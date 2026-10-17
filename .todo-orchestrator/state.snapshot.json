@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-17T15:17:26Z",
+  "generated_at": "2026-10-17T18:02:53Z",
   "project": {
     "configuration": {
       "busy_timeout_ms": 5000,
@@ -11,20 +11,21 @@
         "planned": 3,
         "stale": 3
       },
-      "resource_lease_seconds": 300
+      "resource_lease_seconds": 300,
+      "workflow_front_door": "project-control"
     },
     "created_at": "2026-10-17T15:16:40Z",
     "project_name": "KernelWiki",
     "project_uuid": "c6ca94a4-a877-417d-876d-a8dc94221905",
     "schema_version": 2
   },
-  "project_revision": 1,
+  "project_revision": 32,
   "schema_version": 2,
   "semantic_context": {
     "declarations": [],
     "invalidations": [],
     "orientation": [],
-    "project_revision": 1,
+    "project_revision": 32,
     "project_uuid": "c6ca94a4-a877-417d-876d-a8dc94221905",
     "skill_uses": []
   },
@@ -46,18 +47,1609 @@
         "revision": 1,
         "seq": 1,
         "timestamp": "2026-10-17T15:17:26Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "c6ca94a4-a877-417d-876d-a8dc94221905",
+        "entity_type": "project",
+        "event_type": "plan.applied",
+        "payload_json": "{\"plan_digest\": \"51cdc61ebe07397f2f6852fce77f82c93f6ac1ca22e3d6bbaac4a2e589a86a2b\", \"source\": \"project-control\"}",
+        "revision": 2,
+        "seq": 2,
+        "timestamp": "2026-10-17T17:36:20Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-L-EXEC",
+        "entity_type": "workflow_dispatch",
+        "event_type": "workflow.next_task",
+        "payload_json": "{\"lane_id\": \"KWV-L-EXEC\", \"run_id\": \"KWV-RUN-1\", \"status\": \"claimed\", \"task_id\": \"KWV-01\"}",
+        "revision": 3,
+        "seq": 3,
+        "timestamp": "2026-10-17T17:37:55Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-01-CPU",
+        "entity_type": "gate",
+        "event_type": "gate.started",
+        "payload_json": "{\"gate_id\": \"KWV-01-CPU\"}",
+        "revision": 4,
+        "seq": 4,
+        "timestamp": "2026-10-17T17:41:56Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-01-CPU",
+        "entity_type": "gate",
+        "event_type": "gate.completed",
+        "payload_json": "{\"evidence_id\": \"79c97003-e8a2-4127-95e2-16dc490b490e\", \"status\": \"passed\", \"valid\": true}",
+        "revision": 5,
+        "seq": 5,
+        "timestamp": "2026-10-17T17:41:56Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-01-CPU",
+        "entity_type": "gate",
+        "event_type": "gate.started",
+        "payload_json": "{\"gate_id\": \"KWV-01-CPU\"}",
+        "revision": 6,
+        "seq": 6,
+        "timestamp": "2026-10-17T17:42:06Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-01-CPU",
+        "entity_type": "gate",
+        "event_type": "gate.completed",
+        "payload_json": "{\"evidence_id\": \"445f9dda-060e-42ef-8fe0-44e9ca18bceb\", \"status\": \"passed\", \"valid\": true}",
+        "revision": 7,
+        "seq": 7,
+        "timestamp": "2026-10-17T17:42:06Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-01",
+        "entity_type": "task",
+        "event_type": "task.completed",
+        "payload_json": "{\"completion_revision\": 8, \"disposition\": \"validated\", \"reached_checkpoints\": []}",
+        "revision": 8,
+        "seq": 8,
+        "timestamp": "2026-10-17T17:42:06Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-L-EXEC",
+        "entity_type": "workflow_dispatch",
+        "event_type": "workflow.next_task",
+        "payload_json": "{\"lane_id\": \"KWV-L-EXEC\", \"run_id\": \"KWV-RUN-1\", \"status\": \"claimed\", \"task_id\": \"KWV-02\"}",
+        "revision": 9,
+        "seq": 9,
+        "timestamp": "2026-10-17T17:42:10Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-02-WIKI",
+        "entity_type": "gate",
+        "event_type": "gate.started",
+        "payload_json": "{\"gate_id\": \"KWV-02-WIKI\"}",
+        "revision": 10,
+        "seq": 10,
+        "timestamp": "2026-10-17T17:57:00Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-02-WIKI",
+        "entity_type": "gate",
+        "event_type": "gate.completed",
+        "payload_json": "{\"evidence_id\": \"02b1627c-2f4d-4e15-9e66-115ab56f9c41\", \"status\": \"passed\", \"valid\": true}",
+        "revision": 11,
+        "seq": 11,
+        "timestamp": "2026-10-17T17:57:50Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-02",
+        "entity_type": "task",
+        "event_type": "task.completed",
+        "payload_json": "{\"completion_revision\": 12, \"disposition\": \"validated\", \"reached_checkpoints\": []}",
+        "revision": 12,
+        "seq": 12,
+        "timestamp": "2026-10-17T17:57:50Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-L-EXEC",
+        "entity_type": "workflow_dispatch",
+        "event_type": "workflow.next_task",
+        "payload_json": "{\"lane_id\": \"KWV-L-EXEC\", \"run_id\": \"KWV-RUN-1\", \"status\": \"claimed\", \"task_id\": \"KWV-03\"}",
+        "revision": 13,
+        "seq": 13,
+        "timestamp": "2026-10-17T17:57:53Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "2645eeee-defc-4faa-935c-2dd192ce3c10",
+        "entity_type": "gate_binding",
+        "event_type": "workflow.gates.bound",
+        "payload_json": "{\"gate_count\": 1}",
+        "revision": 14,
+        "seq": 14,
+        "timestamp": "2026-10-17T18:00:41Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-03-EVIDENCE",
+        "entity_type": "gate",
+        "event_type": "gate.started",
+        "payload_json": "{\"gate_id\": \"KWV-03-EVIDENCE\"}",
+        "revision": 15,
+        "seq": 15,
+        "timestamp": "2026-10-17T18:01:07Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-03-EVIDENCE",
+        "entity_type": "gate",
+        "event_type": "gate.completed",
+        "payload_json": "{\"evidence_id\": \"74960b98-1de5-4033-93c7-0e8698f7f48a\", \"status\": \"failed\", \"valid\": false}",
+        "revision": 16,
+        "seq": 16,
+        "timestamp": "2026-10-17T18:01:07Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-03-RECEIPT-TEST",
+        "entity_type": "gate",
+        "event_type": "gate.started",
+        "payload_json": "{\"gate_id\": \"KWV-03-RECEIPT-TEST\"}",
+        "revision": 17,
+        "seq": 17,
+        "timestamp": "2026-10-17T18:01:07Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-03-RECEIPT-TEST",
+        "entity_type": "gate",
+        "event_type": "gate.completed",
+        "payload_json": "{\"evidence_id\": \"0dfd1a22-2253-4faf-b980-f76cc447f856\", \"status\": \"passed\", \"valid\": true}",
+        "revision": 18,
+        "seq": 18,
+        "timestamp": "2026-10-17T18:01:07Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "kwv03-volta-sm70-correctness-smoke",
+        "entity_type": "gate",
+        "event_type": "gate.started",
+        "payload_json": "{\"gate_id\": \"kwv03-volta-sm70-correctness-smoke\"}",
+        "revision": 19,
+        "seq": 19,
+        "timestamp": "2026-10-17T18:01:07Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "kwv03-volta-sm70-correctness-smoke",
+        "entity_type": "gate",
+        "event_type": "gate.completed",
+        "payload_json": "{\"evidence_id\": \"46918840-1957-47e7-a274-307126944885\", \"status\": \"failed\", \"valid\": false}",
+        "revision": 20,
+        "seq": 20,
+        "timestamp": "2026-10-17T18:01:09Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-03-EVIDENCE",
+        "entity_type": "gate",
+        "event_type": "gate.started",
+        "payload_json": "{\"gate_id\": \"KWV-03-EVIDENCE\"}",
+        "revision": 21,
+        "seq": 21,
+        "timestamp": "2026-10-17T18:02:31Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-03-EVIDENCE",
+        "entity_type": "gate",
+        "event_type": "gate.completed",
+        "payload_json": "{\"evidence_id\": \"e1011abd-bb33-4978-a34f-ef05f2c4b902\", \"status\": \"failed\", \"valid\": false}",
+        "revision": 22,
+        "seq": 22,
+        "timestamp": "2026-10-17T18:02:32Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-03-RECEIPT-TEST",
+        "entity_type": "gate",
+        "event_type": "gate.started",
+        "payload_json": "{\"gate_id\": \"KWV-03-RECEIPT-TEST\"}",
+        "revision": 23,
+        "seq": 23,
+        "timestamp": "2026-10-17T18:02:32Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-03-RECEIPT-TEST",
+        "entity_type": "gate",
+        "event_type": "gate.completed",
+        "payload_json": "{\"evidence_id\": \"6207268a-c987-4edc-8d72-73ceb99e6319\", \"status\": \"passed\", \"valid\": true}",
+        "revision": 24,
+        "seq": 24,
+        "timestamp": "2026-10-17T18:02:32Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "kwv03-volta-sm70-correctness-smoke",
+        "entity_type": "gate",
+        "event_type": "gate.started",
+        "payload_json": "{\"gate_id\": \"kwv03-volta-sm70-correctness-smoke\"}",
+        "revision": 25,
+        "seq": 25,
+        "timestamp": "2026-10-17T18:02:32Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "kwv03-volta-sm70-correctness-smoke",
+        "entity_type": "gate",
+        "event_type": "gate.completed",
+        "payload_json": "{\"evidence_id\": \"37194da7-8338-4d9a-bd1a-85a9b4399839\", \"status\": \"failed\", \"valid\": false}",
+        "revision": 26,
+        "seq": 26,
+        "timestamp": "2026-10-17T18:02:36Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-03-EVIDENCE",
+        "entity_type": "gate",
+        "event_type": "gate.started",
+        "payload_json": "{\"gate_id\": \"KWV-03-EVIDENCE\"}",
+        "revision": 27,
+        "seq": 27,
+        "timestamp": "2026-10-17T18:02:46Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-03-EVIDENCE",
+        "entity_type": "gate",
+        "event_type": "gate.completed",
+        "payload_json": "{\"evidence_id\": \"2c465ea9-39ab-4cc5-b3a0-eadea70258dc\", \"status\": \"failed\", \"valid\": false}",
+        "revision": 28,
+        "seq": 28,
+        "timestamp": "2026-10-17T18:02:46Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-03-RECEIPT-TEST",
+        "entity_type": "gate",
+        "event_type": "gate.started",
+        "payload_json": "{\"gate_id\": \"KWV-03-RECEIPT-TEST\"}",
+        "revision": 29,
+        "seq": 29,
+        "timestamp": "2026-10-17T18:02:46Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "KWV-03-RECEIPT-TEST",
+        "entity_type": "gate",
+        "event_type": "gate.completed",
+        "payload_json": "{\"evidence_id\": \"0e543226-97a1-4661-a8d9-c4824e61fc7f\", \"status\": \"passed\", \"valid\": true}",
+        "revision": 30,
+        "seq": 30,
+        "timestamp": "2026-10-17T18:02:46Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "kwv03-volta-sm70-correctness-smoke",
+        "entity_type": "gate",
+        "event_type": "gate.started",
+        "payload_json": "{\"gate_id\": \"kwv03-volta-sm70-correctness-smoke\"}",
+        "revision": 31,
+        "seq": 31,
+        "timestamp": "2026-10-17T18:02:46Z"
+      },
+      {
+        "actor_session_id": null,
+        "entity_id": "kwv03-volta-sm70-correctness-smoke",
+        "entity_type": "gate",
+        "event_type": "gate.completed",
+        "payload_json": "{\"evidence_id\": \"3209078c-5d10-4a8f-9799-5cc8d725cbc0\", \"status\": \"passed\", \"valid\": true}",
+        "revision": 32,
+        "seq": 32,
+        "timestamp": "2026-10-17T18:02:53Z"
       }
     ],
-    "evidence": [],
-    "gates": [],
-    "handoffs": [],
+    "evidence": [
+      {
+        "checkpoint_id": null,
+        "claim_id": null,
+        "content_hash": null,
+        "created_at": "2026-10-17T17:57:50Z",
+        "gate_id": "KWV-02-WIKI",
+        "id": "02b1627c-2f4d-4e15-9e66-115ab56f9c41",
+        "kind": "command",
+        "metadata_json": "{\"argv\": [\"python3\", \"scripts/validate.py\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"14bdf956a1db279d644d2db277c349b54d16a79b2fec203f65007068d6087b58\", \"inputs\": {\"command_contract\": {\"argv\": [\"python3\", \"scripts/validate.py\"], \"cwd\": \".\", \"timeout\": 120}, \"diff_fingerprint\": \"99ddc797f3a57724ffc6bf4aac6e296403199d6968f2738cce29142a2ad48f63\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"CLAUDE.md\", \"README.md\", \"SKILL.md\", \"audit/policies/pr_policy-aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86.py.txt\", \"audit/pr-policy-origin.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"index.md\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"references/primer.md\", \"references/volta.md\", \"scripts/generate-indices.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"scripts/validate.py\", \"sources/blogs/volta-atlas-campaign.md\", \"sources/docs/volta-capability.md\", \"sources/docs/volta-cuda-12-9.md\", \"sources/docs/volta-fastattention.md\", \"sources/docs/volta-fttn.md\", \"sources/docs/volta-gdn.md\", \"sources/docs/volta-jia.md\", \"sources/docs/volta-ptx-8-8.md\", \"sources/docs/volta-sparkattention.md\", \"sources/docs/volta-toolkit-support.md\", \"sources/docs/volta-tuning-12-9.md\", \"tests/test_pr_policy.py\", \"tests/test_pr_policy_origin.py\", \"tests/test_volta_architecture.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\", \"wiki/hardware/volta-feature-boundaries.md\", \"wiki/hardware/volta-mma.md\", \"wiki/hardware/volta-numerics.md\", \"wiki/hardware/volta-operand-delivery.md\", \"wiki/hardware/volta-participation.md\", \"wiki/hardware/volta-resources.md\"], \"files\": [{\"path\": \"data\", \"sha256\": \"missing\"}, {\"path\": \"planning/volta-bootstrap\", \"sha256\": \"missing\"}, {\"path\": \"references\", \"sha256\": \"missing\"}, {\"path\": \"scripts\", \"sha256\": \"missing\"}, {\"path\": \"sources\", \"sha256\": \"missing\"}, {\"path\": \"wiki\", \"sha256\": \"missing\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 0, \"started_revision\": 10}",
+        "path": "/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/02b1627c-2f4d-4e15-9e66-115ab56f9c41",
+        "revision": 11,
+        "status": "passed"
+      },
+      {
+        "checkpoint_id": null,
+        "claim_id": null,
+        "content_hash": null,
+        "created_at": "2026-10-17T18:01:07Z",
+        "gate_id": "KWV-03-RECEIPT-TEST",
+        "id": "0dfd1a22-2253-4faf-b980-f76cc447f856",
+        "kind": "command",
+        "metadata_json": "{\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_evidence_check.py\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"14b2292fd6ead68d9003d8634eb6a3b3cee543d068685aa2236b945bca063cd2\", \"inputs\": {\"command_contract\": {\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_evidence_check.py\"], \"cwd\": \".\", \"timeout\": 120}, \"diff_fingerprint\": \"13ef336c6d4707d65caff21fe6729137f3ad0441bbcf0ef10a53eea13fa28a85\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"CLAUDE.md\", \"README.md\", \"SKILL.md\", \"artifacts/kernels/volta-common/README.md\", \"artifacts/kernels/volta-common/variants/PROVENANCE.yaml\", \"artifacts/kernels/volta-common/variants/volta_smoke.cu\", \"audit/policies/pr_policy-aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86.py.txt\", \"audit/pr-policy-origin.json\", \"benchmark_runs/volta-environment/README.md\", \"benchmark_runs/volta-environment/inputs.f16le\", \"benchmark_runs/volta-environment/ncu-collection-shim.py\", \"benchmark_runs/volta-environment/required-gate.json\", \"benchmark_runs/volta-environment/run_config.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"index.md\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"references/primer.md\", \"references/volta.md\", \"scripts/generate-indices.py\", \"scripts/make_volta_smoke_input.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"scripts/validate.py\", \"scripts/volta_evidence_check.py\", \"sources/blogs/volta-atlas-campaign.md\", \"sources/docs/volta-capability.md\", \"sources/docs/volta-cuda-12-9.md\", \"sources/docs/volta-fastattention.md\", \"sources/docs/volta-fttn.md\", \"sources/docs/volta-gdn.md\", \"sources/docs/volta-jia.md\", \"sources/docs/volta-ptx-8-8.md\", \"sources/docs/volta-sparkattention.md\", \"sources/docs/volta-toolkit-support.md\", \"sources/docs/volta-tuning-12-9.md\", \"tests/test_pr_policy.py\", \"tests/test_pr_policy_origin.py\", \"tests/test_volta_architecture.py\", \"tests/test_volta_evidence_check.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\", \"wiki/hardware/volta-feature-boundaries.md\", \"wiki/hardware/volta-mma.md\", \"wiki/hardware/volta-numerics.md\", \"wiki/hardware/volta-operand-delivery.md\", \"wiki/hardware/volta-participation.md\", \"wiki/hardware/volta-resources.md\", \"wiki/languages/volta-cuda-cpp.md\", \"wiki/languages/volta-ptx.md\"], \"files\": [{\"path\": \"planning/volta-bootstrap\", \"sha256\": \"missing\"}, {\"path\": \"scripts/volta_evidence_check.py\", \"sha256\": \"eed85489ba08a20d400820759e4135328748f838d5815b72fd9d8c37ec0bb91e\"}, {\"path\": \"tests/test_volta_evidence_check.py\", \"sha256\": \"033975a700349ff766d8e2deeb09538f539fb8220b81e8570a4b9ffb0a68bdfd\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 0, \"started_revision\": 17}",
+        "path": "/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/0dfd1a22-2253-4faf-b980-f76cc447f856",
+        "revision": 18,
+        "status": "passed"
+      },
+      {
+        "checkpoint_id": null,
+        "claim_id": null,
+        "content_hash": null,
+        "created_at": "2026-10-17T18:02:46Z",
+        "gate_id": "KWV-03-RECEIPT-TEST",
+        "id": "0e543226-97a1-4661-a8d9-c4824e61fc7f",
+        "kind": "command",
+        "metadata_json": "{\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_evidence_check.py\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"14b2292fd6ead68d9003d8634eb6a3b3cee543d068685aa2236b945bca063cd2\", \"inputs\": {\"command_contract\": {\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_evidence_check.py\"], \"cwd\": \".\", \"timeout\": 120}, \"diff_fingerprint\": \"13ef336c6d4707d65caff21fe6729137f3ad0441bbcf0ef10a53eea13fa28a85\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"CLAUDE.md\", \"README.md\", \"SKILL.md\", \"artifacts/kernels/volta-common/README.md\", \"artifacts/kernels/volta-common/variants/PROVENANCE.yaml\", \"artifacts/kernels/volta-common/variants/volta_smoke.cu\", \"audit/policies/pr_policy-aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86.py.txt\", \"audit/pr-policy-origin.json\", \"benchmark_runs/volta-environment/README.md\", \"benchmark_runs/volta-environment/inputs.f16le\", \"benchmark_runs/volta-environment/ncu-collection-shim.py\", \"benchmark_runs/volta-environment/required-gate.json\", \"benchmark_runs/volta-environment/run_config.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"index.md\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"references/primer.md\", \"references/volta.md\", \"scripts/generate-indices.py\", \"scripts/make_volta_smoke_input.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"scripts/validate.py\", \"scripts/volta_evidence_check.py\", \"sources/blogs/volta-atlas-campaign.md\", \"sources/docs/volta-capability.md\", \"sources/docs/volta-cuda-12-9.md\", \"sources/docs/volta-fastattention.md\", \"sources/docs/volta-fttn.md\", \"sources/docs/volta-gdn.md\", \"sources/docs/volta-jia.md\", \"sources/docs/volta-ptx-8-8.md\", \"sources/docs/volta-sparkattention.md\", \"sources/docs/volta-toolkit-support.md\", \"sources/docs/volta-tuning-12-9.md\", \"tests/test_pr_policy.py\", \"tests/test_pr_policy_origin.py\", \"tests/test_volta_architecture.py\", \"tests/test_volta_evidence_check.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\", \"wiki/hardware/volta-feature-boundaries.md\", \"wiki/hardware/volta-mma.md\", \"wiki/hardware/volta-numerics.md\", \"wiki/hardware/volta-operand-delivery.md\", \"wiki/hardware/volta-participation.md\", \"wiki/hardware/volta-resources.md\", \"wiki/languages/volta-cuda-cpp.md\", \"wiki/languages/volta-ptx.md\"], \"files\": [{\"path\": \"planning/volta-bootstrap\", \"sha256\": \"missing\"}, {\"path\": \"scripts/volta_evidence_check.py\", \"sha256\": \"eed85489ba08a20d400820759e4135328748f838d5815b72fd9d8c37ec0bb91e\"}, {\"path\": \"tests/test_volta_evidence_check.py\", \"sha256\": \"033975a700349ff766d8e2deeb09538f539fb8220b81e8570a4b9ffb0a68bdfd\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 0, \"started_revision\": 29}",
+        "path": "/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/0e543226-97a1-4661-a8d9-c4824e61fc7f",
+        "revision": 30,
+        "status": "passed"
+      },
+      {
+        "checkpoint_id": null,
+        "claim_id": null,
+        "content_hash": null,
+        "created_at": "2026-10-17T18:02:46Z",
+        "gate_id": "KWV-03-EVIDENCE",
+        "id": "2c465ea9-39ab-4cc5-b3a0-eadea70258dc",
+        "kind": "command",
+        "metadata_json": "{\"argv\": [\"python3\", \"scripts/volta_evidence_check.py\", \"--case\", \"environment\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"6b9defb8e3317dfce88988d7afa304c6b12acee8c046727726fbc5a51160240b\", \"inputs\": {\"command_contract\": {\"argv\": [\"python3\", \"scripts/volta_evidence_check.py\", \"--case\", \"environment\"], \"cwd\": \".\", \"timeout\": 120}, \"diff_fingerprint\": \"13ef336c6d4707d65caff21fe6729137f3ad0441bbcf0ef10a53eea13fa28a85\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"CLAUDE.md\", \"README.md\", \"SKILL.md\", \"artifacts/kernels/volta-common/README.md\", \"artifacts/kernels/volta-common/variants/PROVENANCE.yaml\", \"artifacts/kernels/volta-common/variants/volta_smoke.cu\", \"audit/policies/pr_policy-aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86.py.txt\", \"audit/pr-policy-origin.json\", \"benchmark_runs/volta-environment/README.md\", \"benchmark_runs/volta-environment/inputs.f16le\", \"benchmark_runs/volta-environment/ncu-collection-shim.py\", \"benchmark_runs/volta-environment/required-gate.json\", \"benchmark_runs/volta-environment/run_config.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"index.md\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"references/primer.md\", \"references/volta.md\", \"scripts/generate-indices.py\", \"scripts/make_volta_smoke_input.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"scripts/validate.py\", \"scripts/volta_evidence_check.py\", \"sources/blogs/volta-atlas-campaign.md\", \"sources/docs/volta-capability.md\", \"sources/docs/volta-cuda-12-9.md\", \"sources/docs/volta-fastattention.md\", \"sources/docs/volta-fttn.md\", \"sources/docs/volta-gdn.md\", \"sources/docs/volta-jia.md\", \"sources/docs/volta-ptx-8-8.md\", \"sources/docs/volta-sparkattention.md\", \"sources/docs/volta-toolkit-support.md\", \"sources/docs/volta-tuning-12-9.md\", \"tests/test_pr_policy.py\", \"tests/test_pr_policy_origin.py\", \"tests/test_volta_architecture.py\", \"tests/test_volta_evidence_check.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\", \"wiki/hardware/volta-feature-boundaries.md\", \"wiki/hardware/volta-mma.md\", \"wiki/hardware/volta-numerics.md\", \"wiki/hardware/volta-operand-delivery.md\", \"wiki/hardware/volta-participation.md\", \"wiki/hardware/volta-resources.md\", \"wiki/languages/volta-cuda-cpp.md\", \"wiki/languages/volta-ptx.md\"], \"files\": [{\"path\": \"artifacts/kernels/volta-common\", \"sha256\": \"missing\"}, {\"path\": \"planning/volta-bootstrap\", \"sha256\": \"missing\"}, {\"path\": \"scripts/volta_evidence_check.py\", \"sha256\": \"eed85489ba08a20d400820759e4135328748f838d5815b72fd9d8c37ec0bb91e\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 2, \"started_revision\": 27}",
+        "path": "/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/2c465ea9-39ab-4cc5-b3a0-eadea70258dc",
+        "revision": 28,
+        "status": "failed"
+      },
+      {
+        "checkpoint_id": null,
+        "claim_id": null,
+        "content_hash": null,
+        "created_at": "2026-10-17T18:02:53Z",
+        "gate_id": "kwv03-volta-sm70-correctness-smoke",
+        "id": "3209078c-5d10-4a8f-9799-5cc8d725cbc0",
+        "kind": "command",
+        "metadata_json": "{\"argv\": [\"benchmark_runs/volta-environment/bin/volta_smoke\", \"--self-test\", \"--input\", \"benchmark_runs/volta-environment/inputs.f16le\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"94b1d51a506ab98bc4c1c82856ae0638983764b946fd26bdc0b3c3ceda6f3115\", \"inputs\": {\"command_contract\": {\"argv\": [\"benchmark_runs/volta-environment/bin/volta_smoke\", \"--self-test\", \"--input\", \"benchmark_runs/volta-environment/inputs.f16le\"], \"cuda\": {\"binary_paths\": [\"benchmark_runs/volta-environment/bin/volta_smoke\"], \"build_argv\": [\"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc\", \"-O2\", \"-std=c++17\", \"-lineinfo\", \"-arch=sm_70\", \"-o\", \"benchmark_runs/volta-environment/bin/volta_smoke\", \"artifacts/kernels/volta-common/variants/volta_smoke.cu\"], \"cpu_threads\": 1, \"gpus\": 1, \"quiescence\": {\"consecutive_idle_samples\": 3, \"interval_seconds\": 0.25, \"timeout_seconds\": 20}, \"toolchain\": {\"require_sanitizer\": true, \"root\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9\"}}, \"cwd\": \".\", \"env\": {\"CUDACXX\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc\", \"CUDAToolkit_ROOT\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9\", \"CUDA_HOME\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9\", \"PROJECT_CONTROL_SKILLS_ROOT\": \"/home/tumlinson/.agents/skills\", \"PYTHONPATH\": \"/home/tumlinson/skills_dev/integrations/coding-workflow-mcp:/home/tumlinson/project-control/src\"}, \"expected_exit_code\": 0, \"timeout\": 3600}, \"diff_fingerprint\": \"13ef336c6d4707d65caff21fe6729137f3ad0441bbcf0ef10a53eea13fa28a85\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"CLAUDE.md\", \"README.md\", \"SKILL.md\", \"artifacts/kernels/volta-common/README.md\", \"artifacts/kernels/volta-common/variants/PROVENANCE.yaml\", \"artifacts/kernels/volta-common/variants/volta_smoke.cu\", \"audit/policies/pr_policy-aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86.py.txt\", \"audit/pr-policy-origin.json\", \"benchmark_runs/volta-environment/README.md\", \"benchmark_runs/volta-environment/inputs.f16le\", \"benchmark_runs/volta-environment/ncu-collection-shim.py\", \"benchmark_runs/volta-environment/required-gate.json\", \"benchmark_runs/volta-environment/run_config.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"index.md\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"references/primer.md\", \"references/volta.md\", \"scripts/generate-indices.py\", \"scripts/make_volta_smoke_input.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"scripts/validate.py\", \"scripts/volta_evidence_check.py\", \"sources/blogs/volta-atlas-campaign.md\", \"sources/docs/volta-capability.md\", \"sources/docs/volta-cuda-12-9.md\", \"sources/docs/volta-fastattention.md\", \"sources/docs/volta-fttn.md\", \"sources/docs/volta-gdn.md\", \"sources/docs/volta-jia.md\", \"sources/docs/volta-ptx-8-8.md\", \"sources/docs/volta-sparkattention.md\", \"sources/docs/volta-toolkit-support.md\", \"sources/docs/volta-tuning-12-9.md\", \"tests/test_pr_policy.py\", \"tests/test_pr_policy_origin.py\", \"tests/test_volta_architecture.py\", \"tests/test_volta_evidence_check.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\", \"wiki/hardware/volta-feature-boundaries.md\", \"wiki/hardware/volta-mma.md\", \"wiki/hardware/volta-numerics.md\", \"wiki/hardware/volta-operand-delivery.md\", \"wiki/hardware/volta-participation.md\", \"wiki/hardware/volta-resources.md\", \"wiki/languages/volta-cuda-cpp.md\", \"wiki/languages/volta-ptx.md\"], \"files\": [{\"path\": \"artifacts/kernels/volta-common/variants/volta_smoke.cu\", \"sha256\": \"2d8ac189ed8cd5190788ed5adb5f38ad90fc18c105a4b4eb697da0448df25a48\"}, {\"path\": \"benchmark_runs/volta-environment/inputs.f16le\", \"sha256\": \"5c231f0961921f9a3dfe86d633e8cc0c6f6b974c04b47a7d6f203f835a3cf98e\"}, {\"path\": \"benchmark_runs/volta-environment/required-gate.json\", \"sha256\": \"33b1b949e15ef537fe28894647d2d4451bd25f76fa5e8e1db3616cc7b40dbc0a\"}, {\"path\": \"benchmark_runs/volta-environment/run_config.json\", \"sha256\": \"751b3793779d601ce649f21b3905418ecddc620928a35d715d5097b53892335b\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 0, \"started_revision\": 31}",
+        "path": "/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/3209078c-5d10-4a8f-9799-5cc8d725cbc0",
+        "revision": 32,
+        "status": "passed"
+      },
+      {
+        "checkpoint_id": null,
+        "claim_id": null,
+        "content_hash": null,
+        "created_at": "2026-10-17T18:02:36Z",
+        "gate_id": "kwv03-volta-sm70-correctness-smoke",
+        "id": "37194da7-8338-4d9a-bd1a-85a9b4399839",
+        "kind": "command",
+        "metadata_json": "{\"argv\": [\"benchmark_runs/volta-environment/bin/volta_smoke\", \"--self-test\", \"--input\", \"benchmark_runs/volta-environment/inputs.f16le\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"94b1d51a506ab98bc4c1c82856ae0638983764b946fd26bdc0b3c3ceda6f3115\", \"inputs\": {\"command_contract\": {\"argv\": [\"benchmark_runs/volta-environment/bin/volta_smoke\", \"--self-test\", \"--input\", \"benchmark_runs/volta-environment/inputs.f16le\"], \"cuda\": {\"binary_paths\": [\"benchmark_runs/volta-environment/bin/volta_smoke\"], \"build_argv\": [\"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc\", \"-O2\", \"-std=c++17\", \"-lineinfo\", \"-arch=sm_70\", \"-o\", \"benchmark_runs/volta-environment/bin/volta_smoke\", \"artifacts/kernels/volta-common/variants/volta_smoke.cu\"], \"cpu_threads\": 1, \"gpus\": 1, \"quiescence\": {\"consecutive_idle_samples\": 3, \"interval_seconds\": 0.25, \"timeout_seconds\": 20}, \"toolchain\": {\"require_sanitizer\": true, \"root\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9\"}}, \"cwd\": \".\", \"env\": {\"CUDACXX\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc\", \"CUDAToolkit_ROOT\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9\", \"CUDA_HOME\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9\", \"PROJECT_CONTROL_SKILLS_ROOT\": \"/home/tumlinson/.agents/skills\", \"PYTHONPATH\": \"/home/tumlinson/skills_dev/integrations/coding-workflow-mcp:/home/tumlinson/project-control/src\"}, \"expected_exit_code\": 0, \"timeout\": 3600}, \"diff_fingerprint\": \"13ef336c6d4707d65caff21fe6729137f3ad0441bbcf0ef10a53eea13fa28a85\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"CLAUDE.md\", \"README.md\", \"SKILL.md\", \"artifacts/kernels/volta-common/README.md\", \"artifacts/kernels/volta-common/variants/PROVENANCE.yaml\", \"artifacts/kernels/volta-common/variants/volta_smoke.cu\", \"audit/policies/pr_policy-aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86.py.txt\", \"audit/pr-policy-origin.json\", \"benchmark_runs/volta-environment/README.md\", \"benchmark_runs/volta-environment/inputs.f16le\", \"benchmark_runs/volta-environment/ncu-collection-shim.py\", \"benchmark_runs/volta-environment/required-gate.json\", \"benchmark_runs/volta-environment/run_config.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"index.md\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"references/primer.md\", \"references/volta.md\", \"scripts/generate-indices.py\", \"scripts/make_volta_smoke_input.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"scripts/validate.py\", \"scripts/volta_evidence_check.py\", \"sources/blogs/volta-atlas-campaign.md\", \"sources/docs/volta-capability.md\", \"sources/docs/volta-cuda-12-9.md\", \"sources/docs/volta-fastattention.md\", \"sources/docs/volta-fttn.md\", \"sources/docs/volta-gdn.md\", \"sources/docs/volta-jia.md\", \"sources/docs/volta-ptx-8-8.md\", \"sources/docs/volta-sparkattention.md\", \"sources/docs/volta-toolkit-support.md\", \"sources/docs/volta-tuning-12-9.md\", \"tests/test_pr_policy.py\", \"tests/test_pr_policy_origin.py\", \"tests/test_volta_architecture.py\", \"tests/test_volta_evidence_check.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\", \"wiki/hardware/volta-feature-boundaries.md\", \"wiki/hardware/volta-mma.md\", \"wiki/hardware/volta-numerics.md\", \"wiki/hardware/volta-operand-delivery.md\", \"wiki/hardware/volta-participation.md\", \"wiki/hardware/volta-resources.md\", \"wiki/languages/volta-cuda-cpp.md\", \"wiki/languages/volta-ptx.md\"], \"files\": [{\"path\": \"artifacts/kernels/volta-common/variants/volta_smoke.cu\", \"sha256\": \"2d8ac189ed8cd5190788ed5adb5f38ad90fc18c105a4b4eb697da0448df25a48\"}, {\"path\": \"benchmark_runs/volta-environment/inputs.f16le\", \"sha256\": \"5c231f0961921f9a3dfe86d633e8cc0c6f6b974c04b47a7d6f203f835a3cf98e\"}, {\"path\": \"benchmark_runs/volta-environment/required-gate.json\", \"sha256\": \"33b1b949e15ef537fe28894647d2d4451bd25f76fa5e8e1db3616cc7b40dbc0a\"}, {\"path\": \"benchmark_runs/volta-environment/run_config.json\", \"sha256\": \"751b3793779d601ce649f21b3905418ecddc620928a35d715d5097b53892335b\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 1, \"started_revision\": 25}",
+        "path": "/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/37194da7-8338-4d9a-bd1a-85a9b4399839",
+        "revision": 26,
+        "status": "failed"
+      },
+      {
+        "checkpoint_id": null,
+        "claim_id": null,
+        "content_hash": null,
+        "created_at": "2026-10-17T17:42:06Z",
+        "gate_id": "KWV-01-CPU",
+        "id": "445f9dda-060e-42ef-8fe0-44e9ca18bceb",
+        "kind": "command",
+        "metadata_json": "{\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_architecture.py\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"1d7a056ddf4a66a3347ee3b5d365ab42f0019e1b63032d8b8447a8a6cbd6c516\", \"inputs\": {\"command_contract\": {\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_architecture.py\"], \"cwd\": \".\", \"timeout\": 120}, \"diff_fingerprint\": \"4012a13c7609248bfe2af50f22fb023f23f0745f6847087b8875655b7c7d470f\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"scripts/generate-indices.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"tests/test_pr_policy.py\", \"tests/test_volta_architecture.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\"], \"files\": [{\"path\": \"data\", \"sha256\": \"missing\"}, {\"path\": \"planning/volta-bootstrap\", \"sha256\": \"missing\"}, {\"path\": \"scripts\", \"sha256\": \"missing\"}, {\"path\": \"tests/test_volta_architecture.py\", \"sha256\": \"7a1a8118c16e7959f2fd6e861e119034763b6057d49fc2d53e57bc4f0e9d08e0\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 0, \"started_revision\": 6}",
+        "path": "/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/445f9dda-060e-42ef-8fe0-44e9ca18bceb",
+        "revision": 7,
+        "status": "passed"
+      },
+      {
+        "checkpoint_id": null,
+        "claim_id": null,
+        "content_hash": null,
+        "created_at": "2026-10-17T18:01:09Z",
+        "gate_id": "kwv03-volta-sm70-correctness-smoke",
+        "id": "46918840-1957-47e7-a274-307126944885",
+        "kind": "command",
+        "metadata_json": "{\"argv\": [\"benchmark_runs/volta-environment/bin/volta_smoke\", \"--self-test\", \"--input\", \"benchmark_runs/volta-environment/inputs.f16le\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"36dfa1d529e6dd134a4dfc10d4e20936c726ed72b14fb5644bebe5c8193b2daf\", \"inputs\": {\"command_contract\": {\"argv\": [\"benchmark_runs/volta-environment/bin/volta_smoke\", \"--self-test\", \"--input\", \"benchmark_runs/volta-environment/inputs.f16le\"], \"cuda\": {\"binary_paths\": [\"benchmark_runs/volta-environment/bin/volta_smoke\"], \"build_argv\": [\"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc\", \"-O2\", \"-std=c++17\", \"-lineinfo\", \"-arch=sm_70\", \"-o\", \"benchmark_runs/volta-environment/bin/volta_smoke\", \"artifacts/kernels/volta-common/variants/volta_smoke.cu\"], \"cpu_threads\": 1, \"gpus\": 1, \"quiescence\": {\"consecutive_idle_samples\": 3, \"interval_seconds\": 0.25, \"timeout_seconds\": 20}, \"toolchain\": {\"require_sanitizer\": true, \"root\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9\"}}, \"cwd\": \".\", \"env\": {\"CUDACXX\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc\", \"CUDAToolkit_ROOT\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9\", \"CUDA_HOME\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9\", \"PROJECT_CONTROL_SKILLS_ROOT\": \"/home/tumlinson/.agents/skills\", \"PYTHONPATH\": \"/home/tumlinson/skills_dev/integrations/coding-workflow-mcp:/home/tumlinson/project-control/src\"}, \"expected_exit_code\": 0, \"timeout\": 3600}, \"diff_fingerprint\": \"13ef336c6d4707d65caff21fe6729137f3ad0441bbcf0ef10a53eea13fa28a85\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"CLAUDE.md\", \"README.md\", \"SKILL.md\", \"artifacts/kernels/volta-common/README.md\", \"artifacts/kernels/volta-common/variants/PROVENANCE.yaml\", \"artifacts/kernels/volta-common/variants/volta_smoke.cu\", \"audit/policies/pr_policy-aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86.py.txt\", \"audit/pr-policy-origin.json\", \"benchmark_runs/volta-environment/README.md\", \"benchmark_runs/volta-environment/inputs.f16le\", \"benchmark_runs/volta-environment/ncu-collection-shim.py\", \"benchmark_runs/volta-environment/required-gate.json\", \"benchmark_runs/volta-environment/run_config.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"index.md\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"references/primer.md\", \"references/volta.md\", \"scripts/generate-indices.py\", \"scripts/make_volta_smoke_input.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"scripts/validate.py\", \"scripts/volta_evidence_check.py\", \"sources/blogs/volta-atlas-campaign.md\", \"sources/docs/volta-capability.md\", \"sources/docs/volta-cuda-12-9.md\", \"sources/docs/volta-fastattention.md\", \"sources/docs/volta-fttn.md\", \"sources/docs/volta-gdn.md\", \"sources/docs/volta-jia.md\", \"sources/docs/volta-ptx-8-8.md\", \"sources/docs/volta-sparkattention.md\", \"sources/docs/volta-toolkit-support.md\", \"sources/docs/volta-tuning-12-9.md\", \"tests/test_pr_policy.py\", \"tests/test_pr_policy_origin.py\", \"tests/test_volta_architecture.py\", \"tests/test_volta_evidence_check.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\", \"wiki/hardware/volta-feature-boundaries.md\", \"wiki/hardware/volta-mma.md\", \"wiki/hardware/volta-numerics.md\", \"wiki/hardware/volta-operand-delivery.md\", \"wiki/hardware/volta-participation.md\", \"wiki/hardware/volta-resources.md\", \"wiki/languages/volta-cuda-cpp.md\", \"wiki/languages/volta-ptx.md\"], \"files\": [{\"path\": \"artifacts/kernels/volta-common/variants/volta_smoke.cu\", \"sha256\": \"477943bf15104a5b9f7729d36803abbd1719a0eae104dc4bab86e19475128e5e\"}, {\"path\": \"benchmark_runs/volta-environment/inputs.f16le\", \"sha256\": \"5c231f0961921f9a3dfe86d633e8cc0c6f6b974c04b47a7d6f203f835a3cf98e\"}, {\"path\": \"benchmark_runs/volta-environment/required-gate.json\", \"sha256\": \"33b1b949e15ef537fe28894647d2d4451bd25f76fa5e8e1db3616cc7b40dbc0a\"}, {\"path\": \"benchmark_runs/volta-environment/run_config.json\", \"sha256\": \"751b3793779d601ce649f21b3905418ecddc620928a35d715d5097b53892335b\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 1, \"started_revision\": 19}",
+        "path": "/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/46918840-1957-47e7-a274-307126944885",
+        "revision": 20,
+        "status": "failed"
+      },
+      {
+        "checkpoint_id": null,
+        "claim_id": null,
+        "content_hash": null,
+        "created_at": "2026-10-17T18:02:32Z",
+        "gate_id": "KWV-03-RECEIPT-TEST",
+        "id": "6207268a-c987-4edc-8d72-73ceb99e6319",
+        "kind": "command",
+        "metadata_json": "{\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_evidence_check.py\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"14b2292fd6ead68d9003d8634eb6a3b3cee543d068685aa2236b945bca063cd2\", \"inputs\": {\"command_contract\": {\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_evidence_check.py\"], \"cwd\": \".\", \"timeout\": 120}, \"diff_fingerprint\": \"13ef336c6d4707d65caff21fe6729137f3ad0441bbcf0ef10a53eea13fa28a85\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"CLAUDE.md\", \"README.md\", \"SKILL.md\", \"artifacts/kernels/volta-common/README.md\", \"artifacts/kernels/volta-common/variants/PROVENANCE.yaml\", \"artifacts/kernels/volta-common/variants/volta_smoke.cu\", \"audit/policies/pr_policy-aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86.py.txt\", \"audit/pr-policy-origin.json\", \"benchmark_runs/volta-environment/README.md\", \"benchmark_runs/volta-environment/inputs.f16le\", \"benchmark_runs/volta-environment/ncu-collection-shim.py\", \"benchmark_runs/volta-environment/required-gate.json\", \"benchmark_runs/volta-environment/run_config.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"index.md\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"references/primer.md\", \"references/volta.md\", \"scripts/generate-indices.py\", \"scripts/make_volta_smoke_input.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"scripts/validate.py\", \"scripts/volta_evidence_check.py\", \"sources/blogs/volta-atlas-campaign.md\", \"sources/docs/volta-capability.md\", \"sources/docs/volta-cuda-12-9.md\", \"sources/docs/volta-fastattention.md\", \"sources/docs/volta-fttn.md\", \"sources/docs/volta-gdn.md\", \"sources/docs/volta-jia.md\", \"sources/docs/volta-ptx-8-8.md\", \"sources/docs/volta-sparkattention.md\", \"sources/docs/volta-toolkit-support.md\", \"sources/docs/volta-tuning-12-9.md\", \"tests/test_pr_policy.py\", \"tests/test_pr_policy_origin.py\", \"tests/test_volta_architecture.py\", \"tests/test_volta_evidence_check.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\", \"wiki/hardware/volta-feature-boundaries.md\", \"wiki/hardware/volta-mma.md\", \"wiki/hardware/volta-numerics.md\", \"wiki/hardware/volta-operand-delivery.md\", \"wiki/hardware/volta-participation.md\", \"wiki/hardware/volta-resources.md\", \"wiki/languages/volta-cuda-cpp.md\", \"wiki/languages/volta-ptx.md\"], \"files\": [{\"path\": \"planning/volta-bootstrap\", \"sha256\": \"missing\"}, {\"path\": \"scripts/volta_evidence_check.py\", \"sha256\": \"eed85489ba08a20d400820759e4135328748f838d5815b72fd9d8c37ec0bb91e\"}, {\"path\": \"tests/test_volta_evidence_check.py\", \"sha256\": \"033975a700349ff766d8e2deeb09538f539fb8220b81e8570a4b9ffb0a68bdfd\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 0, \"started_revision\": 23}",
+        "path": "/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/6207268a-c987-4edc-8d72-73ceb99e6319",
+        "revision": 24,
+        "status": "passed"
+      },
+      {
+        "checkpoint_id": null,
+        "claim_id": null,
+        "content_hash": null,
+        "created_at": "2026-10-17T18:01:07Z",
+        "gate_id": "KWV-03-EVIDENCE",
+        "id": "74960b98-1de5-4033-93c7-0e8698f7f48a",
+        "kind": "command",
+        "metadata_json": "{\"argv\": [\"python3\", \"scripts/volta_evidence_check.py\", \"--case\", \"environment\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"6b9defb8e3317dfce88988d7afa304c6b12acee8c046727726fbc5a51160240b\", \"inputs\": {\"command_contract\": {\"argv\": [\"python3\", \"scripts/volta_evidence_check.py\", \"--case\", \"environment\"], \"cwd\": \".\", \"timeout\": 120}, \"diff_fingerprint\": \"13ef336c6d4707d65caff21fe6729137f3ad0441bbcf0ef10a53eea13fa28a85\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"CLAUDE.md\", \"README.md\", \"SKILL.md\", \"artifacts/kernels/volta-common/README.md\", \"artifacts/kernels/volta-common/variants/PROVENANCE.yaml\", \"artifacts/kernels/volta-common/variants/volta_smoke.cu\", \"audit/policies/pr_policy-aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86.py.txt\", \"audit/pr-policy-origin.json\", \"benchmark_runs/volta-environment/README.md\", \"benchmark_runs/volta-environment/inputs.f16le\", \"benchmark_runs/volta-environment/ncu-collection-shim.py\", \"benchmark_runs/volta-environment/required-gate.json\", \"benchmark_runs/volta-environment/run_config.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"index.md\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"references/primer.md\", \"references/volta.md\", \"scripts/generate-indices.py\", \"scripts/make_volta_smoke_input.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"scripts/validate.py\", \"scripts/volta_evidence_check.py\", \"sources/blogs/volta-atlas-campaign.md\", \"sources/docs/volta-capability.md\", \"sources/docs/volta-cuda-12-9.md\", \"sources/docs/volta-fastattention.md\", \"sources/docs/volta-fttn.md\", \"sources/docs/volta-gdn.md\", \"sources/docs/volta-jia.md\", \"sources/docs/volta-ptx-8-8.md\", \"sources/docs/volta-sparkattention.md\", \"sources/docs/volta-toolkit-support.md\", \"sources/docs/volta-tuning-12-9.md\", \"tests/test_pr_policy.py\", \"tests/test_pr_policy_origin.py\", \"tests/test_volta_architecture.py\", \"tests/test_volta_evidence_check.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\", \"wiki/hardware/volta-feature-boundaries.md\", \"wiki/hardware/volta-mma.md\", \"wiki/hardware/volta-numerics.md\", \"wiki/hardware/volta-operand-delivery.md\", \"wiki/hardware/volta-participation.md\", \"wiki/hardware/volta-resources.md\", \"wiki/languages/volta-cuda-cpp.md\", \"wiki/languages/volta-ptx.md\"], \"files\": [{\"path\": \"artifacts/kernels/volta-common\", \"sha256\": \"missing\"}, {\"path\": \"planning/volta-bootstrap\", \"sha256\": \"missing\"}, {\"path\": \"scripts/volta_evidence_check.py\", \"sha256\": \"eed85489ba08a20d400820759e4135328748f838d5815b72fd9d8c37ec0bb91e\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 2, \"started_revision\": 15}",
+        "path": "/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/74960b98-1de5-4033-93c7-0e8698f7f48a",
+        "revision": 16,
+        "status": "failed"
+      },
+      {
+        "checkpoint_id": null,
+        "claim_id": null,
+        "content_hash": null,
+        "created_at": "2026-10-17T17:41:56Z",
+        "gate_id": "KWV-01-CPU",
+        "id": "79c97003-e8a2-4127-95e2-16dc490b490e",
+        "kind": "command",
+        "metadata_json": "{\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_architecture.py\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"1d7a056ddf4a66a3347ee3b5d365ab42f0019e1b63032d8b8447a8a6cbd6c516\", \"inputs\": {\"command_contract\": {\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_architecture.py\"], \"cwd\": \".\", \"timeout\": 120}, \"diff_fingerprint\": \"4012a13c7609248bfe2af50f22fb023f23f0745f6847087b8875655b7c7d470f\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"scripts/generate-indices.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"tests/test_pr_policy.py\", \"tests/test_volta_architecture.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\"], \"files\": [{\"path\": \"data\", \"sha256\": \"missing\"}, {\"path\": \"planning/volta-bootstrap\", \"sha256\": \"missing\"}, {\"path\": \"scripts\", \"sha256\": \"missing\"}, {\"path\": \"tests/test_volta_architecture.py\", \"sha256\": \"7a1a8118c16e7959f2fd6e861e119034763b6057d49fc2d53e57bc4f0e9d08e0\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 0, \"started_revision\": 4}",
+        "path": "/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/79c97003-e8a2-4127-95e2-16dc490b490e",
+        "revision": 5,
+        "status": "passed"
+      },
+      {
+        "checkpoint_id": null,
+        "claim_id": null,
+        "content_hash": null,
+        "created_at": "2026-10-17T18:02:32Z",
+        "gate_id": "KWV-03-EVIDENCE",
+        "id": "e1011abd-bb33-4978-a34f-ef05f2c4b902",
+        "kind": "command",
+        "metadata_json": "{\"argv\": [\"python3\", \"scripts/volta_evidence_check.py\", \"--case\", \"environment\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"6b9defb8e3317dfce88988d7afa304c6b12acee8c046727726fbc5a51160240b\", \"inputs\": {\"command_contract\": {\"argv\": [\"python3\", \"scripts/volta_evidence_check.py\", \"--case\", \"environment\"], \"cwd\": \".\", \"timeout\": 120}, \"diff_fingerprint\": \"13ef336c6d4707d65caff21fe6729137f3ad0441bbcf0ef10a53eea13fa28a85\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"CLAUDE.md\", \"README.md\", \"SKILL.md\", \"artifacts/kernels/volta-common/README.md\", \"artifacts/kernels/volta-common/variants/PROVENANCE.yaml\", \"artifacts/kernels/volta-common/variants/volta_smoke.cu\", \"audit/policies/pr_policy-aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86.py.txt\", \"audit/pr-policy-origin.json\", \"benchmark_runs/volta-environment/README.md\", \"benchmark_runs/volta-environment/inputs.f16le\", \"benchmark_runs/volta-environment/ncu-collection-shim.py\", \"benchmark_runs/volta-environment/required-gate.json\", \"benchmark_runs/volta-environment/run_config.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"index.md\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"references/primer.md\", \"references/volta.md\", \"scripts/generate-indices.py\", \"scripts/make_volta_smoke_input.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"scripts/validate.py\", \"scripts/volta_evidence_check.py\", \"sources/blogs/volta-atlas-campaign.md\", \"sources/docs/volta-capability.md\", \"sources/docs/volta-cuda-12-9.md\", \"sources/docs/volta-fastattention.md\", \"sources/docs/volta-fttn.md\", \"sources/docs/volta-gdn.md\", \"sources/docs/volta-jia.md\", \"sources/docs/volta-ptx-8-8.md\", \"sources/docs/volta-sparkattention.md\", \"sources/docs/volta-toolkit-support.md\", \"sources/docs/volta-tuning-12-9.md\", \"tests/test_pr_policy.py\", \"tests/test_pr_policy_origin.py\", \"tests/test_volta_architecture.py\", \"tests/test_volta_evidence_check.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\", \"wiki/hardware/volta-feature-boundaries.md\", \"wiki/hardware/volta-mma.md\", \"wiki/hardware/volta-numerics.md\", \"wiki/hardware/volta-operand-delivery.md\", \"wiki/hardware/volta-participation.md\", \"wiki/hardware/volta-resources.md\", \"wiki/languages/volta-cuda-cpp.md\", \"wiki/languages/volta-ptx.md\"], \"files\": [{\"path\": \"artifacts/kernels/volta-common\", \"sha256\": \"missing\"}, {\"path\": \"planning/volta-bootstrap\", \"sha256\": \"missing\"}, {\"path\": \"scripts/volta_evidence_check.py\", \"sha256\": \"eed85489ba08a20d400820759e4135328748f838d5815b72fd9d8c37ec0bb91e\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 2, \"started_revision\": 21}",
+        "path": "/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/e1011abd-bb33-4978-a34f-ef05f2c4b902",
+        "revision": 22,
+        "status": "failed"
+      }
+    ],
+    "gates": [
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"status\": \"done\", \"task_id\": \"KWV-01\", \"track_git_head\": false}",
+        "id": "KWV-000-KWV-01-DONE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-000",
+        "type": "task_state",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"status\": \"done\", \"task_id\": \"KWV-02\", \"track_git_head\": false}",
+        "id": "KWV-000-KWV-02-DONE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-000",
+        "type": "task_state",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"status\": \"done\", \"task_id\": \"KWV-03\", \"track_git_head\": false}",
+        "id": "KWV-000-KWV-03-DONE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-000",
+        "type": "task_state",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"status\": \"done\", \"task_id\": \"KWV-04\", \"track_git_head\": false}",
+        "id": "KWV-000-KWV-04-DONE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-000",
+        "type": "task_state",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"status\": \"done\", \"task_id\": \"KWV-05\", \"track_git_head\": false}",
+        "id": "KWV-000-KWV-05-DONE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-000",
+        "type": "task_state",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"status\": \"done\", \"task_id\": \"KWV-06\", \"track_git_head\": false}",
+        "id": "KWV-000-KWV-06-DONE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-000",
+        "type": "task_state",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"status\": \"done\", \"task_id\": \"KWV-07\", \"track_git_head\": false}",
+        "id": "KWV-000-KWV-07-DONE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-000",
+        "type": "task_state",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"status\": \"done\", \"task_id\": \"KWV-08\", \"track_git_head\": false}",
+        "id": "KWV-000-KWV-08-DONE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-000",
+        "type": "task_state",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"status\": \"done\", \"task_id\": \"KWV-09\", \"track_git_head\": false}",
+        "id": "KWV-000-KWV-09-DONE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-000",
+        "type": "task_state",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_architecture.py\"], \"cwd\": \".\", \"input_paths\": [\"scripts\", \"data\", \"tests/test_volta_architecture.py\", \"planning/volta-bootstrap\"], \"timeout\": 120, \"track_git_head\": false}",
+        "id": "KWV-01-CPU",
+        "input_fingerprint": "1d7a056ddf4a66a3347ee3b5d365ab42f0019e1b63032d8b8447a8a6cbd6c516",
+        "last_run_at": "2026-10-17T17:42:06Z",
+        "required": 1,
+        "revision": 7,
+        "status": "passed",
+        "task_id": "KWV-01",
+        "type": "command",
+        "valid": 1
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"argv\": [\"python3\", \"scripts/validate.py\"], \"cwd\": \".\", \"input_paths\": [\"scripts\", \"data\", \"sources\", \"wiki\", \"references\", \"planning/volta-bootstrap\"], \"timeout\": 120, \"track_git_head\": false}",
+        "id": "KWV-02-WIKI",
+        "input_fingerprint": "14bdf956a1db279d644d2db277c349b54d16a79b2fec203f65007068d6087b58",
+        "last_run_at": "2026-10-17T17:57:50Z",
+        "required": 1,
+        "revision": 11,
+        "status": "passed",
+        "task_id": "KWV-02",
+        "type": "command",
+        "valid": 1
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"argv\": [\"python3\", \"scripts/volta_evidence_check.py\", \"--case\", \"environment\"], \"cwd\": \".\", \"input_paths\": [\"scripts/volta_evidence_check.py\", \"artifacts/kernels/volta-common\", \"planning/volta-bootstrap\"], \"timeout\": 120, \"track_git_head\": false}",
+        "id": "KWV-03-EVIDENCE",
+        "input_fingerprint": "6b9defb8e3317dfce88988d7afa304c6b12acee8c046727726fbc5a51160240b",
+        "last_run_at": "2026-10-17T18:02:46Z",
+        "required": 1,
+        "revision": 28,
+        "status": "failed",
+        "task_id": "KWV-03",
+        "type": "command",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_evidence_check.py\"], \"cwd\": \".\", \"input_paths\": [\"scripts/volta_evidence_check.py\", \"tests/test_volta_evidence_check.py\", \"planning/volta-bootstrap\"], \"timeout\": 120, \"track_git_head\": false}",
+        "id": "KWV-03-RECEIPT-TEST",
+        "input_fingerprint": "14b2292fd6ead68d9003d8634eb6a3b3cee543d068685aa2236b945bca063cd2",
+        "last_run_at": "2026-10-17T18:02:46Z",
+        "required": 1,
+        "revision": 30,
+        "status": "passed",
+        "task_id": "KWV-03",
+        "type": "command",
+        "valid": 1
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"argv\": [\"python3\", \"scripts/volta_evidence_check.py\", \"--case\", \"gemm\"], \"cwd\": \".\", \"input_paths\": [\"scripts/volta_evidence_check.py\", \"artifacts/kernels/volta-gemm\", \"artifacts/kernels/volta-common\", \"planning/volta-bootstrap\"], \"timeout\": 120, \"track_git_head\": false}",
+        "id": "KWV-04-EVIDENCE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-04",
+        "type": "command",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"argv\": [\"python3\", \"scripts/volta_evidence_check.py\", \"--case\", \"rows\"], \"cwd\": \".\", \"input_paths\": [\"scripts/volta_evidence_check.py\", \"artifacts/kernels/volta-rows\", \"artifacts/kernels/volta-common\", \"planning/volta-bootstrap\"], \"timeout\": 120, \"track_git_head\": false}",
+        "id": "KWV-05-EVIDENCE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-05",
+        "type": "command",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"argv\": [\"python3\", \"scripts/volta_evidence_check.py\", \"--case\", \"attention\"], \"cwd\": \".\", \"input_paths\": [\"scripts/volta_evidence_check.py\", \"artifacts/kernels/volta-attention\", \"artifacts/kernels/volta-common\", \"planning/volta-bootstrap\", \"artifacts/kernels/volta-gemm\", \"artifacts/kernels/volta-rows\"], \"timeout\": 120, \"track_git_head\": false}",
+        "id": "KWV-06-EVIDENCE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-06",
+        "type": "command",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"argv\": [\"python3\", \"scripts/volta_evidence_check.py\", \"--case\", \"grouped-lowbit\"], \"cwd\": \".\", \"input_paths\": [\"scripts/volta_evidence_check.py\", \"artifacts/kernels/volta-grouped-lowbit\", \"artifacts/kernels/volta-common\", \"planning/volta-bootstrap\", \"artifacts/kernels/volta-gemm\"], \"timeout\": 120, \"track_git_head\": false}",
+        "id": "KWV-07-EVIDENCE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-07",
+        "type": "command",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"argv\": [\"python3\", \"scripts/volta_evidence_check.py\", \"--case\", \"recurrence\"], \"cwd\": \".\", \"input_paths\": [\"scripts/volta_evidence_check.py\", \"artifacts/kernels/volta-recurrence\", \"artifacts/kernels/volta-common\", \"planning/volta-bootstrap\", \"artifacts/kernels/volta-gemm\", \"artifacts/kernels/volta-rows\"], \"timeout\": 120, \"track_git_head\": false}",
+        "id": "KWV-08-EVIDENCE",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-08",
+        "type": "command",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_architecture.py\"], \"cwd\": \".\", \"input_paths\": [\"scripts\", \"data\", \"tests/test_volta_architecture.py\", \"planning/volta-bootstrap\"], \"timeout\": 120, \"track_git_head\": false}",
+        "id": "KWV-09-CPU",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-09",
+        "type": "command",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"argv\": [\"python3\", \"scripts/volta_evidence_check.py\", \"--all\"], \"cwd\": \".\", \"input_paths\": [\"scripts/volta_evidence_check.py\", \"artifacts/kernels\", \"planning/volta-bootstrap\"], \"timeout\": 120, \"track_git_head\": false}",
+        "id": "KWV-09-KERNELS",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-09",
+        "type": "command",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"argv\": [\"python3\", \"scripts/validate.py\"], \"cwd\": \".\", \"input_paths\": [\"scripts\", \"data\", \"sources\", \"wiki\", \"references\", \"artifacts\", \"planning/volta-bootstrap\"], \"timeout\": 120, \"track_git_head\": false}",
+        "id": "KWV-09-WIKI",
+        "input_fingerprint": null,
+        "last_run_at": null,
+        "required": 1,
+        "revision": 2,
+        "status": "pending",
+        "task_id": "KWV-09",
+        "type": "command",
+        "valid": 0
+      },
+      {
+        "checkpoint_id": null,
+        "config_json": "{\"argv\": [\"benchmark_runs/volta-environment/bin/volta_smoke\", \"--self-test\", \"--input\", \"benchmark_runs/volta-environment/inputs.f16le\"], \"cuda\": {\"binary_paths\": [\"benchmark_runs/volta-environment/bin/volta_smoke\"], \"build_argv\": [\"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc\", \"-O2\", \"-std=c++17\", \"-lineinfo\", \"-arch=sm_70\", \"-o\", \"benchmark_runs/volta-environment/bin/volta_smoke\", \"artifacts/kernels/volta-common/variants/volta_smoke.cu\"], \"cpu_threads\": 1, \"gpus\": 1, \"quiescence\": {\"consecutive_idle_samples\": 3, \"interval_seconds\": 0.25, \"timeout_seconds\": 20}, \"toolchain\": {\"require_sanitizer\": true, \"root\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9\"}}, \"cwd\": \".\", \"env\": {\"CUDACXX\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc\", \"CUDAToolkit_ROOT\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9\", \"CUDA_HOME\": \"/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9\", \"PROJECT_CONTROL_SKILLS_ROOT\": \"/home/tumlinson/.agents/skills\", \"PYTHONPATH\": \"/home/tumlinson/skills_dev/integrations/coding-workflow-mcp:/home/tumlinson/project-control/src\"}, \"expected_exit_code\": 0, \"input_paths\": [\"artifacts/kernels/volta-common/variants/volta_smoke.cu\", \"benchmark_runs/volta-environment/inputs.f16le\", \"benchmark_runs/volta-environment/run_config.json\", \"benchmark_runs/volta-environment/required-gate.json\"], \"timeout\": 3600}",
+        "id": "kwv03-volta-sm70-correctness-smoke",
+        "input_fingerprint": "94b1d51a506ab98bc4c1c82856ae0638983764b946fd26bdc0b3c3ceda6f3115",
+        "last_run_at": "2026-10-17T18:02:53Z",
+        "required": 1,
+        "revision": 32,
+        "status": "passed",
+        "task_id": "KWV-03",
+        "type": "command",
+        "valid": 1
+      }
+    ],
+    "handoffs": [
+      {
+        "claim_id": null,
+        "created_at": "2026-10-17T17:57:50Z",
+        "id": "205b2945-24d3-4bfd-b70c-6907afc8451d",
+        "kind": "complete",
+        "note": "Adopted 11 grounded Volta sources, six source-reported/concept hardware pages and routing; V100 query returns six SM70 hardware pages and source following resolves. Luna independent content review passed. Necessary bounded integration correction: current policy changes invalidated historical full-file policy hashes; preserved original receipt bytes and all 944 PR pages, archived exact baseline policy as non-executed provenance, pinned origin/receipt/corpus hashes and added ten negative origin tests (10/10) plus existing receipt tests (2/2). No raw 944-row source replay or live upstream audit is claimed. Native validator retains per-row/cap invariants; no confidence inflation or GPU work.",
+        "payload_json": "{\"authority_commit\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"changed_owned_paths\": [\"CLAUDE.md\", \"README.md\", \"SKILL.md\", \"index.md\", \"references/primer.md\", \"references/volta.md\", \"sources/blogs/volta-atlas-campaign.md\", \"sources/docs/volta-capability.md\", \"sources/docs/volta-cuda-12-9.md\", \"sources/docs/volta-fastattention.md\", \"sources/docs/volta-fttn.md\", \"sources/docs/volta-gdn.md\", \"sources/docs/volta-jia.md\", \"sources/docs/volta-ptx-8-8.md\", \"sources/docs/volta-sparkattention.md\", \"sources/docs/volta-toolkit-support.md\", \"sources/docs/volta-tuning-12-9.md\", \"wiki/hardware/volta-feature-boundaries.md\", \"wiki/hardware/volta-mma.md\", \"wiki/hardware/volta-numerics.md\", \"wiki/hardware/volta-operand-delivery.md\", \"wiki/hardware/volta-participation.md\", \"wiki/hardware/volta-resources.md\"], \"checkpoints\": [], \"completion_commit\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"completion_gates\": [{\"evidence_id\": \"02b1627c-2f4d-4e15-9e66-115ab56f9c41\", \"evidence_revision\": 11, \"id\": \"KWV-02-WIKI\", \"input_fingerprint\": \"14bdf956a1db279d644d2db277c349b54d16a79b2fec203f65007068d6087b58\", \"status\": \"passed\", \"valid\": true, \"validation_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\"}], \"completion_revision\": 12, \"finalized_checkpoints\": [], \"gates\": [{\"id\": \"KWV-02-WIKI\", \"input_fingerprint\": \"14bdf956a1db279d644d2db277c349b54d16a79b2fec203f65007068d6087b58\", \"last_run_at\": \"2026-10-17T17:57:50Z\", \"revision\": 11, \"status\": \"passed\", \"valid\": 1}], \"git_diffstat\": \".todo-orchestrator/state.snapshot.json | 2058 +++++++++++++++++++++++++++++++-\\n CLAUDE.md                              |   11 +-\\n README.md                              |   11 +-\\n SKILL.md                               |   19 +-\\n data/aliases.yaml                      |   13 +\\n data/tags.yaml                         |    6 +\\n index.md                               |   18 +-\\n references/primer.md                   |   18 +\\n scripts/generate-indices.py            |   29 +-\\n scripts/pr_policy.py                   |   46 +-\\n scripts/query.py                       |   53 +-\\n scripts/validate.py                    |  217 +++-\\n tests/test_pr_policy.py                |    2 +-\\n todo-status.md                         |   15 +-\\n todos.md                               |   15 +-\\n 15 files changed, 2442 insertions(+), 89 deletions(-)\", \"git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"integration_commit\": null, \"interfaces\": [], \"note\": \"Adopted 11 grounded Volta sources, six source-reported/concept hardware pages and routing; V100 query returns six SM70 hardware pages and source following resolves. Luna independent content review passed. Necessary bounded integration correction: current policy changes invalidated historical full-file policy hashes; preserved original receipt bytes and all 944 PR pages, archived exact baseline policy as non-executed provenance, pinned origin/receipt/corpus hashes and added ten negative origin tests (10/10) plus existing receipt tests (2/2). No raw 944-row source replay or live upstream audit is claimed. Native validator retains per-row/cap invariants; no confidence inflation or GPU work.\", \"producer_commit\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"producer_root\": \"/home/tumlinson/KernelWiki\", \"resources\": [], \"task_id\": \"KWV-02\"}",
+        "revision": 12,
+        "task_id": "KWV-02"
+      },
+      {
+        "claim_id": null,
+        "created_at": "2026-10-17T17:42:06Z",
+        "id": "c70246e6-4517-458a-a996-9e8b61573bde",
+        "kind": "complete",
+        "note": "Native Volta attribution/aliases, family diagnostics and deterministic multiple language guides implemented by Luna. Independent Luna verification: focused Volta 10/10, existing architecture/index 6/6, policy/query classes 32/32, diff whitespace pass. Necessary minimal scope correction updated existing vocabulary assertion for volta family. No GPU execution or source adoption.",
+        "payload_json": "{\"authority_commit\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"changed_owned_paths\": [\"data/aliases.yaml\", \"data/tags.yaml\", \"scripts/generate-indices.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"tests/test_volta_architecture.py\"], \"checkpoints\": [], \"completion_commit\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"completion_gates\": [{\"evidence_id\": \"445f9dda-060e-42ef-8fe0-44e9ca18bceb\", \"evidence_revision\": 7, \"id\": \"KWV-01-CPU\", \"input_fingerprint\": \"1d7a056ddf4a66a3347ee3b5d365ab42f0019e1b63032d8b8447a8a6cbd6c516\", \"status\": \"passed\", \"valid\": true, \"validation_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\"}], \"completion_revision\": 8, \"finalized_checkpoints\": [], \"gates\": [{\"id\": \"KWV-01-CPU\", \"input_fingerprint\": \"1d7a056ddf4a66a3347ee3b5d365ab42f0019e1b63032d8b8447a8a6cbd6c516\", \"last_run_at\": \"2026-10-17T17:42:06Z\", \"revision\": 7, \"status\": \"passed\", \"valid\": 1}], \"git_diffstat\": \".todo-orchestrator/state.snapshot.json | 1928 +++++++++++++++++++++++++++++++-\\n data/aliases.yaml                      |   13 +\\n data/tags.yaml                         |    6 +\\n scripts/generate-indices.py            |   29 +-\\n scripts/pr_policy.py                   |   46 +-\\n scripts/query.py                       |   53 +-\\n tests/test_pr_policy.py                |    2 +-\\n todo-status.md                         |   15 +-\\n todos.md                               |   15 +-\\n 9 files changed, 2058 insertions(+), 49 deletions(-)\", \"git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"integration_commit\": null, \"interfaces\": [], \"note\": \"Native Volta attribution/aliases, family diagnostics and deterministic multiple language guides implemented by Luna. Independent Luna verification: focused Volta 10/10, existing architecture/index 6/6, policy/query classes 32/32, diff whitespace pass. Necessary minimal scope correction updated existing vocabulary assertion for volta family. No GPU execution or source adoption.\", \"producer_commit\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"producer_root\": \"/home/tumlinson/KernelWiki\", \"resources\": [], \"task_id\": \"KWV-01\"}",
+        "revision": 8,
+        "task_id": "KWV-01"
+      }
+    ],
     "interface_consumers": [],
     "interfaces": [],
     "invariants": [],
     "live_recovery_audit": [],
     "migration_warnings": [],
     "named_locks": [],
-    "ownership_scopes": [],
+    "ownership_scopes": [
+      {
+        "mode": "exclusive",
+        "path": "planning/volta-bootstrap/implementation",
+        "task_id": "KWV-000"
+      },
+      {
+        "mode": "read",
+        "path": "planning/volta-bootstrap",
+        "task_id": "KWV-000"
+      },
+      {
+        "mode": "exclusive",
+        "path": "data/aliases.yaml",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "exclusive",
+        "path": "data/tags.yaml",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "exclusive",
+        "path": "scripts/generate-indices.py",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "exclusive",
+        "path": "scripts/pr_policy.py",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "exclusive",
+        "path": "scripts/query.py",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "exclusive",
+        "path": "tests/test_volta_architecture.py",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "forbidden",
+        "path": ".gitmodules",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-common",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "read",
+        "path": "data",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "read",
+        "path": "planning/volta-bootstrap",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "read",
+        "path": "references",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "read",
+        "path": "scripts",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "read",
+        "path": "sources",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "read",
+        "path": "tests",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "read",
+        "path": "wiki",
+        "task_id": "KWV-01"
+      },
+      {
+        "mode": "exclusive",
+        "path": "CLAUDE.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "README.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "SKILL.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "data/version-claims.yaml",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "index.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "references/primer.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "references/volta.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/blogs/volta-atlas-campaign.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/docs/volta-capability.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/docs/volta-cuda-12-9.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/docs/volta-fastattention.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/docs/volta-fttn.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/docs/volta-gdn.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/docs/volta-jia.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/docs/volta-ptx-8-8.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/docs/volta-sparkattention.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/docs/volta-toolkit-support.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/docs/volta-tuning-12-9.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/hardware/volta-feature-boundaries.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/hardware/volta-mma.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/hardware/volta-numerics.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/hardware/volta-operand-delivery.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/hardware/volta-participation.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/hardware/volta-resources.md",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "forbidden",
+        "path": ".gitmodules",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-common",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "read",
+        "path": "data",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "read",
+        "path": "planning/volta-bootstrap",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "read",
+        "path": "references",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "read",
+        "path": "scripts",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "read",
+        "path": "sources",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "read",
+        "path": "tests",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "read",
+        "path": "wiki",
+        "task_id": "KWV-02"
+      },
+      {
+        "mode": "exclusive",
+        "path": "artifacts/kernels/volta-common",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "exclusive",
+        "path": "benchmark_runs/volta-environment",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "exclusive",
+        "path": "scripts/volta_evidence_check.py",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "exclusive",
+        "path": "tests/test_volta_evidence_check.py",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/languages/volta-cuda-cpp.md",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/languages/volta-ptx.md",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "forbidden",
+        "path": ".gitmodules",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-common",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "read",
+        "path": "data",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "read",
+        "path": "planning/volta-bootstrap",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "read",
+        "path": "references",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "read",
+        "path": "scripts",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "read",
+        "path": "sources",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "read",
+        "path": "tests",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "read",
+        "path": "wiki",
+        "task_id": "KWV-03"
+      },
+      {
+        "mode": "exclusive",
+        "path": "artifacts/kernels/volta-gemm",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "exclusive",
+        "path": "benchmark_runs/volta-gemm",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/blogs/volta-gemm-measurements.md",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/kernels/volta-gemm.md",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/techniques/volta-fragment-layout.md",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/techniques/volta-software-staging.md",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "forbidden",
+        "path": ".gitmodules",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-common",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "read",
+        "path": "data",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "read",
+        "path": "planning/volta-bootstrap",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "read",
+        "path": "references",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "read",
+        "path": "scripts",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "read",
+        "path": "sources",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "read",
+        "path": "tests",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "read",
+        "path": "wiki",
+        "task_id": "KWV-04"
+      },
+      {
+        "mode": "exclusive",
+        "path": "artifacts/kernels/volta-rows",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "exclusive",
+        "path": "benchmark_runs/volta-rows",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/blogs/volta-rows-measurements.md",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/kernels/volta-row-kernels.md",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/patterns/volta-memory-and-residency.md",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/techniques/volta-memory-fusion.md",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "forbidden",
+        "path": ".gitmodules",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-common",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "read",
+        "path": "data",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "read",
+        "path": "planning/volta-bootstrap",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "read",
+        "path": "references",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "read",
+        "path": "scripts",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "read",
+        "path": "sources",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "read",
+        "path": "tests",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "read",
+        "path": "wiki",
+        "task_id": "KWV-05"
+      },
+      {
+        "mode": "exclusive",
+        "path": "artifacts/kernels/volta-attention",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "exclusive",
+        "path": "benchmark_runs/volta-attention",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/blogs/volta-attention-measurements.md",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/kernels/volta-attention.md",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/techniques/volta-attention-dataflow.md",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "forbidden",
+        "path": ".gitmodules",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-common",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-gemm",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-rows",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "read",
+        "path": "data",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "read",
+        "path": "planning/volta-bootstrap",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "read",
+        "path": "references",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "read",
+        "path": "scripts",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "read",
+        "path": "sources",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "read",
+        "path": "tests",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "read",
+        "path": "wiki",
+        "task_id": "KWV-06"
+      },
+      {
+        "mode": "exclusive",
+        "path": "artifacts/kernels/volta-grouped-lowbit",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "exclusive",
+        "path": "benchmark_runs/volta-grouped-lowbit",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/blogs/volta-grouped-lowbit-measurements.md",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/kernels/volta-grouped-gated.md",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/kernels/volta-w4a16.md",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/techniques/volta-grouping-and-decoding.md",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "forbidden",
+        "path": ".gitmodules",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-common",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-gemm",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "read",
+        "path": "data",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "read",
+        "path": "planning/volta-bootstrap",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "read",
+        "path": "references",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "read",
+        "path": "scripts",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "read",
+        "path": "sources",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "read",
+        "path": "tests",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "read",
+        "path": "wiki",
+        "task_id": "KWV-07"
+      },
+      {
+        "mode": "exclusive",
+        "path": "artifacts/kernels/volta-recurrence",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "exclusive",
+        "path": "benchmark_runs/volta-recurrence",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/blogs/volta-recurrence-measurements.md",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/kernels/volta-gated-delta.md",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki/techniques/volta-state-ownership.md",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "forbidden",
+        "path": ".gitmodules",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-common",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-gemm",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-rows",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "read",
+        "path": "data",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "read",
+        "path": "planning/volta-bootstrap",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "read",
+        "path": "references",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "read",
+        "path": "scripts",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "read",
+        "path": "sources",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "read",
+        "path": "tests",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "read",
+        "path": "wiki",
+        "task_id": "KWV-08"
+      },
+      {
+        "mode": "exclusive",
+        "path": "CLAUDE.md",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "exclusive",
+        "path": "README.md",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "exclusive",
+        "path": "SKILL.md",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "exclusive",
+        "path": "index.md",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "exclusive",
+        "path": "planning/volta-bootstrap/implementation",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "exclusive",
+        "path": "queries",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "exclusive",
+        "path": "references/primer.md",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "exclusive",
+        "path": "references/volta.md",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "exclusive",
+        "path": "sources/blogs",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "exclusive",
+        "path": "wiki",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "forbidden",
+        "path": ".gitmodules",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "read",
+        "path": "artifacts/kernels/volta-common",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "read",
+        "path": "data",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "read",
+        "path": "planning/volta-bootstrap",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "read",
+        "path": "references",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "read",
+        "path": "scripts",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "read",
+        "path": "sources",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "read",
+        "path": "tests",
+        "task_id": "KWV-09"
+      },
+      {
+        "mode": "read",
+        "path": "wiki",
+        "task_id": "KWV-09"
+      }
+    ],
     "project_amendments": [],
     "project_declarations": [],
     "project_fragment_invalidations": [],
@@ -65,15 +1657,811 @@
     "resource_instances": [],
     "resource_requests": [],
     "task_artifacts": [],
-    "task_completion_gates": [],
-    "task_dependencies": [],
+    "task_completion_gates": [
+      {
+        "completion_git_head": "d5d2637aa9651e5fad835ea5192c20a2393da8ab",
+        "completion_revision": 8,
+        "evidence_id": "445f9dda-060e-42ef-8fe0-44e9ca18bceb",
+        "evidence_revision": 7,
+        "gate_id": "KWV-01-CPU",
+        "input_fingerprint": "1d7a056ddf4a66a3347ee3b5d365ab42f0019e1b63032d8b8447a8a6cbd6c516",
+        "provenance_json": "{\"claim_id\": \"e1bb9f34-397e-4089-ae67-c6ae378384ba\", \"evidence_content_hash\": null, \"evidence_kind\": \"command\", \"evidence_metadata\": {\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_architecture.py\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"1d7a056ddf4a66a3347ee3b5d365ab42f0019e1b63032d8b8447a8a6cbd6c516\", \"inputs\": {\"command_contract\": {\"argv\": [\"python3\", \"-m\", \"unittest\", \"discover\", \"-s\", \"tests\", \"-p\", \"test_volta_architecture.py\"], \"cwd\": \".\", \"timeout\": 120}, \"diff_fingerprint\": \"4012a13c7609248bfe2af50f22fb023f23f0745f6847087b8875655b7c7d470f\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"scripts/generate-indices.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"tests/test_pr_policy.py\", \"tests/test_volta_architecture.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\"], \"files\": [{\"path\": \"data\", \"sha256\": \"missing\"}, {\"path\": \"planning/volta-bootstrap\", \"sha256\": \"missing\"}, {\"path\": \"scripts\", \"sha256\": \"missing\"}, {\"path\": \"tests/test_volta_architecture.py\", \"sha256\": \"7a1a8118c16e7959f2fd6e861e119034763b6057d49fc2d53e57bc4f0e9d08e0\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 0, \"started_revision\": 6}, \"evidence_path\": \"/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/445f9dda-060e-42ef-8fe0-44e9ca18bceb\", \"source\": \"completion_transaction\"}",
+        "status": "passed",
+        "task_id": "KWV-01",
+        "valid": 1,
+        "validation_git_head": "d5d2637aa9651e5fad835ea5192c20a2393da8ab"
+      },
+      {
+        "completion_git_head": "d5d2637aa9651e5fad835ea5192c20a2393da8ab",
+        "completion_revision": 12,
+        "evidence_id": "02b1627c-2f4d-4e15-9e66-115ab56f9c41",
+        "evidence_revision": 11,
+        "gate_id": "KWV-02-WIKI",
+        "input_fingerprint": "14bdf956a1db279d644d2db277c349b54d16a79b2fec203f65007068d6087b58",
+        "provenance_json": "{\"claim_id\": \"c976284a-03f1-481a-994a-3cdd0711c7a5\", \"evidence_content_hash\": null, \"evidence_kind\": \"command\", \"evidence_metadata\": {\"argv\": [\"python3\", \"scripts/validate.py\"], \"environment\": {}, \"expected_exit_code\": 0, \"input_fingerprint\": \"14bdf956a1db279d644d2db277c349b54d16a79b2fec203f65007068d6087b58\", \"inputs\": {\"command_contract\": {\"argv\": [\"python3\", \"scripts/validate.py\"], \"cwd\": \".\", \"timeout\": 120}, \"diff_fingerprint\": \"99ddc797f3a57724ffc6bf4aac6e296403199d6968f2738cce29142a2ad48f63\", \"dirty_paths\": [\".todo-orchestrator/state.snapshot.json\", \"CLAUDE.md\", \"README.md\", \"SKILL.md\", \"audit/policies/pr_policy-aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86.py.txt\", \"audit/pr-policy-origin.json\", \"data/aliases.yaml\", \"data/tags.yaml\", \"index.md\", \"planning/volta-bootstrap-readiness.md\", \"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\", \"planning/volta-bootstrap/MANIFEST.sha256\", \"planning/volta-bootstrap/START_HERE.md\", \"planning/volta-bootstrap/design/01-extension-design.md\", \"planning/volta-bootstrap/design/02-coverage-and-priorities.md\", \"planning/volta-bootstrap/design/03-validation-and-evidence.md\", \"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\", \"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\", \"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\", \"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\", \"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\", \"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\", \"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\", \"planning/volta-bootstrap/planning/INTAKE.md\", \"planning/volta-bootstrap/planning/WORK.md\", \"planning/volta-bootstrap/planning/kernelwiki.todo-plan.json\", \"planning/volta-bootstrap/scripts/check_design_equations.py\", \"planning/volta-bootstrap/scripts/check_package.py\", \"planning/volta-bootstrap/seed/ADOPTION.json\", \"planning/volta-bootstrap/seed/README.md\", \"planning/volta-bootstrap/seed/references/volta.md\", \"planning/volta-bootstrap/seed/sources/blogs/volta-atlas-campaign.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-capability.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-cuda-12-9.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fastattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-fttn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-gdn.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-jia.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-ptx-8-8.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-sparkattention.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-toolkit-support.md\", \"planning/volta-bootstrap/seed/sources/docs/volta-tuning-12-9.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-feature-boundaries.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-mma.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-numerics.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-operand-delivery.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-participation.md\", \"planning/volta-bootstrap/seed/wiki/hardware/volta-resources.md\", \"planning/volta-bootstrap/sources/README.md\", \"planning/volta-bootstrap/sources/external-sources.json\", \"planning/volta-bootstrap/sources/local-inputs.json\", \"planning/volta-bootstrap/sources/source-adjudications.md\", \"planning/volta-bootstrap/validation/STATUS.md\", \"planning/volta-bootstrap/validation/design-equations.json\", \"planning/volta-bootstrap/validation/package-check.json\", \"references/primer.md\", \"references/volta.md\", \"scripts/generate-indices.py\", \"scripts/pr_policy.py\", \"scripts/query.py\", \"scripts/validate.py\", \"sources/blogs/volta-atlas-campaign.md\", \"sources/docs/volta-capability.md\", \"sources/docs/volta-cuda-12-9.md\", \"sources/docs/volta-fastattention.md\", \"sources/docs/volta-fttn.md\", \"sources/docs/volta-gdn.md\", \"sources/docs/volta-jia.md\", \"sources/docs/volta-ptx-8-8.md\", \"sources/docs/volta-sparkattention.md\", \"sources/docs/volta-toolkit-support.md\", \"sources/docs/volta-tuning-12-9.md\", \"tests/test_pr_policy.py\", \"tests/test_pr_policy_origin.py\", \"tests/test_volta_architecture.py\", \"todo-status.md\", \"todos.md\", \"todos/kwv-000.md\", \"todos/kwv-01.md\", \"todos/kwv-02.md\", \"todos/kwv-03.md\", \"todos/kwv-04.md\", \"todos/kwv-05.md\", \"todos/kwv-06.md\", \"todos/kwv-07.md\", \"todos/kwv-08.md\", \"todos/kwv-09.md\", \"wiki/hardware/volta-feature-boundaries.md\", \"wiki/hardware/volta-mma.md\", \"wiki/hardware/volta-numerics.md\", \"wiki/hardware/volta-operand-delivery.md\", \"wiki/hardware/volta-participation.md\", \"wiki/hardware/volta-resources.md\"], \"files\": [{\"path\": \"data\", \"sha256\": \"missing\"}, {\"path\": \"planning/volta-bootstrap\", \"sha256\": \"missing\"}, {\"path\": \"references\", \"sha256\": \"missing\"}, {\"path\": \"scripts\", \"sha256\": \"missing\"}, {\"path\": \"sources\", \"sha256\": \"missing\"}, {\"path\": \"wiki\", \"sha256\": \"missing\"}], \"interfaces\": [], \"recorded_git_head\": \"d5d2637aa9651e5fad835ea5192c20a2393da8ab\", \"static_path\": null}, \"locks\": [], \"resources\": [], \"returncode\": 0, \"started_revision\": 10}, \"evidence_path\": \"/home/tumlinson/KernelWiki/.git/todo-orchestrator/c6ca94a4-a877-417d-876d-a8dc94221905/evidence/02b1627c-2f4d-4e15-9e66-115ab56f9c41\", \"source\": \"completion_transaction\"}",
+        "status": "passed",
+        "task_id": "KWV-02",
+        "valid": 1,
+        "validation_git_head": "d5d2637aa9651e5fad835ea5192c20a2393da8ab"
+      }
+    ],
+    "task_dependencies": [
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 1,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-01",
+        "task_id": "KWV-02",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 2,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-01",
+        "task_id": "KWV-03",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 3,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-02",
+        "task_id": "KWV-04",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 4,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-03",
+        "task_id": "KWV-04",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 5,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-02",
+        "task_id": "KWV-05",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 6,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-03",
+        "task_id": "KWV-05",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 7,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-04",
+        "task_id": "KWV-06",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 8,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-05",
+        "task_id": "KWV-06",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 9,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-04",
+        "task_id": "KWV-07",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 10,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-04",
+        "task_id": "KWV-08",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 11,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-05",
+        "task_id": "KWV-08",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 12,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-02",
+        "task_id": "KWV-09",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 13,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-03",
+        "task_id": "KWV-09",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 14,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-04",
+        "task_id": "KWV-09",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 15,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-05",
+        "task_id": "KWV-09",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 16,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-06",
+        "task_id": "KWV-09",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 17,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-07",
+        "task_id": "KWV-09",
+        "type": "task"
+      },
+      {
+        "barrier_id": null,
+        "checkpoint_id": null,
+        "condition_json": "{}",
+        "decision_id": null,
+        "id": 18,
+        "interface_id": null,
+        "prerequisite_task_id": "KWV-08",
+        "task_id": "KWV-09",
+        "type": "task"
+      }
+    ],
     "task_invariants": [],
     "task_locks": [],
-    "tasks": [],
-    "workflow_context_fragments": [],
+    "tasks": [
+      {
+        "attention_reason": null,
+        "completion_commit": null,
+        "completion_git_head": null,
+        "completion_revision": null,
+        "created_at": "2026-10-17T17:36:20Z",
+        "id": "KWV-000",
+        "kind": "epic",
+        "legacy_owner": null,
+        "legacy_payload_json": "{}",
+        "next_action": "Close only after the nine task-owned outcomes and publication handoff are complete. Do not expand scope to create work.",
+        "notes": "",
+        "objective": "Aggregate the nine bounded outcomes; not a coordinator claim or prerequisite of children.",
+        "parallel_policy": "serial",
+        "parent_id": null,
+        "priority": 0,
+        "result": null,
+        "result_policy_json": "{\"allowed_dispositions\": [\"validated\"]}",
+        "revision": 2,
+        "status": "planned",
+        "tags_json": "[]",
+        "title": "KernelWiki: first-class performance-useful Volta support",
+        "updated_at": "2026-10-17T17:36:20Z",
+        "version": 1
+      },
+      {
+        "attention_reason": null,
+        "completion_commit": "d5d2637aa9651e5fad835ea5192c20a2393da8ab",
+        "completion_git_head": "d5d2637aa9651e5fad835ea5192c20a2393da8ab",
+        "completion_revision": 8,
+        "created_at": "2026-10-17T17:36:20Z",
+        "id": "KWV-01",
+        "kind": "task",
+        "legacy_owner": null,
+        "legacy_payload_json": "{}",
+        "next_action": "Read KWV-01 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.",
+        "notes": "",
+        "objective": "Make SM70 exact/family/product attribution work natively with a small patch; fix diagnostics and multiple-language-guide indexing without rewriting the engine.",
+        "parallel_policy": "serial",
+        "parent_id": "KWV-000",
+        "priority": 100,
+        "result": "validated",
+        "result_policy_json": "{\"allowed_dispositions\": [\"validated\", \"no_change_required\"]}",
+        "revision": 8,
+        "status": "done",
+        "tags_json": "[]",
+        "title": "Register Volta in the existing architecture and navigation machinery",
+        "updated_at": "2026-10-17T17:42:06Z",
+        "version": 3
+      },
+      {
+        "attention_reason": null,
+        "completion_commit": "d5d2637aa9651e5fad835ea5192c20a2393da8ab",
+        "completion_git_head": "d5d2637aa9651e5fad835ea5192c20a2393da8ab",
+        "completion_revision": 12,
+        "created_at": "2026-10-17T17:36:20Z",
+        "id": "KWV-02",
+        "kind": "task",
+        "legacy_owner": null,
+        "legacy_payload_json": "{}",
+        "next_action": "Read KWV-02 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.",
+        "notes": "",
+        "objective": "Use the prepared drafts and source adjudications to publish a correct initial Volta knowledge layer, preserving the continuing CUDA skill and atlas.",
+        "parallel_policy": "serial",
+        "parent_id": "KWV-000",
+        "priority": 95,
+        "result": "validated",
+        "result_policy_json": "{\"allowed_dispositions\": [\"validated\", \"no_change_required\"]}",
+        "revision": 12,
+        "status": "done",
+        "tags_json": "[]",
+        "title": "Adopt grounded Volta sources, hardware material and routing",
+        "updated_at": "2026-10-17T17:57:50Z",
+        "version": 3
+      },
+      {
+        "attention_reason": null,
+        "completion_commit": null,
+        "completion_git_head": null,
+        "completion_revision": null,
+        "created_at": "2026-10-17T17:36:20Z",
+        "id": "KWV-03",
+        "kind": "task",
+        "legacy_owner": null,
+        "legacy_payload_json": "{}",
+        "next_action": "Read KWV-03 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.",
+        "notes": "",
+        "objective": "Use the CUDA controller and user-supplied Volta NCU skill to establish a small working compilation/correctness/timing/profile path. Do not build another toolkit.",
+        "parallel_policy": "serial",
+        "parent_id": "KWV-000",
+        "priority": 95,
+        "result": null,
+        "result_policy_json": "{\"allowed_dispositions\": [\"validated\", \"no_change_required\"]}",
+        "revision": 13,
+        "status": "in_progress",
+        "tags_json": "[]",
+        "title": "Qualify the existing native measurement path and reusable receipts",
+        "updated_at": "2026-10-17T17:57:53Z",
+        "version": 2
+      },
+      {
+        "attention_reason": null,
+        "completion_commit": null,
+        "completion_git_head": null,
+        "completion_revision": null,
+        "created_at": "2026-10-17T17:36:20Z",
+        "id": "KWV-04",
+        "kind": "task",
+        "legacy_owner": null,
+        "legacy_payload_json": "{}",
+        "next_action": "Read KWV-04 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.",
+        "notes": "",
+        "objective": "Deliver a correct useful SM70 GEMM baseline and test the actual costs of staging and retaining fragment layouts under a fixed numerical contract.",
+        "parallel_policy": "serial",
+        "parent_id": "KWV-000",
+        "priority": 85,
+        "result": null,
+        "result_policy_json": "{\"allowed_dispositions\": [\"validated\", \"evaluated_not_promoted\"]}",
+        "revision": 2,
+        "status": "planned",
+        "tags_json": "[]",
+        "title": "Build and investigate native GEMM, fragment ownership and software staging",
+        "updated_at": "2026-10-17T17:36:20Z",
+        "version": 1
+      },
+      {
+        "attention_reason": null,
+        "completion_commit": null,
+        "completion_git_head": null,
+        "completion_revision": null,
+        "created_at": "2026-10-17T17:36:20Z",
+        "id": "KWV-05",
+        "kind": "task",
+        "legacy_owner": null,
+        "legacy_payload_json": "{}",
+        "next_action": "Read KWV-05 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.",
+        "notes": "",
+        "objective": "Supply stable softmax and one normalization operator; test useful traffic/request and residency tradeoffs without building a reduction library.",
+        "parallel_policy": "serial",
+        "parent_id": "KWV-000",
+        "priority": 85,
+        "result": null,
+        "result_policy_json": "{\"allowed_dispositions\": [\"validated\", \"evaluated_not_promoted\"]}",
+        "revision": 2,
+        "status": "planned",
+        "tags_json": "[]",
+        "title": "Build row kernels and locate memory/fusion crossovers",
+        "updated_at": "2026-10-17T17:36:20Z",
+        "version": 1
+      },
+      {
+        "attention_reason": null,
+        "completion_commit": null,
+        "completion_git_head": null,
+        "completion_revision": null,
+        "created_at": "2026-10-17T17:36:20Z",
+        "id": "KWV-06",
+        "kind": "task",
+        "legacy_owner": null,
+        "legacy_payload_json": "{}",
+        "next_action": "Read KWV-06 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.",
+        "notes": "",
+        "objective": "Reuse matrix and row work to produce correct forward attention, then investigate fragment exchange, useful query grouping and bounded KV partitioning.",
+        "parallel_policy": "serial",
+        "parent_id": "KWV-000",
+        "priority": 85,
+        "result": null,
+        "result_policy_json": "{\"allowed_dispositions\": [\"validated\", \"evaluated_not_promoted\"]}",
+        "revision": 2,
+        "status": "planned",
+        "tags_json": "[]",
+        "title": "Implement Volta attention dataflow for prefill and decode",
+        "updated_at": "2026-10-17T17:36:20Z",
+        "version": 1
+      },
+      {
+        "attention_reason": null,
+        "completion_commit": null,
+        "completion_git_head": null,
+        "completion_revision": null,
+        "created_at": "2026-10-17T17:36:20Z",
+        "id": "KWV-07",
+        "kind": "task",
+        "legacy_owner": null,
+        "legacy_payload_json": "{}",
+        "next_action": "Read KWV-07 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.",
+        "notes": "",
+        "objective": "Reuse the native matrix substrate to test grouped/gated fusion and one W4A16 decoding contract; avoid a MoE runtime or format-compatibility project.",
+        "parallel_policy": "serial",
+        "parent_id": "KWV-000",
+        "priority": 85,
+        "result": null,
+        "result_policy_json": "{\"allowed_dispositions\": [\"validated\", \"evaluated_not_promoted\"]}",
+        "revision": 2,
+        "status": "planned",
+        "tags_json": "[]",
+        "title": "Implement grouped/gated math and one exact low-bit storage path",
+        "updated_at": "2026-10-17T17:36:20Z",
+        "version": 1
+      },
+      {
+        "attention_reason": null,
+        "completion_commit": null,
+        "completion_git_head": null,
+        "completion_revision": null,
+        "created_at": "2026-10-17T17:36:20Z",
+        "id": "KWV-08",
+        "kind": "task",
+        "legacy_owner": null,
+        "legacy_payload_json": "{}",
+        "next_action": "Read KWV-08 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.",
+        "notes": "",
+        "objective": "Publish the gated-delta recurrence with explicit state orientation/history and assess state retention or a supported small chunk without inventing a general dynamics framework.",
+        "parallel_policy": "serial",
+        "parent_id": "KWV-000",
+        "priority": 85,
+        "result": null,
+        "result_policy_json": "{\"allowed_dispositions\": [\"validated\", \"evaluated_not_promoted\"]}",
+        "revision": 2,
+        "status": "planned",
+        "tags_json": "[]",
+        "title": "Implement a correct recurrent state kernel and test justified chunking",
+        "updated_at": "2026-10-17T17:36:20Z",
+        "version": 1
+      },
+      {
+        "attention_reason": null,
+        "completion_commit": null,
+        "completion_git_head": null,
+        "completion_revision": null,
+        "created_at": "2026-10-17T17:36:20Z",
+        "id": "KWV-09",
+        "kind": "task",
+        "legacy_owner": null,
+        "legacy_payload_json": "{}",
+        "next_action": "Read KWV-09 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.",
+        "notes": "",
+        "objective": "Close the source/artifact/query links, run the compact regressions and native validation, and supply a tested dependency commit with explicit performance limits.",
+        "parallel_policy": "serial",
+        "parent_id": "KWV-000",
+        "priority": 70,
+        "result": null,
+        "result_policy_json": "{\"allowed_dispositions\": [\"validated\", \"no_change_required\"]}",
+        "revision": 2,
+        "status": "planned",
+        "tags_json": "[]",
+        "title": "Publish the coherent corpus and produce the KDA handoff",
+        "updated_at": "2026-10-17T17:36:20Z",
+        "version": 1
+      }
+    ],
+    "workflow_context_fragments": [
+      {
+        "content_hash": "f230bbd5e7c676f956f5dc2da312a5b3d29e79f8c3ac40708503bc8618c98c82",
+        "content_json": "{\"authority\":\"server_enforced_role_and_task_scope\",\"interfaces\":[],\"ordered_tasks\":[\"KWV-01\",\"KWV-02\",\"KWV-03\",\"KWV-04\",\"KWV-05\",\"KWV-06\",\"KWV-07\",\"KWV-08\",\"KWV-09\",\"KWV-000\"],\"rendezvous\":[],\"role\":\"implementer\",\"workspace_mode\":\"exclusive\"}",
+        "created_at": "2026-10-17T17:36:20Z",
+        "creation_revision": 2,
+        "id": "KWV-RUN-1:lane_brief:KWV-L-EXEC:-:1",
+        "invalidated_at": null,
+        "invalidation_revision": null,
+        "kind": "lane_brief",
+        "lane_id": "KWV-L-EXEC",
+        "owner_scope_json": "{\"lane_id\":\"KWV-L-EXEC\",\"run_id\":\"KWV-RUN-1\"}",
+        "run_id": "KWV-RUN-1",
+        "series_key": "",
+        "superseded_by": null,
+        "task_id": null,
+        "version": 1
+      },
+      {
+        "content_hash": "298bea8c25991fea0dcceb6c6b409e89410fc3dad53cfc1fd6492a715f9650b9",
+        "content_json": "{\"boundaries\":[\"Keep the existing corpus/tools; small shared edits and granular CPU tests.\",\"Preserve the CUDA skill and Circuit-Bending Atlas; exact-path reads for both.\",\"User supplies ~/ncu-report-skill with Volta support; no port task here.\",\"Use existing CUDA controller; no privileged changes, edited cubins or persistent background work.\",\"Do not change the operation, precision, masks or history to exploit a benchmark.\",\"Measure selected meaningful candidates; reject honestly and stop when the engineering question is answered.\",\"No live Todo reset or unrelated workspace mutation.\"],\"motivation\":\"Capture V100 performance through better dataflow and measured implementation choices, without a permanently divergent framework.\",\"objective\":\"Extend the native KernelWiki with evidence-backed SM70 knowledge and useful representative kernels.\",\"references\":[\"planning/volta-bootstrap/START_HERE.md\",\"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\",\"planning/volta-bootstrap/design/01-extension-design.md\",\"planning/volta-bootstrap/planning/WORK.md\"]}",
+        "created_at": "2026-10-17T17:36:20Z",
+        "creation_revision": 2,
+        "id": "KWV-RUN-1:run_charter:-:-:1",
+        "invalidated_at": null,
+        "invalidation_revision": null,
+        "kind": "run_charter",
+        "lane_id": null,
+        "owner_scope_json": "{\"run_id\":\"KWV-RUN-1\"}",
+        "run_id": "KWV-RUN-1",
+        "series_key": "",
+        "superseded_by": null,
+        "task_id": null,
+        "version": 1
+      },
+      {
+        "content_hash": "273844bc827bf805db96d62c2b4d70cfdc89e92c39c9018f64fc0f26d5bc17c5",
+        "content_json": "{\"completion_contract\":null,\"forbidden_mutations\":[],\"gates\":[\"KWV-000-KWV-01-DONE\",\"KWV-000-KWV-02-DONE\",\"KWV-000-KWV-03-DONE\",\"KWV-000-KWV-04-DONE\",\"KWV-000-KWV-05-DONE\",\"KWV-000-KWV-06-DONE\",\"KWV-000-KWV-07-DONE\",\"KWV-000-KWV-08-DONE\",\"KWV-000-KWV-09-DONE\"],\"next_action\":\"Close only after the nine task-owned outcomes and publication handoff are complete. Do not expand scope to create work.\",\"objective\":\"Aggregate the nine bounded outcomes; not a coordinator claim or prerequisite of children.\",\"scope\":{\"exclusive_paths\":[\"planning/volta-bootstrap/implementation\"],\"read_paths\":[\"planning/volta-bootstrap\"]},\"tests\":[\"KWV-000-KWV-01-DONE\",\"KWV-000-KWV-02-DONE\",\"KWV-000-KWV-03-DONE\",\"KWV-000-KWV-04-DONE\",\"KWV-000-KWV-05-DONE\",\"KWV-000-KWV-06-DONE\",\"KWV-000-KWV-07-DONE\",\"KWV-000-KWV-08-DONE\",\"KWV-000-KWV-09-DONE\"]}",
+        "created_at": "2026-10-17T17:36:20Z",
+        "creation_revision": 2,
+        "id": "KWV-RUN-1:task_brief:KWV-L-EXEC:KWV-000:1",
+        "invalidated_at": null,
+        "invalidation_revision": null,
+        "kind": "task_brief",
+        "lane_id": "KWV-L-EXEC",
+        "owner_scope_json": "{\"lane_id\":\"KWV-L-EXEC\",\"run_id\":\"KWV-RUN-1\",\"task_id\":\"KWV-000\"}",
+        "run_id": "KWV-RUN-1",
+        "series_key": "",
+        "superseded_by": null,
+        "task_id": "KWV-000",
+        "version": 1
+      },
+      {
+        "content_hash": "7ccf696762289a8eb82e6986f03cc2f15170217824e24d17e512475902d6d76f",
+        "content_json": "{\"completion_contract\":{\"evidence_rule\":\"A receipt check is not execution. Bind actual compiler/correctness/measurement records to the implementation; retain a correct baseline even when optimization candidates lose.\",\"required_outcomes\":[\"V100/sm70/sm_70 and family filters obey exact/family/unknown semantics.\",\"SM72 is only a neighboring attribution boundary; no false sm70a/sm700 acceptance.\",\"Legacy controls work; language index retains both guides.\",\"A focused CPU test passes; no architecture loader, ranking rewrite or full-corpus refresh is introduced.\"]},\"forbidden_mutations\":[\".gitmodules\"],\"gates\":[\"KWV-01-CPU\"],\"next_action\":\"Read KWV-01 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.\",\"objective\":\"Make SM70 exact/family/product attribution work natively with a small patch; fix diagnostics and multiple-language-guide indexing without rewriting the engine.\",\"references\":[\"planning/volta-bootstrap/design/01-extension-design.md\",\"planning/volta-bootstrap/design/03-validation-and-evidence.md\",\"planning/volta-bootstrap/planning/WORK.md\"],\"scope\":{\"exclusive_paths\":[\"scripts/pr_policy.py\",\"scripts/query.py\",\"scripts/generate-indices.py\",\"data/tags.yaml\",\"data/aliases.yaml\",\"tests/test_volta_architecture.py\"],\"forbidden_paths\":[\".gitmodules\"],\"read_paths\":[\"planning/volta-bootstrap\",\"scripts\",\"data\",\"sources\",\"wiki\",\"references\",\"artifacts/kernels/volta-common\",\"tests\"]},\"tests\":[\"KWV-01-CPU\"]}",
+        "created_at": "2026-10-17T17:36:20Z",
+        "creation_revision": 2,
+        "id": "KWV-RUN-1:task_brief:KWV-L-EXEC:KWV-01:1",
+        "invalidated_at": null,
+        "invalidation_revision": null,
+        "kind": "task_brief",
+        "lane_id": "KWV-L-EXEC",
+        "owner_scope_json": "{\"lane_id\":\"KWV-L-EXEC\",\"run_id\":\"KWV-RUN-1\",\"task_id\":\"KWV-01\"}",
+        "run_id": "KWV-RUN-1",
+        "series_key": "",
+        "superseded_by": null,
+        "task_id": "KWV-01",
+        "version": 1
+      },
+      {
+        "content_hash": "724f7638c36e05dcad05438c581117ca51f93b40adc29b5cb74bc3b85915809b",
+        "content_json": "{\"completion_contract\":{\"evidence_rule\":\"A receipt check is not execution. Bind actual compiler/correctness/measurement records to the implementation; retain a correct baseline even when optimization candidates lose.\",\"required_outcomes\":[\"Prepared source/hardware pages are adopted or mapped to exact equivalent existing records, with native IDs and valid source links.\",\"Confidence stays source-reported/concept unless stronger evidence actually exists.\",\"SKILL/primer/index route Volta independently without retagging modern-only content.\",\"No source corpus replacement, schema-wide migration or fabricated historical PRs.\"]},\"forbidden_mutations\":[\".gitmodules\"],\"gates\":[\"KWV-02-WIKI\"],\"next_action\":\"Read KWV-02 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.\",\"objective\":\"Use the prepared drafts and source adjudications to publish a correct initial Volta knowledge layer, preserving the continuing CUDA skill and atlas.\",\"references\":[\"planning/volta-bootstrap/seed/README.md\",\"planning/volta-bootstrap/sources/README.md\",\"planning/volta-bootstrap/sources/source-adjudications.md\",\"planning/volta-bootstrap/design/02-coverage-and-priorities.md\",\"planning/volta-bootstrap/planning/WORK.md\"],\"scope\":{\"exclusive_paths\":[\"references/volta.md\",\"wiki/hardware/volta-feature-boundaries.md\",\"wiki/hardware/volta-resources.md\",\"wiki/hardware/volta-participation.md\",\"wiki/hardware/volta-operand-delivery.md\",\"wiki/hardware/volta-mma.md\",\"wiki/hardware/volta-numerics.md\",\"sources/blogs/volta-atlas-campaign.md\",\"sources/docs/volta-cuda-12-9.md\",\"sources/docs/volta-sparkattention.md\",\"sources/docs/volta-fastattention.md\",\"sources/docs/volta-gdn.md\",\"sources/docs/volta-ptx-8-8.md\",\"sources/docs/volta-toolkit-support.md\",\"sources/docs/volta-capability.md\",\"sources/docs/volta-jia.md\",\"sources/docs/volta-tuning-12-9.md\",\"sources/docs/volta-fttn.md\",\"SKILL.md\",\"README.md\",\"CLAUDE.md\",\"index.md\",\"references/primer.md\",\"data/version-claims.yaml\"],\"forbidden_paths\":[\".gitmodules\"],\"read_paths\":[\"planning/volta-bootstrap\",\"scripts\",\"data\",\"sources\",\"wiki\",\"references\",\"artifacts/kernels/volta-common\",\"tests\"]},\"tests\":[\"KWV-02-WIKI\"]}",
+        "created_at": "2026-10-17T17:36:20Z",
+        "creation_revision": 2,
+        "id": "KWV-RUN-1:task_brief:KWV-L-EXEC:KWV-02:1",
+        "invalidated_at": null,
+        "invalidation_revision": null,
+        "kind": "task_brief",
+        "lane_id": "KWV-L-EXEC",
+        "owner_scope_json": "{\"lane_id\":\"KWV-L-EXEC\",\"run_id\":\"KWV-RUN-1\",\"task_id\":\"KWV-02\"}",
+        "run_id": "KWV-RUN-1",
+        "series_key": "",
+        "superseded_by": null,
+        "task_id": "KWV-02",
+        "version": 1
+      },
+      {
+        "content_hash": "ebd2eb05c8ee14800fdff43068f4d5f772b2d2af3f6cee7b1098a59247a6be4b",
+        "content_json": "{\"completion_contract\":{\"evidence_rule\":\"A receipt check is not execution. Bind actual compiler/correctness/measurement records to the implementation; retain a correct baseline even when optimization candidates lose.\",\"required_outcomes\":[\"Actual GPU UUID/SM70, compiler/sanitizer/library/NCU identities and user port commit are recorded.\",\"One native correctness and sanitizer smoke plus normal timing and readable selected profile have real receipts.\",\"Thin receipt helper rejects missing/failed/unbound evidence and does not treat not_run as evaluated_not_promoted.\",\"Language guides include genuine tested examples; preserve CuTe C++/Python and Triton lowering distinctions.\",\"No privileged changes or persistent campaigns; no duplicated profiling engine.\"]},\"forbidden_mutations\":[\".gitmodules\"],\"gates\":[\"KWV-03-RECEIPT-TEST\",\"KWV-03-EVIDENCE\"],\"next_action\":\"Read KWV-03 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.\",\"objective\":\"Use the CUDA controller and user-supplied Volta NCU skill to establish a small working compilation/correctness/timing/profile path. Do not build another toolkit.\",\"references\":[\"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\",\"planning/volta-bootstrap/design/03-validation-and-evidence.md\",\"planning/volta-bootstrap/planning/WORK.md\"],\"scope\":{\"exclusive_paths\":[\"artifacts/kernels/volta-common\",\"scripts/volta_evidence_check.py\",\"tests/test_volta_evidence_check.py\",\"wiki/languages/volta-cuda-cpp.md\",\"wiki/languages/volta-ptx.md\",\"benchmark_runs/volta-environment\"],\"forbidden_paths\":[\".gitmodules\"],\"read_paths\":[\"planning/volta-bootstrap\",\"scripts\",\"data\",\"sources\",\"wiki\",\"references\",\"artifacts/kernels/volta-common\",\"tests\"]},\"tests\":[\"KWV-03-RECEIPT-TEST\",\"KWV-03-EVIDENCE\"]}",
+        "created_at": "2026-10-17T17:36:20Z",
+        "creation_revision": 2,
+        "id": "KWV-RUN-1:task_brief:KWV-L-EXEC:KWV-03:1",
+        "invalidated_at": null,
+        "invalidation_revision": null,
+        "kind": "task_brief",
+        "lane_id": "KWV-L-EXEC",
+        "owner_scope_json": "{\"lane_id\":\"KWV-L-EXEC\",\"run_id\":\"KWV-RUN-1\",\"task_id\":\"KWV-03\"}",
+        "run_id": "KWV-RUN-1",
+        "series_key": "",
+        "superseded_by": null,
+        "task_id": "KWV-03",
+        "version": 1
+      },
+      {
+        "content_hash": "b8ffa23eb2c83af56dd29ba3a52dc189b0cfb48345b065b9a04562241819968f",
+        "content_json": "{\"completion_contract\":{\"evidence_rule\":\"A receipt check is not execution. Bind actual compiler/correctness/measurement records to the implementation; retain a correct baseline even when optimization candidates lose.\",\"required_outcomes\":[\"Independent small oracle, library baseline and real native compilation/correctness records exist.\",\"Reuse E09 exact mapping; new forms receive only the additional tests they require.\",\"Compare meaningful stage/layout alternatives with useful versus executed work and full operator costs.\",\"Record selected profile, retained implementation, losing shapes and precision limitations; no optimality or bank-cause overclaim.\"]},\"forbidden_mutations\":[\".gitmodules\"],\"gates\":[\"KWV-04-EVIDENCE\"],\"next_action\":\"Read KWV-04 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.\",\"objective\":\"Deliver a correct useful SM70 GEMM baseline and test the actual costs of staging and retaining fragment layouts under a fixed numerical contract.\",\"references\":[\"planning/volta-bootstrap/materials/M01-mma-layout-and-gemm.md\",\"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\",\"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\",\"planning/volta-bootstrap/design/03-validation-and-evidence.md\",\"planning/volta-bootstrap/planning/WORK.md\"],\"scope\":{\"exclusive_paths\":[\"artifacts/kernels/volta-gemm\",\"benchmark_runs/volta-gemm\",\"sources/blogs/volta-gemm-measurements.md\",\"wiki/kernels/volta-gemm.md\",\"wiki/techniques/volta-fragment-layout.md\",\"wiki/techniques/volta-software-staging.md\"],\"forbidden_paths\":[\".gitmodules\"],\"read_paths\":[\"planning/volta-bootstrap\",\"scripts\",\"data\",\"sources\",\"wiki\",\"references\",\"artifacts/kernels/volta-common\",\"tests\"]},\"tests\":[\"KWV-04-EVIDENCE\"]}",
+        "created_at": "2026-10-17T17:36:20Z",
+        "creation_revision": 2,
+        "id": "KWV-RUN-1:task_brief:KWV-L-EXEC:KWV-04:1",
+        "invalidated_at": null,
+        "invalidation_revision": null,
+        "kind": "task_brief",
+        "lane_id": "KWV-L-EXEC",
+        "owner_scope_json": "{\"lane_id\":\"KWV-L-EXEC\",\"run_id\":\"KWV-RUN-1\",\"task_id\":\"KWV-04\"}",
+        "run_id": "KWV-RUN-1",
+        "series_key": "",
+        "superseded_by": null,
+        "task_id": "KWV-04",
+        "version": 1
+      },
+      {
+        "content_hash": "0661b5edf6c05fe4d2b398f02dfff7dc45361a5b32f7f9ad9b59e5e170bd54ef",
+        "content_json": "{\"completion_contract\":{\"evidence_rule\":\"A receipt check is not execution. Bind actual compiler/correctness/measurement records to the implementation; retain a correct baseline even when optimization candidates lose.\",\"required_outcomes\":[\"Stable, independently checked softmax and normalization paths support documented tail/mask/stride contracts.\",\"Compare selected vector/warp/CTA/fusion alternatives only where meaningful.\",\"Actual traffic, request/instruction costs and register/shared effects are distinguished when evidence permits.\",\"Published boundaries include preprocessing, full producer/consumer costs and an honest retained baseline.\"]},\"forbidden_mutations\":[\".gitmodules\"],\"gates\":[\"KWV-05-EVIDENCE\"],\"next_action\":\"Read KWV-05 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.\",\"objective\":\"Supply stable softmax and one normalization operator; test useful traffic/request and residency tradeoffs without building a reduction library.\",\"references\":[\"planning/volta-bootstrap/materials/M02-memory-row-kernels-and-fusion.md\",\"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\",\"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\",\"planning/volta-bootstrap/design/03-validation-and-evidence.md\",\"planning/volta-bootstrap/planning/WORK.md\"],\"scope\":{\"exclusive_paths\":[\"artifacts/kernels/volta-rows\",\"benchmark_runs/volta-rows\",\"sources/blogs/volta-rows-measurements.md\",\"wiki/kernels/volta-row-kernels.md\",\"wiki/techniques/volta-memory-fusion.md\",\"wiki/patterns/volta-memory-and-residency.md\"],\"forbidden_paths\":[\".gitmodules\"],\"read_paths\":[\"planning/volta-bootstrap\",\"scripts\",\"data\",\"sources\",\"wiki\",\"references\",\"artifacts/kernels/volta-common\",\"tests\"]},\"tests\":[\"KWV-05-EVIDENCE\"]}",
+        "created_at": "2026-10-17T17:36:20Z",
+        "creation_revision": 2,
+        "id": "KWV-RUN-1:task_brief:KWV-L-EXEC:KWV-05:1",
+        "invalidated_at": null,
+        "invalidation_revision": null,
+        "kind": "task_brief",
+        "lane_id": "KWV-L-EXEC",
+        "owner_scope_json": "{\"lane_id\":\"KWV-L-EXEC\",\"run_id\":\"KWV-RUN-1\",\"task_id\":\"KWV-05\"}",
+        "run_id": "KWV-RUN-1",
+        "series_key": "",
+        "superseded_by": null,
+        "task_id": "KWV-05",
+        "version": 1
+      },
+      {
+        "content_hash": "ac87832ae339c7ec123c2fe0e9b3b9be229b40181b464a8144ac28657dd4c249",
+        "content_json": "{\"completion_contract\":{\"evidence_rule\":\"A receipt check is not execution. Bind actual compiler/correctness/measurement records to the implementation; retain a correct baseline even when optimization candidates lose.\",\"required_outcomes\":[\"Correct scaled-dot operator, masks, independent per-head normalization, FP32 running state and any probability rounding are explicit.\",\"Prefill and low-query decode have real checked implementations and matched benchmarks.\",\"Compare a meaningful ownership/GQA/split-KV candidate selected by bottleneck evidence.\",\"One supplied selected-block correctness case demonstrates the sparse applicability boundary without a serving planner.\",\"No history/mask omission, precision shortcut or borrowed paper speedup is presented as a valid optimization.\"]},\"forbidden_mutations\":[\".gitmodules\"],\"gates\":[\"KWV-06-EVIDENCE\"],\"next_action\":\"Read KWV-06 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.\",\"objective\":\"Reuse matrix and row work to produce correct forward attention, then investigate fragment exchange, useful query grouping and bounded KV partitioning.\",\"references\":[\"planning/volta-bootstrap/materials/M03-attention-prefill-decode-and-sparsity.md\",\"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\",\"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\",\"planning/volta-bootstrap/design/03-validation-and-evidence.md\",\"planning/volta-bootstrap/planning/WORK.md\"],\"scope\":{\"exclusive_paths\":[\"artifacts/kernels/volta-attention\",\"benchmark_runs/volta-attention\",\"sources/blogs/volta-attention-measurements.md\",\"wiki/kernels/volta-attention.md\",\"wiki/techniques/volta-attention-dataflow.md\"],\"forbidden_paths\":[\".gitmodules\"],\"read_paths\":[\"planning/volta-bootstrap\",\"scripts\",\"data\",\"sources\",\"wiki\",\"references\",\"artifacts/kernels/volta-common\",\"tests\",\"artifacts/kernels/volta-gemm\",\"artifacts/kernels/volta-rows\"]},\"tests\":[\"KWV-06-EVIDENCE\"]}",
+        "created_at": "2026-10-17T17:36:20Z",
+        "creation_revision": 2,
+        "id": "KWV-RUN-1:task_brief:KWV-L-EXEC:KWV-06:1",
+        "invalidated_at": null,
+        "invalidation_revision": null,
+        "kind": "task_brief",
+        "lane_id": "KWV-L-EXEC",
+        "owner_scope_json": "{\"lane_id\":\"KWV-L-EXEC\",\"run_id\":\"KWV-RUN-1\",\"task_id\":\"KWV-06\"}",
+        "run_id": "KWV-RUN-1",
+        "series_key": "",
+        "superseded_by": null,
+        "task_id": "KWV-06",
+        "version": 1
+      },
+      {
+        "content_hash": "f23d1ae54bbfff3e8b74cb0996470dbc9474086fec21016074f7f451b217444a",
+        "content_json": "{\"completion_contract\":{\"evidence_rule\":\"A receipt check is not execution. Bind actual compiler/correctness/measurement records to the implementation; retain a correct baseline even when optimization candidates lose.\",\"required_outcomes\":[\"Grouped/gated outputs preserve group IDs, duplicates, empty groups and numerical policy.\",\"One explicitly defined low-bit format has an independent decoder/oracle and all-value/tail/scale tests.\",\"Compare fused versus materialized decoding and small versus moderate M under the same represented weights.\",\"Include preparation, reuse and scheduling costs; test persistence only for a real tail/skew limiter.\",\"Native FP8/NVFP4/INT4 tensor support and full checkpoint compatibility are not claimed.\"]},\"forbidden_mutations\":[\".gitmodules\"],\"gates\":[\"KWV-07-EVIDENCE\"],\"next_action\":\"Read KWV-07 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.\",\"objective\":\"Reuse the native matrix substrate to test grouped/gated fusion and one W4A16 decoding contract; avoid a MoE runtime or format-compatibility project.\",\"references\":[\"planning/volta-bootstrap/materials/M04-grouped-gated-and-lowbit.md\",\"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\",\"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\",\"planning/volta-bootstrap/design/03-validation-and-evidence.md\",\"planning/volta-bootstrap/planning/WORK.md\"],\"scope\":{\"exclusive_paths\":[\"artifacts/kernels/volta-grouped-lowbit\",\"benchmark_runs/volta-grouped-lowbit\",\"sources/blogs/volta-grouped-lowbit-measurements.md\",\"wiki/kernels/volta-grouped-gated.md\",\"wiki/kernels/volta-w4a16.md\",\"wiki/techniques/volta-grouping-and-decoding.md\"],\"forbidden_paths\":[\".gitmodules\"],\"read_paths\":[\"planning/volta-bootstrap\",\"scripts\",\"data\",\"sources\",\"wiki\",\"references\",\"artifacts/kernels/volta-common\",\"tests\",\"artifacts/kernels/volta-gemm\"]},\"tests\":[\"KWV-07-EVIDENCE\"]}",
+        "created_at": "2026-10-17T17:36:20Z",
+        "creation_revision": 2,
+        "id": "KWV-RUN-1:task_brief:KWV-L-EXEC:KWV-07:1",
+        "invalidated_at": null,
+        "invalidation_revision": null,
+        "kind": "task_brief",
+        "lane_id": "KWV-L-EXEC",
+        "owner_scope_json": "{\"lane_id\":\"KWV-L-EXEC\",\"run_id\":\"KWV-RUN-1\",\"task_id\":\"KWV-07\"}",
+        "run_id": "KWV-RUN-1",
+        "series_key": "",
+        "superseded_by": null,
+        "task_id": "KWV-07",
+        "version": 1
+      },
+      {
+        "content_hash": "b95d5a8e63d2f202da7c07cd4302d63eb7be96895fc58572b9038e0421f7b494",
+        "content_json": "{\"completion_contract\":{\"evidence_rule\":\"A receipt check is not execution. Bind actual compiler/correctness/measurement records to the implementation; retain a correct baseline even when optimization candidates lose.\",\"required_outcomes\":[\"Independent recurrence oracle validates every output and final state, including nonzero initial state and boundary gates.\",\"Sequential/fused ownership comparison has source-bound correctness and normal timing evidence.\",\"Any chunk candidate uses a demonstrated equivalent formulation and includes setup/carry costs.\",\"Long-sequence and segmented-carry tests reject history truncation, misplaced decay and sequence mixing.\",\"A rejected chunk is recorded honestly while the correct representative baseline remains useful.\"]},\"forbidden_mutations\":[\".gitmodules\"],\"gates\":[\"KWV-08-EVIDENCE\"],\"next_action\":\"Read KWV-08 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.\",\"objective\":\"Publish the gated-delta recurrence with explicit state orientation/history and assess state retention or a supported small chunk without inventing a general dynamics framework.\",\"references\":[\"planning/volta-bootstrap/materials/M05-recurrent-state-and-chunks.md\",\"planning/volta-bootstrap/materials/M00-toolchain-and-numerical-contracts.md\",\"planning/volta-bootstrap/materials/M06-targeted-deeper-investigations.md\",\"planning/volta-bootstrap/design/03-validation-and-evidence.md\",\"planning/volta-bootstrap/planning/WORK.md\"],\"scope\":{\"exclusive_paths\":[\"artifacts/kernels/volta-recurrence\",\"benchmark_runs/volta-recurrence\",\"sources/blogs/volta-recurrence-measurements.md\",\"wiki/kernels/volta-gated-delta.md\",\"wiki/techniques/volta-state-ownership.md\"],\"forbidden_paths\":[\".gitmodules\"],\"read_paths\":[\"planning/volta-bootstrap\",\"scripts\",\"data\",\"sources\",\"wiki\",\"references\",\"artifacts/kernels/volta-common\",\"tests\",\"artifacts/kernels/volta-gemm\",\"artifacts/kernels/volta-rows\"]},\"tests\":[\"KWV-08-EVIDENCE\"]}",
+        "created_at": "2026-10-17T17:36:20Z",
+        "creation_revision": 2,
+        "id": "KWV-RUN-1:task_brief:KWV-L-EXEC:KWV-08:1",
+        "invalidated_at": null,
+        "invalidation_revision": null,
+        "kind": "task_brief",
+        "lane_id": "KWV-L-EXEC",
+        "owner_scope_json": "{\"lane_id\":\"KWV-L-EXEC\",\"run_id\":\"KWV-RUN-1\",\"task_id\":\"KWV-08\"}",
+        "run_id": "KWV-RUN-1",
+        "series_key": "",
+        "superseded_by": null,
+        "task_id": "KWV-08",
+        "version": 1
+      },
+      {
+        "content_hash": "ac17625decc8bdcf4b04cb7050b909d5ddeb757298995ef6a0101945b2f1f5cc",
+        "content_json": "{\"completion_contract\":{\"evidence_rule\":\"A receipt check is not execution. Bind actual compiler/correctness/measurement records to the implementation; retain a correct baseline even when optimization candidates lose.\",\"required_outcomes\":[\"Generated indexes preserve existing guides and reflect the new exact/family coverage.\",\"Native schema/link checks and all required representative evidence checks pass, with baseline inherited issues separately reported rather than silently rewritten.\",\"V100 hardware/attention and legacy Hopper/Blackwell queries and source following work.\",\"Publication distinguishes measured, rejected and deferred performance work, with code licenses/provenance intact.\",\"Provide exact KernelWiki commit for KDA pinning; do not modify another workspace or claim global optimality.\"]},\"forbidden_mutations\":[\".gitmodules\"],\"gates\":[\"KWV-09-CPU\",\"KWV-09-WIKI\",\"KWV-09-KERNELS\"],\"next_action\":\"Read KWV-09 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.\",\"objective\":\"Close the source/artifact/query links, run the compact regressions and native validation, and supply a tested dependency commit with explicit performance limits.\",\"references\":[\"planning/volta-bootstrap/design/01-extension-design.md\",\"planning/volta-bootstrap/design/02-coverage-and-priorities.md\",\"planning/volta-bootstrap/design/03-validation-and-evidence.md\",\"planning/volta-bootstrap/planning/WORK.md\"],\"scope\":{\"exclusive_paths\":[\"queries\",\"references/volta.md\",\"references/primer.md\",\"README.md\",\"SKILL.md\",\"CLAUDE.md\",\"index.md\",\"planning/volta-bootstrap/implementation\",\"wiki\",\"sources/blogs\"],\"forbidden_paths\":[\".gitmodules\"],\"read_paths\":[\"planning/volta-bootstrap\",\"scripts\",\"data\",\"sources\",\"wiki\",\"references\",\"artifacts/kernels/volta-common\",\"tests\",\"artifacts\"]},\"tests\":[\"KWV-09-CPU\",\"KWV-09-WIKI\",\"KWV-09-KERNELS\"]}",
+        "created_at": "2026-10-17T17:36:20Z",
+        "creation_revision": 2,
+        "id": "KWV-RUN-1:task_brief:KWV-L-EXEC:KWV-09:1",
+        "invalidated_at": null,
+        "invalidation_revision": null,
+        "kind": "task_brief",
+        "lane_id": "KWV-L-EXEC",
+        "owner_scope_json": "{\"lane_id\":\"KWV-L-EXEC\",\"run_id\":\"KWV-RUN-1\",\"task_id\":\"KWV-09\"}",
+        "run_id": "KWV-RUN-1",
+        "series_key": "",
+        "superseded_by": null,
+        "task_id": "KWV-09",
+        "version": 1
+      }
+    ],
     "workflow_integration_queue": [],
-    "workflow_lane_tasks": [],
-    "workflow_lanes": [],
+    "workflow_lane_tasks": [
+      {
+        "activated_at": "2026-10-17T17:37:55Z",
+        "completed_at": "2026-10-17T17:42:06Z",
+        "enqueued_at": "2026-10-17T17:36:20Z",
+        "lane_id": "KWV-L-EXEC",
+        "position": 0,
+        "revision": 8,
+        "state": "completed",
+        "task_id": "KWV-01"
+      },
+      {
+        "activated_at": "2026-10-17T17:42:10Z",
+        "completed_at": "2026-10-17T17:57:50Z",
+        "enqueued_at": "2026-10-17T17:36:20Z",
+        "lane_id": "KWV-L-EXEC",
+        "position": 1,
+        "revision": 12,
+        "state": "completed",
+        "task_id": "KWV-02"
+      },
+      {
+        "activated_at": "2026-10-17T17:57:53Z",
+        "completed_at": null,
+        "enqueued_at": "2026-10-17T17:36:20Z",
+        "lane_id": "KWV-L-EXEC",
+        "position": 2,
+        "revision": 13,
+        "state": "active",
+        "task_id": "KWV-03"
+      },
+      {
+        "activated_at": null,
+        "completed_at": null,
+        "enqueued_at": "2026-10-17T17:36:20Z",
+        "lane_id": "KWV-L-EXEC",
+        "position": 3,
+        "revision": 2,
+        "state": "queued",
+        "task_id": "KWV-04"
+      },
+      {
+        "activated_at": null,
+        "completed_at": null,
+        "enqueued_at": "2026-10-17T17:36:20Z",
+        "lane_id": "KWV-L-EXEC",
+        "position": 4,
+        "revision": 2,
+        "state": "queued",
+        "task_id": "KWV-05"
+      },
+      {
+        "activated_at": null,
+        "completed_at": null,
+        "enqueued_at": "2026-10-17T17:36:20Z",
+        "lane_id": "KWV-L-EXEC",
+        "position": 5,
+        "revision": 2,
+        "state": "queued",
+        "task_id": "KWV-06"
+      },
+      {
+        "activated_at": null,
+        "completed_at": null,
+        "enqueued_at": "2026-10-17T17:36:20Z",
+        "lane_id": "KWV-L-EXEC",
+        "position": 6,
+        "revision": 2,
+        "state": "queued",
+        "task_id": "KWV-07"
+      },
+      {
+        "activated_at": null,
+        "completed_at": null,
+        "enqueued_at": "2026-10-17T17:36:20Z",
+        "lane_id": "KWV-L-EXEC",
+        "position": 7,
+        "revision": 2,
+        "state": "queued",
+        "task_id": "KWV-08"
+      },
+      {
+        "activated_at": null,
+        "completed_at": null,
+        "enqueued_at": "2026-10-17T17:36:20Z",
+        "lane_id": "KWV-L-EXEC",
+        "position": 8,
+        "revision": 2,
+        "state": "queued",
+        "task_id": "KWV-09"
+      },
+      {
+        "activated_at": null,
+        "completed_at": null,
+        "enqueued_at": "2026-10-17T17:36:20Z",
+        "lane_id": "KWV-L-EXEC",
+        "position": 9,
+        "revision": 2,
+        "state": "queued",
+        "task_id": "KWV-000"
+      }
+    ],
+    "workflow_lanes": [
+      {
+        "context_cursor": 0,
+        "created_at": "2026-10-17T17:36:20Z",
+        "id": "KWV-L-EXEC",
+        "parent_lane_id": null,
+        "revision": 13,
+        "role": "implementer",
+        "run_id": "KWV-RUN-1",
+        "state": "active",
+        "updated_at": "2026-10-17T17:57:53Z",
+        "workspace_mode": "exclusive"
+      }
+    ],
     "workflow_message_receipts": [],
     "workflow_message_recipients": [],
     "workflow_messages": [],
@@ -82,8 +2470,30 @@
     "workflow_rendezvous": [],
     "workflow_rendezvous_arrivals": [],
     "workflow_rendezvous_participants": [],
-    "workflow_run_charters": [],
-    "workflow_runs": [],
+    "workflow_run_charters": [
+      {
+        "content_hash": "298bea8c25991fea0dcceb6c6b409e89410fc3dad53cfc1fd6492a715f9650b9",
+        "content_json": "{\"boundaries\":[\"Keep the existing corpus/tools; small shared edits and granular CPU tests.\",\"Preserve the CUDA skill and Circuit-Bending Atlas; exact-path reads for both.\",\"User supplies ~/ncu-report-skill with Volta support; no port task here.\",\"Use existing CUDA controller; no privileged changes, edited cubins or persistent background work.\",\"Do not change the operation, precision, masks or history to exploit a benchmark.\",\"Measure selected meaningful candidates; reject honestly and stop when the engineering question is answered.\",\"No live Todo reset or unrelated workspace mutation.\"],\"motivation\":\"Capture V100 performance through better dataflow and measured implementation choices, without a permanently divergent framework.\",\"objective\":\"Extend the native KernelWiki with evidence-backed SM70 knowledge and useful representative kernels.\",\"references\":[\"planning/volta-bootstrap/START_HERE.md\",\"planning/volta-bootstrap/IMPLEMENTER_HANDOFF.md\",\"planning/volta-bootstrap/design/01-extension-design.md\",\"planning/volta-bootstrap/planning/WORK.md\"]}",
+        "created_at": "2026-10-17T17:36:20Z",
+        "creation_revision": 2,
+        "run_id": "KWV-RUN-1",
+        "superseded_at": null,
+        "superseded_revision": null,
+        "version": 1
+      }
+    ],
+    "workflow_runs": [
+      {
+        "active_charter_version": 1,
+        "completed_at": null,
+        "created_at": "2026-10-17T17:36:20Z",
+        "id": "KWV-RUN-1",
+        "revision": 2,
+        "root_task_id": "KWV-000",
+        "status": "active",
+        "updated_at": "2026-10-17T17:36:20Z"
+      }
+    ],
     "workflow_workspaces": []
   },
   "workflow_snapshot_version": 1
