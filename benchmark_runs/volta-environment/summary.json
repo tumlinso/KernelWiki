@@ -61,8 +61,9 @@
             "sha256": "84b9d1653e15d8d4804fa285ebc31bd70d4c90bba5876a32f4c6f249aaf107f1"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/4193800e-26f4-4a59-b282-4fe328d55d61/lease.json",
-            "sha256": "a8689c8d63694482ebb66969d87f01dd9d97d8617a5b1142be7a5b17363cef32"
+            "path": "evidence/portable-leases/environment/baseline_timing.json",
+            "sha256": "a8689c8d63694482ebb66969d87f01dd9d97d8617a5b1142be7a5b17363cef32",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/4193800e-26f4-4a59-b282-4fe328d55d61/lease.json"
           }
         },
         "candidate_timing": {
@@ -75,8 +76,9 @@
             "sha256": "ed7844e56313c9910c54e7e6fc6ee807faef621f05403588ecc7b3487c6ce127"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/0dd41e03-f828-4eb0-9b8d-f8a87b96a129/lease.json",
-            "sha256": "23edc6076be063f8c683a08e63f72990237d594f695faa56f62ed59f0c5e8499"
+            "path": "evidence/portable-leases/environment/candidate_timing.json",
+            "sha256": "23edc6076be063f8c683a08e63f72990237d594f695faa56f62ed59f0c5e8499",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/0dd41e03-f828-4eb0-9b8d-f8a87b96a129/lease.json"
           }
         },
         "correctness_baseline": {
@@ -89,8 +91,9 @@
             "sha256": "fa0f7b798229254c935489dcd1d572142a5d09b45345b20df7c45fc2c3d4ce15"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/a2a98659-d057-4e73-905b-5c5a16af9baf/lease.json",
-            "sha256": "7e384c98e02c68ca91fea17355db3308486befe7f520c984e42248fdea8f2ad2"
+            "path": "evidence/portable-leases/environment/correctness_baseline.json",
+            "sha256": "7e384c98e02c68ca91fea17355db3308486befe7f520c984e42248fdea8f2ad2",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/a2a98659-d057-4e73-905b-5c5a16af9baf/lease.json"
           }
         },
         "correctness_candidate": {
@@ -103,8 +106,9 @@
             "sha256": "136964ef63ecff1ac48899b7c161a814808bb8012a5489049bc67c2bf60b2ff8"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/6394b443-d3d4-4240-a68e-d921aa2ecae2/lease.json",
-            "sha256": "d8ead30c51ee714f514ee429b21898b9e325933f2b3ebfb0adcc41b09b19051b"
+            "path": "evidence/portable-leases/environment/correctness_candidate.json",
+            "sha256": "d8ead30c51ee714f514ee429b21898b9e325933f2b3ebfb0adcc41b09b19051b",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/6394b443-d3d4-4240-a68e-d921aa2ecae2/lease.json"
           }
         },
         "profile_candidate": {
@@ -117,8 +121,9 @@
             "sha256": "6d63e96d225b0d63b18576d70651315b39b2406316cf4bbac85e3ec4837b1095"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/a9aaf396-b161-4ba7-a044-206b433bb52c/lease.json",
-            "sha256": "252827e781ff4845c87935ba5663c0ce3b8147fe2db204f63b94b9ef9bf5cd7b"
+            "path": "evidence/portable-leases/environment/profile_candidate.json",
+            "sha256": "252827e781ff4845c87935ba5663c0ce3b8147fe2db204f63b94b9ef9bf5cd7b",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/a9aaf396-b161-4ba7-a044-206b433bb52c/lease.json"
           },
           "profile": {
             "analysis": {
@@ -146,8 +151,9 @@
             "sha256": "e6742e5c8ffdbf6651844f010d1c6c1e1936af62bf08315e720a8c60aeb17a03"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/0e5dbb63-4b99-4803-85e3-3dad11c07901/lease.json",
-            "sha256": "601312a69efee6630c624ec27b2703ebe94b499ee41d17710a503ece9be03a0e"
+            "path": "evidence/portable-leases/environment/sanitizer_candidate.json",
+            "sha256": "601312a69efee6630c624ec27b2703ebe94b499ee41d17710a503ece9be03a0e",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/0e5dbb63-4b99-4803-85e3-3dad11c07901/lease.json"
           },
           "sanitizer_summary": {
             "path": "controller/sanitizer-root/sanitizer-summary.json",
@@ -161,5 +167,6 @@
     "path": "environment.json",
     "sha256": "4449c819e4adef449158dd8bb3f4f580f9a21288489b0ec62c67f2a7ac78434c"
   },
-  "format": "KERNELWIKI-VOLTA-EVIDENCE/1"
+  "format": "KERNELWIKI-VOLTA-EVIDENCE/1",
+  "source_root": "/home/tumlinson/KernelWiki"
 }

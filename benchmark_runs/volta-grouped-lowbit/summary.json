@@ -383,7 +383,7 @@
       "implementations": {
         "baseline": {
           "binary": {
-            "path": "benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner",
+            "path": "benchmark_runs/volta-grouped-lowbit/evidence/v1/binaries/kwv07_runner-c9eae1a8c7ceac582d5a39e8595656068797b15b57559ae5ddd3b8ff2dd10d88.elf",
             "sha256": "c9eae1a8c7ceac582d5a39e8595656068797b15b57559ae5ddd3b8ff2dd10d88"
           },
           "executed_path": "benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner",
@@ -395,7 +395,7 @@
         },
         "candidate": {
           "binary": {
-            "path": "benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner",
+            "path": "benchmark_runs/volta-grouped-lowbit/evidence/v1/binaries/kwv07_runner-c9eae1a8c7ceac582d5a39e8595656068797b15b57559ae5ddd3b8ff2dd10d88.elf",
             "sha256": "c9eae1a8c7ceac582d5a39e8595656068797b15b57559ae5ddd3b8ff2dd10d88"
           },
           "executed_path": "benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner",
@@ -463,8 +463,9 @@
             "sha256": "e2d12d19fcf6bf74fcc3f28ef225242ee7cecdb3fc415885bb83e6903dda1dd9"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/868c022b-0592-41d3-8f4d-e015cc6d7264/lease.json",
-            "sha256": "acdd0d75d25837d3f8270e34ca632fb0cb71f3c61f8c1e6d3979eb847f70b383"
+            "path": "evidence/v1/roles/grouped_baseline_timing/lease.json",
+            "sha256": "acdd0d75d25837d3f8270e34ca632fb0cb71f3c61f8c1e6d3979eb847f70b383",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/868c022b-0592-41d3-8f4d-e015cc6d7264/lease.json"
           },
           "native_stdout_capture": {
             "path": "evidence/v1/roles/grouped_baseline_timing/foreground.stdout.txt",
@@ -485,8 +486,9 @@
             "sha256": "ba2e16256d889cccfcefe25f82b1b0721ccee129c90b3650f0d062af6501fe43"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/2ecf06d9-8ba3-4666-b34a-23b9fb65383b/lease.json",
-            "sha256": "31088edd6f6eb51d8ff69747d7778f0501df1d64907e1a2d8b59d34b512b93f1"
+            "path": "evidence/v1/roles/grouped_candidate_timing/lease.json",
+            "sha256": "31088edd6f6eb51d8ff69747d7778f0501df1d64907e1a2d8b59d34b512b93f1",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/2ecf06d9-8ba3-4666-b34a-23b9fb65383b/lease.json"
           },
           "native_stdout_capture": {
             "path": "evidence/v1/roles/grouped_candidate_timing/foreground.stdout.txt",
@@ -507,8 +509,9 @@
             "sha256": "69b343def2aa9e66be38763204f6251e2e32e97bf324f61874dae2b3ccbaddf0"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/0d51c1c9-a242-48b5-b231-051f00c02355/lease.json",
-            "sha256": "6058e4e81d918bc64c5d08127a1fa4be83ee9df52c5a06761e06638b66ac6e6a"
+            "path": "evidence/v1/roles/grouped_correctness_baseline/lease.json",
+            "sha256": "6058e4e81d918bc64c5d08127a1fa4be83ee9df52c5a06761e06638b66ac6e6a",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/0d51c1c9-a242-48b5-b231-051f00c02355/lease.json"
           },
           "native_stdout_capture": {
             "path": "evidence/v1/roles/grouped_correctness_baseline/foreground.stdout.txt",
@@ -529,8 +532,9 @@
             "sha256": "cd0bcc013df10d97dd43f621675d6ccf812440c034be2527a56f461cc48af72f"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/a2519fac-6331-46bf-a38c-25b00f9f9c33/lease.json",
-            "sha256": "772e7b93f1ed66615c549a70995fd6045dcc81723881ab216a529630a6392b8b"
+            "path": "evidence/v1/roles/grouped_correctness_candidate/lease.json",
+            "sha256": "772e7b93f1ed66615c549a70995fd6045dcc81723881ab216a529630a6392b8b",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/a2519fac-6331-46bf-a38c-25b00f9f9c33/lease.json"
           },
           "native_stdout_capture": {
             "path": "evidence/v1/roles/grouped_correctness_candidate/foreground.stdout.txt",
@@ -551,8 +555,9 @@
             "sha256": "2f606f344576e602f15f74665fcc534a1c060586957308710efb8d83a8b59010"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/2ebcd65e-61b4-46a4-97ea-8a818856d8cb/lease.json",
-            "sha256": "f00130cbb5f5c77f2cedf9c9baf78a2009d3fde22769715a1421fff3ac187209"
+            "path": "evidence/v1/roles/grouped_profile_candidate/lease.json",
+            "sha256": "f00130cbb5f5c77f2cedf9c9baf78a2009d3fde22769715a1421fff3ac187209",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/2ebcd65e-61b4-46a4-97ea-8a818856d8cb/lease.json"
           },
           "native_stdout_capture": {
             "path": "evidence/v1/roles/grouped_profile_candidate/ncu/run/command.stdout.txt",
@@ -601,8 +606,9 @@
             "sha256": "04f18a58dadddaafeda831da0997049e97ec6afa89052c571637421b88cb3548"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/fe9b9087-b51a-4b4e-863e-2ed5a7db4e49/lease.json",
-            "sha256": "2b846c359685a5a9b195f3a79dd87cda01e811ee19ca1ca9a7a869c5b434db71"
+            "path": "evidence/v1/roles/grouped_sanitizer_candidate/lease.json",
+            "sha256": "2b846c359685a5a9b195f3a79dd87cda01e811ee19ca1ca9a7a869c5b434db71",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/fe9b9087-b51a-4b4e-863e-2ed5a7db4e49/lease.json"
           },
           "native_stdout_capture": {
             "path": "evidence/v1/roles/grouped_sanitizer_candidate/sanitizer/run/stdout.txt",
@@ -1027,7 +1033,7 @@
       "implementations": {
         "baseline": {
           "binary": {
-            "path": "benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner",
+            "path": "benchmark_runs/volta-grouped-lowbit/evidence/v1/binaries/kwv07_runner-c9eae1a8c7ceac582d5a39e8595656068797b15b57559ae5ddd3b8ff2dd10d88.elf",
             "sha256": "c9eae1a8c7ceac582d5a39e8595656068797b15b57559ae5ddd3b8ff2dd10d88"
           },
           "executed_path": "benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner",
@@ -1039,7 +1045,7 @@
         },
         "candidate": {
           "binary": {
-            "path": "benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner",
+            "path": "benchmark_runs/volta-grouped-lowbit/evidence/v1/binaries/kwv07_runner-c9eae1a8c7ceac582d5a39e8595656068797b15b57559ae5ddd3b8ff2dd10d88.elf",
             "sha256": "c9eae1a8c7ceac582d5a39e8595656068797b15b57559ae5ddd3b8ff2dd10d88"
           },
           "executed_path": "benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner",
@@ -1107,8 +1113,9 @@
             "sha256": "1be423a5361dabfb09356e4883dce5c1a00553df4ebfa40fbbfba285ea23d82d"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/8fff01f1-e545-456e-8fc1-3cdd44eecdb6/lease.json",
-            "sha256": "f192cde1ad22626f0a2c85f5a186b25115abed9591343e6fe6b906618d6eb6f7"
+            "path": "evidence/v1/roles/w4a16_baseline_timing/lease.json",
+            "sha256": "f192cde1ad22626f0a2c85f5a186b25115abed9591343e6fe6b906618d6eb6f7",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/8fff01f1-e545-456e-8fc1-3cdd44eecdb6/lease.json"
           },
           "native_stdout_capture": {
             "path": "evidence/v1/roles/w4a16_baseline_timing/foreground.stdout.txt",
@@ -1129,8 +1136,9 @@
             "sha256": "4b2048cd000c73c7a03d9f2860525b07db2af9a5a24403ac79aeea90c020eef3"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/72a19fe1-c8e0-45a9-a6ce-77a271878936/lease.json",
-            "sha256": "f9942542c8e41954206091956f0047e13672d2bef068bcc3f92229c3ed0a21a5"
+            "path": "evidence/v1/roles/w4a16_candidate_timing/lease.json",
+            "sha256": "f9942542c8e41954206091956f0047e13672d2bef068bcc3f92229c3ed0a21a5",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/72a19fe1-c8e0-45a9-a6ce-77a271878936/lease.json"
           },
           "native_stdout_capture": {
             "path": "evidence/v1/roles/w4a16_candidate_timing/foreground.stdout.txt",
@@ -1151,8 +1159,9 @@
             "sha256": "dccadf8c9091b12b1a1225f5af8ad27dc55a0683cf86350e28c938a532d3da1b"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/b6441cc4-ef5c-441d-84e9-9490af246df6/lease.json",
-            "sha256": "030a5481c5cebed6f9783a40a9a120635bc38944dc37cd96759a5175832ba587"
+            "path": "evidence/v1/roles/w4a16_correctness_baseline/lease.json",
+            "sha256": "030a5481c5cebed6f9783a40a9a120635bc38944dc37cd96759a5175832ba587",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/b6441cc4-ef5c-441d-84e9-9490af246df6/lease.json"
           },
           "native_stdout_capture": {
             "path": "evidence/v1/roles/w4a16_correctness_baseline/foreground.stdout.txt",
@@ -1173,8 +1182,9 @@
             "sha256": "1a58d4fa59d3b18b0ceadc7b45c5297f6606342b75bf88a9cf05641ad9c2d0e4"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/7a52ca2c-4aaf-43cc-82ee-4847e8cb3042/lease.json",
-            "sha256": "a8064c0c98c2959189b61cd04d45263a71de95c9907f9ff309b50bf7d27ceea4"
+            "path": "evidence/v1/roles/w4a16_correctness_candidate/lease.json",
+            "sha256": "a8064c0c98c2959189b61cd04d45263a71de95c9907f9ff309b50bf7d27ceea4",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/7a52ca2c-4aaf-43cc-82ee-4847e8cb3042/lease.json"
           },
           "native_stdout_capture": {
             "path": "evidence/v1/roles/w4a16_correctness_candidate/foreground.stdout.txt",
@@ -1195,8 +1205,9 @@
             "sha256": "3bc8a0a6208fbe6a50a74a2372d81cb66b3b957d243b861a68f3fc779f0399d5"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/c08fae3d-a9fd-4ea1-a351-c692b649d1f2/lease.json",
-            "sha256": "14b5b963da94901f1d79e8a20056fdbd8379bede0adb24928f840558d3f17207"
+            "path": "evidence/v1/roles/w4a16_profile_candidate/lease.json",
+            "sha256": "14b5b963da94901f1d79e8a20056fdbd8379bede0adb24928f840558d3f17207",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/c08fae3d-a9fd-4ea1-a351-c692b649d1f2/lease.json"
           },
           "native_stdout_capture": {
             "path": "evidence/v1/roles/w4a16_profile_candidate/ncu/run/command.stdout.txt",
@@ -1245,8 +1256,9 @@
             "sha256": "d09d4d52bd73499e05d4e452585a411ed36dffae47b642d6ce5bbed7693b31ff"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/c6d5456e-640a-44d7-a3de-79984d8db371/lease.json",
-            "sha256": "bcd8520e5c331e7a4be5b7de1fb8eee95db13b0d335648400b1bd3164d4dcb47"
+            "path": "evidence/v1/roles/w4a16_sanitizer_candidate/lease.json",
+            "sha256": "bcd8520e5c331e7a4be5b7de1fb8eee95db13b0d335648400b1bd3164d4dcb47",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/c6d5456e-640a-44d7-a3de-79984d8db371/lease.json"
           },
           "native_stdout_capture": {
             "path": "evidence/v1/roles/w4a16_sanitizer_candidate/sanitizer/run/stdout.txt",
@@ -1293,5 +1305,6 @@
       }
     }
   ],
-  "format": "KERNELWIKI-VOLTA-EVIDENCE/1"
+  "format": "KERNELWIKI-VOLTA-EVIDENCE/1",
+  "source_root": "/home/tumlinson/KernelWiki"
 }

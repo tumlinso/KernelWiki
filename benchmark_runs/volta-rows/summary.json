@@ -763,8 +763,9 @@
           },
           "lease": {
             "archive_path": "evidence/v2/roles/baseline_timing/lease.json",
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/9afd9a4a-640a-42bf-ac52-1b81f2ba7c1c/lease.json",
-            "sha256": "07ea5949115f560c8f742260d7f8ad0ef1a66e5369d7f44b332332561d0926c2"
+            "path": "evidence/v2/roles/baseline_timing/lease.json",
+            "sha256": "07ea5949115f560c8f742260d7f8ad0ef1a66e5369d7f44b332332561d0926c2",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/9afd9a4a-640a-42bf-ac52-1b81f2ba7c1c/lease.json"
           },
           "role_manifest": {
             "path": "evidence/v2/roles/baseline_timing/manifest.json",
@@ -792,8 +793,9 @@
           },
           "lease": {
             "archive_path": "evidence/v2/roles/candidate_timing/lease.json",
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/e988c618-71f4-44ec-b606-f7e5251ee5b5/lease.json",
-            "sha256": "cbd466f11a6cae297221a01a35a69662561d836cdced83c3c80126d6174a00de"
+            "path": "evidence/v2/roles/candidate_timing/lease.json",
+            "sha256": "cbd466f11a6cae297221a01a35a69662561d836cdced83c3c80126d6174a00de",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/e988c618-71f4-44ec-b606-f7e5251ee5b5/lease.json"
           },
           "role_manifest": {
             "path": "evidence/v2/roles/candidate_timing/manifest.json",
@@ -821,8 +823,9 @@
           },
           "lease": {
             "archive_path": "evidence/v2/roles/baseline_correctness/lease.json",
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/9f7568e1-ca1f-426b-bc9b-6d0f4391ba89/lease.json",
-            "sha256": "709b9fbd9af033c476f89aa83f4fd042f2ff8c6afd775b6adfc650fd8a3c9210"
+            "path": "evidence/v2/roles/baseline_correctness/lease.json",
+            "sha256": "709b9fbd9af033c476f89aa83f4fd042f2ff8c6afd775b6adfc650fd8a3c9210",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/9f7568e1-ca1f-426b-bc9b-6d0f4391ba89/lease.json"
           },
           "role_manifest": {
             "path": "evidence/v2/roles/baseline_correctness/manifest.json",
@@ -850,8 +853,9 @@
           },
           "lease": {
             "archive_path": "evidence/v2/roles/candidate_correctness/lease.json",
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/c7910bcf-40fc-48f5-aee4-deef3eb291e0/lease.json",
-            "sha256": "4ce96b7d6ffe9bab3e3ed147350bd08622b899304a1ff5ad6c3268452b3a36c0"
+            "path": "evidence/v2/roles/candidate_correctness/lease.json",
+            "sha256": "4ce96b7d6ffe9bab3e3ed147350bd08622b899304a1ff5ad6c3268452b3a36c0",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/c7910bcf-40fc-48f5-aee4-deef3eb291e0/lease.json"
           },
           "role_manifest": {
             "path": "evidence/v2/roles/candidate_correctness/manifest.json",
@@ -879,8 +883,9 @@
           },
           "lease": {
             "archive_path": "evidence/v2/roles/candidate_profile/lease.json",
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/9f5c3bc8-d4f9-4fb1-aaf6-a229333f6c12/lease.json",
-            "sha256": "de2d9f700515714abee767be5992a09e5f8e053e602bd31ee599ddc29438d561"
+            "path": "evidence/v2/roles/candidate_profile/lease.json",
+            "sha256": "de2d9f700515714abee767be5992a09e5f8e053e602bd31ee599ddc29438d561",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/9f5c3bc8-d4f9-4fb1-aaf6-a229333f6c12/lease.json"
           },
           "profile": {
             "analysis": {
@@ -931,8 +936,9 @@
           },
           "lease": {
             "archive_path": "evidence/v2/roles/candidate_sanitizer/lease.json",
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/7332f838-e30b-4378-b068-d45d5738956f/lease.json",
-            "sha256": "61633371c72317c68b95279e91d67a836e2f5cb0ae1164e2c71ac87a4c8deafd"
+            "path": "evidence/v2/roles/candidate_sanitizer/lease.json",
+            "sha256": "61633371c72317c68b95279e91d67a836e2f5cb0ae1164e2c71ac87a4c8deafd",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/7332f838-e30b-4378-b068-d45d5738956f/lease.json"
           },
           "role_manifest": {
             "path": "evidence/v2/roles/candidate_sanitizer/manifest.json",
@@ -964,5 +970,6 @@
       }
     }
   ],
-  "format": "KERNELWIKI-VOLTA-EVIDENCE/1"
+  "format": "KERNELWIKI-VOLTA-EVIDENCE/1",
+  "source_root": "/home/tumlinson/KernelWiki"
 }

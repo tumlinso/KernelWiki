@@ -16,3 +16,4 @@ audit/claude-findings-disposition.md
 /benchmark_runs/volta-*/bin/
 /benchmark_runs/volta-*/build/
 /benchmark_runs/volta-recurrence/evidence/v1/source-snapshots/
+/benchmark_runs/volta-recurrence/evidence/v1/ncu-shim.jsonl

@@ -2,6 +2,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -108,6 +109,10 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
     def tearDown(self):
         self.temp.cleanup()
 
+    def reset_fixture(self):
+        self.temp.cleanup()
+        self.setUp()
+
     def make_run(self, role, kind, implementation, timing=False):
         self.ids += 1
         evidence_id = f"evidence-{self.ids}"
@@ -173,6 +178,73 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
             "evidence": {"path": str(exported.relative_to(self.base)), "sha256": CHECK.digest(exported)},
             "lease": {"path": str(lease_path.relative_to(self.root)), "sha256": lease_sha},
         }
+
+    def make_portable(self):
+        """Move fixture bindings to a synthetic old root without copying runtime/tool binaries."""
+        self.historical_root = Path(self.temp.name) / "captured" / "KernelWiki"
+        self.assertFalse(self.historical_root.exists())
+        self.manifest["source_root"] = str(self.historical_root)
+
+        for name, entry in self.manifest["cases"][0]["implementations"].items():
+            original = self.root / entry["binary"]["path"]
+            archived = self.base / "bin" / f"{name}.archived"
+            archived_sha = put(archived, original.read_bytes())
+            entry["executed_path"] = str(original.relative_to(self.root))
+            entry["binary"] = {"path": str(archived.relative_to(self.root)), "sha256": archived_sha}
+            original.unlink()
+
+        for role, run in self.runs.items():
+            original_lease_path = self.root / run["lease"]["path"]
+            lease_data = json.loads(original_lease_path.read_text())
+            lease_data["project_root"] = str(self.historical_root)
+            original_lease_sha = json_file(original_lease_path, lease_data)
+            archived_lease = self.base / "controller" / role / "lease.json"
+            archived_lease_sha = put(archived_lease, original_lease_path.read_bytes())
+            self.assertEqual(original_lease_sha, archived_lease_sha)
+
+            execution_path = self.base / run["execution"]["path"]
+            execution = json.loads(execution_path.read_text())
+            original_lease_identity = self.historical_root / original_lease_path.relative_to(self.root)
+            execution["lease_receipt"] = str(original_lease_identity)
+            run["execution"]["sha256"] = json_file(execution_path, execution)
+            run["lease"] = {
+                "path": str(archived_lease.relative_to(self.base)),
+                "sha256": archived_lease_sha,
+                "original_path": str(original_lease_identity),
+            }
+
+            evidence_path = self.base / run["evidence"]["path"]
+            exported = json.loads(evidence_path.read_text())
+            summary = exported["evidence"]["summary"]
+            provenance = summary["provenance"]
+            provenance["source"]["project_root"] = str(self.historical_root)
+            for item in provenance["inputs"]:
+                input_path = Path(item["path"])
+                if role == "profile_candidate" and input_path.resolve() == self.fake_ncu.resolve():
+                    item["path"] = "/captured-tools/ncu-not-installed"
+                    continue
+                try:
+                    item["path"] = str(self.historical_root / input_path.relative_to(self.root))
+                except ValueError:
+                    pass
+            binary_relative = Path(provenance["binary"]["path"]).relative_to(self.root)
+            provenance["binary"]["path"] = str(self.historical_root / binary_relative)
+            for binary in summary["binaries"]:
+                binary_relative = Path(binary["path"]).relative_to(self.root)
+                binary["path"] = str(self.historical_root / binary_relative)
+            provenance["tools"]["ncu"]["path"] = "/captured-tools/ncu-not-installed"
+            run["evidence"]["sha256"] = json_file(evidence_path, exported)
+
+            if role == "profile_candidate":
+                shim_log_path = self.base / run["profile"]["shim_log"]["path"]
+                shim_record = json.loads(shim_log_path.read_text())
+                shim_record["shim_path"] = str(self.historical_root / "benchmark_runs/volta-environment/ncu-collection-shim.py")
+                shim_record["actual_ncu_path"] = "/captured-tools/ncu-not-installed"
+                run["profile"]["shim_log"]["sha256"] = json_file(shim_log_path, shim_record)
+
+        shutil.rmtree(self.root / ".todo-orchestrator")
+        self.fake_ncu.unlink()
+        self.write_manifest()
 
     def write_manifest(self):
         json_file(self.manifest_path, self.manifest)
@@ -453,6 +525,16 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
         self.assertIn("archive SHA-256 mismatch", result["errors"][0])
 
         self.install_archived_source_binding()
+        source_archive = self.manifest["cases"][0]["captured_input_archives"][0]
+        archive_path = self.root / "data" / "outside-evidence-archive.txt"
+        put(archive_path, (self.root / source_archive["archive_path"]).read_bytes())
+        source_archive["archive_path"] = str(archive_path.relative_to(self.root))
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("archive path escapes the family evidence directory", result["errors"][0])
+
+        self.install_archived_source_binding()
         run = self.manifest["cases"][0]["runs"]["correctness_candidate"]
         evidence_path = self.base / run["evidence"]["path"]
         exported = json.loads(evidence_path.read_text())
@@ -474,6 +556,12 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
         result = self.validate()
         self.assertFalse(result["valid"])
         self.assertIn("exactly bind archived source aliases", result["errors"][0])
+
+    def test_portable_source_alias_archive_remains_bound_after_relocation(self):
+        self.install_archived_source_binding()
+        self.make_portable()
+        result = self.validate()
+        self.assertTrue(result["valid"], result["errors"])
 
     def test_controller_binary_must_match_declared_artifact(self):
         evidence = self.base / self.runs["candidate_timing"]["evidence"]["path"]
@@ -507,6 +595,201 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
         self.assertFalse(result["valid"])
         self.assertIn("not bound to binary", result["errors"][0])
 
+    def test_portable_archive_passes_without_runtime_tree_executed_elf_or_ncu(self):
+        self.reset_fixture()
+        self.make_portable()
+        self.assertFalse((self.root / ".todo-orchestrator").exists())
+        self.assertFalse(self.historical_root.exists())
+        self.assertFalse(Path("/captured-tools/ncu-not-installed").exists())
+        for entry in self.manifest["cases"][0]["implementations"].values():
+            self.assertTrue((self.root / entry["binary"]["path"]).is_file())
+            self.assertFalse((self.historical_root / entry["executed_path"]).exists())
+        result = self.validate()
+        self.assertTrue(result["valid"], result["errors"])
+
+    def test_portable_lease_copy_and_execution_original_path_are_bound(self):
+        self.reset_fixture()
+        self.make_portable()
+        run = self.manifest["cases"][0]["runs"]["sanitizer_candidate"]
+        lease_path = self.base / run["lease"]["path"]
+        lease_path.write_bytes(lease_path.read_bytes() + b"tampered\n")
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("archived lease: SHA-256 mismatch", result["errors"][0])
+
+        self.reset_fixture()
+        self.make_portable()
+        run = self.manifest["cases"][0]["runs"]["sanitizer_candidate"]
+        execution_path = self.base / run["execution"]["path"]
+        execution = json.loads(execution_path.read_text())
+        execution["lease_receipt"] += ".wrong"
+        run["execution"]["sha256"] = json_file(execution_path, execution)
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("lease path differs from execution receipt", result["errors"][0])
+
+    def test_portable_source_root_and_input_remapping_are_bound(self):
+        self.reset_fixture()
+        self.make_portable()
+        run = self.manifest["cases"][0]["runs"]["correctness_baseline"]
+        evidence_path = self.base / run["evidence"]["path"]
+        exported = json.loads(evidence_path.read_text())
+        exported["evidence"]["summary"]["provenance"]["source"]["project_root"] = str(
+            self.historical_root / "other")
+        run["evidence"]["sha256"] = json_file(evidence_path, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("source snapshot is unbound", result["errors"][0])
+
+        self.reset_fixture()
+        self.make_portable()
+        run = self.manifest["cases"][0]["runs"]["correctness_baseline"]
+        evidence_path = self.base / run["evidence"]["path"]
+        exported = json.loads(evidence_path.read_text())
+        inputs = exported["evidence"]["summary"]["provenance"]["inputs"]
+        inputs[0]["path"] = str(self.historical_root / "../escaped/contract.json")
+        run["evidence"]["sha256"] = json_file(evidence_path, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("escapes historical source_root", result["errors"][0])
+
+    def test_portable_manifest_rejects_explicit_null_source_root(self):
+        self.manifest["source_root"] = None
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("source_root must be an absolute historical path", result["errors"][0])
+
+    def test_portable_archived_elf_hash_and_historical_identity_are_bound(self):
+        self.make_portable()
+        candidate = self.manifest["cases"][0]["implementations"]["candidate"]
+        archived = self.root / candidate["binary"]["path"]
+        archived.write_bytes(archived.read_bytes() + b"tampered")
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("SHA-256 mismatch", result["errors"][0])
+
+        self.reset_fixture()
+        self.make_portable()
+        run = self.manifest["cases"][0]["runs"]["candidate_timing"]
+        evidence_path = self.base / run["evidence"]["path"]
+        exported = json.loads(evidence_path.read_text())
+        exported["evidence"]["summary"]["binaries"][0]["path"] += ".wrong"
+        run["evidence"]["sha256"] = json_file(evidence_path, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("not bound to binary", result["errors"][0])
+
+    def test_portable_executable_input_uses_archived_role_elf_not_mutable_checkout_path(self):
+        self.make_portable()
+        candidate = self.manifest["cases"][0]["implementations"]["candidate"]
+        mutable_checkout_path = self.root / candidate["executed_path"]
+        put(mutable_checkout_path, b"different file now at captured executable path")
+        run = self.manifest["cases"][0]["runs"]["correctness_candidate"]
+        evidence_path = self.base / run["evidence"]["path"]
+        exported = json.loads(evidence_path.read_text())
+        provenance = exported["evidence"]["summary"]["provenance"]
+        binary_identity = str(self.historical_root / candidate["executed_path"])
+        provenance["inputs"].append({
+            "path": binary_identity, "sha256": candidate["binary"]["sha256"],
+        })
+        run["evidence"]["sha256"] = json_file(evidence_path, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertTrue(result["valid"], result["errors"])
+
+        evidence_path = self.base / run["evidence"]["path"]
+        exported = json.loads(evidence_path.read_text())
+        provenance = exported["evidence"]["summary"]["provenance"]
+        binary_input = next(item for item in provenance["inputs"] if item["path"] == binary_identity)
+        binary_input["sha256"] = "0" * 64
+        run["evidence"]["sha256"] = json_file(evidence_path, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("executed binary input differs from its archived ELF", result["errors"][0])
+
+    def test_portable_unarchived_repo_input_must_match_current_checkout(self):
+        self.make_portable()
+        input_file = self.root / "docs" / "captured-extra.txt"
+        input_sha = put(input_file, b"source bytes at capture time")
+        input_file.write_bytes(b"different current checkout bytes")
+        run = self.manifest["cases"][0]["runs"]["correctness_baseline"]
+        evidence_path = self.base / run["evidence"]["path"]
+        exported = json.loads(evidence_path.read_text())
+        exported["evidence"]["summary"]["provenance"]["inputs"].append({
+            "path": str(self.historical_root / "docs" / input_file.name), "sha256": input_sha,
+        })
+        run["evidence"]["sha256"] = json_file(evidence_path, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("repository input is absent or mismatched and has no archive", result["errors"][0])
+
+    def test_portable_archived_repo_input_closes_missing_source_path(self):
+        self.make_portable()
+        original = self.root / "docs" / "frozen-extra.txt"
+        input_sha = put(original, b"frozen source record")
+        archive = self.base / "source-archive" / "frozen-extra.txt"
+        put(archive, original.read_bytes())
+        original.unlink()
+        self.manifest["cases"][0]["captured_input_archives"] = [{
+            "original_path": "docs/frozen-extra.txt",
+            "archive_path": str(archive.relative_to(self.root)),
+            "sha256": input_sha,
+        }]
+        for run in self.manifest["cases"][0]["runs"].values():
+            evidence_path = self.base / run["evidence"]["path"]
+            exported = json.loads(evidence_path.read_text())
+            exported["evidence"]["summary"]["provenance"]["inputs"].append({
+                "path": str(self.historical_root / "docs" / original.name), "sha256": input_sha,
+            })
+            run["evidence"]["sha256"] = json_file(evidence_path, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertTrue(result["valid"], result["errors"])
+
+    def test_portable_ncu_hash_and_path_remain_capture_bound_without_binary(self):
+        self.make_portable()
+        self.assertFalse(Path("/captured-tools/ncu-not-installed").exists())
+        run = self.manifest["cases"][0]["runs"]["profile_candidate"]
+        shim_log_path = self.base / run["profile"]["shim_log"]["path"]
+        shim_record = json.loads(shim_log_path.read_text())
+        shim_record["actual_ncu_sha256"] = "0" * 64
+        run["profile"]["shim_log"]["sha256"] = json_file(shim_log_path, shim_record)
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("no-clock/source-import policy", result["errors"][0])
+
+    def test_portable_ncu_identity_requires_absolute_captured_path(self):
+        self.make_portable()
+        run = self.manifest["cases"][0]["runs"]["profile_candidate"]
+        evidence_path = self.base / run["evidence"]["path"]
+        exported = json.loads(evidence_path.read_text())
+        exported["evidence"]["summary"]["provenance"]["tools"]["ncu"]["path"] = "tools/ncu"
+        run["evidence"]["sha256"] = json_file(evidence_path, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("NCU tool path must be absolute", result["errors"][0])
+
+        self.reset_fixture()
+        self.make_portable()
+        run = self.manifest["cases"][0]["runs"]["profile_candidate"]
+        evidence_path = self.base / run["evidence"]["path"]
+        exported = json.loads(evidence_path.read_text())
+        exported["evidence"]["summary"]["provenance"]["tools"]["ncu"]["path"] = "/captured-tools/other-ncu"
+        run["evidence"]["sha256"] = json_file(evidence_path, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("no-clock/source-import policy", result["errors"][0])
+
     def test_declared_library_must_be_bound_in_controller_inputs(self):
         library = self.root / "lib" / "libbaseline.so"
         library_sha = put(library, b"synthetic baseline library")
@@ -525,6 +808,101 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
             exported["evidence"]["summary"]["provenance"]["inputs"].append(
                 {"path": str(library.resolve()), "sha256": library_sha})
             self.manifest["cases"][0]["runs"][role]["evidence"]["sha256"] = json_file(evidence, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertTrue(result["valid"], result["errors"])
+
+    def test_portable_external_library_identity_does_not_require_vendor_file(self):
+        self.make_portable()
+        library_path = "/captured-libraries/libcublas.so"
+        self.assertFalse(Path(library_path).exists())
+        library_sha = "a" * 64
+        self.manifest["cases"][0]["libraries"] = [{
+            "implementation": "baseline", "name": "cuBLAS", "version": "12.9",
+            "path": library_path, "sha256": "malformed",
+        }]
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("external library identity has a malformed SHA-256", result["errors"][0])
+
+        self.manifest["cases"][0]["libraries"][0]["sha256"] = library_sha
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("do not bind declared library", result["errors"][0])
+
+        for role in ("correctness_baseline", "baseline_timing"):
+            evidence = self.base / self.runs[role]["evidence"]["path"]
+            exported = json.loads(evidence.read_text())
+            inputs = exported["evidence"]["summary"]["provenance"]["inputs"]
+            inputs[:] = [item for item in inputs if item.get("path") != library_path]
+            inputs.append({"path": library_path, "sha256": "b" * 64})
+            self.manifest["cases"][0]["runs"][role]["evidence"]["sha256"] = json_file(evidence, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("do not bind declared library", result["errors"][0])
+
+        for role in ("correctness_baseline", "baseline_timing"):
+            evidence = self.base / self.runs[role]["evidence"]["path"]
+            exported = json.loads(evidence.read_text())
+            inputs = exported["evidence"]["summary"]["provenance"]["inputs"]
+            inputs[:] = [item for item in inputs if item.get("path") != library_path]
+            inputs.append({"path": library_path, "sha256": library_sha})
+            self.manifest["cases"][0]["runs"][role]["evidence"]["sha256"] = json_file(evidence, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertTrue(result["valid"], result["errors"])
+
+    def test_portable_repo_library_archive_is_hashed_after_remapping(self):
+        self.make_portable()
+        library = self.root / "lib" / "libcutlass-header-identity.txt"
+        library_sha = put(library, b"repo-contained CUTLASS header archive")
+        historical_library_path = str(self.historical_root / "lib" / library.name)
+        self.manifest["cases"][0]["libraries"] = [{
+            "implementation": "baseline", "name": "CUTLASS headers", "version": "2.11",
+            "path": historical_library_path, "sha256": library_sha,
+        }]
+        for role in ("correctness_baseline", "baseline_timing"):
+            evidence = self.base / self.runs[role]["evidence"]["path"]
+            exported = json.loads(evidence.read_text())
+            exported["evidence"]["summary"]["provenance"]["inputs"].append(
+                {"path": historical_library_path, "sha256": library_sha})
+            self.manifest["cases"][0]["runs"][role]["evidence"]["sha256"] = json_file(evidence, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertTrue(result["valid"], result["errors"])
+
+        library.write_bytes(library.read_bytes() + b"tampered")
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("linked library archive is unavailable or mismatched", result["errors"][0])
+
+    def test_portable_repo_library_can_use_captured_archive_when_checkout_path_is_absent(self):
+        self.make_portable()
+        original = self.root / "lib" / "captured-cutlass-header.txt"
+        library_sha = put(original, b"frozen CUTLASS include identity")
+        archive = self.base / "source-archive" / "captured-cutlass-header.txt"
+        put(archive, original.read_bytes())
+        original.unlink()
+        historical_path = str(self.historical_root / "lib" / original.name)
+        self.manifest["cases"][0]["libraries"] = [{
+            "implementation": "baseline", "name": "CUTLASS headers", "version": "2.11",
+            "path": historical_path, "sha256": library_sha,
+        }]
+        self.manifest["cases"][0]["captured_input_archives"] = [{
+            "original_path": "lib/captured-cutlass-header.txt",
+            "archive_path": str(archive.relative_to(self.root)),
+            "sha256": library_sha,
+        }]
+        for run in self.manifest["cases"][0]["runs"].values():
+            evidence_path = self.base / run["evidence"]["path"]
+            exported = json.loads(evidence_path.read_text())
+            exported["evidence"]["summary"]["provenance"]["inputs"].append({
+                "path": historical_path, "sha256": library_sha,
+            })
+            run["evidence"]["sha256"] = json_file(evidence_path, exported)
         self.write_manifest()
         result = self.validate()
         self.assertTrue(result["valid"], result["errors"])
@@ -1072,7 +1450,7 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
 class AttentionNativeEvidenceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.contract = json.loads((Path(__file__).parents[1] / "benchmark_runs" /
+        cls.contract = json.loads((Path("/home/tumlinson/KernelWiki") / "benchmark_runs" /
                                    "volta-attention" / "cases" / "attention" /
                                    "attention_contract.json").read_text())
         cls.dimensions = CHECK._attention_case_dimensions(cls.contract)
@@ -1168,14 +1546,15 @@ class AttentionNativeEvidenceTests(unittest.TestCase):
             CHECK._attention_selector(["--impl", "online", "--impl", "split"],
                                       "profile", "--impl", "online")
 
-    def make_archive_capture(self, role, native_relative, outer_text, nested=False):
+    def make_archive_capture(self, role, native_relative, outer_text, nested=False, portable=False):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp) / "repo"
             base = root / "benchmark_runs" / "attention"
             role_dir = base / "evidence" / "roles" / role
             role_dir.mkdir(parents=True)
             (root / ".git").mkdir(parents=True)
-            lease_path = root / ".todo-orchestrator" / "runtime" / "foreground" / "lease.json"
+            lease_path = (base / "portable-leases" / f"{role}.json" if portable else
+                          root / ".todo-orchestrator" / "runtime" / "foreground" / "lease.json")
             lease_sha = json_file(lease_path, {"format": "CUDA-FOREGROUND-LEASE/1"})
 
             evidence_id = "evidence-" + role
@@ -1206,7 +1585,12 @@ class AttentionNativeEvidenceTests(unittest.TestCase):
             run = {
                 "execution": {"path": str(execution_path.relative_to(base)), "sha256": execution_sha},
                 "evidence": {"path": str(evidence_path.relative_to(base)), "sha256": evidence_sha},
-                "lease": {"path": str(lease_path.relative_to(root)), "sha256": lease_sha},
+                "lease": {
+                    "path": str(lease_path.relative_to(base if portable else root)),
+                    "sha256": lease_sha,
+                    **({"original_path": "/retired/runtime/foreground/lease.json"}
+                       if portable else {}),
+                },
                 "native_stdout_capture": {
                     "path": str(native_path.relative_to(base)), "sha256": native_sha,
                     **({"reported_path": "/runtime/inner/stdout.txt"} if nested else {}),
@@ -1242,6 +1626,7 @@ class AttentionNativeEvidenceTests(unittest.TestCase):
                     base, root, run, role, native_path,
                     summary_path if role.startswith("sanitizer_") else None,
                     log_path if role.startswith("sanitizer_") else None,
+                        portable=portable,
                 )
             finally:
                 self.assertTrue(root.exists())
@@ -1259,11 +1644,19 @@ class AttentionNativeEvidenceTests(unittest.TestCase):
             "wrapper summary\n- stdout: /runtime/inner/stdout.txt\n"
             "- raw log: /runtime/inner/raw.log\n", nested=True)
 
+    def test_attention_portable_nested_stdout_uses_archive_without_runtime_tree(self):
+        run = self.make_archive_capture(
+            "sanitizer_candidate", "compute-sanitizer/stdout.txt",
+            "wrapper summary\n- stdout: /runtime/inner/stdout.txt\n"
+            "- raw log: /runtime/inner/raw.log\n", nested=True, portable=True)
+        self.assertEqual(run["lease"]["original_path"],
+                         "/retired/runtime/foreground/lease.json")
+
 
 class GroupedLowbitNativeEvidenceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.root = Path(__file__).parents[1]
+        cls.root = Path("/home/tumlinson/KernelWiki")
         cls.bundle = cls.root / "benchmark_runs" / "volta-grouped-lowbit" / "cases" / "fixture_bundle"
         cls.gpu = "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
         cls.records = {}
@@ -1676,7 +2069,7 @@ class GroupedLowbitNativeEvidenceTests(unittest.TestCase):
 class RecurrenceNativeEvidenceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.root = Path(__file__).parents[1]
+        cls.root = Path("/home/tumlinson/KernelWiki")
         cls.base = cls.root / "benchmark_runs" / "volta-recurrence"
         cls.case = CHECK.read_json(cls.base / "summary.template.json")["cases"][0]
         cls.contract = CHECK.read_json(cls.base / "contract.json")

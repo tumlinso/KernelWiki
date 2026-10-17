@@ -203,6 +203,11 @@ def digest(path: Path) -> str:
     return hasher.hexdigest()
 
 
+def _is_sha256(value: Any) -> bool:
+    return (isinstance(value, str) and len(value) == 64 and
+            all(character in "0123456789abcdef" for character in value.lower()))
+
+
 def read_json(path: Path) -> Any:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
@@ -260,14 +265,58 @@ def sha_binding(root: Path, record: Any, label: str) -> tuple[Path, str]:
     return path, expected
 
 
-def _input_bindings(summary: dict[str, Any]) -> dict[str, str]:
+def _historical_source_root(raw: Any, current_root: Path, portable: bool) -> Path:
+    """Resolve the recorded capture root without requiring it to exist locally."""
+    if not portable:
+        return current_root.resolve()
+    if not isinstance(raw, str) or not Path(raw).is_absolute():
+        raise EvidenceError("manifest source_root must be an absolute historical path")
+    return Path(raw).resolve()
+
+
+def _capture_repo_relative(raw_path: str, root: Path, source_root: Path) -> Path | None:
+    """Return a safe project-relative path, or None for a captured external identity."""
+    raw = Path(raw_path)
+    if raw.is_absolute():
+        for capture_root in (source_root.resolve(), root.resolve()):
+            try:
+                relative = raw.relative_to(capture_root)
+                break
+            except ValueError:
+                continue
+        else:
+            return None
+    else:
+        relative = raw
+    if (not relative.parts or any(part in {"", ".", ".."} for part in relative.parts)):
+        raise EvidenceError("controller project input escapes historical source_root")
+    return relative
+
+
+def _current_path_for_capture(raw_path: str, root: Path, source_root: Path) -> str:
+    """Map paths inside either repository identity to this checkout; keep externals literal."""
+    relative = _capture_repo_relative(raw_path, root, source_root)
+    if relative is None:
+        return str(Path(raw_path).resolve())
+    mapped = (root / relative).resolve()
+    if not mapped.is_relative_to(root.resolve()):
+        raise EvidenceError("relative controller input escapes the relocated checkout")
+    return str(mapped)
+
+
+def _input_bindings(summary: dict[str, Any], root: Path | None = None,
+                    source_root: Path | None = None) -> dict[str, str]:
     provenance = summary.get("provenance")
     inputs = provenance.get("inputs") if isinstance(provenance, dict) else None
     result: dict[str, str] = {}
     if isinstance(inputs, list):
         for item in inputs:
             if isinstance(item, dict) and isinstance(item.get("path"), str) and isinstance(item.get("sha256"), str):
-                result[str(Path(item["path"]).resolve())] = item["sha256"]
+                if root is None or source_root is None:
+                    key = str(Path(item["path"]).resolve())
+                else:
+                    key = _current_path_for_capture(item["path"], root, source_root)
+                result[key] = item["sha256"]
     return result
 
 
@@ -283,7 +332,7 @@ def _repo_relative_identity(root: Path, raw_path: Any, label: str) -> Path:
     return path
 
 
-def _captured_input_archives(root: Path, case: dict[str, Any], required: bool
+def _captured_input_archives(base: Path, root: Path, case: dict[str, Any], required: bool
                              ) -> dict[str, dict[str, Any]]:
     raw_archives = case.get("captured_input_archives")
     if raw_archives is None:
@@ -306,6 +355,8 @@ def _captured_input_archives(root: Path, case: dict[str, Any], required: bool
         if not isinstance(raw_sha, str) or len(raw_sha) != 64:
             raise EvidenceError(f"{label}: SHA-256 is missing or malformed")
         archive_file = absolute_repo_file(root, archive_path, f"{label} archive")
+        if not archive_file.is_relative_to(base.resolve()):
+            raise EvidenceError(f"{label}: archive path escapes the family evidence directory")
         if digest(archive_file) != raw_sha:
             raise EvidenceError(f"{label}: archive SHA-256 mismatch")
         original_key = str(original_path)
@@ -322,13 +373,33 @@ def _captured_input_archives(root: Path, case: dict[str, Any], required: bool
     return archives
 
 
-def _exact_input_bindings(summary: dict[str, Any], expected: dict[str, str],
-                          allow_duplicate_paths: set[str] | None = None) -> bool:
-    """Require every archived capture alias with its declared digest.
+def _captured_project_file(root: Path, relative_path: str,
+                           archives: dict[str, dict[str, Any]], label: str) -> Path:
+    original = _repo_relative_identity(root, relative_path, f"{label} original path")
+    archive = archives.get(str(original))
+    if archive is not None:
+        return archive["archive_path"]
+    if not original.is_file():
+        raise EvidenceError(f"{label}: project file is missing and has no captured archive")
+    return original
 
-    A small set of attention bundles are intentionally listed both as a frozen
-    case input and as a Project Control spec input. Their duplicate provenance
-    rows are accepted only when every occurrence carries the same digest.
+
+def _controller_input_identity(path: Path,
+                               archives: dict[str, dict[str, Any]]) -> str:
+    resolved = path.resolve()
+    for original, archive in archives.items():
+        if Path(archive["archive_path"]).resolve() == resolved:
+            return original
+    return str(resolved)
+
+
+def _exact_input_bindings(summary: dict[str, Any], expected: dict[str, str],
+                          root: Path, source_root: Path,
+                          allow_duplicate_paths: set[str] | None = None) -> bool:
+    """Require archived capture aliases with their declared digests.
+
+    Attention bundles may also appear as Project Control spec inputs. Those
+    duplicates are accepted only when every occurrence carries the same digest.
     """
     provenance = summary.get("provenance")
     inputs = provenance.get("inputs") if isinstance(provenance, dict) else None
@@ -338,7 +409,10 @@ def _exact_input_bindings(summary: dict[str, Any], expected: dict[str, str],
     for item in inputs:
         if not isinstance(item, dict) or not isinstance(item.get("path"), str):
             continue
-        resolved = str(Path(item["path"]).resolve())
+        try:
+            resolved = _current_path_for_capture(item["path"], root, source_root)
+        except EvidenceError:
+            return False
         if resolved in found:
             found[resolved].append(item.get("sha256"))
     allowed = allow_duplicate_paths or set()
@@ -349,28 +423,82 @@ def _exact_input_bindings(summary: dict[str, Any], expected: dict[str, str],
     )
 
 
-def _binary_binding(summary: dict[str, Any], root: Path, expected_path: Path,
-                    expected_sha: str) -> None:
+def _validate_project_input_closure(summary: dict[str, Any], root: Path,
+                                    source_root: Path, implementation: dict[str, Any],
+                                    captured_archives: dict[str, dict[str, Any]],
+                                    label: str,
+                                    allow_duplicate_paths: set[str] | None = None) -> None:
+    """Bind every repository-local controller input to the checkout or a declared archive."""
+    provenance = summary.get("provenance")
+    inputs = provenance.get("inputs") if isinstance(provenance, dict) else None
+    if not isinstance(inputs, list):
+        raise EvidenceError(f"{label}: controller input inventory is missing")
+    executed_relative = implementation.get("executed_relative")
+    binary_sha = implementation.get("binary_sha")
+    if not isinstance(executed_relative, Path) or not _is_sha256(binary_sha):
+        raise EvidenceError(f"{label}: archived executable identity is missing")
+    seen: dict[str, str] = {}
+    for item in inputs:
+        if (not isinstance(item, dict) or not isinstance(item.get("path"), str) or
+                not _is_sha256(item.get("sha256"))):
+            raise EvidenceError(f"{label}: controller input path or SHA-256 is malformed")
+        raw_path = item["path"]
+        relative = _capture_repo_relative(raw_path, root, source_root)
+        if relative is None:
+            continue
+        key = str((root / relative).resolve())
+        input_sha = item["sha256"]
+        if key in seen:
+            if key not in (allow_duplicate_paths or set()) or seen[key] != input_sha:
+                raise EvidenceError(f"{label}: duplicate repository input identity {relative.as_posix()}")
+            continue
+        seen[key] = input_sha
+        if relative == executed_relative:
+            if input_sha != binary_sha or digest(implementation["binary_path"]) != binary_sha:
+                raise EvidenceError(f"{label}: executed binary input differs from its archived ELF")
+            continue
+        archive = captured_archives.get(key)
+        if archive is not None:
+            if input_sha != archive["sha256"]:
+                raise EvidenceError(f"{label}: repository input differs from its captured archive")
+            continue
+        current_file = (root / relative).resolve()
+        if (not current_file.is_relative_to(root.resolve()) or not current_file.is_file() or
+                digest(current_file) != input_sha):
+            raise EvidenceError(f"{label}: repository input is absent or mismatched and has no archive: {relative.as_posix()}")
+
+
+def _binary_binding(summary: dict[str, Any], root: Path, source_root: Path,
+                    portable: bool, expected_path: Path, expected_sha: str) -> None:
     binaries = summary.get("binaries")
     if not isinstance(binaries, list):
         raise EvidenceError("controller receipt does not list binary_paths")
-    target = str(expected_path.resolve())
-    if not any(isinstance(item, dict) and item.get("path") == target and
+    def captured_path(raw: Any) -> Path | None:
+        if not isinstance(raw, str) or not raw:
+            return None
+        path = Path(raw)
+        if not path.is_absolute():
+            path = (source_root if portable else root) / path
+        return path.resolve()
+
+    target = expected_path.resolve()
+    if not any(isinstance(item, dict) and captured_path(item.get("path")) == target and
                item.get("sha256") == expected_sha for item in binaries):
         raise EvidenceError(f"controller receipt is not bound to binary {expected_path}")
     provenance = summary.get("provenance")
     binary = provenance.get("binary") if isinstance(provenance, dict) else None
     if (not isinstance(binary, dict) or binary.get("sha256") != expected_sha or
-            not isinstance(binary.get("path"), str) or
-            Path(binary["path"]).resolve() != expected_path.resolve()):
+            captured_path(binary.get("path")) != target):
         raise EvidenceError("controller argv binary hash differs from the declared implementation")
 
 
-def _controller_run(base: Path, root: Path, run: Any, label: str, expected_kind: str,
+def _controller_run(base: Path, root: Path, source_root: Path, portable: bool,
+                    run: Any, label: str, expected_kind: str,
                     implementation: dict[str, Any], contract: Path, contract_sha: str,
                     inputs_path: Path, inputs_sha: str, oracle_path: Path,
                     oracle_sha: str, gpu_uuid: str,
                     evidence_ids: set[str], captured_inputs: dict[str, str] | None = None,
+                    captured_archives: dict[str, dict[str, Any]] | None = None,
                     additional_inputs: dict[str, str] | None = None,
                     allow_duplicate_captured_inputs: set[str] | None = None
                     ) -> dict[str, Any]:
@@ -378,15 +506,23 @@ def _controller_run(base: Path, root: Path, run: Any, label: str, expected_kind:
         raise EvidenceError(f"{label}: controller receipt is missing")
     execution_path = checked_file(base, run.get("execution"), f"{label} execution")
     evidence_path = checked_file(base, run.get("evidence"), f"{label} evidence")
-    # The durable lease is stored in the repo runtime tree; accept a repository-relative path.
     lease_record = run.get("lease")
     if not isinstance(lease_record, dict):
         raise EvidenceError(f"{label}: lease receipt is missing")
-    lease_path = (root / str(lease_record.get("path", ""))).resolve()
-    if not lease_path.is_relative_to(root) or not lease_path.is_file():
-        raise EvidenceError(f"{label}: controller lease receipt is unavailable")
-    if digest(lease_path) != lease_record.get("sha256"):
-        raise EvidenceError(f"{label}: lease SHA-256 mismatch")
+    if portable:
+        lease_path = checked_file(base, lease_record, f"{label} archived lease")
+        original_lease_path = lease_record.get("original_path")
+        if not isinstance(original_lease_path, str) or not Path(original_lease_path).is_absolute():
+            raise EvidenceError(f"{label}: archived lease lacks its absolute original_path")
+        original_lease_path = str(Path(original_lease_path).resolve())
+    else:
+        # Legacy manifests point directly into the local Project Control runtime.
+        lease_path = (root / str(lease_record.get("path", ""))).resolve()
+        if not lease_path.is_relative_to(root) or not lease_path.is_file():
+            raise EvidenceError(f"{label}: controller lease receipt is unavailable")
+        if digest(lease_path) != lease_record.get("sha256"):
+            raise EvidenceError(f"{label}: lease SHA-256 mismatch")
+        original_lease_path = str(lease_path)
 
     execution = read_json(execution_path)
     exported = read_json(evidence_path)
@@ -405,7 +541,7 @@ def _controller_run(base: Path, root: Path, run: Any, label: str, expected_kind:
         raise EvidenceError(f"{label}: wrong or failed controller evidence kind")
     execution_lease = execution.get("lease_receipt")
     if (not isinstance(execution_lease, str) or not execution_lease or
-            Path(execution_lease).resolve() != lease_path):
+            str(Path(execution_lease).resolve()) != original_lease_path):
         raise EvidenceError(f"{label}: lease path differs from execution receipt")
     if execution.get("returncode", 0) != 0:
         raise EvidenceError(f"{label}: controller process return code was not zero")
@@ -423,8 +559,9 @@ def _controller_run(base: Path, root: Path, run: Any, label: str, expected_kind:
             not toolchain.get("nvcc") or not toolchain.get("sanitizer")):
         raise EvidenceError(f"{label}: actual CUDA 12.9 compiler/sanitizer identity is missing")
     source = provenance.get("source")
-    if not isinstance(source, dict) or Path(str(source.get("project_root", ""))).resolve() != root:
-        raise EvidenceError(f"{label}: controller source snapshot is unbound to this repository")
+    if (not isinstance(source, dict) or
+            Path(str(source.get("project_root", ""))).resolve() != source_root):
+        raise EvidenceError(f"{label}: controller source snapshot is unbound to the declared source_root")
     expected_inputs = {
         str(contract.resolve()): contract_sha,
         str(inputs_path.resolve()): inputs_sha,
@@ -435,13 +572,18 @@ def _controller_run(base: Path, root: Path, run: Any, label: str, expected_kind:
         expected_inputs.update(captured_inputs)
     if additional_inputs:
         expected_inputs.update(additional_inputs)
-    actual_inputs = _input_bindings(summary)
+    actual_inputs = _input_bindings(summary, root, source_root)
+    if portable:
+        _validate_project_input_closure(summary, root, source_root, implementation,
+                                        captured_archives or {}, label,
+                                        allow_duplicate_captured_inputs)
     if any(actual_inputs.get(path) != value for path, value in expected_inputs.items()):
         raise EvidenceError(f"{label}: controller inputs do not bind the contract, represented data, and source")
     if captured_inputs and not _exact_input_bindings(
-            summary, captured_inputs, allow_duplicate_captured_inputs):
+            summary, captured_inputs, root, source_root, allow_duplicate_captured_inputs):
         raise EvidenceError(f"{label}: controller inputs do not exactly bind archived source aliases")
-    _binary_binding(summary, root, implementation["executed_path"], implementation["binary_sha"])
+    _binary_binding(summary, root, source_root, portable,
+                    implementation["executed_path"], implementation["binary_sha"])
 
     gpus = provenance.get("gpus")
     if not isinstance(gpus, list) or not any(
@@ -455,9 +597,9 @@ def _controller_run(base: Path, root: Path, run: Any, label: str, expected_kind:
     lease = read_json(lease_path)
     expected_resource = f"accelerator:{gpu_uuid}"
     if (lease.get("format") != "CUDA-FOREGROUND-LEASE/1" or
-            lease.get("project_root") != str(root) or
+            Path(str(lease.get("project_root", ""))).resolve() != source_root or
             expected_resource not in lease.get("resource_ids", [])):
-        raise EvidenceError(f"{label}: foreground lease is not bound to the declared GPU and repository")
+        raise EvidenceError(f"{label}: foreground lease is not bound to the declared GPU and source_root")
     return summary
 
 
@@ -701,8 +843,10 @@ def _kwv08_suite_records(base: Path, root: Path, case: dict[str, Any],
     }
 
 
-def _kwv08_source_closure(root: Path, case: dict[str, Any]
+def _kwv08_source_closure(root: Path, case: dict[str, Any], base: Path | None = None,
+                          source_root: Path | None = None, portable: bool = False
                           ) -> tuple[dict[str, Any], dict[str, dict[str, Any]], dict[str, str]]:
+    source_root = source_root or root
     case_id = str(case.get("id", "recurrence"))
     closure_path, closure_sha = sha_binding(root, case.get("source_closure"),
                                             f"{case_id} source closure")
@@ -717,7 +861,7 @@ def _kwv08_source_closure(root: Path, case: dict[str, Any]
             not isinstance(declarations, list) or len(declarations) != len(KWV08_ROLES)):
         raise EvidenceError(f"{case_id}: source closure format or six-role declaration set is invalid")
 
-    captured = _captured_input_archives(root, case, required=True)
+    captured = _captured_input_archives(base or root, root, case, required=True)
     expected: dict[str, tuple[str, str, int]] = {}
     for index, item in enumerate(repository_inputs):
         label = f"{case_id} source closure repository input {index}"
@@ -752,7 +896,8 @@ def _kwv08_source_closure(root: Path, case: dict[str, Any]
                 type(size) is not int or size < 0 or raw_path in expected_toolchain):
             raise EvidenceError(f"{label}: toolchain identity is malformed or duplicated")
         path = Path(raw_path)
-        if not path.is_file() or path.stat().st_size != size or digest(path) != expected_sha:
+        if (not portable and
+                (not path.is_file() or path.stat().st_size != size or digest(path) != expected_sha)):
             raise EvidenceError(f"{label}: current toolchain file differs from captured identity")
         expected_toolchain[raw_path] = expected_sha
 
@@ -804,7 +949,7 @@ def _kwv08_source_closure(root: Path, case: dict[str, Any]
         raise EvidenceError(f"{case_id}: source closure does not cover every declared role input")
 
     gpu_uuid = str(case.get("gpu_uuid", ""))
-    if (closure.get("project_root") != str(root) or
+    if (closure.get("project_root") != str(source_root) or
             closure.get("gpu_uuid_target") != gpu_uuid):
         raise EvidenceError(f"{case_id}: source closure root or target GPU differs from the summary")
     return ({"path": closure_path, "sha256": closure_sha, "data": closure,
@@ -813,13 +958,15 @@ def _kwv08_source_closure(root: Path, case: dict[str, Any]
 
 
 def _kwv08_validate_spec(root: Path, role: str, spec_record: dict[str, Any],
-                         binary_path: Path, gpu_uuid: str) -> None:
+                         binary_path: Path, gpu_uuid: str,
+                         source_root: Path | None = None) -> None:
+    source_root = source_root or root
     spec = spec_record["spec"]
     _kind, _implementation_name, variant, mode, selected_case = KWV08_ROLES[role]
     native_role = f"recurrence_{role}"
     recipe = "ncu" if _kind == "foreground-ncu" else (
         "compute-sanitizer" if _kind == "foreground-compute-sanitizer" else "baseline")
-    expected_argv = [str(binary_path.relative_to(root)), "--bundle",
+    expected_argv = [str(binary_path.relative_to(source_root)), "--bundle",
                       "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
                       "--variant", variant, "--mode", mode]
     if selected_case is not None:
@@ -827,14 +974,14 @@ def _kwv08_validate_spec(root: Path, role: str, spec_record: dict[str, Any],
     if (spec.get("role") != native_role or
             spec.get("contract_id") != "kwv08-recurrence-state-ownership" or
             spec.get("recipe") != recipe or spec.get("argv") != expected_argv or
-            spec.get("project_root") != str(root) or spec.get("command_cwd") != str(root) or
+        spec.get("project_root") != str(source_root) or spec.get("command_cwd") != str(source_root) or
             spec.get("resources", {}).get("gpu_uuids") != [gpu_uuid]):
         raise EvidenceError(f"recurrence {role}: captured controller spec differs from the fixed native invocation")
     benchmark = spec.get("benchmark")
     build_argv = benchmark.get("build_argv") if isinstance(benchmark, dict) else None
     if role == "correctness_baseline":
-        script = str((root / "benchmark_runs/volta-recurrence/source/capture_nvcc_build.sh").resolve())
-        source = str((root / "artifacts/kernels/volta-recurrence/variants/gdn_runner.cu").resolve())
+        script = str((source_root / "benchmark_runs/volta-recurrence/source/capture_nvcc_build.sh").resolve())
+        source = str((source_root / "artifacts/kernels/volta-recurrence/variants/gdn_runner.cu").resolve())
         if (not isinstance(build_argv, list) or len(build_argv) < 8 or
                 build_argv[0] != script or "--" not in build_argv or
                 "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc" not in build_argv or
@@ -846,7 +993,9 @@ def _kwv08_validate_spec(root: Path, role: str, spec_record: dict[str, Any],
 
 
 def _kwv08_validate_argv(summary: dict[str, Any], root: Path, role: str,
-                         implementation: dict[str, Any]) -> None:
+                         implementation: dict[str, Any],
+                         source_root: Path | None = None) -> None:
+    source_root = source_root or root
     _kind, _implementation_name, variant, mode, selected_case = KWV08_ROLES[role]
     provenance = summary.get("provenance")
     argv = provenance.get("argv") if isinstance(provenance, dict) else None
@@ -854,7 +1003,7 @@ def _kwv08_validate_argv(summary: dict[str, Any], root: Path, role: str,
         raise EvidenceError(f"recurrence {role}: controller application argv is missing")
     executable = Path(argv[0])
     if not executable.is_absolute():
-        executable = root / executable
+        executable = source_root / executable
     if executable.resolve() != implementation["executed_path"].resolve():
         raise EvidenceError(f"recurrence {role}: executed binary differs from the shared measured ELF")
     expected = ["--bundle", "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
@@ -882,12 +1031,20 @@ def _kwv08_archive_hash(manifest: dict[str, Any], path: Path, role_dir: Path,
 
 
 def _kwv08_copied_role_file(root: Path, role_dir: Path, raw_path: str,
-                            label: str) -> Path:
+                            label: str, source_root: Path | None = None,
+                            portable: bool = False) -> Path:
     """Resolve a collector file path while keeping it inside the archived role."""
     supplied = Path(raw_path)
     role_root = role_dir.resolve()
     if supplied.is_absolute():
         candidate = supplied.resolve()
+        if portable:
+            source_root = source_root or root
+            historical_role = (source_root / role_dir.resolve().relative_to(root.resolve())).resolve()
+            try:
+                candidate = (role_root / candidate.relative_to(historical_role)).resolve()
+            except ValueError:
+                pass
     else:
         repo_candidate = (root / supplied).resolve()
         try:
@@ -905,7 +1062,10 @@ def _kwv08_copied_role_file(root: Path, role_dir: Path, raw_path: str,
 
 
 def _kwv08_bind_stdout_capture(base: Path, root: Path, role: str, gpu_uuid: str,
-                               run: dict[str, Any], native_stdout: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+                               run: dict[str, Any], native_stdout: Path,
+                               source_root: Path | None = None,
+                               portable: bool = False) -> tuple[dict[str, Any], dict[str, Any]]:
+    source_root = source_root or root
     archive_path = checked_file(base, run.get("archive_manifest"), f"recurrence {role} archive manifest")
     archive = read_json(archive_path)
     role_dir = archive_path.parent
@@ -950,7 +1110,8 @@ def _kwv08_bind_stdout_capture(base: Path, root: Path, role: str, gpu_uuid: str,
         if not isinstance(item, dict) or not isinstance(item.get("path"), str):
             raise EvidenceError(f"recurrence {role}: copied-file receipt is malformed")
         archived = _kwv08_copied_role_file(root, role_dir, item["path"],
-                                           f"recurrence {role} copied file")
+                                           f"recurrence {role} copied file",
+                                           source_root=source_root, portable=portable)
         archived = checked_file(base, {"path": archived.relative_to(base).as_posix(),
                                        "sha256": item.get("sha256")},
                                 f"recurrence {role} copied file")
@@ -968,7 +1129,8 @@ def _kwv08_bind_stdout_capture(base: Path, root: Path, role: str, gpu_uuid: str,
     lease_record = run.get("lease")
     if not isinstance(lease_record, dict):
         raise EvidenceError(f"recurrence {role}: lease binding is missing")
-    lease_path = absolute_repo_file(root, lease_record.get("path"), f"recurrence {role} lease")
+    lease_path = (checked_file(base, lease_record, f"recurrence {role} archived lease") if portable
+                  else absolute_repo_file(root, lease_record.get("path"), f"recurrence {role} lease"))
     if (archive.get("evidence_id") != evidence_id or controller.get("evidence_id") != evidence_id or
             digest(controller_path) != files.get("controller-run.json") or
             digest(evidence_path) != files.get("controller-evidence.json") or
@@ -1276,7 +1438,10 @@ def _validate_rows_primary_argv(summaries: dict[str, dict[str, Any]], root: Path
                                 contract: dict[str, Any], input_path: Path,
                                 input_sha: str, reference_path: Path,
                                 reference_sha: str,
-                                implementations: dict[str, dict[str, Any]]) -> None:
+                                implementations: dict[str, dict[str, Any]],
+                                source_root: Path | None = None,
+                                portable: bool = False) -> None:
+    source_root = source_root or root
     cases = _row_contract_cases(contract)
     timing_cases = contract.get("selected_timing_case_ids")
     if (not isinstance(timing_cases, list) or not timing_cases or
@@ -1342,7 +1507,7 @@ def _validate_rows_primary_argv(summaries: dict[str, dict[str, Any]], root: Path
                                   "--rotations", str(rotations)))
         if argv[1:] != expected_argv:
             raise EvidenceError(f"{role}: controller argv differs from the frozen rows role")
-        if _input_bindings(summary).get(str(reference_path.resolve())) != reference_sha:
+        if _input_bindings(summary, root, source_root).get(str(reference_path.resolve())) != reference_sha:
             raise EvidenceError(f"{role}: controller inputs do not bind the rows reference output")
 
 
@@ -1460,7 +1625,8 @@ def _gemm_option(argv: list[Any], role: str, flag: str,
 
 
 def _validate_gemm_input_option(argv: list[Any], role: str, root: Path,
-                                expected_path: Path) -> None:
+                                expected_path: Path, source_root: Path,
+                                portable: bool) -> None:
     occurrences = [
         index for index, item in enumerate(argv)
         if isinstance(item, str) and
@@ -1473,13 +1639,17 @@ def _validate_gemm_input_option(argv: list[Any], role: str, root: Path,
             not isinstance(argv[index + 1], str) or argv[index + 1].startswith("--")):
         raise EvidenceError(f"{role}: controller argv has malformed --input selector")
     input_arg = Path(argv[index + 1])
-    if not input_arg.is_absolute():
+    if portable:
+        mapped = _current_path_for_capture(str(input_arg), root, source_root)
+        input_arg = Path(mapped)
+    elif not input_arg.is_absolute():
         input_arg = root / input_arg
     if input_arg.resolve() != expected_path.resolve():
         raise EvidenceError(f"{role}: controller argv --input does not resolve to represented GEMM input")
 
 
 def _validate_gemm_primary_argv(summaries: dict[str, dict[str, Any]], root: Path,
+                               source_root: Path, portable: bool,
                                contract: dict[str, Any], input_path: Path,
                                implementations: dict[str, dict[str, Any]]) -> None:
     """Bind the six primary GEMM run roles to their declared runner selectors."""
@@ -1521,7 +1691,7 @@ def _validate_gemm_primary_argv(summaries: dict[str, dict[str, Any]], root: Path
                 f"{role}: controller argv[0] differs from the declared GEMM executable"
             )
         _gemm_option(argv, role, "--case", case_id)
-        _validate_gemm_input_option(argv, role, root, input_path)
+        _validate_gemm_input_option(argv, role, root, input_path, source_root, portable)
         _gemm_option(argv, role, "--impl", implementation)
         _gemm_option(argv, role, "--mode", mode)
         _gemm_option(argv, role, "--stages", stages)
@@ -1736,7 +1906,8 @@ def _attention_selector(argv: list[Any], role: str, flag: str, expected: str | N
         raise EvidenceError(f"{role}: argv {flag} selector differs from the attention role")
 
 
-def _attention_validate_argv(summary: dict[str, Any], root: Path, role: str,
+def _attention_validate_argv(summary: dict[str, Any], root: Path, source_root: Path,
+                             portable: bool, archives: dict[str, dict[str, Any]], role: str,
                              expected_impl: str, expected_mode: str, expected_case: str,
                              expected_splits: int,
                              implementation: dict[str, Any], input_path: Path,
@@ -1746,17 +1917,27 @@ def _attention_validate_argv(summary: dict[str, Any], root: Path, role: str,
     if not isinstance(argv, list) or not argv or not isinstance(argv[0], str):
         raise EvidenceError(f"{role}: controller provenance argv is missing")
     executable = Path(argv[0])
-    if not executable.is_absolute():
+    if portable:
+        if not executable.is_absolute():
+            executable = source_root / executable
+    elif not executable.is_absolute():
         executable = root / executable
     binary = provenance.get("binary")
     binary_path = Path(str(binary.get("path", ""))) if isinstance(binary, dict) else Path()
     if not binary_path.is_absolute():
-        binary_path = root / binary_path
+        binary_path = (source_root if portable else root) / binary_path
     if (executable.resolve() != implementation["executed_path"].resolve() or
             binary_path.resolve() != implementation["executed_path"].resolve()):
         raise EvidenceError(f"{role}: controller argv executable differs from the declared attention binary")
-    _attention_selector(argv, role, "--input", str(input_path.relative_to(root)))
-    _attention_selector(argv, role, "--reference", str(oracle_path.relative_to(root)))
+    input_identity = Path(_controller_input_identity(input_path, archives))
+    oracle_identity = Path(_controller_input_identity(oracle_path, archives))
+    try:
+        input_selector = input_identity.relative_to(root).as_posix()
+        oracle_selector = oracle_identity.relative_to(root).as_posix()
+    except ValueError as exc:
+        raise EvidenceError(f"{role}: input or reference selector is not repository-relative") from exc
+    _attention_selector(argv, role, "--input", input_selector)
+    _attention_selector(argv, role, "--reference", oracle_selector)
     _attention_selector(argv, role, "--impl", expected_impl)
     _attention_selector(argv, role, "--mode", expected_mode)
     _attention_selector(argv, role, "--case", expected_case)
@@ -1772,7 +1953,9 @@ def _attention_validate_argv(summary: dict[str, Any], root: Path, role: str,
         _attention_selector(argv, role, "--splits", None)
 
 
-def _attention_validate_profile(root: Path, base: Path, run: dict[str, Any],
+def _attention_validate_profile(root: Path, source_root: Path, portable: bool,
+                                base: Path, captured_archives: dict[str, dict[str, Any]],
+                                run: dict[str, Any],
                                 summary: dict[str, Any], label: str) -> None:
     profile = run.get("profile")
     if not isinstance(profile, dict):
@@ -1801,22 +1984,26 @@ def _attention_validate_profile(root: Path, base: Path, run: dict[str, Any],
                         if line.strip()]
     except (OSError, json.JSONDecodeError) as exc:
         raise EvidenceError(f"{label}: malformed NCU shim invocation log") from exc
-    shim_path = absolute_repo_file(root, "benchmark_runs/volta-environment/ncu-collection-shim.py",
-                                   f"{label} checked-in NCU shim")
+    shim_relative_path = "benchmark_runs/volta-environment/ncu-collection-shim.py"
+    shim_path = _captured_project_file(root, shim_relative_path, captured_archives,
+                                       f"{label} checked-in NCU shim")
     shim_sha = digest(shim_path)
     ncu_path = Path(str(ncu_identity["path"])).resolve()
-    inputs = _input_bindings(summary)
+    inputs = _input_bindings(summary, root, source_root)
+    historical_shim_path = (source_root / shim_relative_path).resolve()
+    shim_identity_path = (root / shim_relative_path).resolve()
     collections = [item for item in shim_records if isinstance(item, dict) and
                    item.get("policy") == "collection-clock-control-none-source-import-yes"]
     if not collections or not all(
         isinstance(item.get("argv_executed"), list) and
         _argument_values(item["argv_executed"], "--clock-control") == ["none"] and
         _argument_values(item["argv_executed"], "--import-source") == ["yes"] and
-        isinstance(item.get("shim_path"), str) and Path(item["shim_path"]).resolve() == shim_path and
-        item.get("shim_sha256") == shim_sha and inputs.get(str(shim_path)) == shim_sha and
+        isinstance(item.get("shim_path"), str) and Path(item["shim_path"]).resolve() == historical_shim_path and
+        item.get("shim_sha256") == shim_sha and inputs.get(str(shim_identity_path)) == shim_sha and
         isinstance(item.get("actual_ncu_path"), str) and
-        Path(item["actual_ncu_path"]).resolve() == ncu_path and ncu_path.is_file() and
-        item.get("actual_ncu_sha256") == digest(ncu_path) and
+        Path(item["actual_ncu_path"]).resolve() == ncu_path and
+        _is_sha256(item.get("actual_ncu_sha256")) and
+        (portable or (ncu_path.is_file() and item.get("actual_ncu_sha256") == digest(ncu_path))) and
         inputs.get(str(ncu_path)) == item.get("actual_ncu_sha256")
         for item in collections
     ):
@@ -1840,7 +2027,8 @@ def _attention_archive_manifest(base: Path, run: dict[str, Any], role: str,
 def _attention_bind_stdout_capture(base: Path, root: Path, run: dict[str, Any],
                                    role: str, native_stdout: Path,
                                    sanitizer_summary: Path | None = None,
-                                   sanitizer_log: Path | None = None) -> None:
+                                   sanitizer_log: Path | None = None,
+                                   portable: bool = False) -> None:
     """Bind app stdout to the archive, and bind outer stdout to the PC export.
 
     Direct runner output is itself the controller-captured stdout artifact. For
@@ -1874,8 +2062,8 @@ def _attention_bind_stdout_capture(base: Path, root: Path, run: dict[str, Any],
     lease_record = run.get("lease")
     if not isinstance(lease_record, dict) or not isinstance(lease_record.get("path"), str):
         raise EvidenceError(f"attention {role}: archived lease path is missing")
-    lease_path = (root / lease_record["path"]).resolve()
-    # The checked controller lease is outside the evidence base by design.
+    lease_path = (checked_file(base, lease_record, f"attention {role} archived lease")
+                  if portable else (root / lease_record["path"]).resolve())
     if (not lease_path.is_relative_to(root.resolve()) or not lease_path.is_file() or
             digest(lease_path) != lease_record.get("sha256")):
         raise EvidenceError(f"attention {role}: archived lease does not match the run record")
@@ -2422,7 +2610,9 @@ def _kwv07_native_checks(result: dict[str, Any], case_id: str, records: dict[str
         raise EvidenceError(f"{label}: native aggregate counts or error maxima differ from case records")
 
 
-def _kwv07_source_closure(root: Path, case: dict[str, Any], case_id: str
+def _kwv07_source_closure(root: Path, case: dict[str, Any], case_id: str,
+                          base: Path | None = None, source_root: Path | None = None,
+                          portable: bool = False
                           ) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
     closure_path, closure_sha = sha_binding(root, case.get("source_closure"),
                                             f"{case_id} source closure")
@@ -2434,7 +2624,7 @@ def _kwv07_source_closure(root: Path, case: dict[str, Any], case_id: str
             not isinstance(records, list) or not records or
             not isinstance(declarations, list) or len(declarations) != 12):
         raise EvidenceError(f"{case_id}: source closure format or declaring spec set is invalid")
-    captured = _captured_input_archives(root, case, required=True)
+    captured = _captured_input_archives(base or root, root, case, required=True)
     expected: dict[str, tuple[str, str, int]] = {}
     for index, item in enumerate(records):
         label = f"{case_id} source closure input {index}"
@@ -2505,14 +2695,16 @@ def _kwv07_source_closure(root: Path, case: dict[str, Any], case_id: str
 def _kwv07_validate_spec(root: Path, case_id: str, role: str,
                          spec_record: dict[str, Any], binary_path: Path,
                          gpu_uuid: str,
-                         expected_role: tuple[str, str, str, str, str | None]) -> None:
+                         expected_role: tuple[str, str, str, str, str | None],
+                         source_root: Path | None = None) -> None:
+    source_root = source_root or root
     _implementation_group, implementation, _kind, mode, selected_case = expected_role
     spec = spec_record["spec"]
     suite = KWV07_ROLE_SPECS[case_id]["suite"]
     expected_recipe = "ncu" if _kind == "foreground-ncu" else (
         "compute-sanitizer" if _kind == "foreground-compute-sanitizer" else "baseline")
     expected_argv = [
-        str(binary_path.relative_to(root)), "--bundle",
+        str(binary_path.relative_to(source_root)), "--bundle",
         "benchmark_runs/volta-grouped-lowbit/cases/fixture_bundle",
         "--suite", suite, "--impl", implementation, "--mode", mode,
     ]
@@ -2520,7 +2712,7 @@ def _kwv07_validate_spec(root: Path, case_id: str, role: str,
         expected_argv += ["--case", selected_case]
     if (spec.get("role") != role or spec.get("contract_id") != case_id or
             spec.get("recipe") != expected_recipe or spec.get("argv") != expected_argv or
-            spec.get("project_root") != str(root) or spec.get("command_cwd") != str(root) or
+            spec.get("project_root") != str(source_root) or spec.get("command_cwd") != str(source_root) or
             spec.get("resources", {}).get("gpu_uuids") != [gpu_uuid]):
         raise EvidenceError(f"{case_id} {role}: archived controller spec does not match the native role")
     benchmark = spec.get("benchmark")
@@ -2530,8 +2722,8 @@ def _kwv07_validate_spec(root: Path, case_id: str, role: str,
         if (not isinstance(build_argv, list) or not build_argv or
                 build_argv[0] != "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc" or
                 "-arch=sm_70" not in build_argv or "-lcublas" not in build_argv or
-                str((root / "artifacts/kernels/volta-grouped-lowbit/variants/kwv07_runner.cu").resolve()) not in build_argv or
-                str((root / "artifacts/kernels/volta-grouped-lowbit/variants/grouped_lowbit.cu").resolve()) not in build_argv or
+                str((source_root / "artifacts/kernels/volta-grouped-lowbit/variants/kwv07_runner.cu").resolve()) not in build_argv or
+                str((source_root / "artifacts/kernels/volta-grouped-lowbit/variants/grouped_lowbit.cu").resolve()) not in build_argv or
                 build_argv[-2:] != ["-o", str(binary_path)]):
             raise EvidenceError(f"{case_id} {role}: first grouped role does not build the shared SM70 binary")
     elif build_argv:
@@ -2546,7 +2738,9 @@ def _kwv07_validate_timing_scope(case_id: str, case: dict[str, Any]) -> None:
 
 def _kwv07_validate_argv(summary: dict[str, Any], root: Path, case_id: str,
                          role: str, implementation: dict[str, Any],
-                         expected_role: tuple[str, str, str, str, str | None]) -> None:
+                         expected_role: tuple[str, str, str, str, str | None],
+                         source_root: Path | None = None) -> None:
+    source_root = source_root or root
     _impl_group, native_impl, _kind, mode, selected_case = expected_role
     provenance = summary.get("provenance")
     argv = provenance.get("argv") if isinstance(provenance, dict) else None
@@ -2554,7 +2748,7 @@ def _kwv07_validate_argv(summary: dict[str, Any], root: Path, case_id: str,
         raise EvidenceError(f"{case_id} {role}: controller application argv is missing")
     executable = Path(argv[0])
     if not executable.is_absolute():
-        executable = root / executable
+        executable = source_root / executable
     if executable.resolve() != implementation["executed_path"].resolve():
         raise EvidenceError(f"{case_id} {role}: executed native binary differs from shared ELF")
     expected = [
@@ -2587,7 +2781,8 @@ def _kwv07_archive_hash(manifest: dict[str, Any], path: Path, role_dir: Path,
 def _kwv07_bind_stdout_capture(base: Path, root: Path, case_id: str,
                                role: str, gpu_uuid: str, run: dict[str, Any], native_stdout: Path,
                                sanitizer_summary: Path | None = None,
-                               sanitizer_log: Path | None = None) -> dict[str, Any]:
+                               sanitizer_log: Path | None = None,
+                               portable: bool = False) -> dict[str, Any]:
     archive_path = checked_file(base, run.get("archive_manifest"), f"{case_id} {role} archive manifest")
     archive = read_json(archive_path)
     evidence_path = checked_file(base, run.get("evidence"), f"{case_id} {role} controller export")
@@ -2624,7 +2819,8 @@ def _kwv07_bind_stdout_capture(base: Path, root: Path, case_id: str,
     lease = run.get("lease")
     if not isinstance(lease, dict):
         raise EvidenceError(f"{case_id} {role}: lease capture is missing")
-    lease_path = absolute_repo_file(root, lease.get("path"), f"{case_id} {role} lease")
+    lease_path = (checked_file(base, lease, f"{case_id} {role} archived lease") if portable
+                  else absolute_repo_file(root, lease.get("path"), f"{case_id} {role} lease"))
     if files.get("lease.json") != digest(lease_path) or digest(lease_path) != lease.get("sha256"):
         raise EvidenceError(f"{case_id} {role}: archive manifest differs from lease capture")
 
@@ -2711,8 +2907,8 @@ def _kwv07_bind_profile_files(base: Path, run: dict[str, Any], label: str,
         raise EvidenceError(f"{label}: NCU raw counter CSV path is not the captured raw.csv artifact")
 
 
-def _check_kwv07_case(base: Path, root: Path, case: dict[str, Any],
-                      evidence_ids: set[str], contract_path: Path,
+def _check_kwv07_case(base: Path, root: Path, source_root: Path, portable: bool,
+                      case: dict[str, Any], evidence_ids: set[str], contract_path: Path,
                       contract_sha: str, contract: dict[str, Any]) -> None:
     case_id = case["id"]
     role_spec = KWV07_ROLE_SPECS.get(case_id)
@@ -2735,7 +2931,8 @@ def _check_kwv07_case(base: Path, root: Path, case: dict[str, Any],
         raise EvidenceError(f"{case_id}: declared GPU UUID is malformed")
     uuid_hex = gpu_uuid.removeprefix("GPU-").replace("-", "").lower()
 
-    closure, captured_archives = _kwv07_source_closure(root, case, case_id)
+    closure, captured_archives = _kwv07_source_closure(
+        root, case, case_id, base=base, source_root=source_root, portable=portable)
     captured_inputs = {str(item["original_path"]): item["sha256"]
                        for item in captured_archives.values()}
     if (str(contract_path.resolve()) not in captured_inputs or
@@ -2766,19 +2963,27 @@ def _check_kwv07_case(base: Path, root: Path, case: dict[str, Any],
             raise EvidenceError(f"{case_id} {name}: source differs from its captured archive")
         binary_path, binary_sha = sha_binding(root, entry.get("binary"), f"{case_id} {name} binary archive")
         executed_raw = entry.get("executed_path")
-        executed_path = absolute_repo_file(root, executed_raw, f"{case_id} {name} executed binary")
-        if digest(executed_path) != binary_sha:
+        if portable:
+            executed_relative = _capture_repo_relative(executed_raw, root, source_root)
+            if executed_relative is None:
+                raise EvidenceError(f"{case_id} {name}: executed binary escapes historical source root")
+            executed_path = (source_root / executed_relative).resolve()
+        else:
+            executed_path = absolute_repo_file(root, executed_raw, f"{case_id} {name} executed binary")
+            executed_relative = executed_path.relative_to(root.resolve())
+        if not portable and digest(executed_path) != binary_sha:
             raise EvidenceError(f"{case_id} {name}: executed binary differs from shared binary archive")
         bound_impls[name] = {
             "source_path": source_path, "source_input_path": original_path,
             "source_sha": source_sha, "binary_path": binary_path,
-            "executed_path": executed_path, "binary_sha": binary_sha,
+            "executed_path": executed_path, "executed_relative": executed_relative,
+            "binary_sha": binary_sha,
         }
     baseline, candidate = bound_impls["baseline"], bound_impls["candidate"]
     if (baseline["binary_sha"] != candidate["binary_sha"] or
             baseline["executed_path"] != candidate["executed_path"] or
             baseline["binary_path"] != candidate["binary_path"] or
-            baseline["executed_path"].relative_to(root).as_posix() !=
+            baseline["executed_path"].relative_to(source_root).as_posix() !=
             "benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner"):
         raise EvidenceError(f"{case_id}: baseline and candidate do not share the one frozen KWV07 ELF")
 
@@ -2790,7 +2995,8 @@ def _check_kwv07_case(base: Path, root: Path, case: dict[str, Any],
         impl_group, native_impl, expected_kind, mode, selected_case = expected_role
         implementation = bound_impls[impl_group]
         _kwv07_validate_spec(root, case_id, role, declared_specs[role],
-                             implementation["executed_path"], gpu_uuid, expected_role)
+                             implementation["executed_path"], gpu_uuid, expected_role,
+                             source_root=source_root)
 
     summaries: dict[str, dict[str, Any]] = {}
     archives: dict[str, dict[str, Any]] = {}
@@ -2799,12 +3005,14 @@ def _check_kwv07_case(base: Path, root: Path, case: dict[str, Any],
         label = f"{case_id} {role}"
         implementation = bound_impls[impl_group]
         summary = _controller_run(
-            base, root, runs.get(role), label, expected_kind, implementation,
+            base, root, source_root, portable, runs.get(role), label, expected_kind, implementation,
             contract_path, contract_sha, input_path, input_sha, oracle_path, oracle_sha,
             gpu_uuid, evidence_ids, captured_inputs,
+            captured_archives=captured_archives,
             allow_duplicate_captured_inputs=set(captured_inputs),
         )
-        _kwv07_validate_argv(summary, root, case_id, role, implementation, expected_role)
+        _kwv07_validate_argv(summary, root, case_id, role, implementation, expected_role,
+                             source_root=source_root)
         spec = declared_specs[role]["spec"]
         expected_build = spec.get("benchmark", {}).get("build_argv") if isinstance(
             spec.get("benchmark"), dict) else None
@@ -2829,11 +3037,12 @@ def _check_kwv07_case(base: Path, root: Path, case: dict[str, Any],
             sanitizer_log = checked_file(base, run.get("sanitizer_log"),
                                          f"{label} raw Compute Sanitizer log")
         archive = _kwv07_bind_stdout_capture(base, root, case_id, role, gpu_uuid,
-                                             run, native_path, sanitizer_summary, sanitizer_log)
+                                             run, native_path, sanitizer_summary, sanitizer_log,
+                                             portable=portable)
         archive_binary_hash = archive.get("files", {}).get("measured_binary")
         if (archive.get("runner_status") != "passed" or
                 archive.get("binary_path") not in {
-                    str(implementation["executed_path"].relative_to(root)),
+                    str(implementation["executed_path"].relative_to(source_root)),
                     str(implementation["executed_path"]),
                 } or archive_binary_hash != implementation["binary_sha"]):
             raise EvidenceError(f"{label}: role archive does not bind the shared native binary or app pass")
@@ -2851,11 +3060,27 @@ def _check_kwv07_case(base: Path, root: Path, case: dict[str, Any],
                 not all(library.get(field) for field in ("name", "version", "path", "sha256"))):
             raise EvidenceError(f"{case_id}: linked library identity/version/path/hash is malformed")
         library_raw = Path(str(library["path"]))
-        library_path = (library_raw if library_raw.is_absolute() else root / library_raw).resolve()
-        if not library_path.is_file() or digest(library_path) != library["sha256"]:
-            raise EvidenceError(f"{case_id}: linked library path/hash differs")
+        if portable:
+            library_relative = _capture_repo_relative(str(library_raw), root, source_root)
+            if library_relative is None:
+                library_path = library_raw.resolve()
+                if not _is_sha256(library["sha256"]):
+                    raise EvidenceError(f"{case_id}: external linked library hash is malformed")
+            else:
+                library_path = (root / library_relative).resolve()
+                archive_record = captured_archives.get(str(library_path))
+                if archive_record is not None:
+                    if archive_record["sha256"] != library["sha256"]:
+                        raise EvidenceError(f"{case_id}: linked library differs from captured repository archive")
+                elif (not library_path.is_relative_to(root.resolve()) or not library_path.is_file() or
+                      digest(library_path) != library["sha256"]):
+                    raise EvidenceError(f"{case_id}: linked repository library is missing or mismatched")
+        else:
+            library_path = (library_raw if library_raw.is_absolute() else root / library_raw).resolve()
+            if not library_path.is_file() or digest(library_path) != library["sha256"]:
+                raise EvidenceError(f"{case_id}: linked library path/hash differs")
         for role, summary in summaries.items():
-            if _input_bindings(summary).get(str(library_path)) != library["sha256"]:
+            if _input_bindings(summary, root, source_root).get(str(library_path)) != library["sha256"]:
                 raise EvidenceError(f"{case_id} {role}: controller inputs do not bind {library['name']}")
 
     profile_roles = [role for role, (_impl, _native_impl, kind, _mode, _case) in role_spec["roles"].items()
@@ -2866,7 +3091,8 @@ def _check_kwv07_case(base: Path, root: Path, case: dict[str, Any],
     profile = runs[profile_role].get("profile")
     if not isinstance(profile, dict):
         raise EvidenceError(f"{case_id}: selected NCU profile artifacts are missing")
-    _attention_validate_profile(root, base, runs[profile_role], summaries[profile_role],
+    _attention_validate_profile(root, source_root, portable, base, captured_archives,
+                                runs[profile_role], summaries[profile_role],
                                 f"{case_id} {profile_role}")
     ncu_archive = archives[profile_role]
     _kwv07_bind_profile_files(base, runs[profile_role], f"{case_id} {profile_role}", ncu_archive)
@@ -2876,8 +3102,8 @@ def _check_kwv07_case(base: Path, root: Path, case: dict[str, Any],
         raise EvidenceError(f"{case_id} {profile_role}: NCU archive must be one counter-valid, timing-invalid profile")
 
 
-def _check_attention_case(base: Path, root: Path, case: dict[str, Any],
-                          evidence_ids: set[str], contract_path: Path,
+def _check_attention_case(base: Path, root: Path, source_root: Path, portable: bool,
+                          case: dict[str, Any], evidence_ids: set[str], contract_path: Path,
                           contract_sha: str, contract: dict[str, Any]) -> None:
     case_id = case["id"]
     if case_id != "attention" or contract.get("case_id") != "attention":
@@ -2942,7 +3168,7 @@ def _check_attention_case(base: Path, root: Path, case: dict[str, Any],
     if set(oracle_records) != set(case_specs):
         raise EvidenceError("attention per-case FP64 oracle set is incomplete")
 
-    captured_archives = _captured_input_archives(root, case, required=True)
+    captured_archives = _captured_input_archives(base, root, case, required=True)
     _attention_source_closure(root, case, captured_archives)
     source_manifest_record = case.get("source_manifest")
     if isinstance(source_manifest_record, dict) and "original_path" in source_manifest_record:
@@ -3022,11 +3248,21 @@ def _check_attention_case(base: Path, root: Path, case: dict[str, Any],
         binary_path, binary_sha = sha_binding(root, entry.get("binary"), f"attention {name} binary")
         binary_record = entry.get("binary")
         executed_raw = entry.get("executed_path", binary_record.get("path") if isinstance(binary_record, dict) else None)
-        executed_path = absolute_repo_file(root, executed_raw, f"attention {name} executed binary")
+        if portable:
+            if not isinstance(executed_raw, str) or not executed_raw or Path(executed_raw).is_absolute():
+                raise EvidenceError(f"attention {name}: executed_path must be repository-relative")
+            executed_relative = _capture_repo_relative(executed_raw, root, source_root)
+            if executed_relative is None:
+                raise EvidenceError(f"attention {name}: executed_path escapes historical source_root")
+            executed_path = (source_root / executed_relative).resolve()
+        else:
+            executed_path = absolute_repo_file(root, executed_raw, f"attention {name} executed binary")
+            executed_relative = executed_path.relative_to(root.resolve())
         bound_impls[name] = {"source_path": source_path, "source_input_path": source_input_path,
                              "source_original_path": source_original_path,
                              "source_sha": source_sha, "binary_path": binary_path,
-                             "executed_path": executed_path, "binary_sha": binary_sha}
+                             "executed_path": executed_path, "executed_relative": executed_relative,
+                             "binary_sha": binary_sha}
 
     libraries = case.get("libraries")
     if not isinstance(libraries, list):
@@ -3037,9 +3273,34 @@ def _check_attention_case(base: Path, root: Path, case: dict[str, Any],
                 not all(item.get(key) for key in ("name", "version", "path", "sha256"))):
             raise EvidenceError("attention linked library entry lacks identity/version/path/hash")
         raw_path = Path(str(item["path"]))
-        library_path = (raw_path if raw_path.is_absolute() else root / raw_path).resolve()
-        if not library_path.is_file() or digest(library_path) != item["sha256"]:
-            raise EvidenceError("attention linked library path/hash is unavailable or mismatched")
+        if portable:
+            if raw_path.is_absolute():
+                try:
+                    relative = raw_path.relative_to(source_root)
+                except ValueError:
+                    try:
+                        relative = raw_path.relative_to(root.resolve())
+                    except ValueError:
+                        if not _is_sha256(item["sha256"]):
+                            raise EvidenceError("attention external library SHA-256 is malformed")
+                        bound_libraries.append((item, raw_path.resolve()))
+                        continue
+                if ".." in relative.parts:
+                    raise EvidenceError("attention linked library path escapes historical source_root")
+                library_path = (root / relative).resolve()
+            else:
+                library_path = (root / raw_path).resolve()
+            archive = captured_archives.get(str(library_path))
+            if archive is not None:
+                if archive["sha256"] != item["sha256"]:
+                    raise EvidenceError("attention linked library differs from its captured archive")
+            elif (not library_path.is_relative_to(root.resolve()) or not library_path.is_file() or
+                  digest(library_path) != item["sha256"]):
+                raise EvidenceError("attention linked library path/hash is unavailable or mismatched")
+        else:
+            library_path = (raw_path if raw_path.is_absolute() else root / raw_path).resolve()
+            if not library_path.is_file() or digest(library_path) != item["sha256"]:
+                raise EvidenceError("attention linked library path/hash is unavailable or mismatched")
         bound_libraries.append((item, library_path))
 
     summaries: dict[str, dict[str, Any]] = {}
@@ -3052,7 +3313,7 @@ def _check_attention_case(base: Path, root: Path, case: dict[str, Any],
         role_archives = captured_archives
         if role in ATTENTION_OPTIONAL_ROLES:
             role_archives = _captured_input_archives(
-                root, {"id": role, "captured_input_archives": runs[role].get("captured_input_archives")},
+                base, root, {"id": role, "captured_input_archives": runs[role].get("captured_input_archives")},
                 required=True)
             _attention_role_source_closure(root, runs[role], role, role_archives)
         role_captured_inputs = {str(item["original_path"]): item["sha256"]
@@ -3076,11 +3337,13 @@ def _check_attention_case(base: Path, root: Path, case: dict[str, Any],
                     bound_impls[impl_name]["source_sha"] != source_capture["sha256"]):
                 raise EvidenceError(f"attention {role}: implementation source differs from its role archive")
         summary = _controller_run(
-            base, root, runs.get(role), f"attention {role}", kind, bound_impls[impl_name],
+            base, root, source_root, portable, runs.get(role),
+            f"attention {role}", kind, bound_impls[impl_name],
             contract_path, contract_sha, input_path, input_sha, oracle_path, oracle_sha,
             str(case.get("gpu_uuid", "")), evidence_ids, role_captured_inputs,
             additional_inputs=additional_inputs,
             allow_duplicate_captured_inputs=allow_duplicate_captured_inputs,
+            captured_archives=role_archives,
         )
         if role in ATTENTION_OPTIONAL_ROLES:
             argv_summ = summary.get("provenance", {}).get("argv", [])
@@ -3090,7 +3353,8 @@ def _check_attention_case(base: Path, root: Path, case: dict[str, Any],
             split_count = int(split_values[0])
         else:
             split_count = 1
-        _attention_validate_argv(summary, root, role, native_impl, mode, selected_case,
+        _attention_validate_argv(summary, root, source_root, portable, role_archives,
+                                 role, native_impl, mode, selected_case,
                                  split_count, bound_impls[impl_name], input_path, oracle_path)
         native_path = checked_file(base, runs[role].get("native_stdout"),
                                    f"attention {role} native stdout")
@@ -3105,7 +3369,8 @@ def _check_attention_case(base: Path, root: Path, case: dict[str, Any],
                 base, runs[role].get("sanitizer_log"),
                 f"attention {role} raw Compute Sanitizer log")
         _attention_bind_stdout_capture(base, root, runs[role], role, native_path,
-                                       sanitizer_summary_path, sanitizer_log_path)
+                                       sanitizer_summary_path, sanitizer_log_path,
+                                       portable=portable)
         native_result = read_json(native_path)
         _attention_native_checks(native_result, contract, oracle_records,
                                  str(case.get("gpu_uuid", "")), native_impl, mode,
@@ -3117,7 +3382,7 @@ def _check_attention_case(base: Path, root: Path, case: dict[str, Any],
         roles = [role for role, (impl_name, _native_impl, _kind, _mode, _case) in role_specs.items()
                  if impl_name == implementation]
         for role in roles:
-            if _input_bindings(summaries[role]).get(str(library_path)) != library["sha256"]:
+            if _input_bindings(summaries[role], root, source_root).get(str(library_path)) != library["sha256"]:
                 raise EvidenceError(f"attention {role}: controller inputs do not bind {library['name']}")
 
     sanitizer_roles = ["sanitizer_candidate"]
@@ -3148,13 +3413,14 @@ def _check_attention_case(base: Path, root: Path, case: dict[str, Any],
 
     if "profile_candidate_decode" not in summaries:
         raise EvidenceError("attention NCU profile role is missing")
-    _attention_validate_profile(root, base, runs["profile_candidate_decode"],
+    _attention_validate_profile(root, source_root, portable, base, captured_archives,
+                                runs["profile_candidate_decode"],
                                 summaries["profile_candidate_decode"],
                                 "attention profile_candidate_decode")
 
 
-def _check_kwv08_case(base: Path, root: Path, case: dict[str, Any],
-                      evidence_ids: set[str], contract_path: Path,
+def _check_kwv08_case(base: Path, root: Path, source_root: Path, portable: bool,
+                      case: dict[str, Any], evidence_ids: set[str], contract_path: Path,
                       contract_sha: str, contract: dict[str, Any]) -> None:
     case_id = case["id"]
     if case_id != "recurrence_state_ownership_bundle":
@@ -3167,7 +3433,8 @@ def _check_kwv08_case(base: Path, root: Path, case: dict[str, Any],
         raise EvidenceError(f"{case_id}: CPU oracle SHA binding differs")
     records = _kwv08_suite_records(base, root, case, contract_path, contract,
                                    input_path, input_sha, oracle_path, oracle_sha)
-    closure, captured_archives, external_inputs = _kwv08_source_closure(root, case)
+    closure, captured_archives, external_inputs = _kwv08_source_closure(
+        root, case, base=base, source_root=source_root, portable=portable)
     captured_inputs = {original: item["sha256"] for original, item in captured_archives.items()}
 
     if case.get("source_closure", {}).get("path") != str(closure["path"].relative_to(root)):
@@ -3177,7 +3444,7 @@ def _check_kwv08_case(base: Path, root: Path, case: dict[str, Any],
     implementations = case.get("implementations")
     if not isinstance(implementations, dict):
         raise EvidenceError(f"{case_id}: baseline/candidate implementation identities are missing")
-    executed_path = (root / "benchmark_runs/volta-recurrence/bin/gdn_runner").resolve()
+    executed_path = (source_root / "benchmark_runs/volta-recurrence/bin/gdn_runner").resolve()
     bound_impls: dict[str, dict[str, Any]] = {}
     binary_identity: tuple[Path, str] | None = None
     for name in ("baseline", "candidate"):
@@ -3208,7 +3475,7 @@ def _check_kwv08_case(base: Path, root: Path, case: dict[str, Any],
                 not binary_path.name.endswith(".elf") or
                 binary_path.parent != (base / "evidence/v1/bin").resolve() or
                 entry.get("executed_path") != "benchmark_runs/volta-recurrence/bin/gdn_runner" or
-                not executed_path.is_file() or digest(executed_path) != binary_sha):
+                (not portable and (not executed_path.is_file() or digest(executed_path) != binary_sha))):
             raise EvidenceError(f"{case_id}: {name} implementation does not bind the one built shared ELF")
         if binary_identity is None:
             binary_identity = (binary_path, binary_sha)
@@ -3218,6 +3485,7 @@ def _check_kwv08_case(base: Path, root: Path, case: dict[str, Any],
             "source_path": source_path, "source_input_path": source_original,
             "source_sha": source_sha, "launcher_source_path": launcher_path,
             "binary_path": binary_path, "executed_path": executed_path,
+            "executed_relative": Path("benchmark_runs/volta-recurrence/bin/gdn_runner"),
             "binary_sha": binary_sha,
         }
     if case.get("libraries") != []:
@@ -3234,19 +3502,22 @@ def _check_kwv08_case(base: Path, root: Path, case: dict[str, Any],
         spec_record = spec_records.get(f"recurrence_{role}")
         if not isinstance(spec_record, dict):
             raise EvidenceError(f"recurrence {role}: exact source-closed spec is missing")
-        _kwv08_validate_spec(root, role, spec_record, executed_path, str(case["gpu_uuid"]))
+        _kwv08_validate_spec(root, role, spec_record, executed_path,
+                             str(case["gpu_uuid"]), source_root=source_root)
         summary = _controller_run(
-            base, root, runs[role], f"recurrence {role}", kind,
+            base, root, source_root, portable, runs[role], f"recurrence {role}", kind,
             bound_impls[implementation_name], contract_path, contract_sha,
             input_path, input_sha, oracle_path, oracle_sha,
             str(case["gpu_uuid"]), evidence_ids, captured_inputs,
+            captured_archives=captured_archives,
             additional_inputs=external_inputs,
         )
-        _kwv08_validate_argv(summary, root, role, bound_impls[implementation_name])
+        _kwv08_validate_argv(summary, root, role, bound_impls[implementation_name],
+                             source_root=source_root)
         capture = runs[role].get("native_stdout_capture")
         native_path = checked_file(base, capture, f"recurrence {role} native stdout")
         _kwv08_bind_stdout_capture(base, root, role, str(case["gpu_uuid"]),
-                                   runs[role], native_path)
+                                   runs[role], native_path, source_root, portable)
         native_result = read_json(native_path)
         _kwv08_native_checks(native_result, records, str(case["gpu_uuid"]),
                              role, f"recurrence {role}")
@@ -3280,7 +3551,8 @@ def _check_kwv08_case(base: Path, root: Path, case: dict[str, Any],
         raise EvidenceError("recurrence build: captured compiler stderr lacks the SM70 ptxas resource report")
 
 
-def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> None:
+def _check_case(base: Path, root: Path, source_root: Path, portable: bool,
+                case: Any, evidence_ids: set[str]) -> None:
     if not isinstance(case, dict) or not isinstance(case.get("id"), str):
         raise EvidenceError("case is malformed or lacks id")
     disposition = case.get("disposition")
@@ -3294,16 +3566,19 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
     if contract_data.get("case_id") != case["id"] or not contract_data.get("case_signature") or not contract_data.get("numerical_contract"):
         raise EvidenceError(f"{case['id']}: contract lacks case signature or numerical policy")
     if _is_attention_contract(contract_data):
-        _check_attention_case(base, root, case, evidence_ids, contract, contract_sha, contract_data)
+        _check_attention_case(base, root, source_root, portable, case, evidence_ids,
+                              contract, contract_sha, contract_data)
         return
     if _is_kwv07_contract(contract_data):
-        _check_kwv07_case(base, root, case, evidence_ids, contract, contract_sha, contract_data)
+        _check_kwv07_case(base, root, source_root, portable, case, evidence_ids,
+                          contract, contract_sha, contract_data)
         return
     if _is_kwv08_contract(contract_data):
-        _check_kwv08_case(base, root, case, evidence_ids, contract, contract_sha, contract_data)
+        _check_kwv08_case(base, root, source_root, portable, case, evidence_ids,
+                          contract, contract_sha, contract_data)
         return
     rows_contract = _is_rows_contract(contract_data)
-    captured_archives = _captured_input_archives(root, case, required=rows_contract)
+    captured_archives = _captured_input_archives(base, root, case, required=rows_contract)
     if rows_contract and {archive["original_path"].relative_to(root).as_posix()
                           for archive in captured_archives.values()} != ROW_CAPTURED_SOURCE_PATHS:
         raise EvidenceError(f"{case['id']}: captured source archive set does not match the frozen four-file snapshot")
@@ -3339,11 +3614,20 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
         binary_record = entry.get("binary")
         default_executed = binary_record.get("path") if isinstance(binary_record, dict) else None
         executed_raw = entry.get("executed_path", default_executed)
-        executed_path = absolute_repo_file(root, executed_raw, f"{case['id']} {name} executed binary")
+        if portable:
+            if not isinstance(executed_raw, str) or not executed_raw or Path(executed_raw).is_absolute():
+                raise EvidenceError(f"{case['id']} {name} executed_path must be repository-relative")
+            executed_relative = _capture_repo_relative(executed_raw, root, source_root)
+            if executed_relative is None:
+                raise EvidenceError(f"{case['id']} {name} executed_path escapes the historical repository")
+            executed_path = (source_root / executed_relative).resolve()
+        else:
+            executed_path = absolute_repo_file(root, executed_raw, f"{case['id']} {name} executed binary")
+            executed_relative = executed_path.relative_to(root.resolve())
         bound_impls[name] = {"source_path": source_path, "source_input_path": source_input_path,
                              "source_sha": source_sha,
                              "binary_path": binary_path, "executed_path": executed_path,
-                             "binary_sha": binary_sha}
+                             "binary_sha": binary_sha, "executed_relative": executed_relative}
 
     libraries = case.get("libraries")
     if not isinstance(libraries, list):
@@ -3352,12 +3636,44 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
     for item in libraries:
         if (not isinstance(item, dict) or
                 item.get("implementation") not in {"baseline", "candidate"} or
-                not all(item.get(key) for key in ("name", "version", "path", "sha256"))):
+                not all(isinstance(item.get(key), str) and item.get(key)
+                        for key in ("name", "version", "path", "sha256"))):
             raise EvidenceError(f"{case['id']}: linked library entry lacks identity/version/path/hash")
-        raw_library_path = Path(str(item["path"]))
-        library_path = (raw_library_path if raw_library_path.is_absolute() else root / raw_library_path).resolve()
-        if not library_path.is_file() or digest(library_path) != item["sha256"]:
-            raise EvidenceError(f"{case['id']}: linked library path/hash is unavailable or mismatched")
+        raw_library_path = Path(item["path"])
+        library_sha = item["sha256"]
+        if portable:
+            if raw_library_path.is_absolute():
+                try:
+                    relative = raw_library_path.relative_to(source_root)
+                except ValueError:
+                    try:
+                        relative = raw_library_path.relative_to(root.resolve())
+                    except ValueError:
+                        if not _is_sha256(library_sha):
+                            raise EvidenceError(
+                                f"{case['id']}: external library identity has a malformed SHA-256"
+                            )
+                        # External libraries are capture identities; their hashes are bound below
+                        # to the original controller inputs, without requiring vendor files locally.
+                        library_path = raw_library_path.resolve()
+                        bound_libraries.append((item, library_path))
+                        continue
+                if ".." in relative.parts:
+                    raise EvidenceError(f"{case['id']}: library path escapes source_root")
+                library_path = (root / relative).resolve()
+            else:
+                library_path = (root / raw_library_path).resolve()
+            archive = captured_archives.get(str(library_path))
+            if archive is not None:
+                if archive["sha256"] != library_sha:
+                    raise EvidenceError(f"{case['id']}: linked library differs from its captured archive")
+            elif (not library_path.is_relative_to(root.resolve()) or not library_path.is_file() or
+                  digest(library_path) != library_sha):
+                raise EvidenceError(f"{case['id']}: linked library archive is unavailable or mismatched")
+        else:
+            library_path = (raw_library_path if raw_library_path.is_absolute() else root / raw_library_path).resolve()
+            if not library_path.is_file() or digest(library_path) != library_sha:
+                raise EvidenceError(f"{case['id']}: linked library path/hash is unavailable or mismatched")
         bound_libraries.append((item, library_path))
 
     oracle_path = checked_file(base, case.get("oracle"), f"{case['id']} CPU oracle")
@@ -3393,19 +3709,21 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
     summaries: dict[str, dict[str, Any]] = {}
     for role, (kind, implementation_name) in REQUIRED_RUNS.items():
         summaries[role] = _controller_run(
-            base, root, runs.get(role), f"{case['id']} {role}", kind,
+            base, root, source_root, portable, runs.get(role), f"{case['id']} {role}", kind,
             bound_impls[implementation_name], contract, contract_sha,
             input_path, input_sha, oracle_path, oracle_sha,
-            str(case.get("gpu_uuid", "")), evidence_ids, captured_inputs,
+            str(case.get("gpu_uuid", "")), evidence_ids, captured_inputs, captured_archives,
         )
     if _is_gemm_contract(contract_data):
-        _validate_gemm_primary_argv(summaries, root, contract_data, input_path, bound_impls)
+        _validate_gemm_primary_argv(summaries, root, source_root, portable,
+                                    contract_data, input_path, bound_impls)
     elif _is_rows_contract(contract_data):
         if rows_reference_path is None or rows_reference_sha is None:
             raise EvidenceError(f"{case['id']}: rows reference binding is missing")
         _validate_rows_primary_argv(
             summaries, root, contract_data, input_path, input_sha,
             rows_reference_path, rows_reference_sha, bound_impls,
+            source_root=source_root, portable=portable,
         )
         for role, implementation in (("correctness_baseline", "baseline"),
                                      ("correctness_candidate", "candidate")):
@@ -3423,7 +3741,7 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
     for library, library_path in bound_libraries:
         library_sha = str(library["sha256"])
         for role in library_roles[library["implementation"]]:
-            if _input_bindings(summaries[role]).get(str(library_path)) != library_sha:
+            if _input_bindings(summaries[role], root, source_root).get(str(library_path)) != library_sha:
                 raise EvidenceError(
                     f"{case['id']} {role}: controller inputs do not bind declared library {library['name']}"
                 )
@@ -3475,19 +3793,24 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
     shim_path = absolute_repo_file(root, shim_relative_path,
                                    f"{case['id']} checked-in NCU shim")
     shim_sha = digest(shim_path)
-    ncu_path = Path(str(ncu_identity["path"])).resolve()
-    profile_inputs = _input_bindings(summaries["profile_candidate"])
+    historical_shim_path = (source_root / shim_relative_path).resolve()
+    raw_ncu_path = ncu_identity.get("path")
+    if not isinstance(raw_ncu_path, str) or not Path(raw_ncu_path).is_absolute():
+        raise EvidenceError(f"{case['id']}: NCU tool path must be absolute")
+    ncu_path = Path(raw_ncu_path).resolve()
+    profile_inputs = _input_bindings(summaries["profile_candidate"], root, source_root)
     if not collection or not all(
         isinstance(item.get("argv_executed"), list) and
         _argument_values(item["argv_executed"], "--clock-control") == ["none"] and
         _argument_values(item["argv_executed"], "--import-source") == ["yes"] and
-        isinstance(item.get("shim_path"), str) and Path(item["shim_path"]).resolve() == shim_path and
+        isinstance(item.get("shim_path"), str) and Path(item["shim_path"]).resolve() == historical_shim_path and
         item.get("shim_sha256") == shim_sha and
         profile_inputs.get(str(shim_path)) == shim_sha and
         isinstance(item.get("actual_ncu_path"), str) and Path(item["actual_ncu_path"]).resolve() == ncu_path and
-        ncu_path.is_file() and item.get("actual_ncu_sha256") == digest(ncu_path) and
+        _is_sha256(item.get("actual_ncu_sha256")) and
         (_is_rows_contract(contract_data) or
-         profile_inputs.get(str(ncu_path)) == item.get("actual_ncu_sha256"))
+         profile_inputs.get(str(ncu_path)) == item.get("actual_ncu_sha256")) and
+        (portable or (ncu_path.is_file() and item.get("actual_ncu_sha256") == digest(ncu_path)))
         for item in collection
     ):
         raise EvidenceError(f"{case['id']}: NCU collection did not record the no-clock/source-import policy")
@@ -3514,12 +3837,18 @@ def validate(path: Path) -> dict[str, Any]:
     if not isinstance(cases, list) or not cases:
         raise EvidenceError("manifest contains no cases")
     root = repo_root(path.parent)
+    portable = "source_root" in manifest
+    try:
+        source_root = _historical_source_root(manifest.get("source_root"), root, portable)
+    except EvidenceError as exc:
+        return {"format": "KERNELWIKI-VOLTA-EVIDENCE-CHECK/1", "valid": False,
+                "checked_cases": 0, "errors": [str(exc)]}
     evidence_ids: set[str] = set()
     errors: list[str] = []
     checked = 0
     for case in cases:
         try:
-            _check_case(path.parent.resolve(), root, case, evidence_ids)
+            _check_case(path.parent.resolve(), root, source_root, portable, case, evidence_ids)
             checked += 1
         except EvidenceError as exc:
             errors.append(str(exc))

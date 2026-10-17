@@ -417,8 +417,9 @@
             "sha256": "b37dc926b59be3f14f59dad49f036156f3f4719ad51fafb078c1634895375d4a"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/2aee223f-a588-4972-8d73-bb9f5d9e8028/lease.json",
-            "sha256": "692209355cc6a95d592a1ea3388379e0647cdd20991335b00284556d788c9e6a"
+            "path": "evidence/v1/roles/baseline_decode_timing/lease.json",
+            "sha256": "692209355cc6a95d592a1ea3388379e0647cdd20991335b00284556d788c9e6a",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/2aee223f-a588-4972-8d73-bb9f5d9e8028/lease.json"
           },
           "native_stdout": {
             "path": "evidence/v1/roles/baseline_decode_timing/runner.stdout.txt",
@@ -443,8 +444,9 @@
             "sha256": "55c591a30f6cdf917a4637264c30712f753e06d342da348aa85255a0182eb10e"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/c16761c9-abc8-4e94-98e3-4c87300e4095/lease.json",
-            "sha256": "862bc4f6534109b1a164bc23368562e02f84003e9395bc9a724cd51ad6851122"
+            "path": "evidence/v1/roles/baseline_prefill_timing/lease.json",
+            "sha256": "862bc4f6534109b1a164bc23368562e02f84003e9395bc9a724cd51ad6851122",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/c16761c9-abc8-4e94-98e3-4c87300e4095/lease.json"
           },
           "native_stdout": {
             "path": "evidence/v1/roles/baseline_prefill_timing/runner.stdout.txt",
@@ -469,8 +471,9 @@
             "sha256": "0f0af5ee36dfc56e6b3f2f9ae2ff035fd26406cbf98b74432952dbd9f5720fbd"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/e51b46e6-535d-4678-af0f-5b2c7c7e37b3/lease.json",
-            "sha256": "d21433b48af175290716bdffbe9d47652d3ccd6ab8a0b641876791a791a4843c"
+            "path": "evidence/v1/roles/candidate_decode_timing/lease.json",
+            "sha256": "d21433b48af175290716bdffbe9d47652d3ccd6ab8a0b641876791a791a4843c",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/e51b46e6-535d-4678-af0f-5b2c7c7e37b3/lease.json"
           },
           "native_stdout": {
             "path": "evidence/v1/roles/candidate_decode_timing/runner.stdout.txt",
@@ -495,8 +498,9 @@
             "sha256": "83983dce946c1313e868207a2cc63dc7a9bee3bce4003b34ac1bfeca7f642532"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/a31bab18-eb35-405a-bf7c-c13ceca727ec/lease.json",
-            "sha256": "2c667eacbc5580a996c388e50fa6ffcd4171a78138fee81f45ec981f8cc05c10"
+            "path": "evidence/v1/roles/candidate_prefill_timing/lease.json",
+            "sha256": "2c667eacbc5580a996c388e50fa6ffcd4171a78138fee81f45ec981f8cc05c10",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/a31bab18-eb35-405a-bf7c-c13ceca727ec/lease.json"
           },
           "native_stdout": {
             "path": "evidence/v1/roles/candidate_prefill_timing/runner.stdout.txt",
@@ -521,8 +525,9 @@
             "sha256": "dba0f812abba7ad9f41c4de269303f4a3670b20ea7c1c4852042261bf392df39"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/85883cae-6245-4e04-afeb-bd2fff4285da/lease.json",
-            "sha256": "d6dc1408025b7cd6d71bd92c7b6170be72b3c7860e1d64e82cb1223c38f2dfbd"
+            "path": "evidence/v1/roles/correctness_baseline/lease.json",
+            "sha256": "d6dc1408025b7cd6d71bd92c7b6170be72b3c7860e1d64e82cb1223c38f2dfbd",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/85883cae-6245-4e04-afeb-bd2fff4285da/lease.json"
           },
           "native_stdout": {
             "path": "evidence/v1/roles/correctness_baseline/runner.stdout.txt",
@@ -547,8 +552,9 @@
             "sha256": "6e9434b9f1e2980945c6c337d1614abcce3dbb91b5249c28117b34380bbcd832"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/7ff67823-e9af-48a8-9b1a-3719b27649ef/lease.json",
-            "sha256": "330792139615bddaf31dd9fed62294410c0d99463ad1e16eadd7d89688bbf714"
+            "path": "evidence/v1/roles/correctness_candidate/lease.json",
+            "sha256": "330792139615bddaf31dd9fed62294410c0d99463ad1e16eadd7d89688bbf714",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/7ff67823-e9af-48a8-9b1a-3719b27649ef/lease.json"
           },
           "native_stdout": {
             "path": "evidence/v1/roles/correctness_candidate/runner.stdout.txt",
@@ -573,8 +579,9 @@
             "sha256": "2d36a35011f8d487cbf6b13684cebf69fd520f434f90fd6a148864a60e1dccb8"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/69a9838b-19df-4409-8aa3-eae672333cea/lease.json",
-            "sha256": "6e699673a8a808e9b64aaea51c9a9def1ccfe2a7e77f90e9fb840515972afd1c"
+            "path": "evidence/v1/roles/profile_candidate_decode/lease.json",
+            "sha256": "6e699673a8a808e9b64aaea51c9a9def1ccfe2a7e77f90e9fb840515972afd1c",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/69a9838b-19df-4409-8aa3-eae672333cea/lease.json"
           },
           "native_stdout": {
             "path": "evidence/v1/roles/profile_candidate_decode/ncu/command.stdout.txt",
@@ -615,8 +622,9 @@
             "sha256": "e3fc0a0305abadfd7d26e77d4f8fac48002ea8c3c79b1782a51f15fde9a5748a"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/f3d80d8d-286c-415f-9493-1aa0b2cb27e2/lease.json",
-            "sha256": "49cb5346b1c5f576e07bc7938106d4a5c414bffd15e56ae2ad3c91178afb1e96"
+            "path": "evidence/v1/roles/sanitizer_candidate/lease.json",
+            "sha256": "49cb5346b1c5f576e07bc7938106d4a5c414bffd15e56ae2ad3c91178afb1e96",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/f3d80d8d-286c-415f-9493-1aa0b2cb27e2/lease.json"
           },
           "native_stdout": {
             "path": "evidence/v1/roles/sanitizer_candidate/compute-sanitizer/stdout.txt",
@@ -651,8 +659,9 @@
             "sha256": "1a969cb9a9621e705a5ca4c9e438d331fbf65977e539c0bb7d0e75aeebdebe57"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/05cd68df-7630-40de-937d-52f208882940/lease.json",
-            "sha256": "4c239e9fdb69c5fca166de547918858f4de6e0216b7245f8c19fe7ee1a2e9e96"
+            "path": "evidence/v2/roles/correctness_split16/lease.json",
+            "sha256": "4c239e9fdb69c5fca166de547918858f4de6e0216b7245f8c19fe7ee1a2e9e96",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/05cd68df-7630-40de-937d-52f208882940/lease.json"
           },
           "native_stdout": {
             "path": "evidence/v2/roles/correctness_split16/runner.stdout.txt",
@@ -1218,8 +1227,9 @@
             "sha256": "c3a36ac6b70881abfd5cec3e3ba3dff5d2de3638006b44ec4ae8d133f6246ad1"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/093e80b0-340f-474b-bdbd-72f07c9040ec/lease.json",
-            "sha256": "32e203a0078dbd046c47020ac4ce4acb2ed7f603ce6a5dafa7957b4e763da9bf"
+            "path": "evidence/v2/roles/sanitizer_split16/lease.json",
+            "sha256": "32e203a0078dbd046c47020ac4ce4acb2ed7f603ce6a5dafa7957b4e763da9bf",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/093e80b0-340f-474b-bdbd-72f07c9040ec/lease.json"
           },
           "native_stdout": {
             "path": "evidence/v2/roles/sanitizer_split16/compute-sanitizer/stdout.txt",
@@ -1795,8 +1805,9 @@
             "sha256": "fcc6875ca5941271a60f37be9bfd65ca837f9ee6af2477b6dc92623db28ff329"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/00c32a1f-556b-4651-b334-59635e16c2c3/lease.json",
-            "sha256": "ac0cd5d5b7a366b658ac9bf16ecfffd0c7e4bc8bd09ddb50f6506f6fad86e5bc"
+            "path": "evidence/v2/roles/split16_decode_timing/lease.json",
+            "sha256": "ac0cd5d5b7a366b658ac9bf16ecfffd0c7e4bc8bd09ddb50f6506f6fad86e5bc",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/00c32a1f-556b-4651-b334-59635e16c2c3/lease.json"
           },
           "native_stdout": {
             "path": "evidence/v2/roles/split16_decode_timing/runner.stdout.txt",
@@ -2360,5 +2371,6 @@
       }
     }
   ],
-  "format": "KERNELWIKI-VOLTA-EVIDENCE/1"
+  "format": "KERNELWIKI-VOLTA-EVIDENCE/1",
+  "source_root": "/home/tumlinson/KernelWiki"
 }

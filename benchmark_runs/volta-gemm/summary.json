@@ -1,5 +1,6 @@
 {
   "format": "KERNELWIKI-VOLTA-EVIDENCE/1",
+  "source_root": "/home/tumlinson/KernelWiki",
   "cases": [
     {
       "id": "large_dense",
@@ -76,9 +77,10 @@
             "sha256": "c0d160d154ed73383a119715a8f23ee5c1f9ad730fea4168f4a2121277b3d2bd"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/bf672c7f-9bd2-4233-934c-f1449fc9e20b/lease.json",
+            "path": "evidence/large_dense/correctness_baseline/lease.json",
             "sha256": "5167fa1bf8280a4c99d642827ca3ed4129448f7b060774d6468eccd8f82151f6",
-            "archive_path": "evidence/large_dense/correctness_baseline/lease.json"
+            "archive_path": "evidence/large_dense/correctness_baseline/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/bf672c7f-9bd2-4233-934c-f1449fc9e20b/lease.json"
           },
           "target_output": {
             "stdout": {
@@ -104,9 +106,10 @@
             "sha256": "5ad3f63fe35e1547f426b8ac5e88e3e91244aa0a882f921e026de8c813c17b61"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/820df417-812a-43b2-9bf8-3b605cec055a/lease.json",
+            "path": "evidence/large_dense/correctness_candidate/lease.json",
             "sha256": "f29f12f8d0d8d328c6b925e3c30d3d25995ecd6579681461c8a6c8087d822bd0",
-            "archive_path": "evidence/large_dense/correctness_candidate/lease.json"
+            "archive_path": "evidence/large_dense/correctness_candidate/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/820df417-812a-43b2-9bf8-3b605cec055a/lease.json"
           },
           "target_output": {
             "stdout": {
@@ -132,9 +135,10 @@
             "sha256": "750836ad2d0e86796fcc2ba30896029f55ba63fd71a34a576d7ef7a2e06d2ea2"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/0bfdea76-d4d9-4228-bdec-f7c15880138a/lease.json",
+            "path": "evidence/large_dense/sanitizer_candidate/attempt-2/lease.json",
             "sha256": "3fcc09ad522b74f9dbcfcedb653750b0acbb1bd20630a72164699d77d74b358b",
-            "archive_path": "evidence/large_dense/sanitizer_candidate/attempt-2/lease.json"
+            "archive_path": "evidence/large_dense/sanitizer_candidate/attempt-2/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/0bfdea76-d4d9-4228-bdec-f7c15880138a/lease.json"
           },
           "sanitizer_summary": {
             "path": "evidence/large_dense/sanitizer_candidate/attempt-2/summary.json",
@@ -171,9 +175,10 @@
             "sha256": "d7b95786f49191fce9c48e361fc1382d2fd1802fe4921646870d0e3e5e5c7661"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/2b642f8c-6e8c-40f7-bb01-fe6e9ca9eae9/lease.json",
+            "path": "evidence/large_dense/baseline_timing/attempt-1/lease.json",
             "sha256": "8e7e416c066fc04bf24b250c036f01cba6925a066f7f52c43faba215a922bbdc",
-            "archive_path": "evidence/large_dense/baseline_timing/attempt-1/lease.json"
+            "archive_path": "evidence/large_dense/baseline_timing/attempt-1/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/2b642f8c-6e8c-40f7-bb01-fe6e9ca9eae9/lease.json"
           }
         },
         "candidate_timing": {
@@ -186,9 +191,10 @@
             "sha256": "8d010d170247d532e1589d4b207eb24cdbc8a8ee01a3ffa602dfd219850ee6b3"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/ddc6aa1a-b50c-4090-8a3d-89a2e04e9780/lease.json",
+            "path": "evidence/large_dense/candidate_timing/attempt-1/lease.json",
             "sha256": "76da372b95acb1678880bbf0ff25236c29f609925c8454406644564d2f35bde3",
-            "archive_path": "evidence/large_dense/candidate_timing/attempt-1/lease.json"
+            "archive_path": "evidence/large_dense/candidate_timing/attempt-1/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/ddc6aa1a-b50c-4090-8a3d-89a2e04e9780/lease.json"
           }
         },
         "profile_candidate": {
@@ -201,9 +207,10 @@
             "sha256": "ef4c549ed703c57ab77d38605b2a8b4e864b8000a2bae2215d9a48de245f3ce5"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/bab63d2b-f4a3-41bc-a8bc-76a3d7270a85/lease.json",
+            "path": "evidence/large_dense/profile_candidate/attempt-1/lease.json",
             "sha256": "3e582d43556030aff3dfa4c0bb667340763d2ad6d87a780a43728e8263b8bad2",
-            "archive_path": "evidence/large_dense/profile_candidate/attempt-1/lease.json"
+            "archive_path": "evidence/large_dense/profile_candidate/attempt-1/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/bab63d2b-f4a3-41bc-a8bc-76a3d7270a85/lease.json"
           },
           "profile": {
             "selected_kernel": "void unnamed>::ptx_gemm_kernel<64, 64, 32, 2, 0>(const unsigned short *, const unsigned short *, const float *, float *, int, int, int)",
@@ -381,9 +388,10 @@
             "sha256": "b70529beb9dd8a8dbc8d9f931506cbf4552827acff31362ad80d52c3c2cdbbdf"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/c761d08f-dabc-4298-a609-4b247ee1ca4a/lease.json",
+            "path": "evidence/small_m/correctness_baseline/lease.json",
             "sha256": "38098c0c5a2023093b9e7ef60e50c481c9497c7a825db28d0b61d5c22575b334",
-            "archive_path": "evidence/small_m/correctness_baseline/lease.json"
+            "archive_path": "evidence/small_m/correctness_baseline/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/c761d08f-dabc-4298-a609-4b247ee1ca4a/lease.json"
           },
           "target_output": {
             "stdout": {
@@ -409,9 +417,10 @@
             "sha256": "cc74d6aaa23deb7e5ab7b18e0db526cb6a687e17472166138665218c2bf4916a"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/f9966e12-a8ff-4f2b-85f6-7a78a9d2d722/lease.json",
+            "path": "evidence/small_m/correctness_candidate/lease.json",
             "sha256": "fd47bf24824190c86e638144ab7b16c4d1dac927d42aaff445ba3c91ade4aa69",
-            "archive_path": "evidence/small_m/correctness_candidate/lease.json"
+            "archive_path": "evidence/small_m/correctness_candidate/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/f9966e12-a8ff-4f2b-85f6-7a78a9d2d722/lease.json"
           },
           "target_output": {
             "stdout": {
@@ -437,9 +446,10 @@
             "sha256": "387e1f6145cf59e64c9f0e4f017f04bd1e85b2a6be05ac58211d9e9f05987291"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/07a41ec3-5f7b-408f-b5ec-0d63f087b632/lease.json",
+            "path": "evidence/small_m/sanitizer_candidate/attempt-1/lease.json",
             "sha256": "1e268162651bdbdc0fdaeb30091f52726616d26ff749f2553a0e09238fd8dfb7",
-            "archive_path": "evidence/small_m/sanitizer_candidate/attempt-1/lease.json"
+            "archive_path": "evidence/small_m/sanitizer_candidate/attempt-1/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/07a41ec3-5f7b-408f-b5ec-0d63f087b632/lease.json"
           },
           "sanitizer_summary": {
             "path": "evidence/small_m/sanitizer_candidate/attempt-1/summary.json",
@@ -476,9 +486,10 @@
             "sha256": "7216d1e4806e77afe82d7da7f9f74fb3fa4277d63205217559ae28c3ff2f5b30"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/e9ee9ee4-50eb-4740-886f-501c6f864b8f/lease.json",
+            "path": "evidence/small_m/baseline_timing/attempt-1/lease.json",
             "sha256": "076a0aeb54309f96c24577c22b8cfc3f3ad125d6a201ff4e9ed859ddd6474356",
-            "archive_path": "evidence/small_m/baseline_timing/attempt-1/lease.json"
+            "archive_path": "evidence/small_m/baseline_timing/attempt-1/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/e9ee9ee4-50eb-4740-886f-501c6f864b8f/lease.json"
           }
         },
         "candidate_timing": {
@@ -491,9 +502,10 @@
             "sha256": "3999158e945889ebf1cf46154df2b5f5a6572bb1e367458b30b8e8885474d355"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/lease.json",
+            "path": "evidence/small_m/candidate_timing/attempt-1/lease.json",
             "sha256": "9d0871e9b71b41052de8c58c964847e4c52cf58ae296a83c798af4a7691c38a5",
-            "archive_path": "evidence/small_m/candidate_timing/attempt-1/lease.json"
+            "archive_path": "evidence/small_m/candidate_timing/attempt-1/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/lease.json"
           }
         },
         "profile_candidate": {
@@ -506,9 +518,10 @@
             "sha256": "279c0c7d1df2a3e293559e830a253454b1bb3d78ea59b2e0153996e890209906"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/038c8594-a292-45b6-9b19-59f8863798c6/lease.json",
+            "path": "evidence/small_m/profile_candidate/attempt-1/lease.json",
             "sha256": "ecdd1607e3fb58a58afc7b149aabd2cb8fb29372f4333d190c58336e79f58f76",
-            "archive_path": "evidence/small_m/profile_candidate/attempt-1/lease.json"
+            "archive_path": "evidence/small_m/profile_candidate/attempt-1/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/038c8594-a292-45b6-9b19-59f8863798c6/lease.json"
           },
           "profile": {
             "selected_kernel": "void unnamed>::ptx_gemm_kernel<16, 32, 32, 2, 0>(const unsigned short *, const unsigned short *, const float *, float *, int, int, int)",
@@ -686,9 +699,10 @@
             "sha256": "07de47c1694bf3d51c6ee3de6d940d1b27ad822c0807b6d5964719f2ac7bc6df"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/2453f5cf-7cb8-4943-8902-1877243006e9/lease.json",
+            "path": "evidence/ragged/correctness_baseline/lease.json",
             "sha256": "e4d72a400adec3bafde6f58f9ca16dfc3357c3d7dedf1753409a1cb3cabf8f46",
-            "archive_path": "evidence/ragged/correctness_baseline/lease.json"
+            "archive_path": "evidence/ragged/correctness_baseline/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/2453f5cf-7cb8-4943-8902-1877243006e9/lease.json"
           },
           "target_output": {
             "stdout": {
@@ -714,9 +728,10 @@
             "sha256": "9f88598f6fca86a3d93b55c3904668bbd2061cf4431012ab0732b031657516a1"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/0201e5a0-4d0a-4533-a6d6-b6c52cb5a69d/lease.json",
+            "path": "evidence/ragged/correctness_candidate/lease.json",
             "sha256": "d6e9dcd4089eaf5efbfaf45838ae2326a98934ecc3a3f8521a7b4310795e7722",
-            "archive_path": "evidence/ragged/correctness_candidate/lease.json"
+            "archive_path": "evidence/ragged/correctness_candidate/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/0201e5a0-4d0a-4533-a6d6-b6c52cb5a69d/lease.json"
           },
           "target_output": {
             "stdout": {
@@ -742,9 +757,10 @@
             "sha256": "26782adff06dcda624c164701fcf45ca667a136947c52436d43c9140f2da514b"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/c8b4de1e-1af1-4dee-9722-ce29f8a7a474/lease.json",
+            "path": "evidence/ragged/sanitizer_candidate/attempt-1/lease.json",
             "sha256": "04267b56c7154edbf1ff768f16e4560bf7588b337961ffe6627e5af18587e9ee",
-            "archive_path": "evidence/ragged/sanitizer_candidate/attempt-1/lease.json"
+            "archive_path": "evidence/ragged/sanitizer_candidate/attempt-1/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/c8b4de1e-1af1-4dee-9722-ce29f8a7a474/lease.json"
           },
           "sanitizer_summary": {
             "path": "evidence/ragged/sanitizer_candidate/attempt-1/summary.json",
@@ -781,9 +797,10 @@
             "sha256": "3fe6fac9cd9c46e6714a953dc1a550870f583da6c45e15611f2ca1f586d110c5"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/fbc4463a-2278-4bc6-9426-fd7248215875/lease.json",
+            "path": "evidence/ragged/baseline_timing/attempt-1/lease.json",
             "sha256": "ed44e8db86ef6c7d95129179f3cd48a755295d40bcfc3a69b844ee6b0d757222",
-            "archive_path": "evidence/ragged/baseline_timing/attempt-1/lease.json"
+            "archive_path": "evidence/ragged/baseline_timing/attempt-1/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/fbc4463a-2278-4bc6-9426-fd7248215875/lease.json"
           }
         },
         "candidate_timing": {
@@ -796,9 +813,10 @@
             "sha256": "88171da6535f5803d391891cef605670637a9e1b433dd0a5ea154ffd2718a273"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/d556e216-7767-47c1-97ce-06156439a06f/lease.json",
+            "path": "evidence/ragged/candidate_timing/attempt-1/lease.json",
             "sha256": "ac11b17ba21ab61bfa4a53f374eea2daccf96ef2771b2d879be27d65c2f7d4f5",
-            "archive_path": "evidence/ragged/candidate_timing/attempt-1/lease.json"
+            "archive_path": "evidence/ragged/candidate_timing/attempt-1/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d556e216-7767-47c1-97ce-06156439a06f/lease.json"
           }
         },
         "profile_candidate": {
@@ -811,9 +829,10 @@
             "sha256": "b4c9ae2eec4c3111cfa266876b92e6741deacf10b98346b44e887e3a0e26625d"
           },
           "lease": {
-            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/c4de1e30-8196-411e-a654-8a2c5ae65e38/lease.json",
+            "path": "evidence/ragged/profile_candidate/attempt-1/lease.json",
             "sha256": "be4bf8467bccca96d13e34df1fddc415c48f4e8f51e6d542139be88e39205de9",
-            "archive_path": "evidence/ragged/profile_candidate/attempt-1/lease.json"
+            "archive_path": "evidence/ragged/profile_candidate/attempt-1/lease.json",
+            "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/c4de1e30-8196-411e-a654-8a2c5ae65e38/lease.json"
           },
           "profile": {
             "selected_kernel": "void unnamed>::ptx_gemm_kernel<32, 64, 32, 2, 0>(const unsigned short *, const unsigned short *, const float *, float *, int, int, int)",
