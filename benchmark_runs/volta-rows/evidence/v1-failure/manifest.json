@@ -1,0 +1,22 @@
+{
+  "controller_artifact_dir": ".todo-orchestrator/runtime/background-artifacts/foreground/452d187d-e74e-46bc-a61f-b3b30f140444",
+  "evidence_id": "21befe1c-45ec-4b4d-a733-1d0321cb0762",
+  "format": "KERNELWIKI-ROW-FAILED-ATTEMPT/1",
+  "measured_binary_path": "benchmark_runs/volta-rows/evidence/v1-failure/binary/row_runner",
+  "measured_binary_sha256": "61b8cece4a73310361f1fa6f94bea78d96c6e3cc823022a5380cf879c48251da",
+  "note": "Preserved failed first baseline correctness run. Do not reuse as v2 evidence.",
+  "raw_files": {
+    "foreground.stderr.txt": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+    "foreground.stdout.txt": "26ba96d21818fffed452ed288c27c36d6c8eb86c2cecc4984a99d798d5998120",
+    "lease.json": "0b2edb77d103beb229e328055617a62bf1981007ab4ec9b4e94a3a42198f4a23"
+  },
+  "source_hashes": {
+    "PROVENANCE.yaml": "4eda68a14ab3935f6689dbfa57d51c2316946b1b2a9c5b1aabd60eb98ccc58d7",
+    "contract.json": "374d8f9ec7cb90e558109184d8242618cc00fde618ffbc067e0d37b4d7f17dd4",
+    "role-rows-correctness-baseline.spec.json": "a4cbccd5240631706b3ff16071ffe04cb2641dcc48a27c4f03a4768ab1bc3587",
+    "row_kernels.cu": "84228f37a1c3668b2b712af6b1a772d3a7cb6a1039638b20e7f64448f44892d9",
+    "row_runner.cu": "c42e74c1c1cf7b2fe02f2e4273de04773f159f37d4885e3e9be7fcafa1b4733b"
+  },
+  "source_revision": "v1-before-same-stream-copy-fix",
+  "status": "failed"
+}

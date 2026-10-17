@@ -1,0 +1,49 @@
+{
+  "tool": "ncu",
+  "status": "partial",
+  "counter_valid": true,
+  "timing_valid": false,
+  "needs_more_data": true,
+  "measurement_scope": "kernel counters",
+  "collection_set": "",
+  "launch_count": null,
+  "reasons": [
+    "Nsight Compute is valid for kernel-cause diagnosis here, but not for throughput timing because replay changes runtime.",
+    "Hottest kernel class: memory-bound.",
+    "Primary next move: Reduce HBM traffic, improve coalescing, or fuse memory passes.",
+    "- Kernel sample count is light. Rerun with more repeated hot launches if you need stronger confidence."
+  ],
+  "recommended_route": "fusion",
+  "recommended_route_reason": "The next decision is bytes moved, fusion depth, or memory-pass removal.",
+  "hot_kernel": {
+    "name": "softmax_cta(const float *, const unsigned char *, float *, int, int, int, int, int)",
+    "share_pct": 100.0,
+    "samples": 1,
+    "class": "memory-bound",
+    "next_step": "Reduce HBM traffic, improve coalescing, or fuse memory passes.",
+    "dram_pct": 44.010245,
+    "sm_pct": 20.301456,
+    "tensor_pct": null,
+    "occupancy": null,
+    "registers_per_thread": 32.0
+  },
+  "top_kernels": [
+    {
+      "name": "softmax_cta(const float *, const unsigned char *, float *, int, int, int, int, int)",
+      "share_pct": 100.0,
+      "samples": 1,
+      "class": "memory-bound",
+      "next_step": "Reduce HBM traffic, improve coalescing, or fuse memory passes.",
+      "dram_pct": 44.010245,
+      "sm_pct": 20.301456,
+      "tensor_pct": null,
+      "occupancy": null,
+      "registers_per_thread": 32.0
+    }
+  ],
+  "next_step": "Reduce HBM traffic, improve coalescing, or fuse memory passes.",
+  "notes": [
+    "Use benchmark output or Nsight Systems for throughput comparisons.",
+    "Use Nsight Compute to decide whether poor performance comes from bytes moved, compute path choice, registers, or shared memory."
+  ]
+}

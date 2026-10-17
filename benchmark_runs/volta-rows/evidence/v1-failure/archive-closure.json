@@ -1,0 +1,33 @@
+{
+  "captured_manifest": {
+    "path": "benchmark_runs/volta-rows/evidence/v1-failure/manifest.json",
+    "sha256": "deea701f6272c47f6408349725f2adf0f364ac025ed8f67037de2d1ecab43ed3"
+  },
+  "controller_result": {
+    "path": "benchmark_runs/volta-rows/evidence/v1-failure/controller-result.json",
+    "sha256": "7aac4ef6a47979014cd0ff36cda7e270c51e4b16388df33f81ac73a82e21f747",
+    "source_api": "todo_orchestrator.background.store.BackgroundStore.result"
+  },
+  "evidence_id": "21befe1c-45ec-4b4d-a733-1d0321cb0762",
+  "format": "KERNELWIKI-ROW-FAILED-ATTEMPT-ARCHIVE/1",
+  "raw_files": {
+    "foreground.stderr.txt": {
+      "archive_path": "benchmark_runs/volta-rows/evidence/v1-failure/foreground.stderr.txt",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/452d187d-e74e-46bc-a61f-b3b30f140444/foreground.stderr.txt",
+      "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+      "size_bytes": 176
+    },
+    "foreground.stdout.txt": {
+      "archive_path": "benchmark_runs/volta-rows/evidence/v1-failure/foreground.stdout.txt",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/452d187d-e74e-46bc-a61f-b3b30f140444/foreground.stdout.txt",
+      "sha256": "26ba96d21818fffed452ed288c27c36d6c8eb86c2cecc4984a99d798d5998120",
+      "size_bytes": 11378
+    },
+    "lease.json": {
+      "archive_path": "benchmark_runs/volta-rows/evidence/v1-failure/lease.json",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/452d187d-e74e-46bc-a61f-b3b30f140444/lease.json",
+      "sha256": "0b2edb77d103beb229e328055617a62bf1981007ab4ec9b4e94a3a42198f4a23",
+      "size_bytes": 316
+    }
+  }
+}

@@ -1,0 +1,5 @@
+==WARNING== Note: Running with unmodified GPU clocks. If not controlled otherwise, profiling results may be inconsistent.
+==PROF== Connected to process 962320 (/home/tumlinson/KernelWiki/benchmark_runs/volta-rows/bin/row_runner)
+==PROF== Profiling "softmax_cta" - 0: 0%....50%....100% - 8 passes
+==PROF== Disconnected from process 962320
+==PROF== Report: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/9f5c3bc8-d4f9-4fb1-aaf6-a229333f6c12/ncu/run/report.ncu-rep

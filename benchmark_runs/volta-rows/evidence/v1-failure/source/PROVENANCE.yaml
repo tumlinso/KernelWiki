@@ -1,0 +1,119 @@
+format: KERNELWIKI-KWV05-PROVENANCE/1
+state: source_frozen_before_device_execution
+scope: "KWV-05 stable softmax and plain RMSNorm on Volta SM70"
+repository_root: /home/tumlinson/KernelWiki
+frozen_date_utc: "2026-10-17"
+
+build:
+  compiler: /opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc
+  compiler_version: "Cuda compilation tools, release 12.9, V12.9.86; build cuda_12.9.r12.9/compiler.36037853_0"
+  command:
+    - /opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc
+    - -O3
+    - -std=c++17
+    - -arch=sm_70
+    - -lineinfo
+    - -Xptxas=-v
+    - -Xcompiler=-fno-omit-frame-pointer
+    - -Xcompiler=-Wall,-Wextra
+    - -o
+    - benchmark_runs/volta-rows/bin/row_runner
+    - artifacts/kernels/volta-rows/full/row_runner.cu
+  architecture: sm_70
+  fast_math: false
+  compile_status: passed
+  binary: benchmark_runs/volta-rows/bin/row_runner
+  binary_sha256: c07a1b62d72d8b24ced17b6c2fd387e5196549e07edd630ba6305a1d1857a594
+  binary_bytes: 1313544
+  ptxas_summary:
+    softmax_warp: "31 registers, 0 bytes spill stores, 0 bytes spill loads, 0 bytes shared memory"
+    softmax_cta: "32 registers, 0 bytes spill stores, 0 bytes spill loads, 16 bytes shared memory"
+    rmsnorm_warp: "30 registers, 0 bytes spill stores, 0 bytes spill loads, 0 bytes shared memory"
+    rmsnorm_cta_scalar: "32 registers, 0 bytes spill stores, 0 bytes spill loads, 16 bytes shared memory"
+    rmsnorm_cta_vec4: "32 registers, 0 bytes spill stores, 0 bytes spill loads, 16 bytes shared memory"
+
+sources:
+  artifacts/kernels/volta-rows/full/row_kernels.cu: 84228f37a1c3668b2b712af6b1a772d3a7cb6a1039638b20e7f64448f44892d9
+  artifacts/kernels/volta-rows/full/row_runner.cu: c42e74c1c1cf7b2fe02f2e4273de04773f159f37d4885e3e9be7fcafa1b4733b
+  artifacts/kernels/volta-rows/full/README.md: 9f1bedc1097a7063db581a1b57e5aa5d4fd820f775aa6bc31d497e9a3396b393
+  benchmark_runs/volta-rows/source/row_oracle.py: 53a528880521bd1637cfcd5f073fc1d617bac6a229eed7372ae2185b6ac2f6b2
+  benchmark_runs/volta-rows/source/prepare_rows.py: 1e056ecabda11dbfc2aaad9d1ac9f59fdf48472ebe8932e085744df8fa6a096d
+  benchmark_runs/volta-rows/source/test_row_oracle.py: f257a047883376748986fb5f84e195e7fc4021e52609f7df024c3c9cb86334f3
+  benchmark_runs/volta-rows/case_matrix.json: cbe948c753454e41698b5c314cbf8cf80a0e98dbe31b43cd47f2cd1ad984725a
+  benchmark_runs/volta-rows/controller/pc_controller.py: ad6e921272f2dd34e31701d8fd7e5b686341bb2396ba0125b6dcbbc92e11589b
+  benchmark_runs/volta-rows/controller/ncu-collection-shim.py: fda69450466b6617d627e638db32d094ac28d8e7d5bec80e512a4fdce3fce98f
+
+fixed_bundle:
+  contract: benchmark_runs/volta-rows/cases/rows/contract.json
+  contract_format: KERNELWIKI-ROW-CONTRACT/1
+  contract_sha256: 374d8f9ec7cb90e558109184d8242618cc00fde618ffbc067e0d37b4d7f17dd4
+  case_signature: 6be308579deb3cc7c6b14268549ce521dd9b63bef3ca8c5e120c7fc02d35ae13
+  case_count: 22
+  correctness_case_count: 22
+  correctness_case_ids:
+    - softmax_n31
+    - softmax_n32
+    - softmax_n33
+    - softmax_n128
+    - softmax_n768
+    - softmax_n4096
+    - softmax_n8193
+    - softmax_mask_tail_stride
+    - softmax_zero_rows
+    - rmsnorm_n31
+    - rmsnorm_n32
+    - rmsnorm_n33
+    - rmsnorm_n128
+    - rmsnorm_n768
+    - rmsnorm_n4096
+    - rmsnorm_n8193
+    - rmsnorm_zero_row
+    - rmsnorm_zero_rows
+    - rmsnorm_n33_misaligned
+    - softmax_wide_single_row
+    - softmax_wide_streaming
+    - rmsnorm_vec4_wide_streaming
+  represented_input:
+    path: benchmark_runs/volta-rows/cases/rows/inputs.bin
+    sha256: 78ca394b1441b60b59a283be943301c21488d7ee7a864643c445c4ed3793d909
+    bytes: 17186335
+  reference_output:
+    path: benchmark_runs/volta-rows/cases/rows/reference.f64le
+    sha256: d483d4110b4414d5bbfbf27a0e9976ead21152ca9464d455d7ae6b6ef9b45d43
+    bytes: 34228484
+  independent_cpu_oracle:
+    path: benchmark_runs/volta-rows/cases/rows/cpu-oracle.json
+    sha256: 3ef95dbcfeb88ccb8609838e79580ac27ffe3b61aa137add0ad2c86a3c366857
+  route_and_shape_declarations: contract.cases
+  comparison: "per logical output: abs(actual-reference) <= 2^-30 + 2^-14*abs(reference)"
+
+controller_roles:
+  contract_scope: rows_correctness_suite
+  correctness_and_sanitizer: full_bundle
+  selected_timing_case_ids:
+    - softmax_wide_single_row
+    - softmax_wide_streaming
+    - rmsnorm_vec4_wide_streaming
+  distinct_roles:
+    - baseline_correctness
+    - candidate_correctness
+    - candidate_compute_sanitizer
+    - baseline_timing
+    - candidate_timing
+    - candidate_ncu_profile
+  profile_case_id: softmax_wide_streaming
+  profile_kernel_launches: 1
+
+cpu_validation:
+  tests: "python3 -m unittest discover -s benchmark_runs/volta-rows/source -p test_row_oracle.py -v"
+  result: "passed: 10 tests"
+  py_compile: passed
+  JSON_validation: passed
+  deterministic_fixture_hashes: passed
+
+device_validation_at_freeze:
+  cuda_correctness: not_run
+  compute_sanitizer: not_run
+  unprofiled_timing: not_run
+  ncu_profile: not_run
+  controller_role_receipts: not_run

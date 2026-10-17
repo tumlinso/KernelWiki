@@ -1,0 +1,23 @@
+Compute Sanitizer summary: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/b0f215ff-e566-4e5b-84f1-ebb915ddc66e/sanitizer/run/summary.txt
+
+V100 Crash Debug Decision
+
+tool: compute-sanitizer
+status: partial
+conclusive: no
+crash_class: unknown
+likely_domain: unknown
+exit_status: 0
+signal: 
+tool_detail: memcheck
+error_count: 0
+
+decision:
+- compute-sanitizer reported zero errors.
+
+next_step: The sanitizer run did not report a device fault. Escalate to batch cuda-gdb if the crash still reproduces.
+
+Artifacts:
+- raw log: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/b0f215ff-e566-4e5b-84f1-ebb915ddc66e/sanitizer/run/raw.log
+- stdout: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/b0f215ff-e566-4e5b-84f1-ebb915ddc66e/sanitizer/run/stdout.txt
+- stderr: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/b0f215ff-e566-4e5b-84f1-ebb915ddc66e/sanitizer/run/stderr.txt

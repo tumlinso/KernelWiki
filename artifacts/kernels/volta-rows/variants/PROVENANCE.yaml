@@ -1,0 +1,22 @@
+origin_url: https://docs.nvidia.com/cuda/cuda-runtime-api/
+upstream_repo: KernelWiki-authored CUDA row kernels based on the NVIDIA CUDA Runtime
+  API and CUDA C++ Programming Guide
+license: MIT (authored KernelWiki source; no upstream implementation copied)
+retrieved_at: '2026-10-17'
+asset_mode: derived
+derived_from:
+- blog-volta-rows-measurements
+- doc-volta-cuda-12-9
+files:
+- local_path: README.md
+  role: approach-notes
+  mode: derived
+  sha256: 66a51c2c371874839f5eadd96395dd8605f2f561dd1c72d65ea92215b4598b1a
+- local_path: row_kernels.cu
+  role: derived-source
+  mode: derived
+  sha256: 84228f37a1c3668b2b712af6b1a772d3a7cb6a1039638b20e7f64448f44892d9
+- local_path: row_runner.cu
+  role: derived-source
+  mode: derived
+  sha256: 0a7aa2b3d3d9406d2a65cb4d2069430895705a812ea1e1864a81b4aac15a3287

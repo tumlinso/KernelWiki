@@ -1,0 +1,83 @@
+{
+  "argv": [
+    "benchmark_runs/volta-rows/bin/row_runner",
+    "--input",
+    "benchmark_runs/volta-rows/cases/rows/inputs.bin",
+    "--reference",
+    "benchmark_runs/volta-rows/cases/rows/reference.f64le",
+    "--impl",
+    "candidate",
+    "--mode",
+    "time",
+    "--case",
+    "softmax_wide_streaming",
+    "--warmups",
+    "0",
+    "--repetitions",
+    "1",
+    "--rotations",
+    "1"
+  ],
+  "benchmark": {
+    "build_argv": [
+      "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+      "-O3",
+      "-std=c++17",
+      "-arch=sm_70",
+      "-lineinfo",
+      "-Xptxas=-v",
+      "-Xcompiler=-fno-omit-frame-pointer",
+      "-Xcompiler=-Wall,-Wextra",
+      "-o",
+      "benchmark_runs/volta-rows/bin/row_runner",
+      "artifacts/kernels/volta-rows/full/row_runner.cu"
+    ]
+  },
+  "binary_paths": [
+    "benchmark_runs/volta-rows/bin/row_runner"
+  ],
+  "command_cwd": "/home/tumlinson/KernelWiki",
+  "contract_id": "rows_correctness_suite",
+  "inputs": [
+    "artifacts/kernels/volta-rows/full/row_kernels.cu",
+    "artifacts/kernels/volta-rows/full/row_runner.cu",
+    "artifacts/kernels/volta-rows/full/README.md",
+    "artifacts/kernels/volta-rows/full/PROVENANCE.yaml",
+    "benchmark_runs/volta-rows/source/row_oracle.py",
+    "benchmark_runs/volta-rows/source/prepare_rows.py",
+    "benchmark_runs/volta-rows/source/test_row_oracle.py",
+    "benchmark_runs/volta-rows/case_matrix.json",
+    "benchmark_runs/volta-rows/cases/rows/contract.json",
+    "benchmark_runs/volta-rows/cases/rows/cpu-oracle.json",
+    "benchmark_runs/volta-rows/cases/rows/inputs.bin",
+    "benchmark_runs/volta-rows/cases/rows/reference.f64le",
+    "benchmark_runs/volta-rows/bin/row_runner",
+    "benchmark_runs/volta-rows/controller/pc_controller.py",
+    "benchmark_runs/volta-rows/controller/ncu-collection-shim.py",
+    "benchmark_runs/volta-rows/controller/role-rows-profile-candidate.spec.json"
+  ],
+  "paths": [
+    "artifacts/kernels/volta-rows/full",
+    "benchmark_runs/volta-rows"
+  ],
+  "project_root": "/home/tumlinson/KernelWiki",
+  "quiescence": {
+    "consecutive_idle_samples": 3,
+    "interval_seconds": 0.25,
+    "timeout_seconds": 60
+  },
+  "recipe": "ncu",
+  "resources": {
+    "cpu_threads": 2,
+    "gpus": 1,
+    "isolate_nvlink_domain": true,
+    "isolate_pcie_root": true
+  },
+  "role": "candidate_profile",
+  "schema_version": 1,
+  "timeout": 7200,
+  "toolchain": {
+    "require_sanitizer": true,
+    "root": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9"
+  }
+}

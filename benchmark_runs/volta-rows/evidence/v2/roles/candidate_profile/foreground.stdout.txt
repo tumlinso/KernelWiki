@@ -1,0 +1,36 @@
+Nsight Compute summary: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/9f5c3bc8-d4f9-4fb1-aaf6-a229333f6c12/ncu/run/summary.txt
+
+V100 Nsight Compute Decision
+
+status: partial
+counter_valid: yes
+timing_valid: no
+needs_more_data: yes
+measurement_scope: kernel counters
+
+decision:
+- Nsight Compute is valid for kernel-cause diagnosis here, but not for throughput timing because replay changes runtime.
+- Hottest kernel class: memory-bound.
+- Primary next move: Reduce HBM traffic, improve coalescing, or fuse memory passes.
+- Kernel sample count is light. Rerun with more repeated hot launches if you need stronger confidence.
+- Recommended route: fusion. The next decision is bytes moved, fusion depth, or memory-pass removal.
+
+top_kernels:
+- softmax_cta(const float *, const unsigned char *, float *, int, int, int, int, int) | share=100.0% | samples=1 | class=memory-bound | dram=44.0% | sm=20.3% | regs=32
+  next: Reduce HBM traffic, improve coalescing, or fuse memory passes.
+
+notes:
+- Use benchmark output or Nsight Systems for throughput comparisons.
+- Use Nsight Compute to decide whether poor performance comes from bytes moved, compute path choice, registers, or shared memory.
+
+recommended_route: fusion
+recommended_route_reason: The next decision is bytes moved, fusion depth, or memory-pass removal.
+next_step: Reduce HBM traffic, improve coalescing, or fuse memory passes.
+
+Artifacts:
+- report: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/9f5c3bc8-d4f9-4fb1-aaf6-a229333f6c12/ncu/run/report.ncu-rep
+- raw csv: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/9f5c3bc8-d4f9-4fb1-aaf6-a229333f6c12/ncu/run/raw.csv
+- command stdout: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/9f5c3bc8-d4f9-4fb1-aaf6-a229333f6c12/ncu/run/command.stdout.txt
+- command stderr: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/9f5c3bc8-d4f9-4fb1-aaf6-a229333f6c12/ncu/run/command.stderr.txt
+- profiler stdout: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/9f5c3bc8-d4f9-4fb1-aaf6-a229333f6c12/ncu/run/profiler.stdout.txt
+- profiler stderr: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/9f5c3bc8-d4f9-4fb1-aaf6-a229333f6c12/ncu/run/profiler.stderr.txt

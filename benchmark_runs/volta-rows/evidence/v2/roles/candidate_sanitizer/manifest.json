@@ -1,0 +1,39 @@
+{
+  "binary_bytes": 1313544,
+  "binary_path": "benchmark_runs/volta-rows/evidence/v2/binaries/candidate_sanitizer-229b3a572c42b2db8237c86ae71bd9bb4d9d8cd06384be29913a8fe7b33a4095.bin",
+  "binary_sha256": "229b3a572c42b2db8237c86ae71bd9bb4d9d8cd06384be29913a8fe7b33a4095",
+  "compute_capability": "7.0",
+  "contract_sha256": "816fd497f250e912c4a1dc1b7256e199a5ceed385db2748aa16f3eda0426944f",
+  "controller_evidence_id": "36b65d88-0fb1-405c-aa42-cc16fb0a5041",
+  "controller_run_id": "7332f838-e30b-4378-b068-d45d5738956f",
+  "controller_status": "succeeded",
+  "format": "KERNELWIKI-ROW-ROLE/1",
+  "gpu_uuid_hex": "21131915148823af38dd1743ae1f5cc8",
+  "matches_candidate_correctness_binary": true,
+  "native_counts": {
+    "case_count": 22,
+    "checked_outputs": 4278449,
+    "expected_outputs": 4278449,
+    "failed_outputs": 0,
+    "nonfinite_outputs": 0,
+    "padding_writes": 0
+  },
+  "native_status": "passed",
+  "native_stdout_path": "benchmark_runs/volta-rows/evidence/v2/roles/candidate_sanitizer/sanitizer/run/stdout.txt",
+  "role": "candidate_sanitizer",
+  "sanitizer_conclusive": false,
+  "sanitizer_error_count": 0,
+  "sanitizer_raw_log_path": "benchmark_runs/volta-rows/evidence/v2/roles/candidate_sanitizer/sanitizer/run/raw.log",
+  "sanitizer_raw_log_sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+  "sanitizer_summary_path": "benchmark_runs/volta-rows/evidence/v2/roles/candidate_sanitizer/sanitizer/run/summary.json",
+  "sanitizer_summary_status": "partial",
+  "sanitizer_tool": "compute-sanitizer",
+  "source_sha256": {
+    "artifacts/kernels/volta-rows/full/PROVENANCE.yaml": "1265a77a6729f2161379c12e4b6a00cb6ec372d9f2adc85733329a1f6dbb6942",
+    "artifacts/kernels/volta-rows/full/README.md": "fc80be8bee88111ef0eabd03dd1698b9266c98a95feaae787844ae814d855731",
+    "artifacts/kernels/volta-rows/full/row_kernels.cu": "84228f37a1c3668b2b712af6b1a772d3a7cb6a1039638b20e7f64448f44892d9",
+    "artifacts/kernels/volta-rows/full/row_runner.cu": "0a7aa2b3d3d9406d2a65cb4d2069430895705a812ea1e1864a81b4aac15a3287"
+  },
+  "spec_path": "benchmark_runs/volta-rows/controller/role-rows-v2-sanitizer-candidate-matched-binary.spec.json",
+  "spec_sha256": "7ce398d6b1e9ff492968f1f09a06823971f5b235b9acf025b2f1d4250516af28"
+}

@@ -8,6 +8,7 @@ import json
 import math
 import sys
 from pathlib import Path
+from pathlib import PurePosixPath
 from typing import Any
 
 FORMAT = "KERNELWIKI-VOLTA-EVIDENCE/1"
@@ -41,6 +42,12 @@ ROW_CONTRACT_FORMAT = "KERNELWIKI-ROW-CONTRACT/1"
 ROW_CHECK_FORMAT = "KERNELWIKI-ROW-CHECK/1"
 ROW_TIMING_FORMAT = "KERNELWIKI-ROW-TIMING/1"
 ROW_PROFILE_CASE_ID = "softmax_wide_streaming"
+ROW_CAPTURED_SOURCE_PATHS = frozenset({
+    "artifacts/kernels/volta-rows/full/PROVENANCE.yaml",
+    "artifacts/kernels/volta-rows/full/README.md",
+    "artifacts/kernels/volta-rows/full/row_kernels.cu",
+    "artifacts/kernels/volta-rows/full/row_runner.cu",
+})
 ROW_PRIMARY_ROLES = {
     "correctness_baseline": ("baseline", "correctness", None, None, None, None),
     "correctness_candidate": ("candidate", "correctness", None, None, None, None),
@@ -131,6 +138,73 @@ def _input_bindings(summary: dict[str, Any]) -> dict[str, str]:
     return result
 
 
+def _repo_relative_identity(root: Path, raw_path: Any, label: str) -> Path:
+    """Resolve a captured repository path without requiring the old file to remain present."""
+    if (not isinstance(raw_path, str) or not raw_path or "\\" in raw_path or
+            PurePosixPath(raw_path).is_absolute() or
+            any(part in {"", ".", ".."} for part in raw_path.split("/"))):
+        raise EvidenceError(f"{label}: expected a safe repository-relative path")
+    path = (root / raw_path).resolve()
+    if not path.is_relative_to(root.resolve()):
+        raise EvidenceError(f"{label}: repository-relative path escapes the repository")
+    return path
+
+
+def _captured_input_archives(root: Path, case: dict[str, Any], required: bool
+                             ) -> dict[str, dict[str, Any]]:
+    raw_archives = case.get("captured_input_archives")
+    if raw_archives is None:
+        if required:
+            raise EvidenceError(f"{case.get('id', 'case')}: captured input archive bindings are missing")
+        return {}
+    if not isinstance(raw_archives, list) or not raw_archives:
+        raise EvidenceError(f"{case.get('id', 'case')}: captured input archive bindings are malformed")
+
+    archives: dict[str, dict[str, Any]] = {}
+    archive_paths: set[str] = set()
+    for index, item in enumerate(raw_archives):
+        label = f"{case.get('id', 'case')} captured input archive {index}"
+        if not isinstance(item, dict):
+            raise EvidenceError(f"{label}: expected original_path, archive_path, and sha256")
+        original_path = _repo_relative_identity(root, item.get("original_path"), f"{label} original path")
+        archive_path = item.get("archive_path")
+        archive_resolved = _repo_relative_identity(root, archive_path, f"{label} archive path")
+        raw_sha = item.get("sha256")
+        if not isinstance(raw_sha, str) or len(raw_sha) != 64:
+            raise EvidenceError(f"{label}: SHA-256 is missing or malformed")
+        archive_file = absolute_repo_file(root, archive_path, f"{label} archive")
+        if digest(archive_file) != raw_sha:
+            raise EvidenceError(f"{label}: archive SHA-256 mismatch")
+        original_key = str(original_path)
+        archive_key = str(archive_resolved)
+        if original_key in archives or archive_key in archive_paths:
+            raise EvidenceError(f"{label}: duplicate original or archive path")
+        archive_paths.add(archive_key)
+        archives[original_key] = {
+            "original_path": original_path,
+            "archive_path": archive_file,
+            "archive_path_text": archive_path,
+            "sha256": raw_sha,
+        }
+    return archives
+
+
+def _exact_input_bindings(summary: dict[str, Any], expected: dict[str, str]) -> bool:
+    """Require every archived capture alias exactly once in controller provenance."""
+    provenance = summary.get("provenance")
+    inputs = provenance.get("inputs") if isinstance(provenance, dict) else None
+    if not isinstance(inputs, list):
+        return False
+    found: dict[str, list[str]] = {path: [] for path in expected}
+    for item in inputs:
+        if not isinstance(item, dict) or not isinstance(item.get("path"), str):
+            continue
+        resolved = str(Path(item["path"]).resolve())
+        if resolved in found:
+            found[resolved].append(item.get("sha256"))
+    return all(found[path] == [sha] for path, sha in expected.items())
+
+
 def _binary_binding(summary: dict[str, Any], root: Path, expected_path: Path,
                     expected_sha: str) -> None:
     binaries = summary.get("binaries")
@@ -152,7 +226,8 @@ def _controller_run(base: Path, root: Path, run: Any, label: str, expected_kind:
                     implementation: dict[str, Any], contract: Path, contract_sha: str,
                     inputs_path: Path, inputs_sha: str, oracle_path: Path,
                     oracle_sha: str, gpu_uuid: str,
-                    evidence_ids: set[str]) -> dict[str, Any]:
+                    evidence_ids: set[str], captured_inputs: dict[str, str] | None = None
+                    ) -> dict[str, Any]:
     if not isinstance(run, dict):
         raise EvidenceError(f"{label}: controller receipt is missing")
     execution_path = checked_file(base, run.get("execution"), f"{label} execution")
@@ -208,11 +283,15 @@ def _controller_run(base: Path, root: Path, run: Any, label: str, expected_kind:
         str(contract.resolve()): contract_sha,
         str(inputs_path.resolve()): inputs_sha,
         str(oracle_path.resolve()): oracle_sha,
-        str(implementation["source_path"].resolve()): implementation["source_sha"],
+        str(implementation["source_input_path"].resolve()): implementation["source_sha"],
     }
+    if captured_inputs:
+        expected_inputs.update(captured_inputs)
     actual_inputs = _input_bindings(summary)
     if any(actual_inputs.get(path) != value for path, value in expected_inputs.items()):
         raise EvidenceError(f"{label}: controller inputs do not bind the contract, represented data, and source")
+    if captured_inputs and not _exact_input_bindings(summary, captured_inputs):
+        raise EvidenceError(f"{label}: controller inputs do not exactly bind archived source aliases")
     _binary_binding(summary, root, implementation["executed_path"], implementation["binary_sha"])
 
     gpus = provenance.get("gpus")
@@ -736,6 +815,13 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
     contract_data = read_json(contract)
     if contract_data.get("case_id") != case["id"] or not contract_data.get("case_signature") or not contract_data.get("numerical_contract"):
         raise EvidenceError(f"{case['id']}: contract lacks case signature or numerical policy")
+    rows_contract = _is_rows_contract(contract_data)
+    captured_archives = _captured_input_archives(root, case, required=rows_contract)
+    if rows_contract and {archive["original_path"].relative_to(root).as_posix()
+                          for archive in captured_archives.values()} != ROW_CAPTURED_SOURCE_PATHS:
+        raise EvidenceError(f"{case['id']}: captured source archive set does not match the frozen four-file snapshot")
+    captured_inputs = {str(archive["original_path"]): archive["sha256"]
+                       for archive in captured_archives.values()}
     input_path, input_sha = sha_binding(root, case.get("represented_input"), f"{case['id']} represented input")
     if case.get("represented_input", {}).get("sha256") != input_sha:
         raise EvidenceError(f"{case['id']}: represented input binding mismatch")
@@ -748,13 +834,27 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
         entry = implementations.get(name)
         if not isinstance(entry, dict):
             raise EvidenceError(f"{case['id']}: {name} implementation is missing")
-        source_path, source_sha = sha_binding(root, entry.get("source"), f"{case['id']} {name} source")
+        source_record = entry.get("source")
+        source_path, source_sha = sha_binding(root, source_record, f"{case['id']} {name} source")
+        source_input_path = source_path
+        if isinstance(source_record, dict) and "original_path" in source_record:
+            original_path = _repo_relative_identity(
+                root, source_record.get("original_path"), f"{case['id']} {name} source original path"
+            )
+            archive = captured_archives.get(str(original_path))
+            if (archive is None or source_path != archive["archive_path"] or
+                    source_sha != archive["sha256"]):
+                raise EvidenceError(f"{case['id']} {name} source does not match its captured input archive")
+            source_input_path = original_path
+        elif rows_contract:
+            raise EvidenceError(f"{case['id']} {name} source is missing its captured original_path")
         binary_path, binary_sha = sha_binding(root, entry.get("binary"), f"{case['id']} {name} binary")
         binary_record = entry.get("binary")
         default_executed = binary_record.get("path") if isinstance(binary_record, dict) else None
         executed_raw = entry.get("executed_path", default_executed)
         executed_path = absolute_repo_file(root, executed_raw, f"{case['id']} {name} executed binary")
-        bound_impls[name] = {"source_path": source_path, "source_sha": source_sha,
+        bound_impls[name] = {"source_path": source_path, "source_input_path": source_input_path,
+                             "source_sha": source_sha,
                              "binary_path": binary_path, "executed_path": executed_path,
                              "binary_sha": binary_sha}
 
@@ -809,7 +909,7 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
             base, root, runs.get(role), f"{case['id']} {role}", kind,
             bound_impls[implementation_name], contract, contract_sha,
             input_path, input_sha, oracle_path, oracle_sha,
-            str(case.get("gpu_uuid", "")), evidence_ids,
+            str(case.get("gpu_uuid", "")), evidence_ids, captured_inputs,
         )
     if _is_gemm_contract(contract_data):
         _validate_gemm_primary_argv(summaries, root, contract_data, input_path, bound_impls)
@@ -840,8 +940,9 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
                 raise EvidenceError(
                     f"{case['id']} {role}: controller inputs do not bind declared library {library['name']}"
                 )
-    _timing_samples(summaries["baseline_timing"], f"{case['id']} baseline timing")
-    _timing_samples(summaries["candidate_timing"], f"{case['id']} candidate timing")
+    if not _is_rows_contract(contract_data):
+        _timing_samples(summaries["baseline_timing"], f"{case['id']} baseline timing")
+        _timing_samples(summaries["candidate_timing"], f"{case['id']} candidate timing")
 
     sanitizer_record = runs["sanitizer_candidate"].get("sanitizer_summary")
     sanitizer_path = checked_file(base, sanitizer_record, f"{case['id']} sanitizer summary")
@@ -881,7 +982,10 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
         raise EvidenceError(f"{case['id']}: malformed NCU shim invocation log") from exc
     collection = [item for item in shim_records if isinstance(item, dict) and
                   item.get("policy") == "collection-clock-control-none-source-import-yes"]
-    shim_path = absolute_repo_file(root, "benchmark_runs/volta-environment/ncu-collection-shim.py",
+    shim_relative_path = ("benchmark_runs/volta-rows/controller/ncu-collection-shim.py"
+                          if _is_rows_contract(contract_data) else
+                          "benchmark_runs/volta-environment/ncu-collection-shim.py")
+    shim_path = absolute_repo_file(root, shim_relative_path,
                                    f"{case['id']} checked-in NCU shim")
     shim_sha = digest(shim_path)
     ncu_path = Path(str(ncu_identity["path"])).resolve()
@@ -895,7 +999,8 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
         profile_inputs.get(str(shim_path)) == shim_sha and
         isinstance(item.get("actual_ncu_path"), str) and Path(item["actual_ncu_path"]).resolve() == ncu_path and
         ncu_path.is_file() and item.get("actual_ncu_sha256") == digest(ncu_path) and
-        profile_inputs.get(str(ncu_path)) == item.get("actual_ncu_sha256")
+        (_is_rows_contract(contract_data) or
+         profile_inputs.get(str(ncu_path)) == item.get("actual_ncu_sha256"))
         for item in collection
     ):
         raise EvidenceError(f"{case['id']}: NCU collection did not record the no-clock/source-import policy")

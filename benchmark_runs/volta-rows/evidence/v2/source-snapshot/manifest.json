@@ -1,0 +1,29 @@
+{
+  "files": [
+    {
+      "archive_path": "benchmark_runs/volta-rows/evidence/v2/source-snapshot/full/PROVENANCE.yaml",
+      "bytes": 5795,
+      "original_path": "artifacts/kernels/volta-rows/full/PROVENANCE.yaml",
+      "sha256": "1265a77a6729f2161379c12e4b6a00cb6ec372d9f2adc85733329a1f6dbb6942"
+    },
+    {
+      "archive_path": "benchmark_runs/volta-rows/evidence/v2/source-snapshot/full/README.md",
+      "bytes": 4943,
+      "original_path": "artifacts/kernels/volta-rows/full/README.md",
+      "sha256": "fc80be8bee88111ef0eabd03dd1698b9266c98a95feaae787844ae814d855731"
+    },
+    {
+      "archive_path": "benchmark_runs/volta-rows/evidence/v2/source-snapshot/full/row_kernels.cu",
+      "bytes": 10930,
+      "original_path": "artifacts/kernels/volta-rows/full/row_kernels.cu",
+      "sha256": "84228f37a1c3668b2b712af6b1a772d3a7cb6a1039638b20e7f64448f44892d9"
+    },
+    {
+      "archive_path": "benchmark_runs/volta-rows/evidence/v2/source-snapshot/full/row_runner.cu",
+      "bytes": 30881,
+      "original_path": "artifacts/kernels/volta-rows/full/row_runner.cu",
+      "sha256": "0a7aa2b3d3d9406d2a65cb4d2069430895705a812ea1e1864a81b4aac15a3287"
+    }
+  ],
+  "format": "KERNELWIKI-KWV05-SOURCE-SNAPSHOT/1"
+}

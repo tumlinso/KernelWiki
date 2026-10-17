@@ -1,0 +1,34 @@
+{
+  "authoritative_for_candidate_sanitizer": false,
+  "binary_bytes": 1313544,
+  "binary_path": "benchmark_runs/volta-rows/evidence/v2/binaries/candidate_sanitizer_unbound_attempt-a44d96bb12d0d72bc359e2a146c5d49e40919c940e78543dce7ca9819c9d45db.bin",
+  "binary_sha256": "a44d96bb12d0d72bc359e2a146c5d49e40919c940e78543dce7ca9819c9d45db",
+  "compute_capability": "7.0",
+  "controller_evidence_id": "1e73a786-ea87-4402-b801-9c15b72ee239",
+  "controller_run_id": "b0f215ff-e566-4e5b-84f1-ebb915ddc66e",
+  "controller_status": "succeeded",
+  "format": "KERNELWIKI-ROW-ROLE-ATTEMPT/1",
+  "gpu_uuid_hex": "21131915148823af38dd1743ae1f5cc8",
+  "native_counts": {
+    "case_count": 22,
+    "checked_outputs": 4278449,
+    "expected_outputs": 4278449,
+    "failed_outputs": 0,
+    "nonfinite_outputs": 0,
+    "padding_writes": 0
+  },
+  "native_status": "passed",
+  "raw_artifact_hashes": {
+    "process_env.txt": "153e9ff10b914fed5768067978578ceef5c7bc74842f8b106d148cb0a4404e3a",
+    "raw.log": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+    "run_config.json": "c396bff37789dc28e1d99d9f334845defda23997b8805e110a514e274e8716fd",
+    "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout.txt": "be7f966490864d2ecd8f9d2015e1550d6e6a560bf30aa2dbf50bdadb153ec4de",
+    "summary.json": "001a91ae6744c223fa3f261e8e8c63d86a1c745918b1e55132f0f5d03d620b5d",
+    "summary.txt": "fcb23799a8d20adb6412215f2c2fb13237d3fc371eac10dc743117ac89d5c6a3"
+  },
+  "reason_not_authoritative": "Controller rebuilt the candidate executable; its binary differs from the candidate correctness-checked ELF. Preserved as diagnostic evidence only.",
+  "role": "candidate_sanitizer_unbound_attempt",
+  "sanitizer_summary_path": "benchmark_runs/volta-rows/evidence/v2/roles/candidate_sanitizer_unbound_attempt/sanitizer/run/summary.json",
+  "stdout_path": "benchmark_runs/volta-rows/evidence/v2/roles/candidate_sanitizer_unbound_attempt/sanitizer/run/stdout.txt"
+}

@@ -1,0 +1,16 @@
+{
+  "classification": "memory-bound",
+  "counter_valid": true,
+  "dram_throughput_pct": 44.010245,
+  "format": "KERNELWIKI-ROW-NCU-ANALYSIS/1",
+  "interpretation": "The profiler classified its single sample as memory-bound. This is a narrow classifier result, not evidence that DRAM traffic caused the unprofiled timing difference; replay timing is invalid, one softmax kernel was selected, and this profile says nothing about RMSNorm.",
+  "occupancy": null,
+  "readable": true,
+  "registers_per_thread": 32.0,
+  "role": "candidate_profile",
+  "samples": 1,
+  "scope": "one selected softmax_wide_streaming launch; kernel counters only",
+  "selected_kernel": "softmax_cta(const float *, const unsigned char *, float *, int, int, int, int, int)",
+  "sm_throughput_pct": 20.301456,
+  "timing_valid": false
+}

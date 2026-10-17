@@ -391,6 +391,90 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
         self.assertFalse(result["valid"])
         self.assertIn("do not bind", result["errors"][0])
 
+    def install_archived_source_binding(self):
+        original_path = "artifacts/kernels/example/frozen/source.cu"
+        archive_path = self.root / "benchmark_runs" / "volta-case" / "source-snapshot" / "source.cu"
+        source_sha = put(archive_path, b"captured source bytes\n")
+        self.assertFalse((self.root / original_path).exists())
+        source_record = {
+            "path": str(archive_path.relative_to(self.root)),
+            "original_path": original_path,
+            "sha256": source_sha,
+        }
+        for name in ("baseline", "candidate"):
+            self.impl[name]["source"] = dict(source_record)
+            self.impl[name]["source_path"] = archive_path
+            self.manifest["cases"][0]["implementations"][name]["source"] = dict(source_record)
+        for role, run in self.runs.items():
+            evidence_path = self.base / run["evidence"]["path"]
+            exported = json.loads(evidence_path.read_text())
+            inputs = exported["evidence"]["summary"]["provenance"]["inputs"]
+            inputs[3] = {"path": str((self.root / original_path).resolve()), "sha256": source_sha}
+            run["evidence"]["sha256"] = json_file(evidence_path, exported)
+        self.manifest["cases"][0]["captured_input_archives"] = [{
+            "original_path": original_path,
+            "archive_path": str(archive_path.relative_to(self.root)),
+            "sha256": source_sha,
+        }]
+        self.write_manifest()
+
+    def test_archived_source_is_bound_to_missing_captured_path_and_legacy_stays_valid(self):
+        legacy = self.validate()
+        self.assertTrue(legacy["valid"], legacy["errors"])
+        self.assertNotIn("original_path", self.manifest["cases"][0]["implementations"]["candidate"]["source"])
+
+        self.install_archived_source_binding()
+        result = self.validate()
+        self.assertTrue(result["valid"], result["errors"])
+
+    def test_archived_source_rejects_wrong_or_escaping_original_path(self):
+        self.install_archived_source_binding()
+        source = self.manifest["cases"][0]["implementations"]["baseline"]["source"]
+        source["original_path"] = "artifacts/kernels/example/frozen/other.cu"
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("does not match its captured input archive", result["errors"][0])
+
+        self.install_archived_source_binding()
+        source = self.manifest["cases"][0]["implementations"]["baseline"]["source"]
+        source["original_path"] = "../outside/source.cu"
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("safe repository-relative path", result["errors"][0])
+
+    def test_archived_source_rejects_archive_hash_and_controller_alias_mismatches(self):
+        self.install_archived_source_binding()
+        self.manifest["cases"][0]["captured_input_archives"][0]["sha256"] = "0" * 64
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("archive SHA-256 mismatch", result["errors"][0])
+
+        self.install_archived_source_binding()
+        run = self.manifest["cases"][0]["runs"]["correctness_candidate"]
+        evidence_path = self.base / run["evidence"]["path"]
+        exported = json.loads(evidence_path.read_text())
+        exported["evidence"]["summary"]["provenance"]["inputs"][-1]["sha256"] = "0" * 64
+        run["evidence"]["sha256"] = json_file(evidence_path, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("do not bind the contract, represented data, and source", result["errors"][0])
+
+        self.install_archived_source_binding()
+        run = self.manifest["cases"][0]["runs"]["correctness_candidate"]
+        evidence_path = self.base / run["evidence"]["path"]
+        exported = json.loads(evidence_path.read_text())
+        inputs = exported["evidence"]["summary"]["provenance"]["inputs"]
+        inputs.append(dict(inputs[-1]))
+        run["evidence"]["sha256"] = json_file(evidence_path, exported)
+        self.write_manifest()
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertIn("exactly bind archived source aliases", result["errors"][0])
+
     def test_controller_binary_must_match_declared_artifact(self):
         evidence = self.base / self.runs["candidate_timing"]["evidence"]["path"]
         exported = json.loads(evidence.read_text())
