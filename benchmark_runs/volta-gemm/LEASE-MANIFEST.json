@@ -1,0 +1,151 @@
+{
+  "format": "KERNELWIKI-VOLTA-RUNTIME-LEASE-MANIFEST/1",
+  "summary": "benchmark_runs/volta-gemm/summary.json",
+  "purpose": "Enumerates original foreground lease receipts read by scripts/volta_evidence_check.py and their archived copies.",
+  "leases": [
+    {
+      "case_id": "large_dense",
+      "role": "correctness_baseline",
+      "evidence_id": "f74e3ceb-0f92-4b07-a493-ec5fe75ea8cc",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/bf672c7f-9bd2-4233-934c-f1449fc9e20b/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/large_dense/correctness_baseline/lease.json",
+      "sha256": "5167fa1bf8280a4c99d642827ca3ed4129448f7b060774d6468eccd8f82151f6"
+    },
+    {
+      "case_id": "large_dense",
+      "role": "correctness_candidate",
+      "evidence_id": "f36b6185-9769-4d17-bc46-d60e5c0af1b4",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/820df417-812a-43b2-9bf8-3b605cec055a/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/large_dense/correctness_candidate/lease.json",
+      "sha256": "f29f12f8d0d8d328c6b925e3c30d3d25995ecd6579681461c8a6c8087d822bd0"
+    },
+    {
+      "case_id": "large_dense",
+      "role": "sanitizer_candidate",
+      "evidence_id": "8b4cd05c-797b-4704-8cff-e75b80ffc0db",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/0bfdea76-d4d9-4228-bdec-f7c15880138a/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/large_dense/sanitizer_candidate/attempt-2/lease.json",
+      "sha256": "3fcc09ad522b74f9dbcfcedb653750b0acbb1bd20630a72164699d77d74b358b"
+    },
+    {
+      "case_id": "large_dense",
+      "role": "baseline_timing",
+      "evidence_id": "e7ce6ec5-0d22-4072-bfb7-2b3f8faf87bb",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/2b642f8c-6e8c-40f7-bb01-fe6e9ca9eae9/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/large_dense/baseline_timing/attempt-1/lease.json",
+      "sha256": "8e7e416c066fc04bf24b250c036f01cba6925a066f7f52c43faba215a922bbdc"
+    },
+    {
+      "case_id": "large_dense",
+      "role": "candidate_timing",
+      "evidence_id": "99f67e2a-68f7-4a4d-a50d-96761f841c53",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/ddc6aa1a-b50c-4090-8a3d-89a2e04e9780/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/large_dense/candidate_timing/attempt-1/lease.json",
+      "sha256": "76da372b95acb1678880bbf0ff25236c29f609925c8454406644564d2f35bde3"
+    },
+    {
+      "case_id": "large_dense",
+      "role": "profile_candidate",
+      "evidence_id": "53d0e5ae-f45d-4759-b8cc-d0b7f580c0de",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/bab63d2b-f4a3-41bc-a8bc-76a3d7270a85/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/large_dense/profile_candidate/attempt-1/lease.json",
+      "sha256": "3e582d43556030aff3dfa4c0bb667340763d2ad6d87a780a43728e8263b8bad2"
+    },
+    {
+      "case_id": "small_m",
+      "role": "correctness_baseline",
+      "evidence_id": "d1c6c989-796d-48e4-a3d3-d21b65146709",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/c761d08f-dabc-4298-a609-4b247ee1ca4a/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/small_m/correctness_baseline/lease.json",
+      "sha256": "38098c0c5a2023093b9e7ef60e50c481c9497c7a825db28d0b61d5c22575b334"
+    },
+    {
+      "case_id": "small_m",
+      "role": "correctness_candidate",
+      "evidence_id": "d39021fb-1751-4c0b-a0b3-50726538c6a4",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/f9966e12-a8ff-4f2b-85f6-7a78a9d2d722/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/small_m/correctness_candidate/lease.json",
+      "sha256": "fd47bf24824190c86e638144ab7b16c4d1dac927d42aaff445ba3c91ade4aa69"
+    },
+    {
+      "case_id": "small_m",
+      "role": "sanitizer_candidate",
+      "evidence_id": "509c6df4-161f-4c27-9c76-281f889fd06d",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/07a41ec3-5f7b-408f-b5ec-0d63f087b632/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/small_m/sanitizer_candidate/attempt-1/lease.json",
+      "sha256": "1e268162651bdbdc0fdaeb30091f52726616d26ff749f2553a0e09238fd8dfb7"
+    },
+    {
+      "case_id": "small_m",
+      "role": "baseline_timing",
+      "evidence_id": "8648aaa9-386f-4beb-9f94-3a94553ad986",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/e9ee9ee4-50eb-4740-886f-501c6f864b8f/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/small_m/baseline_timing/attempt-1/lease.json",
+      "sha256": "076a0aeb54309f96c24577c22b8cfc3f3ad125d6a201ff4e9ed859ddd6474356"
+    },
+    {
+      "case_id": "small_m",
+      "role": "candidate_timing",
+      "evidence_id": "22e1018e-56f9-466f-aa73-81c5ac75501c",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/small_m/candidate_timing/attempt-1/lease.json",
+      "sha256": "9d0871e9b71b41052de8c58c964847e4c52cf58ae296a83c798af4a7691c38a5"
+    },
+    {
+      "case_id": "small_m",
+      "role": "profile_candidate",
+      "evidence_id": "6313de16-2609-4696-a520-aa09e57a61a9",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/038c8594-a292-45b6-9b19-59f8863798c6/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/small_m/profile_candidate/attempt-1/lease.json",
+      "sha256": "ecdd1607e3fb58a58afc7b149aabd2cb8fb29372f4333d190c58336e79f58f76"
+    },
+    {
+      "case_id": "ragged",
+      "role": "correctness_baseline",
+      "evidence_id": "c25e1707-9b84-4956-8b45-1b3f967f35ab",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/2453f5cf-7cb8-4943-8902-1877243006e9/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/ragged/correctness_baseline/lease.json",
+      "sha256": "e4d72a400adec3bafde6f58f9ca16dfc3357c3d7dedf1753409a1cb3cabf8f46"
+    },
+    {
+      "case_id": "ragged",
+      "role": "correctness_candidate",
+      "evidence_id": "4ce37c96-e603-4ab9-8693-1c26f2dfc321",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/0201e5a0-4d0a-4533-a6d6-b6c52cb5a69d/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/ragged/correctness_candidate/lease.json",
+      "sha256": "d6e9dcd4089eaf5efbfaf45838ae2326a98934ecc3a3f8521a7b4310795e7722"
+    },
+    {
+      "case_id": "ragged",
+      "role": "sanitizer_candidate",
+      "evidence_id": "65245e1e-44f1-4e78-831b-6704dcc9f359",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/c8b4de1e-1af1-4dee-9722-ce29f8a7a474/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/ragged/sanitizer_candidate/attempt-1/lease.json",
+      "sha256": "04267b56c7154edbf1ff768f16e4560bf7588b337961ffe6627e5af18587e9ee"
+    },
+    {
+      "case_id": "ragged",
+      "role": "baseline_timing",
+      "evidence_id": "d2e109f3-f7f4-4db3-99ff-098a13ecea81",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/fbc4463a-2278-4bc6-9426-fd7248215875/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/ragged/baseline_timing/attempt-1/lease.json",
+      "sha256": "ed44e8db86ef6c7d95129179f3cd48a755295d40bcfc3a69b844ee6b0d757222"
+    },
+    {
+      "case_id": "ragged",
+      "role": "candidate_timing",
+      "evidence_id": "86d582a1-d2ef-42fd-b81f-9d574960ec0f",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/d556e216-7767-47c1-97ce-06156439a06f/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/ragged/candidate_timing/attempt-1/lease.json",
+      "sha256": "ac11b17ba21ab61bfa4a53f374eea2daccf96ef2771b2d879be27d65c2f7d4f5"
+    },
+    {
+      "case_id": "ragged",
+      "role": "profile_candidate",
+      "evidence_id": "027095ff-ef10-4940-b044-9e3e19c51065",
+      "runtime_path": ".todo-orchestrator/runtime/background-artifacts/foreground/c4de1e30-8196-411e-a654-8a2c5ae65e38/lease.json",
+      "archive_path": "benchmark_runs/volta-gemm/evidence/ragged/profile_candidate/attempt-1/lease.json",
+      "sha256": "be4bf8467bccca96d13e34df1fddc415c48f4e8f51e6d542139be88e39205de9"
+    }
+  ]
+}
