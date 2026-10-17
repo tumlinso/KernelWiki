@@ -3,16 +3,16 @@
 <!-- todo-orchestrator:v2-managed:start -->
 # KWV-06: Implement Volta attention dataflow for prefill and decode
 
-Task revision: `48`; current project revision is in `todo-status.md`.
+Task revision: `51`; current project revision is in `todo-status.md`.
 
 ## Objective
 Reuse matrix and row work to produce correct forward attention, then investigate fragment exchange, useful query grouping and bounded KV partitioning.
 
 ## State
-- Lifecycle: `in_progress`
-- Execution: `claimed`
+- Lifecycle: `done`
+- Execution: `closed`
 - Parallel policy: `serial`
-- Result: `-`
+- Result: `validated`
 
 ## Next Action
 Read KWV-06 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.

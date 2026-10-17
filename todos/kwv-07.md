@@ -1,14 +1,16 @@
+
+
 <!-- todo-orchestrator:v2-managed:start -->
 # KWV-07: Implement grouped/gated math and one exact low-bit storage path
 
-Task revision: `2`; current project revision is in `todo-status.md`.
+Task revision: `52`; current project revision is in `todo-status.md`.
 
 ## Objective
 Reuse the native matrix substrate to test grouped/gated fusion and one W4A16 decoding contract; avoid a MoE runtime or format-compatibility project.
 
 ## State
-- Lifecycle: `planned`
-- Execution: `ready`
+- Lifecycle: `in_progress`
+- Execution: `claimed`
 - Parallel policy: `serial`
 - Result: `-`
 

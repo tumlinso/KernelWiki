@@ -1,0 +1,21 @@
+CXX ?= c++
+CXXFLAGS ?= -O2 -std=c++17 -Wall -Wextra -Werror
+BUNDLE ?= ../../../../benchmark_runs/volta-grouped-lowbit/cases/fixture_bundle
+CPU_BIN_DIR ?= ../../../../benchmark_runs/volta-grouped-lowbit/bin/cpu
+
+.PHONY: cpu-test clean
+cpu-test: $(CPU_BIN_DIR)/test_bundle_reader $(CPU_BIN_DIR)/test_bundle_reader_errors
+	$(CPU_BIN_DIR)/test_bundle_reader $(BUNDLE)
+	$(CPU_BIN_DIR)/test_bundle_reader_errors $(BUNDLE)
+
+# Host-only readers; these targets never invoke nvcc.
+$(CPU_BIN_DIR)/test_bundle_reader: tests/test_bundle_reader.cpp include/kwv07_bundle.hpp
+	mkdir -p $(CPU_BIN_DIR)
+	$(CXX) $(CXXFLAGS) -I. tests/test_bundle_reader.cpp -o $@
+
+$(CPU_BIN_DIR)/test_bundle_reader_errors: tests/test_bundle_reader_errors.cpp include/kwv07_bundle.hpp
+	mkdir -p $(CPU_BIN_DIR)
+	$(CXX) $(CXXFLAGS) -I. tests/test_bundle_reader_errors.cpp -o $@
+
+clean:
+	rm -rf $(CPU_BIN_DIR)

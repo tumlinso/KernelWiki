@@ -1,0 +1,89 @@
+{
+  "case_id": "kwv07-grouped-gated",
+  "case_ids": [
+    "tiny_balanced",
+    "tiny_skewed",
+    "moderate_balanced",
+    "moderate_skewed",
+    "weighted_balanced",
+    "weighted_skewed"
+  ],
+  "case_signature": "da6da47b580b36460f35a4b01f9f4d1e1358758376a165815cf7e38677bee1f5",
+  "family": "grouped_gated",
+  "format": "KERNELWIKI-KWV07-SUITE-CONTRACT/1",
+  "input_references": [
+    {
+      "bytes": 33416,
+      "path": "inputs/tiny_balanced.bin",
+      "sha256": "589efe53d28506197760f3316d966fb15f851072de54b060e069cfc9a78a4bd0"
+    },
+    {
+      "bytes": 33416,
+      "path": "inputs/tiny_skewed.bin",
+      "sha256": "a4b8c336793a062b1c7501a04123540cb2f24137a58dfe0cff0f35bcd57787d3"
+    },
+    {
+      "bytes": 135592,
+      "path": "inputs/moderate_balanced.bin",
+      "sha256": "6949f98d08c38e4a36258d015dcdfbfe2fe59ea490fa584c4083cc10ffbc86ba"
+    },
+    {
+      "bytes": 135592,
+      "path": "inputs/moderate_skewed.bin",
+      "sha256": "a00e7d80e7eb1ce9cc61ec6226b2c42a7b0d36410f6b448420cf391050a58a96"
+    },
+    {
+      "bytes": 4261416,
+      "path": "inputs/weighted_balanced.bin",
+      "sha256": "6fbe426d4794134bfc5cb9566d1a7326266ea66a4f95baf02f91f6193564407d"
+    },
+    {
+      "bytes": 4261416,
+      "path": "inputs/weighted_skewed.bin",
+      "sha256": "8f506a23a13195dd8c436ddabdc0e41a6cb2a540242c5a8620b3056b67f1b6b1"
+    }
+  ],
+  "numerical_contract": {
+    "cpu_oracle": "FP64 CPU reference generated over exact represented binary inputs; exact binary references are SHA-bound and the declared FP32 arithmetic is prechecked before device execution",
+    "gpu_check": "runner checks every output against the fixed per-output policy after each device invocation; this contract is not a GPU result",
+    "operator": "Y[output_position] = silu32(X16[row] @ W_gate16[expert]) * (X16[row] @ W_up16[expert]); both projections accumulate in FP32",
+    "policy": "FP16 represented inputs; FP32 projection/intermediate/SiLU/product/output; FP64 represented-input oracle; per-output bound abs(silu(G64))*eU + (abs(U64)+eU)*(1+1/e)*eG + 8*2^-24*(1+abs(Y64)+abs(U64)+abs(G64)), with eU/eG=gamma_K*sum_abs_products"
+  },
+  "oracle_references": [
+    {
+      "bytes": 10280,
+      "path": "oracles/tiny_balanced.bin",
+      "sha256": "73293eebe534f7a5e7967fcee78cfa245c66fdeebad9440925a856ee3c8070f7"
+    },
+    {
+      "bytes": 10280,
+      "path": "oracles/tiny_skewed.bin",
+      "sha256": "5c58a1cd879fedcee732b36b335154ad2178850c7917af97e0c2b22f8c477f35"
+    },
+    {
+      "bytes": 81960,
+      "path": "oracles/moderate_balanced.bin",
+      "sha256": "993ae2bd9e5de38dc927c4a4823e028190c7b72c1cd1f2335f631e1e3c7c7ff6"
+    },
+    {
+      "bytes": 81960,
+      "path": "oracles/moderate_skewed.bin",
+      "sha256": "66c184448c183970b98404b0d73fd8d1881813c728f36001ba2ba0f4e7916d39"
+    },
+    {
+      "bytes": 1310760,
+      "path": "oracles/weighted_balanced.bin",
+      "sha256": "3c3971e1e045bcbd923fde088353e87db62bb1f29f37b8b57cf7cb39f37ff7a9"
+    },
+    {
+      "bytes": 1310760,
+      "path": "oracles/weighted_skewed.bin",
+      "sha256": "915a8862da6991f83e4f995b0ea0170a27ab548b7e3cfbc9a37fa693104fc5ff"
+    }
+  ],
+  "path_basis": "bundle root",
+  "suite_manifest": {
+    "path": "suites/grouped.json",
+    "sha256": "a1fcbe536ca98b14285f11af1b19d71302ccd46ed47bc8760d400fc092672b99"
+  }
+}

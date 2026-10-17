@@ -1,0 +1,36 @@
+{
+  "assignment_contract": "row_id, expert_id, output_position; duplicate rows/experts retained and output positions unique",
+  "group_counts": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    127
+  ],
+  "group_order": "stable expert-major permutation of original assignment indices",
+  "input_sha256": "8f506a23a13195dd8c436ddabdc0e41a6cb2a540242c5a8620b3056b67f1b6b1",
+  "kind": "grouped_gated",
+  "numerics": {
+    "exceptional_values": "group fixture inputs and weights are finite with magnitude <=0.5; K<=512 bounds |gate| by 128",
+    "gated_output_bound": "abs(silu(G64))*eU + (abs(U64)+eU)*(1+1/e)*eG + 8*2^-24*(1+abs(Y64)+abs(U64)+abs(G64))",
+    "input": "represented IEEE binary16",
+    "oracle": "FP64 over exact represented input values",
+    "product_and_output": "FP32",
+    "projection_accumulator": "FP32",
+    "projection_bound": "gamma_K * sum(abs(x16*w16)) per output",
+    "projection_intermediate": "FP32",
+    "silu": "FP32 g/(1+expf(-g))"
+  },
+  "operator": "Y[pos] = silu(X[row] W_gate[expert]) * (X[row] W_up[expert])",
+  "oracle_sha256": "915a8862da6991f83e4f995b0ea0170a27ab548b7e3cfbc9a37fa693104fc5ff",
+  "shape": {
+    "assignments": 128,
+    "experts": 8,
+    "k": 512,
+    "n": 256,
+    "source_rows": 64
+  }
+}

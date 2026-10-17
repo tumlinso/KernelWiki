@@ -1,0 +1,57 @@
+{
+  "checks": [
+    {
+      "atol": 16.85051345822484,
+      "case_id": "low_m",
+      "checked_outputs": 63,
+      "cpu_check": "direct FP32 CPU dot simulation over exact decoded FP16 weights; identity and per-output admission precheck only",
+      "max_abs_error": 0.007944107055664062,
+      "max_individual_bound_ratio": 0.002315071920773498,
+      "reference_max_abs": 144748.56078243256,
+      "result": "pass",
+      "rtol": 0.0
+    },
+    {
+      "atol": 18.071198208752268,
+      "case_id": "moderate_m",
+      "checked_outputs": 1008,
+      "cpu_check": "direct FP32 CPU dot simulation over exact decoded FP16 weights; identity and per-output admission precheck only",
+      "max_abs_error": 0.11437606811523438,
+      "max_individual_bound_ratio": 0.007611973181244658,
+      "reference_max_abs": 283250.00175857544,
+      "result": "pass",
+      "rtol": 0.0
+    },
+    {
+      "atol": 9964.972527472528,
+      "case_id": "weighted_low_m",
+      "checked_outputs": 1024,
+      "cpu_check": "direct FP32 CPU dot simulation over exact decoded FP16 weights; identity and per-output admission precheck only",
+      "max_abs_error": 0.0,
+      "max_individual_bound_ratio": 0.0,
+      "reference_max_abs": 141562.5,
+      "result": "pass",
+      "rtol": 0.0
+    },
+    {
+      "atol": 10211.309523809523,
+      "case_id": "weighted_moderate_m",
+      "checked_outputs": 16384,
+      "cpu_check": "direct FP32 CPU dot simulation over exact decoded FP16 weights; identity and per-output admission precheck only",
+      "max_abs_error": 0.0,
+      "max_individual_bound_ratio": 0.0,
+      "reference_max_abs": 924062.5,
+      "result": "pass",
+      "rtol": 0.0
+    }
+  ],
+  "format": "KERNELWIKI-CPU-ORACLE/1",
+  "passed": true,
+  "path_basis": "bundle root",
+  "suite_id": "kwv07-w4a16",
+  "suite_manifest": {
+    "path": "suites/w4a16.json",
+    "sha256": "782c84fd60b234d42e692f1c872c2590741fc2b6ee827d23336db5cc83eb1280"
+  },
+  "validation_scope": "CPU-only represented-input/reference identity and fixed-policy FP32 simulation precheck; no GPU execution or GPU numerical result is asserted"
+}

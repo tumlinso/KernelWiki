@@ -1,0 +1,36 @@
+{
+  "format": {
+    "codes": "signed two-complement int4 [-8,7]",
+    "packing": "row-major [K,N], even code low nibble, odd code high nibble; unused tail nibble ignored",
+    "scale_domain_tested": [
+      6.103515625e-05,
+      8000.0
+    ],
+    "scales": "positive finite FP32 [ceil(K/group_size),N]"
+  },
+  "input_sha256": "7d68fa044d71a25370afdb3eab80086cc76f1b401f1bd47acfbcd6cb7e93b077",
+  "kind": "w4a16",
+  "numerics": {
+    "accumulator": "FP32",
+    "activation": "represented IEEE binary16",
+    "decoded_weight": "FP16 RN after FP32 scale multiply",
+    "dot_bound": "gamma_K * sum(abs(A16*decoded_W16))",
+    "exceptional_values": "activation and decoded weights finite; scale*q must round to finite binary16; bounded fixture scale envelope is [2^-14,8000]",
+    "oracle": "FP64 over represented A16 and decoded W16",
+    "output": "FP32"
+  },
+  "operator": "C[m,n] = sum_k A16[m,k] * round_fp16_rn(round_fp32(scale[group_k,n] * q[k,n]))",
+  "oracle_sha256": "28aae663ae0ab06de0b716fd71364a7ec48d28de5f593c866000a75887cc8d03",
+  "reuse_cases": [
+    1,
+    4,
+    16
+  ],
+  "shape": {
+    "group_size": 128,
+    "k": 4096,
+    "m": 1,
+    "n": 1024
+  },
+  "weight_family": "shared_large_weights"
+}

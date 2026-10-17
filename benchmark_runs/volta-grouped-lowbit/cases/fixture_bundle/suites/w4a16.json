@@ -1,0 +1,93 @@
+{
+  "binary_format": {
+    "grouped_input_payload": "FP16 X, FP16 W_up, FP16 W_gate, int32 assignments[row,expert,output_position]",
+    "grouped_oracle_payload": "FP64 Y, FP64 U, FP64 G, FP64 sum_abs_up, FP64 sum_abs_gate",
+    "header": "little-endian <8s8I, 40 bytes",
+    "input_magic": "KWV07I01",
+    "oracle_magic": "KWV07R01",
+    "w4_input_payload": "FP16 activations, packed signed nibbles, FP32 K-group scales",
+    "w4_oracle_payload": "FP64 C, FP64 sum_abs_products"
+  },
+  "cases": [
+    {
+      "contract": {
+        "bytes": 1205,
+        "path": "contracts/low_m.json",
+        "sha256": "eaad1e1e5485da1dce1128cf5e602d2b29fc5be992d335c14394f62b060b52e6"
+      },
+      "id": "low_m",
+      "input": {
+        "bytes": 9406,
+        "path": "inputs/low_m.bin",
+        "sha256": "c1d8ea982714839456cc4f67e4efaf45224688fdb0ce41e9251b16f8718dd1ad"
+      },
+      "oracle": {
+        "bytes": 1048,
+        "path": "oracles/low_m.bin",
+        "sha256": "de693351e12ff67cf07d0bc5e23d964ef6b160d3eda1ed065071919571537a73"
+      }
+    },
+    {
+      "contract": {
+        "bytes": 1198,
+        "path": "contracts/moderate_m.json",
+        "sha256": "0465cdbf4f5103452975bfe4b2b7539f7fa4fd254d0048c975b7c5ce4a4475ce"
+      },
+      "id": "moderate_m",
+      "input": {
+        "bytes": 17116,
+        "path": "inputs/moderate_m.bin",
+        "sha256": "8ba30a6bc309bb4007e7cdb93f87c1158ab9041366c953c73f388df8f3058478"
+      },
+      "oracle": {
+        "bytes": 16168,
+        "path": "oracles/moderate_m.bin",
+        "sha256": "f3525b5e5e6af578a4f1517ee5964901928f0f7aac9ca442aafcf6d3bce68bd2"
+      }
+    },
+    {
+      "contract": {
+        "bytes": 1212,
+        "path": "contracts/weighted_low_m.json",
+        "sha256": "855002c600a280f3ca610877053a0884eeb84c169422f855dfada17f7b426d35"
+      },
+      "id": "weighted_low_m",
+      "input": {
+        "bytes": 2236456,
+        "path": "inputs/weighted_low_m.bin",
+        "sha256": "7d68fa044d71a25370afdb3eab80086cc76f1b401f1bd47acfbcd6cb7e93b077"
+      },
+      "oracle": {
+        "bytes": 16424,
+        "path": "oracles/weighted_low_m.bin",
+        "sha256": "28aae663ae0ab06de0b716fd71364a7ec48d28de5f593c866000a75887cc8d03"
+      }
+    },
+    {
+      "contract": {
+        "bytes": 1205,
+        "path": "contracts/weighted_moderate_m.json",
+        "sha256": "ac694b9316547a4cf4df9648fad69eeec325fa47c39a06c7db462ebc79c0c317"
+      },
+      "id": "weighted_moderate_m",
+      "input": {
+        "bytes": 2359336,
+        "path": "inputs/weighted_moderate_m.bin",
+        "sha256": "48c55a1e127a69fee7444b7d4b1f8253d92dfd1b6193877ae0741d6c2354b0ed"
+      },
+      "oracle": {
+        "bytes": 262184,
+        "path": "oracles/weighted_moderate_m.bin",
+        "sha256": "4435cc8fdda8d10867cd506c44695728cd40fb5dca9c009c08727b2c7b24ecd8"
+      }
+    }
+  ],
+  "family": "w4a16",
+  "format": "KERNELWIKI-KWV07-SUITE/1",
+  "path_basis": "bundle root",
+  "source_bundle_manifest": {
+    "path": "bundle-manifest.json",
+    "sha256": "646137b453a81b9a09245d2b768376fab428ab4b4123c8023973d1b30942d3d8"
+  },
+  "suite_id": "kwv07-w4a16"
+}

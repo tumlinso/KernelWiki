@@ -1,0 +1,46 @@
+origin_url: https://docs.nvidia.com/cuda/cuda-runtime-api/
+upstream_repo: KernelWiki-authored CUDA grouped/gated and W4A16 teaching kernels based on CUDA Runtime, CUDA C++, and cuBLAS
+license: MIT (KernelWiki-authored source; no upstream kernel implementation copied)
+retrieved_at: '2026-10-17'
+asset_mode: derived
+derived_from:
+  - doc-volta-cuda-12-9
+  - doc-volta-tuning-12-9
+  - hw-volta-numerics
+files:
+  - local_path: Makefile.cpu
+    role: approach-notes
+    mode: derived
+    sha256: 57864281a043a6d81540d56232a7253e87746bfb3ae4a1d5ca8e98ff41289861
+  - local_path: Makefile.cuda
+    role: approach-notes
+    mode: derived
+    sha256: 2fe1c75cc63134d6050b8a0d316491924891b2180b7958d8a92c79b356065cf0
+  - local_path: README.md
+    role: approach-notes
+    mode: derived
+    sha256: 253ee6a67a1853430f292809900424404d39563c9d0a8c0c4aa8d59e41019095
+  - local_path: grouped_lowbit.cu
+    role: derived-source
+    mode: derived
+    sha256: ca625dfecfe01624512ddb1a4a3e7516924a4d1f4b541f157cd8256a8d9679a1
+  - local_path: grouped_lowbit.cuh
+    role: derived-source
+    mode: derived
+    sha256: 13c9d17b2c2dbcf7c993a302bb86a156d6782c46eb09a352792b9517beea9c4b
+  - local_path: include/kwv07_bundle.hpp
+    role: derived-source
+    mode: derived
+    sha256: 3aa3c831627e75b2eb71953ec89803dac1dcf300dc06a7f35904137a648b01ad
+  - local_path: kwv07_runner.cu
+    role: derived-source
+    mode: derived
+    sha256: c1d044fe258dea62c39c0353da34f5b0d810394c0871316473f1234dcb24a45f
+  - local_path: tests/test_bundle_reader.cpp
+    role: derived-source
+    mode: derived
+    sha256: 1cf566d951bfc48d9aa881eee906bb65e17a9c784b98d0ac4f952911ecc8dcff
+  - local_path: tests/test_bundle_reader_errors.cpp
+    role: derived-source
+    mode: derived
+    sha256: 45de1bbb1f3aa9051491790b71377976858f76778ac4b92e76071442cbc8c98b

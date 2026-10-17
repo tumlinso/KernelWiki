@@ -1,0 +1,15 @@
+# This target is intentionally separate from `Makefile.cpu`.
+# Do not invoke until KWV-07 is the active claimed lane.
+SDK_ROOT ?= /opt/nvidia/hpc_sdk/Linux_x86_64/26.1
+CUDA_ROOT ?= $(SDK_ROOT)/cuda/12.9
+CUBLAS_ROOT ?= $(SDK_ROOT)/math_libs/12.9/targets/x86_64-linux
+NVCC ?= $(CUDA_ROOT)/bin/nvcc
+NVCCFLAGS ?= -O2 -std=c++17 -lineinfo -arch=sm_70
+
+.PHONY: cuda-runner
+cuda-runner: kwv07_runner
+
+kwv07_runner: kwv07_runner.cu grouped_lowbit.cu grouped_lowbit.cuh include/kwv07_bundle.hpp
+	$(NVCC) $(NVCCFLAGS) -Iinclude -I$(CUBLAS_ROOT)/include \
+		kwv07_runner.cu grouped_lowbit.cu \
+		-L$(CUBLAS_ROOT)/lib -lcublas -o $@

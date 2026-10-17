@@ -1,0 +1,79 @@
+{
+  "checks": [
+    {
+      "atol": 5.069577466838842e-05,
+      "case_id": "tiny_balanced",
+      "checked_outputs": 256,
+      "cpu_check": "paired FP32 CPU accumulation/SiLU/product simulation; identity and per-output admission precheck only",
+      "max_abs_error": 1.221252940997175e-07,
+      "max_individual_bound_ratio": 0.0027485759351885976,
+      "reference_max_abs": 1.4933509855820202,
+      "result": "pass",
+      "rtol": 0.0
+    },
+    {
+      "atol": 4.701622028606211e-05,
+      "case_id": "tiny_skewed",
+      "checked_outputs": 256,
+      "cpu_check": "paired FP32 CPU accumulation/SiLU/product simulation; identity and per-output admission precheck only",
+      "max_abs_error": 7.84109356333218e-08,
+      "max_individual_bound_ratio": 0.0019768969120587767,
+      "reference_max_abs": 0.622424024709112,
+      "result": "pass",
+      "rtol": 0.0
+    },
+    {
+      "atol": 0.000459141877102474,
+      "case_id": "moderate_balanced",
+      "checked_outputs": 2048,
+      "cpu_check": "paired FP32 CPU accumulation/SiLU/product simulation; identity and per-output admission precheck only",
+      "max_abs_error": 2.634604294726728e-07,
+      "max_individual_bound_ratio": 0.0013914687503711626,
+      "reference_max_abs": 6.167755101494594,
+      "result": "pass",
+      "rtol": 0.0
+    },
+    {
+      "atol": 0.00037141876257144863,
+      "case_id": "moderate_skewed",
+      "checked_outputs": 2048,
+      "cpu_check": "paired FP32 CPU accumulation/SiLU/product simulation; identity and per-output admission precheck only",
+      "max_abs_error": 2.8413395192217195e-07,
+      "max_individual_bound_ratio": 0.0010389745632798197,
+      "reference_max_abs": 4.109146487886383,
+      "result": "pass",
+      "rtol": 0.0
+    },
+    {
+      "atol": 0.014865926927151852,
+      "case_id": "weighted_balanced",
+      "checked_outputs": 32768,
+      "cpu_check": "paired FP32 CPU accumulation/SiLU/product simulation; identity and per-output admission precheck only",
+      "max_abs_error": 2.8083625309704985e-06,
+      "max_individual_bound_ratio": 0.0002393135286758208,
+      "reference_max_abs": 32.68237042715675,
+      "result": "pass",
+      "rtol": 0.0
+    },
+    {
+      "atol": 0.014415792062659975,
+      "case_id": "weighted_skewed",
+      "checked_outputs": 32768,
+      "cpu_check": "paired FP32 CPU accumulation/SiLU/product simulation; identity and per-output admission precheck only",
+      "max_abs_error": 3.086457983414448e-06,
+      "max_individual_bound_ratio": 0.00024246684944964853,
+      "reference_max_abs": 35.8720834011171,
+      "result": "pass",
+      "rtol": 0.0
+    }
+  ],
+  "format": "KERNELWIKI-CPU-ORACLE/1",
+  "passed": true,
+  "path_basis": "bundle root",
+  "suite_id": "kwv07-grouped-gated",
+  "suite_manifest": {
+    "path": "suites/grouped.json",
+    "sha256": "a1fcbe536ca98b14285f11af1b19d71302ccd46ed47bc8760d400fc092672b99"
+  },
+  "validation_scope": "CPU-only represented-input/reference identity and fixed-policy FP32 simulation precheck; no GPU execution or GPU numerical result is asserted"
+}
