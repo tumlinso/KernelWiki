@@ -1,0 +1,33 @@
+{
+  "case_id": "small_m",
+  "case_signature": "17edbf60a68e3f26abe4f957ff306de4be3459db4a064774f3788a8047952bf8",
+  "numerical_contract": {
+    "accumulator": "FP32; alpha=1; beta=0",
+    "core_admission_tolerance": "gamma_K * sum_k(abs(double(A16[m,k]) * double(B16[k,n])))",
+    "core_output": "FP32",
+    "epilogue": "optional FP32 bias[n] followed by ReLU; no intermediate rounding beyond FP32 C",
+    "epilogue_admission_tolerance": "gamma_(K+1) * (sum_abs_products + abs(bias[n]))",
+    "exceptional_values": "inputs and bias finite; no NaN/Inf; generated range avoids overflow and subnormal inputs",
+    "layout": "row-major A[M,K], B[K,N], C[M,N]",
+    "operator": "C[m,n] = sum_k A16[m,k] * B16[k,n]",
+    "reference_output": "immutable per-case binary64 C and sum_abs_products generated from represented_inputs on CPU before any device run",
+    "represented_inputs": "serialized IEEE binary16 bit patterns; all routes consume these exact bits",
+    "tolerance_interpretation": "gamma-scaled thresholds are a predeclared per-output FP32 admission policy checked against every output; they are not a universal proved hardware error bound because PTX MMA accumulation order and rounding are unspecified",
+    "unit_roundoff": "2^-24"
+  },
+  "reference_output": {
+    "format": "KWVREF01: little-endian dimensions/seed, row-major FP64 C, row-major FP64 sum_abs_products",
+    "path": "reference.f64le",
+    "sha256": "2744fe8ced972afb676b16da618fd8da94eef92a66f74b41665f8a7821633209"
+  },
+  "represented_input": {
+    "path": "inputs.bin",
+    "sha256": "ed1bdb4a268e252ce4cc9d1fdfbcf5f636f658cb525766b1f54ec038c8e43ca0"
+  },
+  "shape": {
+    "k": 4096,
+    "m": 16,
+    "n": 4096,
+    "seed": 7380994
+  }
+}

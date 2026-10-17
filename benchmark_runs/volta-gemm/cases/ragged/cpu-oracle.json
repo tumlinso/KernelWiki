@@ -1,0 +1,36 @@
+{
+  "case_id": "ragged",
+  "checks": [
+    {
+      "atol": 0,
+      "max_abs_error": 0,
+      "name": "exact_fp64_2x2_core_self_test",
+      "reference_max_abs": 50,
+      "rtol": 0
+    },
+    {
+      "atol": 0,
+      "max_abs_error": 0,
+      "name": "exact_fp64_2x2_sum_abs_products_self_test",
+      "reference_max_abs": 50,
+      "rtol": 0
+    }
+  ],
+  "expected_reference_generation": {
+    "device_comparison": "each native correctness run emits its own per-output error, bound, failures, and exit status",
+    "inputs": "read serialized binary16 values, convert each exactly to binary64, accumulate each output in binary64",
+    "outputs": "the hashed KWVREF01 file stores C64 and sum_abs_products for each row-major output; controller records bind this exact file as an input",
+    "source": "artifacts/kernels/volta-gemm/variants/gemm_contract.hpp: compute_oracle"
+  },
+  "format": "KERNELWIKI-CPU-ORACLE/1",
+  "passed": true,
+  "reference_output": {
+    "format": "KWVREF01: exact generated case reference output and per-output absolute-product sum",
+    "path": "reference.f64le",
+    "sha256": "e34819dd1772853a600b3b46b601c60b6fefba428be78987ee88e54f066c73a4"
+  },
+  "represented_input": {
+    "path": "inputs.bin",
+    "sha256": "59be4d97102a1ebbdc6653ad41f01cd34dee75636ddcf597af05f592d9aec439"
+  }
+}
