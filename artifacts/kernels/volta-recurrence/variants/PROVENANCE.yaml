@@ -1,0 +1,34 @@
+origin_url: https://arxiv.org/html/2412.06464v3
+upstream_repo: KernelWiki-authored CUDA recurrence derived from the gated-delta rule in Yang et al.; no upstream kernel source copied
+license: MIT (KernelWiki-authored source; no upstream implementation copied)
+retrieved_at: '2026-10-17'
+asset_mode: derived
+derived_from:
+  - doc-volta-gdn
+  - doc-volta-cuda-12-9
+status: source-and-input identity manifest; native status lives in evidence/v1/summary.json
+files:
+  - local_path: README.md
+    role: approach-notes
+    mode: derived
+    sha256: 487bdc359675b1b52849211225cc58bf2bf3a7c29af1373bbf1885483e25842f
+  - local_path: bundle_contract.hpp
+    role: derived-source
+    mode: derived
+    sha256: 608123beccab006944e05f521924e527cbeb2e2fa4d87541f120ab5be55fcfb0
+  - local_path: sha256.hpp
+    role: derived-source
+    mode: derived
+    sha256: 478742e92e62db09ee58c2fcc15f727b9aa5e72908ef2173b21325ae1f6e67ed
+  - local_path: gdn_recurrent_state.cuh
+    role: derived-source
+    mode: derived
+    sha256: a2b1cf2edf1c6300ce30af202dc383b5bc2b4ed618869c9eeb1d3ccd4fe427d0
+  - local_path: gdn_runner.cu
+    role: derived-source
+    mode: derived
+    sha256: 8c69b49874fec6146b8d56c3c129e5627e41f616261f2e88ba945353670c0d2a
+  - local_path: tests/test_bundle_reader.cpp
+    role: derived-source
+    mode: derived
+    sha256: a0bc8ef4bf6d893fcab5166a0af98bc5b512eeddc69c2b66a8b63d144d46d5bd

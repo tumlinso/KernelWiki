@@ -1,0 +1,38 @@
+{
+  "case_id": "recurrence_state_ownership_bundle",
+  "checks": [
+    {
+      "atol": 1e-14,
+      "max_abs_error": 1.1102230246251565e-16,
+      "name": "expanded_rank_one_equation_small_semantic_case",
+      "reference_max_abs": 5.5768,
+      "rtol": 1e-14
+    },
+    {
+      "atol": 0.0,
+      "max_abs_error": 0.0,
+      "name": "segmented_carry_all_bundle_outputs",
+      "reference_max_abs": 0.2843370780279457,
+      "rtol": 0.0
+    },
+    {
+      "atol": 0.0,
+      "max_abs_error": 0.0,
+      "name": "segmented_carry_all_bundle_final_states",
+      "reference_max_abs": 0.20223269560265336,
+      "rtol": 0.0
+    }
+  ],
+  "expected_reference_generation": {
+    "inputs": "read exact little-endian FP32 represented values from the hashed bundle",
+    "outputs": "FP64 recurrence in time order; record every live output and final state",
+    "padding": "padded locations are NaN; they are not recurrence steps",
+    "source": "recurrence_oracle.py:run_interleaved and run_sequence"
+  },
+  "format": "KERNELWIKI-CPU-ORACLE/1",
+  "passed": true,
+  "represented_input": {
+    "path": "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
+    "sha256": "e760eda922a42c0d6f6338e8cc0d0b0c7971c4205c956047a55791191fced4b5"
+  }
+}

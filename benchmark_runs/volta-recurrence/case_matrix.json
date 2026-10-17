@@ -1,0 +1,120 @@
+{
+  "format": "kernelwiki-volta-recurrence-prep/1",
+  "status": "scratch-proposal-no-native-evidence",
+  "operator": {
+    "state_shape": [
+      "d_v",
+      "d_k"
+    ],
+    "state_layout": "sequence-major row-major [B,d_v,d_k]",
+    "input_layout": "time-major interleaved [T,B,dim]",
+    "update": [
+      "D = alpha[t,b] * S_previous",
+      "e = v[t,b] - D @ k[t,b]",
+      "S = D + beta[t,b] * outer(e,k[t,b])",
+      "o[t,b] = S @ q[t,b]"
+    ],
+    "output_state": "post-update",
+    "key_normalization": "runner performs no normalization; generated active test vectors are represented unit keys and reader verifies their norm",
+    "input_storage": "FP32 values; future native run must bind immutable stored inputs",
+    "state_and_accumulation": "FP32 in proposed CUDA implementation",
+    "exceptional_values": "bounded finite values; NaN/Inf outside contract",
+    "padding": "steps at or above each sequence length do not update state or write outputs"
+  },
+  "variants": [
+    {
+      "id": "per_token",
+      "description": "One separate kernel launch per token; each CTA owns one sequence and each state-row lane reads/writes its FP32 row each step."
+    },
+    {
+      "id": "retained",
+      "description": "One fused sequence launch; each state-row lane keeps its full d_k row live and stores final state once, subject to compiler register allocation/spills."
+    }
+  ],
+  "candidate_measurements": [
+    {
+      "case": "decode_many_sequences",
+      "T": 1,
+      "B": 256,
+      "d_v": 32,
+      "d_k": 32,
+      "purpose": "single-token latency with independent states; no future tokens batched"
+    },
+    {
+      "case": "short_prefill_many_sequences",
+      "T": 33,
+      "B": 128,
+      "d_v": 32,
+      "d_k": 32,
+      "purpose": "short sequence setup/launch and state movement"
+    },
+    {
+      "case": "long_prefill_many_sequences",
+      "T": 257,
+      "B": 128,
+      "d_v": 64,
+      "d_k": 64,
+      "purpose": "register retention, spills/residency, and complete state traffic"
+    }
+  ],
+  "comparison_requirements": [
+    "same immutable keys, values, queries, gates, lengths, and nonzero initial state for both variants",
+    "per_token timing includes all per-token launches; record host enqueue, host completion, and CUDA-event interval separately",
+    "CUDA event interval may contain device idle time caused by host submission gaps",
+    "do not attribute whole-operator timing differences to state traffic alone",
+    "all live outputs and every final state element compared to independent FP64 reference",
+    "full sequence and segmented carry around available boundaries must both pass",
+    "normal controller-admitted timing only; complete operator path",
+    "report source-level state reads/writes separately from measured DRAM traffic",
+    "include decode, short prefill, and long prefill in one bounded immutable bundle",
+    "no chunk candidate unless an equivalent derivation and real caller input availability are established"
+  ],
+  "bundle": {
+    "path": "recurrence_inputs.bin",
+    "manifest_path": "recurrence_inputs.json",
+    "file_sha256": "e760eda922a42c0d6f6338e8cc0d0b0c7971c4205c956047a55791191fced4b5",
+    "payload_sha256": "7c26087a2d035d692c90167cfc493756a3954cee84664a92c7ece2641611da80",
+    "bytes": 56285400,
+    "cases": [
+      {
+        "case_id": "decode_many_sequences",
+        "T": 1,
+        "B": 256,
+        "d_v": 32,
+        "d_k": 32,
+        "live_steps": 137
+      },
+      {
+        "case_id": "short_prefill_many_sequences",
+        "T": 33,
+        "B": 128,
+        "d_v": 32,
+        "d_k": 32,
+        "live_steps": 1845
+      },
+      {
+        "case_id": "long_prefill_many_sequences",
+        "T": 257,
+        "B": 128,
+        "d_v": 64,
+        "d_k": 64,
+        "live_steps": 13014
+      }
+    ],
+    "representation": "FP32 inputs and initial states plus FP64 outputs/final states in one versioned little-endian bundle",
+    "padding": "NaN sentinels in all padded inputs and FP64 output references; native outputs initialized to finite sentinel"
+  },
+  "numeric_policy": {
+    "atol": 2e-05,
+    "rtol": 0.0002,
+    "formula": "abs(actual-reference) <= atol + rtol*abs(reference)",
+    "applies_to": "every live output and every final-state element",
+    "cpu_fp32_probe": "fp32_policy_probe.json; CPU-only and non-CUDA; all probed values within fixed tolerance"
+  },
+  "cpu_checks": {
+    "python": "13 unittest tests across recurrence oracle and bundle roundtrip/corruption tests",
+    "cpp": "test_bundle_reader.cpp built with host g++ only and run against recurrence_inputs.bin",
+    "fp32_probe": "fp32_policy_probe.json; CPU-only FP32 FMA-order sanity probe, not CUDA evidence",
+    "native_runner": "draft only; no CUDA compilation or GPU execution"
+  }
+}

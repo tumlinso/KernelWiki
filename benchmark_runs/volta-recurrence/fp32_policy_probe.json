@@ -1,0 +1,37 @@
+{
+  "arithmetic": "FP32 multiplies with fmaf-order round-to-FP32 recurrence; no CUDA instructions",
+  "atol": 2e-05,
+  "bundle_file_sha256": "e760eda922a42c0d6f6338e8cc0d0b0c7971c4205c956047a55791191fced4b5",
+  "cases": [
+    {
+      "case_id": "decode_many_sequences",
+      "checked_values": 266528,
+      "max_abs_error": 2.002170013115645e-08,
+      "max_scaled_error": 0.0005678958679040282,
+      "sequences_probed": 256,
+      "within_predeclared_policy": true
+    },
+    {
+      "case_id": "short_prefill_many_sequences",
+      "checked_values": 190112,
+      "max_abs_error": 3.600175456364152e-08,
+      "max_scaled_error": 0.001157804751120911,
+      "sequences_probed": 128,
+      "within_predeclared_policy": true
+    },
+    {
+      "case_id": "long_prefill_many_sequences",
+      "checked_values": 92864,
+      "max_abs_error": 1.322406574244539e-07,
+      "max_scaled_error": 0.004721795126340818,
+      "sequences_probed": 8,
+      "within_predeclared_policy": true
+    }
+  ],
+  "evidence_kind": "cpu_only_arithmetic_sanity_check",
+  "format": "KERNELWIKI-RECURRENCE-FP32-POLICY-PROBE/1",
+  "gpu_execution": false,
+  "numpy": "2.2.6",
+  "python": "3.13.11",
+  "rtol": 0.0002
+}

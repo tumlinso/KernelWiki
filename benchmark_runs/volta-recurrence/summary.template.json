@@ -1,0 +1,49 @@
+{
+  "cases": [
+    {
+      "contract": {
+        "path": "contract.json",
+        "sha256": "96a338e1ad7623c2e356b5394589f7e4fe97f11605812fc76f9e588d1517ccb9"
+      },
+      "disposition": "not_run",
+      "gpu_uuid": "",
+      "id": "recurrence_state_ownership_bundle",
+      "implementations": {
+        "baseline": {
+          "binary": {
+            "path": "bin/gdn_runner",
+            "sha256": "UPDATE_AFTER_BUILD"
+          },
+          "executed_path": "benchmark_runs/volta-recurrence/bin/gdn_runner",
+          "source": {
+            "path": "artifacts/kernels/volta-recurrence/variants/gdn_runner.cu",
+            "sha256": "UPDATE_ON_ADOPTION"
+          }
+        },
+        "candidate": {
+          "binary": {
+            "path": "bin/gdn_runner",
+            "sha256": "UPDATE_AFTER_BUILD"
+          },
+          "executed_path": "benchmark_runs/volta-recurrence/bin/gdn_runner",
+          "source": {
+            "path": "artifacts/kernels/volta-recurrence/variants/gdn_runner.cu",
+            "sha256": "UPDATE_ON_ADOPTION"
+          }
+        }
+      },
+      "libraries": [],
+      "oracle": {
+        "path": "cpu-oracle.json",
+        "sha256": "e8bc1e9256c7cf97e835b07b4d2f2f6673602193eb9f9e0d9d0cbc7ad0cfe147"
+      },
+      "represented_input": {
+        "path": "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
+        "sha256": "e760eda922a42c0d6f6338e8cc0d0b0c7971c4205c956047a55791191fced4b5"
+      },
+      "runs": {}
+    }
+  ],
+  "format": "KERNELWIKI-VOLTA-EVIDENCE/1",
+  "status": "scratch_template_not_run"
+}
