@@ -1,0 +1,5 @@
+==WARNING== Note: Running with unmodified GPU clocks. If not controlled otherwise, profiling results may be inconsistent.
+==PROF== Connected to process 991682 (/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/bin/volta_attention_runner)
+==PROF== Profiling "online_rows" - 0: 0%....50%....100% - 8 passes
+==PROF== Disconnected from process 991682
+==PROF== Report: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/69a9838b-19df-4409-8aa3-eae672333cea/ncu/run/report.ncu-rep

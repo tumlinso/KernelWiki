@@ -1,0 +1,189 @@
+{
+  "format": "KERNELWIKI-VOLTA-ATTENTION-CONTRACT/1",
+  "case_id": "attention",
+  "case_signature": {
+    "bundle_format": "KWVATTN1/KWVREF01",
+    "cases": [
+      {
+        "id": "prefill64-causal",
+        "q_shape": [
+          1,
+          4,
+          16,
+          64
+        ],
+        "kv_shape": [
+          1,
+          2,
+          32,
+          64
+        ],
+        "causal": true,
+        "head_dim": 64,
+        "block_size": 0,
+        "has_per_query_boolean_mask": false,
+        "tolerance_group": "bounded-default"
+      },
+      {
+        "id": "prefill64-medium-causal",
+        "q_shape": [
+          1,
+          4,
+          64,
+          64
+        ],
+        "kv_shape": [
+          1,
+          2,
+          128,
+          64
+        ],
+        "causal": true,
+        "head_dim": 64,
+        "block_size": 0,
+        "has_per_query_boolean_mask": false,
+        "tolerance_group": "bounded-default"
+      },
+      {
+        "id": "prefill64-long-causal",
+        "q_shape": [
+          1,
+          4,
+          32,
+          64
+        ],
+        "kv_shape": [
+          1,
+          2,
+          512,
+          64
+        ],
+        "causal": true,
+        "head_dim": 64,
+        "block_size": 0,
+        "has_per_query_boolean_mask": false,
+        "tolerance_group": "bounded-default"
+      },
+      {
+        "id": "prefill128-noncausal",
+        "q_shape": [
+          1,
+          4,
+          16,
+          128
+        ],
+        "kv_shape": [
+          1,
+          2,
+          64,
+          128
+        ],
+        "causal": false,
+        "head_dim": 128,
+        "block_size": 0,
+        "has_per_query_boolean_mask": false,
+        "tolerance_group": "bounded-default"
+      },
+      {
+        "id": "decode70-causal",
+        "q_shape": [
+          1,
+          8,
+          1,
+          70
+        ],
+        "kv_shape": [
+          1,
+          2,
+          4096,
+          70
+        ],
+        "causal": true,
+        "head_dim": 70,
+        "block_size": 0,
+        "has_per_query_boolean_mask": false,
+        "tolerance_group": "bounded-default"
+      },
+      {
+        "id": "selected64-causal",
+        "q_shape": [
+          1,
+          4,
+          7,
+          64
+        ],
+        "kv_shape": [
+          1,
+          2,
+          19,
+          64
+        ],
+        "causal": true,
+        "head_dim": 64,
+        "block_size": 6,
+        "has_per_query_boolean_mask": true,
+        "tolerance_group": "bounded-default"
+      },
+      {
+        "id": "score-stress64-noncausal",
+        "q_shape": [
+          1,
+          2,
+          2,
+          64
+        ],
+        "kv_shape": [
+          1,
+          1,
+          17,
+          64
+        ],
+        "causal": false,
+        "head_dim": 64,
+        "block_size": 0,
+        "has_per_query_boolean_mask": false,
+        "tolerance_group": "high-contrast-stress"
+      }
+    ]
+  },
+  "numerical_contract": {
+    "input": "FP16 represented Q/K/V",
+    "qk_accumulator": "FP32 native, FP64 semantic oracle",
+    "scale": "1/sqrt(D) before softmax",
+    "softmax_state": "FP32 (m,l,u)",
+    "probability": "FP32, no intermediate rounding",
+    "output": "FP32",
+    "output_atol": 0.00015,
+    "output_rtol": 0.0002,
+    "row_max_atol": 2e-05,
+    "normalizer_atol": 1e-07,
+    "normalizer_rtol": 0.0005,
+    "empty_row": "zero output and zero normalizer",
+    "causal_alignment": "right aligned; key_position=Sk-Sq+query_row",
+    "selected_block_duplicates": "rejected",
+    "frozen_before_native_collection": true,
+    "tolerance_basis": "fixed before native testing: at D=128 and |Q,K|<=0.25, scaled-score FP32 dot gamma_128 estimate is about 5.4e-6; four-way online partition length is at most 1024 and gamma_1024 is about 6.1e-5 before exp/update rounding; 1.5e-4+2e-4|ref| output and 1e-7+5e-4|l| normalizer thresholds are engineering admission envelopes, not formal bounds; do not enlarge after failure"
+  },
+  "bounded_default_domain": {
+    "max_abs_qkv": 0.25,
+    "max_head_dim": 128,
+    "max_key_length": 4096
+  },
+  "separate_stress_fixtures": [
+    {
+      "case_id": "score-stress64-noncausal",
+      "purpose": "near-tied leading scores and large finite score contrast",
+      "max_abs_q_and_k": 4.0,
+      "inside_bounded_default_domain": false,
+      "uses_same_fixed_tolerance": true
+    }
+  ],
+  "represented_input": {
+    "path": "attention_inputs.bin",
+    "sha256": "1fed25c14ebae3c5d41bc5820dafcd881637a95344772cdfa6c730c9318eef5d"
+  },
+  "oracle": {
+    "path": "attention_reference.bin",
+    "sha256": "d1f9cf4ebe78311f336970b7e3f91df9aa921ed191c6009a653ea663b931b969"
+  }
+}

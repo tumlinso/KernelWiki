@@ -1,0 +1,8 @@
+{
+  "utc_timestamp": "2026-10-17T21:03:35Z",
+  "hostname": "testlsserver",
+  "pwd": "/home/tumlinson/KernelWiki",
+  "tool": "memcheck",
+  "sanitizer_bin": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+  "command": ["benchmark_runs/volta-attention/bin/v2/volta_attention_runner", "--input", "benchmark_runs/volta-attention/cases/attention/attention_inputs.bin", "--reference", "benchmark_runs/volta-attention/cases/attention/attention_reference.bin", "--impl", "split", "--splits", "16", "--mode", "correctness", "--case", "decode70-causal"]
+}

@@ -1,0 +1,36 @@
+Nsight Compute summary: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/69a9838b-19df-4409-8aa3-eae672333cea/ncu/run/summary.txt
+
+V100 Nsight Compute Decision
+
+status: partial
+counter_valid: yes
+timing_valid: no
+needs_more_data: yes
+measurement_scope: kernel counters
+
+decision:
+- Nsight Compute is valid for kernel-cause diagnosis here, but not for throughput timing because replay changes runtime.
+- Hottest kernel class: mixed.
+- Primary next move: Pair this with Nsight Systems and the benchmark output before changing the kernel.
+- Kernel sample count is light. Rerun with more repeated hot launches if you need stronger confidence.
+- Recommended route: profile. The kernel summary is mixed, so pair it with timeline or benchmark evidence first.
+
+top_kernels:
+- online_rows(const __half *, const __half *, const __half *, const unsigned char *, const int *, const int *, int, int, int, int, int, int, int, int, int, int, float *, float *, float *, float *, float *, float *) | share=100.0% | samples=1 | class=mixed | dram=0.3% | sm=1.0% | regs=48
+  next: Pair this with Nsight Systems and the benchmark output before changing the kernel.
+
+notes:
+- Use benchmark output or Nsight Systems for throughput comparisons.
+- Use Nsight Compute to decide whether poor performance comes from bytes moved, compute path choice, registers, or shared memory.
+
+recommended_route: profile
+recommended_route_reason: The kernel summary is mixed, so pair it with timeline or benchmark evidence first.
+next_step: Pair this with Nsight Systems and the benchmark output before changing the kernel.
+
+Artifacts:
+- report: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/69a9838b-19df-4409-8aa3-eae672333cea/ncu/run/report.ncu-rep
+- raw csv: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/69a9838b-19df-4409-8aa3-eae672333cea/ncu/run/raw.csv
+- command stdout: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/69a9838b-19df-4409-8aa3-eae672333cea/ncu/run/command.stdout.txt
+- command stderr: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/69a9838b-19df-4409-8aa3-eae672333cea/ncu/run/command.stderr.txt
+- profiler stdout: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/69a9838b-19df-4409-8aa3-eae672333cea/ncu/run/profiler.stdout.txt
+- profiler stderr: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/69a9838b-19df-4409-8aa3-eae672333cea/ncu/run/profiler.stderr.txt

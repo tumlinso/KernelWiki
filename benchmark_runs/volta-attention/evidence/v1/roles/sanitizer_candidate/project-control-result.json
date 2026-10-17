@@ -1,0 +1,1114 @@
+{
+  "evidence": {
+    "artifacts": [
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "b9939052138b00080c8ec9604808f129fb0b47b180fdc9161d335be9c4a4d43d",
+        "created_at": 1792270149.1477818,
+        "id": "02d03780-4e90-450f-bd11-6e79dcd16eea",
+        "job_id": "93cbdb04-63e3-46af-ae70-fb3733412576",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/f3d80d8d-286c-415f-9493-1aa0b2cb27e2/foreground.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "created_at": 1792270149.1477818,
+        "id": "e83262e0-bff9-442a-801b-414d51df8355",
+        "job_id": "93cbdb04-63e3-46af-ae70-fb3733412576",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/f3d80d8d-286c-415f-9493-1aa0b2cb27e2/foreground.stderr.txt"
+      }
+    ],
+    "classification": "decision-result",
+    "contaminated": 0,
+    "created_at": 1792270149.1477818,
+    "id": "15a57bae-1c55-43c0-8d88-e253080da9d6",
+    "job_id": "93cbdb04-63e3-46af-ae70-fb3733412576",
+    "kind": "foreground-compute-sanitizer",
+    "parser_version": "cuda-controller/1",
+    "severity": 0,
+    "snapshot": {
+      "commit": "5c305d48a3970c5234820a4cf994c1d47cd76c02",
+      "dirty": true,
+      "fingerprint": "7efbf781374624d9a3cb8c9401907a0e9a7619575fccdac9831ea594676a34e3",
+      "patch_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "project_root": "/home/tumlinson/KernelWiki",
+      "safe": true,
+      "source_root": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/snapshots/7efbf781374624d9a3cb8c9401907a0e9a7619575fccdac9831ea594676a34e3/source",
+      "untracked": [
+        {
+          "path": "artifacts/kernels/volta-attention/variants/PROVENANCE.yaml",
+          "sha256": "67f2e317e4a4d3cfb223c2389e8a7b84f37b97a01862a1ef5aaad4c950b28197"
+        },
+        {
+          "path": "artifacts/kernels/volta-attention/variants/README.md",
+          "sha256": "f9235b55b240b2770c885aa9ae804ea6da0d4bc7584a5b083c795a5d8437d61b"
+        },
+        {
+          "path": "artifacts/kernels/volta-attention/variants/volta_attention_online.cuh",
+          "sha256": "2b88a805c26585f52a502e4a2272026926191585a2a823bffb861db78e91d198"
+        },
+        {
+          "path": "artifacts/kernels/volta-attention/variants/volta_attention_runner.cu",
+          "sha256": "ef4e590764978d9ebbd4994f4ce43d3c9cff67bf875dadfe5d74a1f84accff83"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/README.md",
+          "sha256": "336cab5e2c6c2e10776501bee012b8bca7e3436a70a2fa7bd0f12480db8cb375"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/bin/volta_attention_runner",
+          "sha256": "082734ce3e1dbff5180f3751256f60e1cbc9a7e87f53baf563d4ff0cc75090df"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/attention_contract.json",
+          "sha256": "d66dc00a131035b99f6386250bf75ebaaaea26f9cbf66d27eb3c44ce22ceb810"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/attention_inputs.bin",
+          "sha256": "1fed25c14ebae3c5d41bc5820dafcd881637a95344772cdfa6c730c9318eef5d"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/attention_reference.bin",
+          "sha256": "d1f9cf4ebe78311f336970b7e3f91df9aa921ed191c6009a653ea663b931b969"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/case-index.json",
+          "sha256": "9b90922ebc789a010ba8017084870be5c4da5cdcfb56645c4f69d039b89af8d3"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/decode70-causal.f16le",
+          "sha256": "e71aaa49bcfbec4ea5a19b83cef8c10f45332e15407bd523ff12dbaa98681e8a"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/decode70-causal.inputs.json",
+          "sha256": "ed8b47d50048d17f02f2a6738b71eeff3a475bfc4fbdf47a91d4e69d4f0adb6d"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/decode70-causal.oracle.json",
+          "sha256": "c4194bbd179517ab9ee0175006c67768e2ab3b9ffa98f3dc02f2abacc76b3df0"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/prefill128-noncausal.f16le",
+          "sha256": "5c88c74ff5b9c9c5f7281f4478a1d10a4318e8244b8ab332d54e14018a4fa577"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/prefill128-noncausal.inputs.json",
+          "sha256": "e6e6e58d16df2a4b00b394b17ed322222e1acdecfd49f9fe42e6bee3dab7b3d7"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/prefill128-noncausal.oracle.json",
+          "sha256": "7366315f808c4963102581c7dd192373359b63e213cf623cb4c2e65dfc22cb0a"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/prefill64-causal.f16le",
+          "sha256": "90b9614f2aacfd4ade02b1b6fcc01d26e2ed01ed017ff96235a1455ab24de1e1"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/prefill64-causal.inputs.json",
+          "sha256": "92c4b1bb2554b63a46db3d5db7c7731e078624779e7c7f8b0647c8d68eddf7bb"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/prefill64-causal.oracle.json",
+          "sha256": "252b50cd79ae7f247a020b03e639db90bb1b73dbfbccef44158c893a8232d31c"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/prefill64-long-causal.f16le",
+          "sha256": "7aca9a63bae4ae3e1ec2bfe8f5f630ec99e7cc658485ceb95919fff186d1ce1d"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/prefill64-long-causal.inputs.json",
+          "sha256": "900a44ea4eacc511a935d8c4643f17a627459e033b83856a76847cfd2a9499d5"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/prefill64-long-causal.oracle.json",
+          "sha256": "f819c38d350eef97981c3dd8e3edb4d798210b7f576713469307009ae0a50120"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/prefill64-medium-causal.f16le",
+          "sha256": "7c299a82c461c324b4a633eb6cb856eddfb6815003c7438e18ea1d9dcffefcbf"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/prefill64-medium-causal.inputs.json",
+          "sha256": "6a9bde44c8422c76a42690017e94eec4dc9fca35270646b3357583b842490bf0"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/prefill64-medium-causal.oracle.json",
+          "sha256": "adea6ccb8f0f1946eac6f55ed8254e4c54c45d57ae097fc68c989e8e71dd3934"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/score-stress64-noncausal.f16le",
+          "sha256": "46018ff717a4bbaf789011931c7aa5d2428e9c564543bdcf717dcd7a9ad9048e"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/score-stress64-noncausal.inputs.json",
+          "sha256": "05556805f8cfd4ec9f4978e556c1faf7368d4da29fea373e749adfc182f92f03"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/score-stress64-noncausal.oracle.json",
+          "sha256": "5d791af4df523550d4a6b62fb3560d71a4bb744e8097d81ffa5ae0ac455f46ca"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/selected64-causal.f16le",
+          "sha256": "494b4270b0c1e8b0aa9331b0437fc22c685b4100ee88597736922bb2751f59ee"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/selected64-causal.inputs.json",
+          "sha256": "30209ce4fe6eff0fe503d6ffc3c40cc4eab1b2df6d900393772b3711a126170e"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/selected64-causal.oracle.json",
+          "sha256": "bf6a64c906ac2df6136b6df5a4e5a027db4076cf0ca099b1e0980447fe1c6b34"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/cases/attention/source-manifest.json",
+          "sha256": "d38b1b2ca178f57d3bdfb1f6062fe1082489a50cbbdde87fa92c54200b9d7626"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/controller/role-attention-baseline_decode_timing.spec.json",
+          "sha256": "7a6d0c47459996256bbde45e191f46ddb25385b4a4bff8442914c088af9fcae0"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/controller/role-attention-baseline_prefill_timing.spec.json",
+          "sha256": "bfe4ac233dad1d9455e49b4a303a8f76f7d8c01025268eed06e1e14b405a27a2"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/controller/role-attention-candidate_decode_timing.spec.json",
+          "sha256": "1ca29aed1a78fe6c6b6bb581f9b63a02c147a75b2732ebd4e1ee6a290fd869ec"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/controller/role-attention-candidate_prefill_timing.spec.json",
+          "sha256": "2eb8f100065dd7a2d849306975f29affed5ddf17265e39421601b45d3305dab1"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/controller/role-attention-correctness_baseline.spec.json",
+          "sha256": "120b801a4e9971a6e43a52b536ecf08a940afb03960f21fb03be6004fc0a98fe"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/controller/role-attention-correctness_candidate.spec.json",
+          "sha256": "9626f6f437f0a49ad38ca90cde345b37f0f250d94eec2078554f5346a3a81609"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/controller/role-attention-correctness_split_decode.spec.json",
+          "sha256": "f8c197327825cd8140b30438b1438d6e7f5e85f24a09404aec0f7861d91cce2b"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/controller/role-attention-profile_candidate_decode.spec.json",
+          "sha256": "7af60505fb786f7556e5423356ad0e8c7f7cb30a9b44314bcbae1059aaede42b"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/controller/role-attention-sanitizer_candidate.spec.json",
+          "sha256": "b67f2fe10260de9ea79d597964509b83fd531406a3319f6fa553040a07ea7550"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/controller/role-attention-sanitizer_split_decode.spec.json",
+          "sha256": "337fa4cbd1820d9cf5fa0217ab5b4de75c24c8ff238cf973714c45d89d344579"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/controller/role-attention-split_decode_timing.spec.json",
+          "sha256": "bc4ac0e8864ade45c44baee0fd628b86518a48c936a28ace6eee6a802f21ae83"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/evidence/v1/binaries/volta_attention_runner",
+          "sha256": "082734ce3e1dbff5180f3751256f60e1cbc9a7e87f53baf563d4ff0cc75090df"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_baseline/archive-manifest.json",
+          "sha256": "194e495090db61d1b81599c6eb4926221107aa82bc5d2de37a26baa003d3b0fb"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_baseline/controller-run.json",
+          "sha256": "dba0f812abba7ad9f41c4de269303f4a3670b20ea7c1c4852042261bf392df39"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_baseline/lease.json",
+          "sha256": "d6dc1408025b7cd6d71bd92c7b6170be72b3c7860e1d64e82cb1223c38f2dfbd"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_baseline/project-control-result.json",
+          "sha256": "07f61ebc34147b3731d4cfaf4d36a544b545ca47f9b9cc4d264600571070dcd6"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_baseline/runner.stderr.txt",
+          "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_baseline/runner.stdout.txt",
+          "sha256": "4e6077b69f8a4158a98c3c12223bc791e94f942cf97ce067822f55ec889a20b6"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_candidate/archive-manifest.json",
+          "sha256": "502860d7f53880515194d78c4e16ffe79ceb04fe26090bea5302747539b17c04"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_candidate/controller-run.json",
+          "sha256": "6e9434b9f1e2980945c6c337d1614abcce3dbb91b5249c28117b34380bbcd832"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_candidate/lease.json",
+          "sha256": "330792139615bddaf31dd9fed62294410c0d99463ad1e16eadd7d89688bbf714"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_candidate/project-control-result.json",
+          "sha256": "738f92ea911a952049d904925c47d93bf3cae8defb3cb7cd570ff86dcb912746"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_candidate/runner.stderr.txt",
+          "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_candidate/runner.stdout.txt",
+          "sha256": "9308d7b5a18145d36b944b84014f8b9adf59a0b793ae10a3a6cabebe7ed36e31"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/source/BUNDLE-FORMAT.md",
+          "sha256": "dbc67dab0ed6641dfe8bc6c2b3f61b29f90e084d2d71d353de21f63d2a1e8e86"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/source/IMPLEMENTATION-NOTES.md",
+          "sha256": "107539c12645c1009e1ec2340e4d7e2c41ef48bf3f4f2c669fb918e0ec5fe416"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/source/attention_bundle.py",
+          "sha256": "66ea25ba94c8723ae643b3c70bc4ef5f22fa47784913244bf8f083a8c2b98240"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/source/attention_oracle.py",
+          "sha256": "d250ef54c369fa62441ec3b0f1f1c8b6144002a500abe07ad28afa41afef2421"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/source/make_attention_inputs.py",
+          "sha256": "d7b98bd076c229499ac4cfdc5b45b67c3d91a73b5c73b433920fdb78f8e906be"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/source/tests/test_attention_bundle.py",
+          "sha256": "7cc26142449f1e9dd10d30c8ee0132cf496a109376a1a60cfdd7ab143d3687eb"
+        },
+        {
+          "path": "benchmark_runs/volta-attention/source/tests/test_attention_oracle.py",
+          "sha256": "4d7a6817347d843ca88d8615b0c49ff6d9fc58d2a3af856b47c3967fb3be8aa8"
+        }
+      ]
+    },
+    "source_fingerprint": "7efbf781374624d9a3cb8c9401907a0e9a7619575fccdac9831ea594676a34e3",
+    "status": "succeeded",
+    "summary": {
+      "benchmark": null,
+      "binaries": [
+        {
+          "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/bin/volta_attention_runner",
+          "sha256": "082734ce3e1dbff5180f3751256f60e1cbc9a7e87f53baf563d4ff0cc75090df"
+        }
+      ],
+      "build": null,
+      "classification": "decision-result",
+      "context": null,
+      "correctness": null,
+      "parser_version": "cuda-controller/1",
+      "provenance": {
+        "argv": [
+          "benchmark_runs/volta-attention/bin/volta_attention_runner",
+          "--input",
+          "benchmark_runs/volta-attention/cases/attention/attention_inputs.bin",
+          "--reference",
+          "benchmark_runs/volta-attention/cases/attention/attention_reference.bin",
+          "--impl",
+          "online",
+          "--mode",
+          "correctness",
+          "--case",
+          "all"
+        ],
+        "binary": {
+          "path": "benchmark_runs/volta-attention/bin/volta_attention_runner",
+          "sha256": "082734ce3e1dbff5180f3751256f60e1cbc9a7e87f53baf563d4ff0cc75090df"
+        },
+        "environment": {},
+        "gpus": [
+          {
+            "clocks_sm_mhz": 1312.0,
+            "compute_capability": "7.0",
+            "driver_version": "580.178.04",
+            "index": 0,
+            "memory_free_mib": 16145,
+            "memory_total_mib": 16384,
+            "name": "Tesla V100-SXM2-16GB",
+            "pci_bus_id": "00000000:02:00.0",
+            "temperature_c": 36.0,
+            "throttle_reasons": "0x0000000000000000",
+            "utilization_percent": 0.0,
+            "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+          }
+        ],
+        "inputs": [
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-attention/variants/PROVENANCE.yaml",
+            "sha256": "67f2e317e4a4d3cfb223c2389e8a7b84f37b97a01862a1ef5aaad4c950b28197"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-attention/variants/README.md",
+            "sha256": "f9235b55b240b2770c885aa9ae804ea6da0d4bc7584a5b083c795a5d8437d61b"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-attention/variants/volta_attention_runner.cu",
+            "sha256": "ef4e590764978d9ebbd4994f4ce43d3c9cff67bf875dadfe5d74a1f84accff83"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-attention/variants/volta_attention_online.cuh",
+            "sha256": "2b88a805c26585f52a502e4a2272026926191585a2a823bffb861db78e91d198"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/README.md",
+            "sha256": "336cab5e2c6c2e10776501bee012b8bca7e3436a70a2fa7bd0f12480db8cb375"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/source/attention_bundle.py",
+            "sha256": "66ea25ba94c8723ae643b3c70bc4ef5f22fa47784913244bf8f083a8c2b98240"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/source/attention_oracle.py",
+            "sha256": "d250ef54c369fa62441ec3b0f1f1c8b6144002a500abe07ad28afa41afef2421"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/source/make_attention_inputs.py",
+            "sha256": "d7b98bd076c229499ac4cfdc5b45b67c3d91a73b5c73b433920fdb78f8e906be"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/source/BUNDLE-FORMAT.md",
+            "sha256": "dbc67dab0ed6641dfe8bc6c2b3f61b29f90e084d2d71d353de21f63d2a1e8e86"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/source/IMPLEMENTATION-NOTES.md",
+            "sha256": "107539c12645c1009e1ec2340e4d7e2c41ef48bf3f4f2c669fb918e0ec5fe416"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/source/tests/test_attention_bundle.py",
+            "sha256": "7cc26142449f1e9dd10d30c8ee0132cf496a109376a1a60cfdd7ab143d3687eb"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/source/tests/test_attention_oracle.py",
+            "sha256": "4d7a6817347d843ca88d8615b0c49ff6d9fc58d2a3af856b47c3967fb3be8aa8"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/attention_contract.json",
+            "sha256": "d66dc00a131035b99f6386250bf75ebaaaea26f9cbf66d27eb3c44ce22ceb810"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/case-index.json",
+            "sha256": "9b90922ebc789a010ba8017084870be5c4da5cdcfb56645c4f69d039b89af8d3"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/source-manifest.json",
+            "sha256": "d38b1b2ca178f57d3bdfb1f6062fe1082489a50cbbdde87fa92c54200b9d7626"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/attention_inputs.bin",
+            "sha256": "1fed25c14ebae3c5d41bc5820dafcd881637a95344772cdfa6c730c9318eef5d"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/attention_reference.bin",
+            "sha256": "d1f9cf4ebe78311f336970b7e3f91df9aa921ed191c6009a653ea663b931b969"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm/controller/pc_controller.py",
+            "sha256": "492d0419f5015188c1191f98c491f0a61afdad8642f91b75de4d093230a2de99"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/ncu-collection-shim.py",
+            "sha256": "fda69450466b6617d627e638db32d094ac28d8e7d5bec80e512a4fdce3fce98f"
+          },
+          {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+            "sha256": "df9974db233a0b7a6c6d59c0e5d74e011566104098bcb3553495ff1b95bdeaf6"
+          },
+          {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+            "sha256": "979adf037f4e3434a976b7f0912b0a05ce3b062e31b2a73397a1bf1cd5f57547"
+          },
+          {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute/ncu",
+            "sha256": "a44ff2c735c4dcf66c78f3f430155805d6a0b1f74f26331f98ecec03bfbf3f1a"
+          },
+          {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute/target/linux-desktop-glibc_2_11_3-x64/ncu",
+            "sha256": "da5e94a33c67f820e154da8a633755c44eb08b51a61e6fc3662ae592c5f59c82"
+          },
+          {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/math_libs/12.9/targets/x86_64-linux/lib/libcublas.so.12.9.1.4",
+            "sha256": "d63456d94f1b8e2408a8a9538c8740eb474c9eba48a84f420b15e2e10fbcd048"
+          },
+          {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/math_libs/12.9/targets/x86_64-linux/lib/libcublasLt.so.12.9.1.4",
+            "sha256": "96ddf4891ca4f4ed1475966783a9185df2abd64a81c3cc713b96d036696fc541"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/attention_contract.json",
+            "sha256": "d66dc00a131035b99f6386250bf75ebaaaea26f9cbf66d27eb3c44ce22ceb810"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/attention_inputs.bin",
+            "sha256": "1fed25c14ebae3c5d41bc5820dafcd881637a95344772cdfa6c730c9318eef5d"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/attention_reference.bin",
+            "sha256": "d1f9cf4ebe78311f336970b7e3f91df9aa921ed191c6009a653ea663b931b969"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/case-index.json",
+            "sha256": "9b90922ebc789a010ba8017084870be5c4da5cdcfb56645c4f69d039b89af8d3"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/decode70-causal.f16le",
+            "sha256": "e71aaa49bcfbec4ea5a19b83cef8c10f45332e15407bd523ff12dbaa98681e8a"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/decode70-causal.inputs.json",
+            "sha256": "ed8b47d50048d17f02f2a6738b71eeff3a475bfc4fbdf47a91d4e69d4f0adb6d"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/decode70-causal.oracle.json",
+            "sha256": "c4194bbd179517ab9ee0175006c67768e2ab3b9ffa98f3dc02f2abacc76b3df0"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/prefill128-noncausal.f16le",
+            "sha256": "5c88c74ff5b9c9c5f7281f4478a1d10a4318e8244b8ab332d54e14018a4fa577"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/prefill128-noncausal.inputs.json",
+            "sha256": "e6e6e58d16df2a4b00b394b17ed322222e1acdecfd49f9fe42e6bee3dab7b3d7"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/prefill128-noncausal.oracle.json",
+            "sha256": "7366315f808c4963102581c7dd192373359b63e213cf623cb4c2e65dfc22cb0a"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/prefill64-causal.f16le",
+            "sha256": "90b9614f2aacfd4ade02b1b6fcc01d26e2ed01ed017ff96235a1455ab24de1e1"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/prefill64-causal.inputs.json",
+            "sha256": "92c4b1bb2554b63a46db3d5db7c7731e078624779e7c7f8b0647c8d68eddf7bb"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/prefill64-causal.oracle.json",
+            "sha256": "252b50cd79ae7f247a020b03e639db90bb1b73dbfbccef44158c893a8232d31c"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/prefill64-long-causal.f16le",
+            "sha256": "7aca9a63bae4ae3e1ec2bfe8f5f630ec99e7cc658485ceb95919fff186d1ce1d"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/prefill64-long-causal.inputs.json",
+            "sha256": "900a44ea4eacc511a935d8c4643f17a627459e033b83856a76847cfd2a9499d5"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/prefill64-long-causal.oracle.json",
+            "sha256": "f819c38d350eef97981c3dd8e3edb4d798210b7f576713469307009ae0a50120"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/prefill64-medium-causal.f16le",
+            "sha256": "7c299a82c461c324b4a633eb6cb856eddfb6815003c7438e18ea1d9dcffefcbf"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/prefill64-medium-causal.inputs.json",
+            "sha256": "6a9bde44c8422c76a42690017e94eec4dc9fca35270646b3357583b842490bf0"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/prefill64-medium-causal.oracle.json",
+            "sha256": "adea6ccb8f0f1946eac6f55ed8254e4c54c45d57ae097fc68c989e8e71dd3934"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/score-stress64-noncausal.f16le",
+            "sha256": "46018ff717a4bbaf789011931c7aa5d2428e9c564543bdcf717dcd7a9ad9048e"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/score-stress64-noncausal.inputs.json",
+            "sha256": "05556805f8cfd4ec9f4978e556c1faf7368d4da29fea373e749adfc182f92f03"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/score-stress64-noncausal.oracle.json",
+            "sha256": "5d791af4df523550d4a6b62fb3560d71a4bb744e8097d81ffa5ae0ac455f46ca"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/selected64-causal.f16le",
+            "sha256": "494b4270b0c1e8b0aa9331b0437fc22c685b4100ee88597736922bb2751f59ee"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/selected64-causal.inputs.json",
+            "sha256": "30209ce4fe6eff0fe503d6ffc3c40cc4eab1b2df6d900393772b3711a126170e"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/selected64-causal.oracle.json",
+            "sha256": "bf6a64c906ac2df6136b6df5a4e5a027db4076cf0ca099b1e0980447fe1c6b34"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/cases/attention/source-manifest.json",
+            "sha256": "d38b1b2ca178f57d3bdfb1f6062fe1082489a50cbbdde87fa92c54200b9d7626"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/controller/role-attention-correctness_baseline.spec.json",
+            "sha256": "120b801a4e9971a6e43a52b536ecf08a940afb03960f21fb03be6004fc0a98fe"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/controller/role-attention-correctness_candidate.spec.json",
+            "sha256": "9626f6f437f0a49ad38ca90cde345b37f0f250d94eec2078554f5346a3a81609"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/controller/role-attention-sanitizer_candidate.spec.json",
+            "sha256": "b67f2fe10260de9ea79d597964509b83fd531406a3319f6fa553040a07ea7550"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/controller/role-attention-baseline_prefill_timing.spec.json",
+            "sha256": "bfe4ac233dad1d9455e49b4a303a8f76f7d8c01025268eed06e1e14b405a27a2"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/controller/role-attention-candidate_prefill_timing.spec.json",
+            "sha256": "2eb8f100065dd7a2d849306975f29affed5ddf17265e39421601b45d3305dab1"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/controller/role-attention-baseline_decode_timing.spec.json",
+            "sha256": "7a6d0c47459996256bbde45e191f46ddb25385b4a4bff8442914c088af9fcae0"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/controller/role-attention-candidate_decode_timing.spec.json",
+            "sha256": "1ca29aed1a78fe6c6b6bb581f9b63a02c147a75b2732ebd4e1ee6a290fd869ec"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/controller/role-attention-profile_candidate_decode.spec.json",
+            "sha256": "7af60505fb786f7556e5423356ad0e8c7f7cb30a9b44314bcbae1059aaede42b"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/controller/role-attention-correctness_split_decode.spec.json",
+            "sha256": "f8c197327825cd8140b30438b1438d6e7f5e85f24a09404aec0f7861d91cce2b"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/controller/role-attention-sanitizer_split_decode.spec.json",
+            "sha256": "337fa4cbd1820d9cf5fa0217ab5b4de75c24c8ff238cf973714c45d89d344579"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-attention/controller/role-attention-split_decode_timing.spec.json",
+            "sha256": "bc4ac0e8864ade45c44baee0fd628b86518a48c936a28ace6eee6a802f21ae83"
+          }
+        ],
+        "parser_version": "cuda-controller/1",
+        "project_root": "/home/tumlinson/KernelWiki",
+        "source": {
+          "commit": "5c305d48a3970c5234820a4cf994c1d47cd76c02",
+          "dirty": true,
+          "fingerprint": "7efbf781374624d9a3cb8c9401907a0e9a7619575fccdac9831ea594676a34e3",
+          "patch_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "project_root": "/home/tumlinson/KernelWiki",
+          "safe": true,
+          "source_root": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/snapshots/7efbf781374624d9a3cb8c9401907a0e9a7619575fccdac9831ea594676a34e3/source",
+          "untracked": [
+            {
+              "path": "artifacts/kernels/volta-attention/variants/PROVENANCE.yaml",
+              "sha256": "67f2e317e4a4d3cfb223c2389e8a7b84f37b97a01862a1ef5aaad4c950b28197"
+            },
+            {
+              "path": "artifacts/kernels/volta-attention/variants/README.md",
+              "sha256": "f9235b55b240b2770c885aa9ae804ea6da0d4bc7584a5b083c795a5d8437d61b"
+            },
+            {
+              "path": "artifacts/kernels/volta-attention/variants/volta_attention_online.cuh",
+              "sha256": "2b88a805c26585f52a502e4a2272026926191585a2a823bffb861db78e91d198"
+            },
+            {
+              "path": "artifacts/kernels/volta-attention/variants/volta_attention_runner.cu",
+              "sha256": "ef4e590764978d9ebbd4994f4ce43d3c9cff67bf875dadfe5d74a1f84accff83"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/README.md",
+              "sha256": "336cab5e2c6c2e10776501bee012b8bca7e3436a70a2fa7bd0f12480db8cb375"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/bin/volta_attention_runner",
+              "sha256": "082734ce3e1dbff5180f3751256f60e1cbc9a7e87f53baf563d4ff0cc75090df"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/attention_contract.json",
+              "sha256": "d66dc00a131035b99f6386250bf75ebaaaea26f9cbf66d27eb3c44ce22ceb810"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/attention_inputs.bin",
+              "sha256": "1fed25c14ebae3c5d41bc5820dafcd881637a95344772cdfa6c730c9318eef5d"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/attention_reference.bin",
+              "sha256": "d1f9cf4ebe78311f336970b7e3f91df9aa921ed191c6009a653ea663b931b969"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/case-index.json",
+              "sha256": "9b90922ebc789a010ba8017084870be5c4da5cdcfb56645c4f69d039b89af8d3"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/decode70-causal.f16le",
+              "sha256": "e71aaa49bcfbec4ea5a19b83cef8c10f45332e15407bd523ff12dbaa98681e8a"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/decode70-causal.inputs.json",
+              "sha256": "ed8b47d50048d17f02f2a6738b71eeff3a475bfc4fbdf47a91d4e69d4f0adb6d"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/decode70-causal.oracle.json",
+              "sha256": "c4194bbd179517ab9ee0175006c67768e2ab3b9ffa98f3dc02f2abacc76b3df0"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/prefill128-noncausal.f16le",
+              "sha256": "5c88c74ff5b9c9c5f7281f4478a1d10a4318e8244b8ab332d54e14018a4fa577"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/prefill128-noncausal.inputs.json",
+              "sha256": "e6e6e58d16df2a4b00b394b17ed322222e1acdecfd49f9fe42e6bee3dab7b3d7"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/prefill128-noncausal.oracle.json",
+              "sha256": "7366315f808c4963102581c7dd192373359b63e213cf623cb4c2e65dfc22cb0a"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/prefill64-causal.f16le",
+              "sha256": "90b9614f2aacfd4ade02b1b6fcc01d26e2ed01ed017ff96235a1455ab24de1e1"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/prefill64-causal.inputs.json",
+              "sha256": "92c4b1bb2554b63a46db3d5db7c7731e078624779e7c7f8b0647c8d68eddf7bb"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/prefill64-causal.oracle.json",
+              "sha256": "252b50cd79ae7f247a020b03e639db90bb1b73dbfbccef44158c893a8232d31c"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/prefill64-long-causal.f16le",
+              "sha256": "7aca9a63bae4ae3e1ec2bfe8f5f630ec99e7cc658485ceb95919fff186d1ce1d"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/prefill64-long-causal.inputs.json",
+              "sha256": "900a44ea4eacc511a935d8c4643f17a627459e033b83856a76847cfd2a9499d5"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/prefill64-long-causal.oracle.json",
+              "sha256": "f819c38d350eef97981c3dd8e3edb4d798210b7f576713469307009ae0a50120"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/prefill64-medium-causal.f16le",
+              "sha256": "7c299a82c461c324b4a633eb6cb856eddfb6815003c7438e18ea1d9dcffefcbf"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/prefill64-medium-causal.inputs.json",
+              "sha256": "6a9bde44c8422c76a42690017e94eec4dc9fca35270646b3357583b842490bf0"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/prefill64-medium-causal.oracle.json",
+              "sha256": "adea6ccb8f0f1946eac6f55ed8254e4c54c45d57ae097fc68c989e8e71dd3934"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/score-stress64-noncausal.f16le",
+              "sha256": "46018ff717a4bbaf789011931c7aa5d2428e9c564543bdcf717dcd7a9ad9048e"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/score-stress64-noncausal.inputs.json",
+              "sha256": "05556805f8cfd4ec9f4978e556c1faf7368d4da29fea373e749adfc182f92f03"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/score-stress64-noncausal.oracle.json",
+              "sha256": "5d791af4df523550d4a6b62fb3560d71a4bb744e8097d81ffa5ae0ac455f46ca"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/selected64-causal.f16le",
+              "sha256": "494b4270b0c1e8b0aa9331b0437fc22c685b4100ee88597736922bb2751f59ee"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/selected64-causal.inputs.json",
+              "sha256": "30209ce4fe6eff0fe503d6ffc3c40cc4eab1b2df6d900393772b3711a126170e"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/selected64-causal.oracle.json",
+              "sha256": "bf6a64c906ac2df6136b6df5a4e5a027db4076cf0ca099b1e0980447fe1c6b34"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/cases/attention/source-manifest.json",
+              "sha256": "d38b1b2ca178f57d3bdfb1f6062fe1082489a50cbbdde87fa92c54200b9d7626"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/controller/role-attention-baseline_decode_timing.spec.json",
+              "sha256": "7a6d0c47459996256bbde45e191f46ddb25385b4a4bff8442914c088af9fcae0"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/controller/role-attention-baseline_prefill_timing.spec.json",
+              "sha256": "bfe4ac233dad1d9455e49b4a303a8f76f7d8c01025268eed06e1e14b405a27a2"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/controller/role-attention-candidate_decode_timing.spec.json",
+              "sha256": "1ca29aed1a78fe6c6b6bb581f9b63a02c147a75b2732ebd4e1ee6a290fd869ec"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/controller/role-attention-candidate_prefill_timing.spec.json",
+              "sha256": "2eb8f100065dd7a2d849306975f29affed5ddf17265e39421601b45d3305dab1"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/controller/role-attention-correctness_baseline.spec.json",
+              "sha256": "120b801a4e9971a6e43a52b536ecf08a940afb03960f21fb03be6004fc0a98fe"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/controller/role-attention-correctness_candidate.spec.json",
+              "sha256": "9626f6f437f0a49ad38ca90cde345b37f0f250d94eec2078554f5346a3a81609"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/controller/role-attention-correctness_split_decode.spec.json",
+              "sha256": "f8c197327825cd8140b30438b1438d6e7f5e85f24a09404aec0f7861d91cce2b"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/controller/role-attention-profile_candidate_decode.spec.json",
+              "sha256": "7af60505fb786f7556e5423356ad0e8c7f7cb30a9b44314bcbae1059aaede42b"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/controller/role-attention-sanitizer_candidate.spec.json",
+              "sha256": "b67f2fe10260de9ea79d597964509b83fd531406a3319f6fa553040a07ea7550"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/controller/role-attention-sanitizer_split_decode.spec.json",
+              "sha256": "337fa4cbd1820d9cf5fa0217ab5b4de75c24c8ff238cf973714c45d89d344579"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/controller/role-attention-split_decode_timing.spec.json",
+              "sha256": "bc4ac0e8864ade45c44baee0fd628b86518a48c936a28ace6eee6a802f21ae83"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/evidence/v1/binaries/volta_attention_runner",
+              "sha256": "082734ce3e1dbff5180f3751256f60e1cbc9a7e87f53baf563d4ff0cc75090df"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_baseline/archive-manifest.json",
+              "sha256": "194e495090db61d1b81599c6eb4926221107aa82bc5d2de37a26baa003d3b0fb"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_baseline/controller-run.json",
+              "sha256": "dba0f812abba7ad9f41c4de269303f4a3670b20ea7c1c4852042261bf392df39"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_baseline/lease.json",
+              "sha256": "d6dc1408025b7cd6d71bd92c7b6170be72b3c7860e1d64e82cb1223c38f2dfbd"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_baseline/project-control-result.json",
+              "sha256": "07f61ebc34147b3731d4cfaf4d36a544b545ca47f9b9cc4d264600571070dcd6"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_baseline/runner.stderr.txt",
+              "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_baseline/runner.stdout.txt",
+              "sha256": "4e6077b69f8a4158a98c3c12223bc791e94f942cf97ce067822f55ec889a20b6"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_candidate/archive-manifest.json",
+              "sha256": "502860d7f53880515194d78c4e16ffe79ceb04fe26090bea5302747539b17c04"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_candidate/controller-run.json",
+              "sha256": "6e9434b9f1e2980945c6c337d1614abcce3dbb91b5249c28117b34380bbcd832"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_candidate/lease.json",
+              "sha256": "330792139615bddaf31dd9fed62294410c0d99463ad1e16eadd7d89688bbf714"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_candidate/project-control-result.json",
+              "sha256": "738f92ea911a952049d904925c47d93bf3cae8defb3cb7cd570ff86dcb912746"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_candidate/runner.stderr.txt",
+              "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/evidence/v1/roles/correctness_candidate/runner.stdout.txt",
+              "sha256": "9308d7b5a18145d36b944b84014f8b9adf59a0b793ae10a3a6cabebe7ed36e31"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/source/BUNDLE-FORMAT.md",
+              "sha256": "dbc67dab0ed6641dfe8bc6c2b3f61b29f90e084d2d71d353de21f63d2a1e8e86"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/source/IMPLEMENTATION-NOTES.md",
+              "sha256": "107539c12645c1009e1ec2340e4d7e2c41ef48bf3f4f2c669fb918e0ec5fe416"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/source/attention_bundle.py",
+              "sha256": "66ea25ba94c8723ae643b3c70bc4ef5f22fa47784913244bf8f083a8c2b98240"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/source/attention_oracle.py",
+              "sha256": "d250ef54c369fa62441ec3b0f1f1c8b6144002a500abe07ad28afa41afef2421"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/source/make_attention_inputs.py",
+              "sha256": "d7b98bd076c229499ac4cfdc5b45b67c3d91a73b5c73b433920fdb78f8e906be"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/source/tests/test_attention_bundle.py",
+              "sha256": "7cc26142449f1e9dd10d30c8ee0132cf496a109376a1a60cfdd7ab143d3687eb"
+            },
+            {
+              "path": "benchmark_runs/volta-attention/source/tests/test_attention_oracle.py",
+              "sha256": "4d7a6817347d843ca88d8615b0c49ff6d9fc58d2a3af856b47c3967fb3be8aa8"
+            }
+          ]
+        },
+        "timestamp": 1792270149.147608,
+        "tools": {
+          "ncu": {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute/ncu",
+            "version": "NVIDIA (R) Nsight Compute Command Line Profiler | Copyright (c) 2018-2025 NVIDIA Corporation | Version 2025.2.1.0 (build 35987062) (public-release)"
+          },
+          "nsys": {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Systems_2025.3/bin/nsys",
+            "version": "NVIDIA Nsight Systems version 2025.3.1.90-253135822126v0"
+          },
+          "nvcc": {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+            "version": "nvcc: NVIDIA (R) Cuda compiler driver | Copyright (c) 2005-2025 NVIDIA Corporation | Built on Tue_May_27_02:21:03_PDT_2025"
+          }
+        }
+      },
+      "record": {
+        "argv": [
+          "/home/tumlinson/.agents/skills/cuda/scripts/debug_compute_sanitizer.sh",
+          "--out-dir",
+          "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/f3d80d8d-286c-415f-9493-1aa0b2cb27e2/sanitizer",
+          "--label",
+          "run",
+          "--",
+          "benchmark_runs/volta-attention/bin/volta_attention_runner",
+          "--input",
+          "benchmark_runs/volta-attention/cases/attention/attention_inputs.bin",
+          "--reference",
+          "benchmark_runs/volta-attention/cases/attention/attention_reference.bin",
+          "--impl",
+          "online",
+          "--mode",
+          "correctness",
+          "--case",
+          "all"
+        ],
+        "elapsed_seconds": 3.172784435999347,
+        "returncode": 0,
+        "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/f3d80d8d-286c-415f-9493-1aa0b2cb27e2/foreground.stderr.txt",
+        "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/f3d80d8d-286c-415f-9493-1aa0b2cb27e2/foreground.stdout.txt",
+        "timeout": false
+      },
+      "resource_samples": {
+        "after": {
+          "busy": false,
+          "foreign_processes": false,
+          "idle": true,
+          "samples": [
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792270129.187951
+            },
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792270136.7250516
+            },
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792270144.2947633
+            }
+          ]
+        },
+        "before": {
+          "busy": false,
+          "foreign_processes": false,
+          "idle": true,
+          "samples": [
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792270116.188913
+            }
+          ]
+        },
+        "quiescence": {
+          "device_uuids": [
+            "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+          ],
+          "elapsed_seconds": 22.257693232000747,
+          "format": "CUDA-QUIESCENCE/1",
+          "observations": [
+            {
+              "busy": false,
+              "foreign_processes": false,
+              "idle": true,
+              "samples": [
+                {
+                  "devices": [
+                    {
+                      "clocks_sm_mhz": 1312.0,
+                      "compute_capability": "7.0",
+                      "driver_version": "580.178.04",
+                      "index": 0,
+                      "memory_free_mib": 16145,
+                      "memory_total_mib": 16384,
+                      "name": "Tesla V100-SXM2-16GB",
+                      "pci_bus_id": "00000000:02:00.0",
+                      "temperature_c": 36.0,
+                      "throttle_reasons": "0x0000000000000000",
+                      "utilization_percent": 0.0,
+                      "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                    }
+                  ],
+                  "foreign_processes": [],
+                  "timestamp": 1792270101.2287543
+                }
+              ]
+            },
+            {
+              "busy": false,
+              "foreign_processes": false,
+              "idle": true,
+              "samples": [
+                {
+                  "devices": [
+                    {
+                      "clocks_sm_mhz": 1312.0,
+                      "compute_capability": "7.0",
+                      "driver_version": "580.178.04",
+                      "index": 0,
+                      "memory_free_mib": 16145,
+                      "memory_total_mib": 16384,
+                      "name": "Tesla V100-SXM2-16GB",
+                      "pci_bus_id": "00000000:02:00.0",
+                      "temperature_c": 36.0,
+                      "throttle_reasons": "0x0000000000000000",
+                      "utilization_percent": 0.0,
+                      "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                    }
+                  ],
+                  "foreign_processes": [],
+                  "timestamp": 1792270108.6900396
+                }
+              ]
+            },
+            {
+              "busy": false,
+              "foreign_processes": false,
+              "idle": true,
+              "samples": [
+                {
+                  "devices": [
+                    {
+                      "clocks_sm_mhz": 1312.0,
+                      "compute_capability": "7.0",
+                      "driver_version": "580.178.04",
+                      "index": 0,
+                      "memory_free_mib": 16145,
+                      "memory_total_mib": 16384,
+                      "name": "Tesla V100-SXM2-16GB",
+                      "pci_bus_id": "00000000:02:00.0",
+                      "temperature_c": 36.0,
+                      "throttle_reasons": "0x0000000000000000",
+                      "utilization_percent": 0.0,
+                      "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                    }
+                  ],
+                  "foreign_processes": [],
+                  "timestamp": 1792270116.188913
+                }
+              ]
+            }
+          ],
+          "observed_consecutive_samples": 3,
+          "required_consecutive_samples": 3,
+          "samples_observed": 3,
+          "schema_version": 1,
+          "state": "quiescent",
+          "uncontaminated": true
+        }
+      },
+      "severity": 0,
+      "status": "succeeded",
+      "toolchain": {
+        "environment": {
+          "CUDACXX": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+          "CUDAToolkit_ROOT": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+          "PATH": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer:/home/tumlinson/.local/bin:/home/tumlinson/.codex/packages/standalone/releases/0.162.1-x86_64-unknown-linux-musl/codex-path:/home/tumlinson/.local/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/tumlinson/.nvm/versions/node/v22.23.2/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Systems_2025.3/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/nvvm/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/comm_libs/12.9/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/comm_libs/12.9/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/comm_libs/hpcx/bin:/home/tumlinson/.codex/tmp/arg0/codex-arg0NVmlLM:/home/tumlinson/.cargo/bin:/home/tumlinson/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/home/tumlinson/Software/miniconda3/bin:/home/tumlinson/Software/miniconda3/condabin:/usr/local/sbin:/usr/games:/usr/local/games:/snap/bin:/home/tumlinson/Software/llama.cpp/build/bin:/home/tumlinson/Software/sratoolkit.3.3.0-ubuntu64/bin"
+        },
+        "nvcc": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+        "root": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+        "sanitizer": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+        "version": "12.9"
+      },
+      "valid": true
+    },
+    "task_id": null,
+    "todo_revision": null,
+    "valid": 1
+  }
+}

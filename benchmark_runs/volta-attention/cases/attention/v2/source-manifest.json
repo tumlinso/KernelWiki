@@ -1,0 +1,67 @@
+{
+  "format": "KERNELWIKI-ATTENTION-SOURCE-MANIFEST/2",
+  "version_label": "split16_corrected_merge_ownership",
+  "sources": [
+    {
+      "path": "benchmark_runs/volta-attention/source/make_attention_inputs.py",
+      "sha256": "d7b98bd076c229499ac4cfdc5b45b67c3d91a73b5c73b433920fdb78f8e906be"
+    },
+    {
+      "path": "benchmark_runs/volta-attention/source/attention_oracle.py",
+      "sha256": "d250ef54c369fa62441ec3b0f1f1c8b6144002a500abe07ad28afa41afef2421"
+    },
+    {
+      "path": "benchmark_runs/volta-attention/source/attention_bundle.py",
+      "sha256": "66ea25ba94c8723ae643b3c70bc4ef5f22fa47784913244bf8f083a8c2b98240"
+    },
+    {
+      "path": "artifacts/kernels/volta-attention/variants/volta_attention_runner.cu",
+      "sha256": "ef4e590764978d9ebbd4994f4ce43d3c9cff67bf875dadfe5d74a1f84accff83"
+    },
+    {
+      "path": "artifacts/kernels/volta-attention/variants/volta_attention_online.cuh",
+      "sha256": "ac7944ac0983a016493a5b52edc501fabd9b2c768c9b72f1506b0b65e180c37b"
+    },
+    {
+      "path": "benchmark_runs/volta-attention/source/tests/test_attention_oracle.py",
+      "sha256": "4d7a6817347d843ca88d8615b0c49ff6d9fc58d2a3af856b47c3967fb3be8aa8"
+    },
+    {
+      "path": "benchmark_runs/volta-attention/source/tests/test_attention_bundle.py",
+      "sha256": "7cc26142449f1e9dd10d30c8ee0132cf496a109376a1a60cfdd7ab143d3687eb"
+    }
+  ],
+  "artifacts": {
+    "input_bundle": {
+      "path": "../attention_inputs.bin",
+      "sha256": "1fed25c14ebae3c5d41bc5820dafcd881637a95344772cdfa6c730c9318eef5d"
+    },
+    "reference_bundle": {
+      "path": "../attention_reference.bin",
+      "sha256": "d1f9cf4ebe78311f336970b7e3f91df9aa921ed191c6009a653ea663b931b969"
+    },
+    "contract": {
+      "path": "../attention_contract.json",
+      "sha256": "d66dc00a131035b99f6386250bf75ebaaaea26f9cbf66d27eb3c44ce22ceb810"
+    },
+    "case_index": {
+      "path": "../case-index.json",
+      "sha256": "9b90922ebc789a010ba8017084870be5c4da5cdcfb56645c4f69d039b89af8d3"
+    }
+  },
+  "base_v1": {
+    "source_manifest": {
+      "path": "benchmark_runs/volta-attention/cases/attention/source-manifest.json",
+      "sha256": "d38b1b2ca178f57d3bdfb1f6062fe1082489a50cbbdde87fa92c54200b9d7626"
+    },
+    "source_closure": {
+      "path": "benchmark_runs/volta-attention/evidence/v1/source-closure/source-closure.json",
+      "sha256": "8ab2b5f5b82e6ecb1ea8e06daf3e3da238beb6270271fdbc7f0571e3edb77ce9"
+    }
+  },
+  "upstream_code_copied": [],
+  "native_build": "captured by the first split16 correctness controller role; this manifest remains immutable",
+  "native_execution": "captured in the three split16 role receipts; no result is implied by this manifest",
+  "device_uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8",
+  "toolchain": "CUDA 12.9 / NVCC SM 7.0; exact identity in controller evidence"
+}

@@ -1,0 +1,31 @@
+{
+  "format": "KERNELWIKI-ATTENTION-ROLE-ARCHIVE/1",
+  "role": "sanitizer_candidate",
+  "evidence_id": "15a57bae-1c55-43c0-8d88-e253080da9d6",
+  "controller_status": "succeeded",
+  "sanitizer_status": "partial",
+  "sanitizer_conclusive": false,
+  "sanitizer_exit_status": 0,
+  "sanitizer_error_count": 0,
+  "application_status": "passed",
+  "gpu_uuid_raw_hex": "21131915148823af38dd1743ae1f5cc8",
+  "compute_capability": "7.0",
+  "binary_path": "benchmark_runs/volta-attention/evidence/v1/binaries/volta_attention_runner",
+  "files": {
+    "compute-sanitizer/process_env.txt": "f9d8fc40fd8993e8b018629055771483c31fb6397f8e7eb5920602cc6f2bf4f9",
+    "compute-sanitizer/raw.log": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+    "compute-sanitizer/run_config.json": "3936a2369c11e41a9ce4911ef7b6a8161779e16b07d5cec2a623b6799d16d3ae",
+    "compute-sanitizer/stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "compute-sanitizer/stdout.txt": "9308d7b5a18145d36b944b84014f8b9adf59a0b793ae10a3a6cabebe7ed36e31",
+    "compute-sanitizer/summary.json": "182a5b7ffa5d6d522cdbedebecbd200a15b93527bd1efbfd83adb24a9c789863",
+    "compute-sanitizer/summary.txt": "fcb23799a8d20adb6412215f2c2fb13237d3fc371eac10dc743117ac89d5c6a3",
+    "controller-run.json": "e3fc0a0305abadfd7d26e77d4f8fac48002ea8c3c79b1782a51f15fde9a5748a",
+    "controller.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "controller.stdout.txt": "b9939052138b00080c8ec9604808f129fb0b47b180fdc9161d335be9c4a4d43d",
+    "lease.json": "49cb5346b1c5f576e07bc7938106d4a5c414bffd15e56ae2ad3c91178afb1e96",
+    "project-control-result.json": "b49f5a303d77971a47ed1f65815aee03e8eb4cdc5b63f238d4f351982a7f1129",
+    "runner.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runner.stdout.txt": "b9939052138b00080c8ec9604808f129fb0b47b180fdc9161d335be9c4a4d43d",
+    "measured_binary": "082734ce3e1dbff5180f3751256f60e1cbc9a7e87f53baf563d4ff0cc75090df"
+  }
+}

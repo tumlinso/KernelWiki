@@ -1069,5 +1069,196 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
         self.assertIn("no-clock/source-import policy", result["errors"][0])
 
 
+class AttentionNativeEvidenceTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.contract = json.loads((Path(__file__).parents[1] / "benchmark_runs" /
+                                   "volta-attention" / "cases" / "attention" /
+                                   "attention_contract.json").read_text())
+        cls.dimensions = CHECK._attention_case_dimensions(cls.contract)
+        cls.oracle_data = {
+            case_id: {
+                "output_fp64": [0.0] * spec["outputs"],
+                "rows": [{"valid_keys": 1, "normalizer": 1.0}] * spec["rows"],
+            }
+            for case_id, spec in cls.dimensions.items()
+        }
+        cls.gpu = "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+
+    def native_result(self, case="all", mode="correctness", implementation="online", splits=1):
+        selected = list(self.dimensions) if case == "all" else [case]
+        checks = []
+        for case_id in selected:
+            spec = self.dimensions[case_id]
+            check = {
+                "case": case_id, "passed": True,
+                "checked_outputs": spec["outputs"], "checked_rows": spec["rows"],
+                "max_abs_output_error": 0.0, "max_row_max_abs_error": 0.0,
+                "max_row_normalizer_relative_error": 0.0,
+            }
+            if mode == "time":
+                check.update({
+                    "samples_us": [1.0] * 11,
+                    "timing_phase": "steady_state_compute",
+                    "timing_scope": {
+                        "included": "full selected implementation",
+                        "excluded": "input loading, device allocation, and H2D upload",
+                    },
+                })
+            checks.append(check)
+        errors = {
+            "checked_outputs": sum(item["checked_outputs"] for item in checks),
+            "checked_rows": sum(item["checked_rows"] for item in checks),
+            "max_abs_output_error": 0.0,
+            "max_row_max_abs_error": 0.0,
+            "max_row_normalizer_relative_error": 0.0,
+        }
+        return {
+            "format": CHECK.ATTENTION_RUN_FORMAT, "status": "passed",
+            "compute_capability": "7.0", "gpu_uuid": "21131915148823af38dd1743ae1f5cc8",
+            "case_id": "attention", "case": case, "mode": mode,
+            "implementation": implementation, "splits": splits,
+            "checks": checks, "errors": errors, "failure": None,
+        }
+
+    def validate_native(self, result, case="all", mode="correctness", implementation="online", splits=1):
+        CHECK._attention_native_checks(result, self.contract, self.oracle_data,
+                                       self.gpu, implementation, mode, case, splits,
+                                       "attention fixture")
+
+    def test_seven_case_attention_result_binds_all_output_and_row_counts(self):
+        result = self.native_result()
+        self.validate_native(result)
+        self.assertEqual(result["errors"]["checked_outputs"], 39472)
+        self.assertEqual(result["errors"]["checked_rows"], 552)
+
+    def test_native_attention_rejects_wrong_case_counts_or_role_identity(self):
+        result = self.native_result()
+        result["checks"][0]["checked_outputs"] -= 1
+        with self.assertRaisesRegex(CHECK.EvidenceError, "checked_outputs differs"):
+            self.validate_native(result)
+
+        result = self.native_result()
+        result["implementation"] = "baseline"
+        with self.assertRaisesRegex(CHECK.EvidenceError, "identity or status"):
+            self.validate_native(result)
+
+    def test_native_attention_rejects_errors_outside_frozen_tolerances(self):
+        result = self.native_result()
+        result["checks"][0]["max_row_max_abs_error"] = 0.001
+        result["errors"]["max_row_max_abs_error"] = 0.001
+        with self.assertRaisesRegex(CHECK.EvidenceError, "row maximum exceeds tolerance"):
+            self.validate_native(result)
+
+        result = self.native_result()
+        result["checks"][0]["max_abs_output_error"] = 0.001
+        result["errors"]["max_abs_output_error"] = 0.001
+        with self.assertRaisesRegex(CHECK.EvidenceError, "output error exceeds"):
+            self.validate_native(result)
+
+    def test_attention_timing_requires_eleven_finite_scoped_samples(self):
+        result = self.native_result("prefill64-long-causal", mode="time", implementation="baseline")
+        self.validate_native(result, "prefill64-long-causal", "time", "baseline")
+        result["checks"][0]["samples_us"][-1] = float("nan")
+        with self.assertRaisesRegex(CHECK.EvidenceError, "timing samples or scope"):
+            self.validate_native(result, "prefill64-long-causal", "time", "baseline")
+
+    def test_attention_argv_rejects_duplicate_role_selectors(self):
+        with self.assertRaisesRegex(CHECK.EvidenceError, "must contain 1 --impl selector"):
+            CHECK._attention_selector(["--impl", "online", "--impl", "split"],
+                                      "profile", "--impl", "online")
+
+    def make_archive_capture(self, role, native_relative, outer_text, nested=False):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "repo"
+            base = root / "benchmark_runs" / "attention"
+            role_dir = base / "evidence" / "roles" / role
+            role_dir.mkdir(parents=True)
+            (root / ".git").mkdir(parents=True)
+            lease_path = root / ".todo-orchestrator" / "runtime" / "foreground" / "lease.json"
+            lease_sha = json_file(lease_path, {"format": "CUDA-FOREGROUND-LEASE/1"})
+
+            evidence_id = "evidence-" + role
+            execution_path = role_dir / "controller-run.json"
+            execution_sha = json_file(execution_path, {"evidence_id": evidence_id})
+            outer_archive_name = "controller.stdout.txt" if nested else "runner.stdout.txt"
+            outer_path = role_dir / outer_archive_name
+            outer_sha = put(outer_path, outer_text.encode())
+            native_path = role_dir / native_relative
+            native_sha = put(native_path, b'{"native":"attention"}\n')
+            runtime_outer = f"/runtime/{role}/controller.stdout.txt"
+            evidence_path = role_dir / "project-control-result.json"
+            evidence = {
+                "id": evidence_id,
+                "artifacts": [{"kind": "stdout", "complete": 1,
+                               "path": runtime_outer, "content_hash": outer_sha}],
+                "summary": {"record": {"stdout": runtime_outer}},
+            }
+            evidence_sha = json_file(evidence_path, {"evidence": evidence})
+
+            manifest_files = {
+                "controller-run.json": execution_sha,
+                "project-control-result.json": evidence_sha,
+                "lease.json": lease_sha,
+                outer_archive_name: outer_sha,
+                native_relative: native_sha,
+            }
+            run = {
+                "execution": {"path": str(execution_path.relative_to(base)), "sha256": execution_sha},
+                "evidence": {"path": str(evidence_path.relative_to(base)), "sha256": evidence_sha},
+                "lease": {"path": str(lease_path.relative_to(root)), "sha256": lease_sha},
+                "native_stdout_capture": {
+                    "path": str(native_path.relative_to(base)), "sha256": native_sha,
+                    **({"reported_path": "/runtime/inner/stdout.txt"} if nested else {}),
+                },
+            }
+            sanitizer_summary = sanitizer_log = None
+            if role.startswith("sanitizer_"):
+                summary_path = role_dir / "compute-sanitizer" / "summary.json"
+                summary_sha = json_file(summary_path, {"status": "partial"})
+                log_path = role_dir / "compute-sanitizer" / "raw.log"
+                log_sha = put(log_path, b"ERROR SUMMARY: 0 errors\n")
+                manifest_files.update({
+                    "compute-sanitizer/summary.json": summary_sha,
+                    "compute-sanitizer/raw.log": log_sha,
+                })
+                sanitizer_summary = {"path": str(summary_path.relative_to(base)),
+                                     "sha256": summary_sha}
+                sanitizer_log = {"path": str(log_path.relative_to(base)),
+                                 "sha256": log_sha,
+                                 "reported_path": "/runtime/inner/raw.log"}
+                run["sanitizer_summary"] = sanitizer_summary
+                run["sanitizer_log"] = sanitizer_log
+            manifest_path = role_dir / "archive-manifest.json"
+            manifest_sha = json_file(manifest_path, {
+                "format": "KERNELWIKI-ATTENTION-ROLE-ARCHIVE/1",
+                "role": role, "evidence_id": evidence_id, "files": manifest_files,
+            })
+            run["archive_manifest"] = {"path": str(manifest_path.relative_to(base)),
+                                        "sha256": manifest_sha}
+            run["native_stdout"] = run["native_stdout_capture"]
+            try:
+                CHECK._attention_bind_stdout_capture(
+                    base, root, run, role, native_path,
+                    summary_path if role.startswith("sanitizer_") else None,
+                    log_path if role.startswith("sanitizer_") else None,
+                )
+            finally:
+                self.assertTrue(root.exists())
+            return run
+
+    def test_attention_direct_stdout_is_bound_to_exported_controller_artifact(self):
+        run = self.make_archive_capture(
+            "candidate_decode_timing", "runner.stdout.txt", '{"native":"attention"}\n')
+        self.assertEqual(run["native_stdout_capture"]["sha256"],
+                         run["native_stdout"]["sha256"])
+
+    def test_attention_nested_sanitizer_stdout_is_archived_separately(self):
+        self.make_archive_capture(
+            "sanitizer_candidate", "compute-sanitizer/stdout.txt",
+            "wrapper summary\n- stdout: /runtime/inner/stdout.txt\n"
+            "- raw log: /runtime/inner/raw.log\n", nested=True)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,17 @@
+{
+  "format": "KERNELWIKI-ATTENTION-ROLE-ARCHIVE/1",
+  "role": "correctness_baseline",
+  "evidence_id": "ee45285d-7142-4364-899f-082f4c79f5bf",
+  "runner_status": "passed",
+  "gpu_uuid_raw_hex": "21131915148823af38dd1743ae1f5cc8",
+  "compute_capability": "7.0",
+  "binary_path": "benchmark_runs/volta-attention/evidence/v1/binaries/volta_attention_runner",
+  "files": {
+    "controller-run.json": "dba0f812abba7ad9f41c4de269303f4a3670b20ea7c1c4852042261bf392df39",
+    "lease.json": "d6dc1408025b7cd6d71bd92c7b6170be72b3c7860e1d64e82cb1223c38f2dfbd",
+    "project-control-result.json": "07f61ebc34147b3731d4cfaf4d36a544b545ca47f9b9cc4d264600571070dcd6",
+    "runner.stderr.txt": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+    "runner.stdout.txt": "4e6077b69f8a4158a98c3c12223bc791e94f942cf97ce067822f55ec889a20b6",
+    "measured_binary": "082734ce3e1dbff5180f3751256f60e1cbc9a7e87f53baf563d4ff0cc75090df"
+  }
+}

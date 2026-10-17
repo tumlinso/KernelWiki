@@ -28,3 +28,34 @@ The fixed pre-run tolerance policy covers finite `abs(Q,K,V) <= 0.25`, `D <= 128
 The host runner reads one binary input bundle and its hash-bound FP64 reference bundle. `--mode correctness` checks one implementation; `--mode time` repeats the selected full implementation after correctness and emits one sample list per shape; `--mode single` requires one case, checks it first, and then launches one additional invocation for a profiler selection. The latter does not isolate profiling to a single CUDA kernel by itself: NCU launch selection must account for the preceding correctness invocation and the selected implementation's internal launches. Native output uses `status`, raw-hex `gpu_uuid`, `compute_capability`, case checks, error maxima and failure details, and only writes `status: passed` after the output, row-max and normalizer checks complete.
 
 Do not infer the winning decode candidate in advance. Record whether the measured grid, KV loads, softmax state, split merge or conversion/materialization cost motivates the next test. Report measured and unmeasured shape regimes separately.
+
+## Frozen v1 measurements and conditional split follow-up
+
+The v1 measured executable is archived at
+`benchmark_runs/volta-attention/evidence/v1/binaries/volta_attention_runner`
+(SHA-256 `082734ce3e1dbff5180f3751256f60e1cbc9a7e87f53baf563d4ff0cc75090df`).
+It was built once for SM 7.0 and all baseline, online, sanitizer, timing, and
+profile roles reuse those exact bytes. The per-role native stdout, controller
+receipt, Project Control export, and lease are archived under
+`benchmark_runs/volta-attention/evidence/v1/roles/`.
+
+On the single frozen `prefill64-long-causal` timing case, 11 unprofiled CUDA
+event samples gave medians of 97.280 us for the materialized cuBLAS baseline
+and 96.256 us for the online SIMT candidate. This is not a decisive prefill
+advantage. On `decode70-causal` (Sq=1, Hq=8, Sk=4096, D=70), medians were
+148.480 us for baseline and 704.512 us for online SIMT. The measured online
+route is therefore retained as a correctness implementation, not the decode
+choice.
+
+The selected NCU report is diagnosis-only: its one `online_rows` sample has an
+8-CTA grid of 128-thread blocks on an 80-SM V100, with 48 registers per thread.
+The reported average DRAM and SM throughput are 0.257% and 1.014% of peak.
+NCU itself marks timing invalid and requests more samples; its replay duration
+is not an operator timing result. The eight-CTA launch establishes a concrete
+underfilled grid, while the very low counters and unprofiled slowdown do not
+isolate the only cause. The bounded follow-up is one 16-way KV split (128
+partial CTAs) with a separate merge kernel, including both kernels in the
+same CUDA-event interval. A split source fix assigns merge outputs to warp 0
+only; the frozen v1 source and executable remain archived, and the v2 split
+route is not accepted unless its own correctness, sanitizer, and timing roles
+pass. No split result is claimed until those roles are captured.

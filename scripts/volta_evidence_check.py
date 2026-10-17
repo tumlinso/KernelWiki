@@ -41,6 +41,8 @@ GEMM_PRIMARY_ROLES = {
 ROW_CONTRACT_FORMAT = "KERNELWIKI-ROW-CONTRACT/1"
 ROW_CHECK_FORMAT = "KERNELWIKI-ROW-CHECK/1"
 ROW_TIMING_FORMAT = "KERNELWIKI-ROW-TIMING/1"
+ATTENTION_CONTRACT_FORMAT = "KERNELWIKI-VOLTA-ATTENTION-CONTRACT/1"
+ATTENTION_RUN_FORMAT = "KERNELWIKI-ATTENTION-RUN/1"
 ROW_PROFILE_CASE_ID = "softmax_wide_streaming"
 ROW_CAPTURED_SOURCE_PATHS = frozenset({
     "artifacts/kernels/volta-rows/full/PROVENANCE.yaml",
@@ -55,6 +57,26 @@ ROW_PRIMARY_ROLES = {
     "baseline_timing": ("baseline", "time", "timing", 5, 21, 2),
     "candidate_timing": ("candidate", "time", "timing", 5, 21, 2),
     "profile_candidate": ("candidate", "time", "profile", 0, 1, 1),
+}
+ATTENTION_REQUIRED_ROLES = {
+    "correctness_baseline": ("baseline", "baseline", "foreground-baseline", "correctness", "all"),
+    "correctness_candidate": ("candidate", "online", "foreground-baseline", "correctness", "all"),
+    "sanitizer_candidate": ("candidate", "online", "foreground-compute-sanitizer", "correctness", "all"),
+    "baseline_prefill_timing": ("baseline", "baseline", "foreground-baseline", "time", "prefill64-long-causal"),
+    "candidate_prefill_timing": ("candidate", "online", "foreground-baseline", "time", "prefill64-long-causal"),
+    "baseline_decode_timing": ("baseline", "baseline", "foreground-baseline", "time", "decode70-causal"),
+    "candidate_decode_timing": ("candidate", "online", "foreground-baseline", "time", "decode70-causal"),
+    "profile_candidate_decode": ("candidate", "online", "foreground-ncu", "correctness", "decode70-causal"),
+}
+ATTENTION_OPTIONAL_ROLES = {
+    "correctness_split_decode": ("split", "split", "foreground-baseline", "correctness", "decode70-causal"),
+    "sanitizer_split_decode": ("split", "split", "foreground-compute-sanitizer", "correctness", "decode70-causal"),
+    "split_decode_timing": ("split", "split", "foreground-baseline", "time", "decode70-causal"),
+}
+ATTENTION_ARCHIVE_ROLE_ALIASES = {
+    "correctness_split_decode": "correctness_split16",
+    "sanitizer_split_decode": "sanitizer_split16",
+    "split_decode_timing": "split16_decode_timing",
 }
 
 
@@ -189,8 +211,14 @@ def _captured_input_archives(root: Path, case: dict[str, Any], required: bool
     return archives
 
 
-def _exact_input_bindings(summary: dict[str, Any], expected: dict[str, str]) -> bool:
-    """Require every archived capture alias exactly once in controller provenance."""
+def _exact_input_bindings(summary: dict[str, Any], expected: dict[str, str],
+                          allow_duplicate_paths: set[str] | None = None) -> bool:
+    """Require every archived capture alias with its declared digest.
+
+    A small set of attention bundles are intentionally listed both as a frozen
+    case input and as a Project Control spec input. Their duplicate provenance
+    rows are accepted only when every occurrence carries the same digest.
+    """
     provenance = summary.get("provenance")
     inputs = provenance.get("inputs") if isinstance(provenance, dict) else None
     if not isinstance(inputs, list):
@@ -202,7 +230,12 @@ def _exact_input_bindings(summary: dict[str, Any], expected: dict[str, str]) -> 
         resolved = str(Path(item["path"]).resolve())
         if resolved in found:
             found[resolved].append(item.get("sha256"))
-    return all(found[path] == [sha] for path, sha in expected.items())
+    allowed = allow_duplicate_paths or set()
+    return all(
+        bool(found[path]) and all(value == sha for value in found[path])
+        if path in allowed else found[path] == [sha]
+        for path, sha in expected.items()
+    )
 
 
 def _binary_binding(summary: dict[str, Any], root: Path, expected_path: Path,
@@ -226,7 +259,9 @@ def _controller_run(base: Path, root: Path, run: Any, label: str, expected_kind:
                     implementation: dict[str, Any], contract: Path, contract_sha: str,
                     inputs_path: Path, inputs_sha: str, oracle_path: Path,
                     oracle_sha: str, gpu_uuid: str,
-                    evidence_ids: set[str], captured_inputs: dict[str, str] | None = None
+                    evidence_ids: set[str], captured_inputs: dict[str, str] | None = None,
+                    additional_inputs: dict[str, str] | None = None,
+                    allow_duplicate_captured_inputs: set[str] | None = None
                     ) -> dict[str, Any]:
     if not isinstance(run, dict):
         raise EvidenceError(f"{label}: controller receipt is missing")
@@ -287,10 +322,13 @@ def _controller_run(base: Path, root: Path, run: Any, label: str, expected_kind:
     }
     if captured_inputs:
         expected_inputs.update(captured_inputs)
+    if additional_inputs:
+        expected_inputs.update(additional_inputs)
     actual_inputs = _input_bindings(summary)
     if any(actual_inputs.get(path) != value for path, value in expected_inputs.items()):
         raise EvidenceError(f"{label}: controller inputs do not bind the contract, represented data, and source")
-    if captured_inputs and not _exact_input_bindings(summary, captured_inputs):
+    if captured_inputs and not _exact_input_bindings(
+            summary, captured_inputs, allow_duplicate_captured_inputs):
         raise EvidenceError(f"{label}: controller inputs do not exactly bind archived source aliases")
     _binary_binding(summary, root, implementation["executed_path"], implementation["binary_sha"])
 
@@ -334,6 +372,10 @@ def _is_gemm_contract(contract: dict[str, Any]) -> bool:
 
 def _is_rows_contract(contract: dict[str, Any]) -> bool:
     return contract.get("format") == ROW_CONTRACT_FORMAT
+
+
+def _is_attention_contract(contract: dict[str, Any]) -> bool:
+    return contract.get("format") == ATTENTION_CONTRACT_FORMAT
 
 
 def _row_contract_cases(contract: dict[str, Any]) -> list[dict[str, Any]]:
@@ -802,6 +844,792 @@ def _partial_memcheck_has_application_pass(summary: dict[str, Any], gpu_uuid: st
     return False
 
 
+def _attention_case_dimensions(contract: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    signature = contract.get("case_signature")
+    records = signature.get("cases") if isinstance(signature, dict) else None
+    if not isinstance(records, list) or not records:
+        raise EvidenceError("attention contract has no frozen case signature")
+    result: dict[str, dict[str, Any]] = {}
+    for item in records:
+        if not isinstance(item, dict) or not isinstance(item.get("id"), str):
+            raise EvidenceError("attention contract contains a malformed case signature")
+        case_id = item["id"]
+        q_shape, kv_shape = item.get("q_shape"), item.get("kv_shape")
+        if (case_id in result or not isinstance(q_shape, list) or len(q_shape) != 4 or
+                not isinstance(kv_shape, list) or len(kv_shape) != 4 or
+                any(type(dimension) is not int or dimension <= 0
+                    for dimension in (*q_shape, *kv_shape))):
+            raise EvidenceError(f"attention case signature is malformed: {case_id}")
+        result[case_id] = {
+            "outputs": math.prod(q_shape),
+            "rows": q_shape[0] * q_shape[1] * q_shape[2],
+            "shape": q_shape,
+            "kv_shape": kv_shape,
+            "signature": item,
+        }
+    if set(result) != {
+        "prefill64-causal", "prefill64-medium-causal", "prefill64-long-causal",
+        "prefill128-noncausal", "decode70-causal", "selected64-causal",
+        "score-stress64-noncausal",
+    }:
+        raise EvidenceError("attention contract case set differs from the frozen seven-case suite")
+    return result
+
+
+def _attention_nonnegative(value: Any) -> bool:
+    return _finite_nonnegative_number(value)
+
+
+def _attention_native_checks(result: dict[str, Any], contract: dict[str, Any],
+                             oracle_data: dict[str, dict[str, Any]], gpu_uuid: str,
+                             implementation: str, mode: str, selected_case: str,
+                             splits: int, label: str) -> None:
+    raw_uuid = result.get("gpu_uuid")
+    if (result.get("format") != ATTENTION_RUN_FORMAT or result.get("status") != "passed" or
+            str(result.get("compute_capability")) != "7.0" or
+            not isinstance(raw_uuid, str) or
+            raw_uuid.lower() != gpu_uuid.removeprefix("GPU-").replace("-", "").lower() or
+            result.get("case_id") != "attention" or result.get("case") != selected_case or
+            result.get("mode") != mode or result.get("implementation") != implementation or
+            type(result.get("splits")) is not int or result.get("splits") != splits or
+            result.get("failure") is not None):
+        raise EvidenceError(f"{label}: native attention result identity or status differs from its role")
+
+    specs = _attention_case_dimensions(contract)
+    expected_ids = list(specs) if selected_case == "all" else [selected_case]
+    if any(case_id not in specs for case_id in expected_ids):
+        raise EvidenceError(f"{label}: selected attention case is absent from the frozen contract")
+    checks = result.get("checks")
+    if not isinstance(checks, list) or [item.get("case") if isinstance(item, dict) else None
+                                       for item in checks] != expected_ids:
+        raise EvidenceError(f"{label}: native attention check list does not match the selected contract cases")
+
+    numerical = contract.get("numerical_contract")
+    if not isinstance(numerical, dict):
+        raise EvidenceError(f"{label}: attention numerical contract is missing")
+    output_atol, output_rtol = numerical.get("output_atol"), numerical.get("output_rtol")
+    row_max_atol = numerical.get("row_max_atol")
+    normalizer_atol, normalizer_rtol = numerical.get("normalizer_atol"), numerical.get("normalizer_rtol")
+    tolerance_values = (output_atol, output_rtol, row_max_atol, normalizer_atol, normalizer_rtol)
+    if any(not _attention_nonnegative(value) for value in tolerance_values):
+        raise EvidenceError(f"{label}: attention tolerances are malformed")
+
+    aggregate_outputs = aggregate_rows = 0
+    error_maxima = {"max_abs_output_error": 0.0,
+                    "max_row_max_abs_error": 0.0,
+                    "max_row_normalizer_relative_error": 0.0}
+    for item in checks:
+        case_id = item["case"]
+        dimensions = specs[case_id]
+        if item.get("passed") is not True:
+            raise EvidenceError(f"{label}: native attention check failed for {case_id}")
+        for key, expected in (("checked_outputs", dimensions["outputs"]),
+                              ("checked_rows", dimensions["rows"])):
+            if type(item.get(key)) is not int or item[key] != expected:
+                raise EvidenceError(f"{label}: native attention {case_id} {key} differs from the contract")
+        numeric = ("max_abs_output_error", "max_row_max_abs_error",
+                   "max_row_normalizer_relative_error")
+        if any(not _attention_nonnegative(item.get(key)) for key in numeric):
+            raise EvidenceError(f"{label}: native attention {case_id} has malformed error metrics")
+        oracle = oracle_data.get(case_id)
+        ref_values = oracle.get("output_fp64") if isinstance(oracle, dict) else None
+        if not isinstance(ref_values, list) or len(ref_values) != dimensions["outputs"]:
+            raise EvidenceError(f"{label}: independent FP64 outputs are missing for {case_id}")
+        if any(isinstance(value, bool) or not isinstance(value, (int, float)) or
+               not math.isfinite(float(value)) for value in ref_values):
+            raise EvidenceError(f"{label}: independent FP64 outputs are malformed for {case_id}")
+        max_reference = max((abs(float(value)) for value in ref_values), default=0.0)
+        if float(item["max_abs_output_error"]) > float(output_atol) + float(output_rtol) * max_reference:
+            raise EvidenceError(f"{label}: native attention output error exceeds the frozen envelope for {case_id}")
+        if float(item["max_row_max_abs_error"]) > float(row_max_atol):
+            raise EvidenceError(f"{label}: native attention row maximum exceeds tolerance for {case_id}")
+        reference_rows = oracle.get("rows")
+        if not isinstance(reference_rows, list) or len(reference_rows) != dimensions["rows"]:
+            raise EvidenceError(f"{label}: independent FP64 row oracle is missing for {case_id}")
+        relative_envelope = 0.0
+        for row in reference_rows:
+            if not isinstance(row, dict):
+                raise EvidenceError(f"{label}: independent FP64 row oracle is malformed for {case_id}")
+            valid_keys = row.get("valid_keys")
+            normalizer = row.get("normalizer")
+            if (type(valid_keys) is not int or valid_keys < 0 or
+                    not _finite_nonnegative_number(normalizer)):
+                raise EvidenceError(f"{label}: independent FP64 row oracle is malformed for {case_id}")
+            if valid_keys == 0:
+                if float(normalizer) != 0.0:
+                    raise EvidenceError(f"{label}: empty-row FP64 normalizer is nonzero for {case_id}")
+                continue
+            if float(normalizer) <= 0.0:
+                raise EvidenceError(f"{label}: nonempty FP64 row normalizer is not positive for {case_id}")
+            relative_envelope = max(
+                relative_envelope,
+                float(normalizer_rtol) + float(normalizer_atol) / float(normalizer),
+            )
+        if float(item["max_row_normalizer_relative_error"]) > relative_envelope:
+            raise EvidenceError(f"{label}: native attention normalizer exceeds tolerance for {case_id}")
+        aggregate_outputs += dimensions["outputs"]
+        aggregate_rows += dimensions["rows"]
+        for key in error_maxima:
+            error_maxima[key] = max(error_maxima[key], float(item[key]))
+
+    errors = result.get("errors")
+    if (not isinstance(errors, dict) or type(errors.get("checked_outputs")) is not int or
+            errors.get("checked_outputs") != aggregate_outputs or
+            type(errors.get("checked_rows")) is not int or errors.get("checked_rows") != aggregate_rows):
+        raise EvidenceError(f"{label}: native attention aggregate counts are inconsistent")
+    for key, maximum in error_maxima.items():
+        if (not _attention_nonnegative(errors.get(key)) or
+                float(errors[key]) != maximum):
+            raise EvidenceError(f"{label}: native attention aggregate {key} is inconsistent")
+    if mode == "time":
+        timing = checks[0]
+        samples = timing.get("samples_us")
+        scope = timing.get("timing_scope")
+        if (not isinstance(samples, list) or len(samples) != 11 or
+                any(not _finite_positive_number(value) for value in samples) or
+                timing.get("timing_phase") != "steady_state_compute" or
+                not isinstance(scope, dict) or
+                not isinstance(scope.get("included"), str) or
+                "full selected implementation" not in scope["included"] or
+                not isinstance(scope.get("excluded"), str) or
+                "input loading" not in scope["excluded"] or
+                "H2D upload" not in scope["excluded"]):
+            raise EvidenceError(f"{label}: native attention timing samples or scope are incomplete")
+
+
+def _attention_selector(argv: list[Any], role: str, flag: str, expected: str | None) -> None:
+    matches = [index for index, value in enumerate(argv)
+               if isinstance(value, str) and (value == flag or value.startswith(flag + "="))]
+    expected_count = 0 if expected is None else 1
+    if len(matches) != expected_count:
+        raise EvidenceError(f"{role}: argv must contain {expected_count} {flag} selector(s)")
+    if not matches:
+        return
+    index = matches[0]
+    if (argv[index] != flag or index + 1 >= len(argv) or
+            not isinstance(argv[index + 1], str) or argv[index + 1].startswith("--") or
+            argv[index + 1] != expected):
+        raise EvidenceError(f"{role}: argv {flag} selector differs from the attention role")
+
+
+def _attention_validate_argv(summary: dict[str, Any], root: Path, role: str,
+                             expected_impl: str, expected_mode: str, expected_case: str,
+                             expected_splits: int,
+                             implementation: dict[str, Any], input_path: Path,
+                             oracle_path: Path) -> None:
+    provenance = summary.get("provenance")
+    argv = provenance.get("argv") if isinstance(provenance, dict) else None
+    if not isinstance(argv, list) or not argv or not isinstance(argv[0], str):
+        raise EvidenceError(f"{role}: controller provenance argv is missing")
+    executable = Path(argv[0])
+    if not executable.is_absolute():
+        executable = root / executable
+    binary = provenance.get("binary")
+    binary_path = Path(str(binary.get("path", ""))) if isinstance(binary, dict) else Path()
+    if not binary_path.is_absolute():
+        binary_path = root / binary_path
+    if (executable.resolve() != implementation["executed_path"].resolve() or
+            binary_path.resolve() != implementation["executed_path"].resolve()):
+        raise EvidenceError(f"{role}: controller argv executable differs from the declared attention binary")
+    _attention_selector(argv, role, "--input", str(input_path.relative_to(root)))
+    _attention_selector(argv, role, "--reference", str(oracle_path.relative_to(root)))
+    _attention_selector(argv, role, "--impl", expected_impl)
+    _attention_selector(argv, role, "--mode", expected_mode)
+    _attention_selector(argv, role, "--case", expected_case)
+    if expected_mode == "time":
+        _attention_selector(argv, role, "--warmups", "2")
+        _attention_selector(argv, role, "--repetitions", "11")
+    else:
+        _attention_selector(argv, role, "--warmups", None)
+        _attention_selector(argv, role, "--repetitions", None)
+    if expected_impl == "split":
+        _attention_selector(argv, role, "--splits", str(expected_splits))
+    else:
+        _attention_selector(argv, role, "--splits", None)
+
+
+def _attention_validate_profile(root: Path, base: Path, run: dict[str, Any],
+                                summary: dict[str, Any], label: str) -> None:
+    profile = run.get("profile")
+    if not isinstance(profile, dict):
+        raise EvidenceError(f"{label}: NCU profile artifacts are missing")
+    report = checked_file(base, profile.get("report"), f"{label} NCU report")
+    analysis_path = checked_file(base, profile.get("analysis"), f"{label} NCU analysis")
+    shim_log = checked_file(base, profile.get("shim_log"), f"{label} NCU shim log")
+    analysis = read_json(analysis_path)
+    selected_kernel = profile.get("selected_kernel")
+    hot_kernel = analysis.get("hot_kernel") if isinstance(analysis, dict) else None
+    kernel_name = hot_kernel.get("name") if isinstance(hot_kernel, dict) else None
+    if (not isinstance(selected_kernel, str) or not selected_kernel or
+            not isinstance(kernel_name, str) or
+            not (kernel_name == selected_kernel or kernel_name.startswith(selected_kernel + "(")) or
+            analysis.get("counter_valid") is not True or analysis.get("timing_valid") is not False or
+            analysis.get("measurement_scope") != "kernel counters" or not report.stat().st_size):
+        raise EvidenceError(f"{label}: NCU report or parsed summary does not bind a valid selected kernel/counter profile")
+    provenance = summary.get("provenance")
+    tools = provenance.get("tools") if isinstance(provenance, dict) else None
+    ncu_identity = tools.get("ncu") if isinstance(tools, dict) else None
+    if (not isinstance(ncu_identity, dict) or not ncu_identity.get("path") or
+            not ncu_identity.get("version")):
+        raise EvidenceError(f"{label}: NCU tool identity is missing")
+    try:
+        shim_records = [json.loads(line) for line in shim_log.read_text(encoding="utf-8").splitlines()
+                        if line.strip()]
+    except (OSError, json.JSONDecodeError) as exc:
+        raise EvidenceError(f"{label}: malformed NCU shim invocation log") from exc
+    shim_path = absolute_repo_file(root, "benchmark_runs/volta-environment/ncu-collection-shim.py",
+                                   f"{label} checked-in NCU shim")
+    shim_sha = digest(shim_path)
+    ncu_path = Path(str(ncu_identity["path"])).resolve()
+    inputs = _input_bindings(summary)
+    collections = [item for item in shim_records if isinstance(item, dict) and
+                   item.get("policy") == "collection-clock-control-none-source-import-yes"]
+    if not collections or not all(
+        isinstance(item.get("argv_executed"), list) and
+        _argument_values(item["argv_executed"], "--clock-control") == ["none"] and
+        _argument_values(item["argv_executed"], "--import-source") == ["yes"] and
+        isinstance(item.get("shim_path"), str) and Path(item["shim_path"]).resolve() == shim_path and
+        item.get("shim_sha256") == shim_sha and inputs.get(str(shim_path)) == shim_sha and
+        isinstance(item.get("actual_ncu_path"), str) and
+        Path(item["actual_ncu_path"]).resolve() == ncu_path and ncu_path.is_file() and
+        item.get("actual_ncu_sha256") == digest(ncu_path) and
+        inputs.get(str(ncu_path)) == item.get("actual_ncu_sha256")
+        for item in collections
+    ):
+        raise EvidenceError(f"{label}: NCU collection does not bind the no-clock/source-import policy")
+
+
+def _attention_archive_manifest(base: Path, run: dict[str, Any], role: str,
+                                evidence_id: str) -> tuple[Path, dict[str, Any]]:
+    manifest_path = checked_file(base, run.get("archive_manifest"),
+                                 f"attention {role} archive manifest")
+    manifest = read_json(manifest_path)
+    archive_role = ATTENTION_ARCHIVE_ROLE_ALIASES.get(role, role)
+    if (not isinstance(manifest, dict) or
+            manifest.get("format") != "KERNELWIKI-ATTENTION-ROLE-ARCHIVE/1" or
+            manifest.get("role") != archive_role or manifest.get("evidence_id") != evidence_id or
+            not isinstance(manifest.get("files"), dict)):
+        raise EvidenceError(f"attention {role}: archive manifest identity is invalid")
+    return manifest_path, manifest
+
+
+def _attention_bind_stdout_capture(base: Path, root: Path, run: dict[str, Any],
+                                   role: str, native_stdout: Path,
+                                   sanitizer_summary: Path | None = None,
+                                   sanitizer_log: Path | None = None) -> None:
+    """Bind app stdout to the archive, and bind outer stdout to the PC export.
+
+    Direct runner output is itself the controller-captured stdout artifact. For
+    sanitizer and NCU, Project Control captures the wrapper's outer stdout;
+    their inner application stdout is separately archived and its reported
+    runtime path must be named by that outer text.
+    """
+    evidence_record = run.get("evidence")
+    if not isinstance(evidence_record, dict):
+        raise EvidenceError(f"attention {role}: exported controller evidence is missing")
+    evidence_path = checked_file(base, evidence_record, f"attention {role} evidence")
+    exported = read_json(evidence_path)
+    evidence = exported.get("evidence") if isinstance(exported, dict) else None
+    evidence_id = evidence.get("id") if isinstance(evidence, dict) else None
+    if not isinstance(evidence_id, str) or not evidence_id:
+        raise EvidenceError(f"attention {role}: exported controller evidence ID is missing")
+    manifest_path, manifest = _attention_archive_manifest(base, run, role, evidence_id)
+    files = manifest["files"]
+
+    def archive_hash(path: Path, label: str) -> str:
+        try:
+            archive_key = path.resolve().relative_to(manifest_path.parent.resolve()).as_posix()
+        except ValueError as exc:
+            raise EvidenceError(f"attention {role}: {label} is outside its role archive") from exc
+        expected = files.get(archive_key)
+        if not isinstance(expected, str) or expected != digest(path):
+            raise EvidenceError(f"attention {role}: {label} differs from the archive manifest")
+        return expected
+
+    execution_path = checked_file(base, run.get("execution"), f"attention {role} execution")
+    lease_record = run.get("lease")
+    if not isinstance(lease_record, dict) or not isinstance(lease_record.get("path"), str):
+        raise EvidenceError(f"attention {role}: archived lease path is missing")
+    lease_path = (root / lease_record["path"]).resolve()
+    # The checked controller lease is outside the evidence base by design.
+    if (not lease_path.is_relative_to(root.resolve()) or not lease_path.is_file() or
+            digest(lease_path) != lease_record.get("sha256")):
+        raise EvidenceError(f"attention {role}: archived lease does not match the run record")
+    expected_archive_files = {
+        "project-control-result.json": evidence_path,
+        "controller-run.json": execution_path,
+        "lease.json": lease_path,
+    }
+    for archive_key, path in expected_archive_files.items():
+        expected = files.get(archive_key)
+        if not isinstance(expected, str) or expected != digest(path):
+            raise EvidenceError(f"attention {role}: archive manifest does not bind {archive_key}")
+
+    evidence_summary = evidence.get("summary") if isinstance(evidence, dict) else None
+    record = evidence_summary.get("record") if isinstance(evidence_summary, dict) else None
+    outer_stdout_path = record.get("stdout") if isinstance(record, dict) else None
+    artifacts = evidence.get("artifacts") if isinstance(evidence, dict) else None
+    stdout_artifacts = [item for item in artifacts if isinstance(item, dict) and
+                        item.get("kind") == "stdout"] if isinstance(artifacts, list) else []
+    nested_capture = role in {"sanitizer_candidate", "sanitizer_split_decode",
+                              "profile_candidate_decode"}
+    outer_archive_name = "controller.stdout.txt" if nested_capture else "runner.stdout.txt"
+    outer_stdout_hash = files.get(outer_archive_name)
+    if (not isinstance(outer_stdout_path, str) or len(stdout_artifacts) != 1 or
+            stdout_artifacts[0].get("complete") != 1 or
+            stdout_artifacts[0].get("path") != outer_stdout_path or
+            stdout_artifacts[0].get("content_hash") != outer_stdout_hash or
+            not isinstance(outer_stdout_hash, str) or len(outer_stdout_hash) != 64):
+        raise EvidenceError(f"attention {role}: controller stdout artifact is not hash-bound to its export")
+    outer_stdout = manifest_path.parent / outer_archive_name
+    if not outer_stdout.is_file() or digest(outer_stdout) != outer_stdout_hash:
+        raise EvidenceError(f"attention {role}: archived controller stdout differs from its exported artifact")
+    try:
+        outer_text = outer_stdout.read_text(encoding="utf-8", errors="replace")
+    except OSError as exc:
+        raise EvidenceError(f"attention {role}: archived controller stdout cannot be read: {exc}") from exc
+
+    capture = run.get("native_stdout_capture")
+    native_record = checked_file(base, capture, f"attention {role} native stdout capture")
+    if native_record.resolve() != native_stdout.resolve():
+        raise EvidenceError(f"attention {role}: native stdout path differs from its declared capture")
+    native_hash = archive_hash(native_record, "native stdout")
+    if not isinstance(capture, dict) or capture.get("sha256") != native_hash:
+        raise EvidenceError(f"attention {role}: native stdout archive hash differs from the capture record")
+
+    if not nested_capture:
+        try:
+            native_suffix = native_record.resolve().relative_to(manifest_path.parent.resolve()).as_posix()
+        except ValueError as exc:
+            raise EvidenceError(f"attention {role}: direct stdout is outside its role archive") from exc
+        if (native_suffix != "runner.stdout.txt" or capture.get("reported_path") is not None or
+                native_hash != outer_stdout_hash or
+                stdout_artifacts[0].get("content_hash") != native_hash):
+            raise EvidenceError(f"attention {role}: native stdout is not the captured controller stdout")
+        return
+
+    expected_suffix = ("compute-sanitizer/stdout.txt" if role.startswith("sanitizer_")
+                       else "ncu/command.stdout.txt")
+    try:
+        suffix = native_record.resolve().relative_to(manifest_path.parent.resolve()).as_posix()
+    except ValueError as exc:
+        raise EvidenceError(f"attention {role}: nested stdout capture is outside its role archive") from exc
+    reported_path = capture.get("reported_path") if isinstance(capture, dict) else None
+    if (suffix != expected_suffix or not isinstance(reported_path, str) or
+            not Path(reported_path).is_absolute() or reported_path not in outer_text):
+        raise EvidenceError(f"attention {role}: nested stdout path is not identified by captured outer output")
+
+    if role.startswith("sanitizer_"):
+        if sanitizer_log is None or sanitizer_summary is None:
+            raise EvidenceError(f"attention {role}: sanitizer raw log and summary bindings are missing")
+        log_hash = archive_hash(sanitizer_log, "raw Compute Sanitizer log")
+        summary_hash = archive_hash(sanitizer_summary, "Compute Sanitizer classifier summary")
+        log_record = run.get("sanitizer_log")
+        summary_record = run.get("sanitizer_summary")
+        if (files.get("compute-sanitizer/summary.json") != summary_hash or
+                files.get("compute-sanitizer/raw.log") != log_hash or
+                not isinstance(log_record, dict) or
+                log_hash != log_record.get("sha256") or
+                not isinstance(summary_record, dict) or
+                summary_hash != summary_record.get("sha256")):
+            raise EvidenceError(f"attention {role}: sanitizer raw log/summary is not bound to its archive")
+        if f"stdout: {reported_path}" not in outer_text:
+            raise EvidenceError(f"attention {role}: captured sanitizer output does not identify native stdout")
+        raw_record = log_record
+        if not isinstance(raw_record, dict) or not isinstance(raw_record.get("reported_path"), str):
+            raise EvidenceError(f"attention {role}: raw sanitizer log reported path is missing")
+        if f"raw log: {raw_record['reported_path']}" not in outer_text:
+            raise EvidenceError(f"attention {role}: captured sanitizer output does not identify the raw log")
+    else:
+        # The NCU outer report names the command stdout path; the archived
+        # native JSON is that separately captured file, not PC's outer stdout.
+        if f"command stdout: {reported_path}" not in outer_text:
+            raise EvidenceError(f"attention {role}: captured NCU output does not identify command stdout")
+
+
+def _attention_source_closure(root: Path, case: dict[str, Any],
+                              captured_archives: dict[str, dict[str, Any]]) -> Path:
+    closure_path, _closure_sha = sha_binding(root, case.get("source_closure"),
+                                             "attention v1 source closure")
+    closure = read_json(closure_path)
+    records = closure.get("repository_inputs") if isinstance(closure, dict) else None
+    if (not isinstance(closure, dict) or
+            closure.get("format") != "KERNELWIKI-ATTENTION-V1-SOURCE-CLOSURE/1" or
+            not isinstance(records, list) or not records):
+        raise EvidenceError("attention v1 source closure is malformed")
+    expected: dict[str, tuple[str, int]] = {}
+    for item in records:
+        if not isinstance(item, dict):
+            raise EvidenceError("attention v1 source closure has a malformed repository input")
+        original = _repo_relative_identity(root, item.get("original_path"),
+                                           "attention v1 captured original path")
+        archived = item.get("archived_path")
+        archive_file = absolute_repo_file(root, archived, "attention v1 source closure archive")
+        sha = item.get("sha256")
+        size = item.get("size_bytes")
+        if (not isinstance(sha, str) or len(sha) != 64 or digest(archive_file) != sha or
+                type(size) is not int or archive_file.stat().st_size != size):
+            raise EvidenceError("attention v1 source closure archive hash or size differs")
+        key = str(original)
+        if key in expected:
+            raise EvidenceError("attention v1 source closure repeats an original input path")
+        expected[key] = (str(archive_file), size)
+    if set(expected) != set(captured_archives):
+        raise EvidenceError("attention captured input archives differ from the v1 source closure")
+    for original, (archived, _size) in expected.items():
+        capture = captured_archives[original]
+        if (str(capture["archive_path"]) != archived or
+                capture["sha256"] != digest(Path(archived))):
+            raise EvidenceError("attention captured input archive does not match the v1 closure manifest")
+    return closure_path
+
+
+def _attention_role_source_closure(root: Path, run: dict[str, Any], role: str,
+                                  captured_archives: dict[str, dict[str, Any]]) -> Path:
+    closure_path, _closure_sha = sha_binding(root, run.get("source_closure"),
+                                             f"attention {role} v2 source closure")
+    closure = read_json(closure_path)
+    records = closure.get("repository_inputs") if isinstance(closure, dict) else None
+    if (not isinstance(closure, dict) or
+            closure.get("format") != "KERNELWIKI-ATTENTION-V2-SOURCE-CLOSURE/1" or
+            not isinstance(records, list) or not records):
+        raise EvidenceError(f"attention {role}: v2 source closure is malformed")
+    expected: dict[str, tuple[str, str, int]] = {}
+    for index, item in enumerate(records):
+        label = f"attention {role} v2 source closure input {index}"
+        if not isinstance(item, dict):
+            raise EvidenceError(f"{label}: input record is malformed")
+        original = _repo_relative_identity(root, item.get("original_path"),
+                                           f"{label} original path")
+        archive_raw, expected_sha, size = (item.get("archived_path"), item.get("sha256"),
+                                           item.get("size_bytes"))
+        if not isinstance(archive_raw, str):
+            raise EvidenceError(f"{label}: archive path is malformed")
+        archive_path = absolute_repo_file(root, archive_raw, f"{label} archive")
+        if (not isinstance(expected_sha, str) or len(expected_sha) != 64 or
+                digest(archive_path) != expected_sha or type(size) is not int or
+                archive_path.stat().st_size != size or str(original) in expected):
+            raise EvidenceError(f"{label}: archive hash, size, or identity is invalid")
+        expected[str(original)] = (str(archive_path), expected_sha, size)
+    if set(expected) != set(captured_archives):
+        raise EvidenceError(f"attention {role}: captured aliases differ from its v2 source closure")
+    for original, (archive, expected_sha, size) in expected.items():
+        capture = captured_archives[original]
+        if (str(capture["archive_path"]) != archive or capture["sha256"] != expected_sha or
+                capture["archive_path"].stat().st_size != size):
+            raise EvidenceError(f"attention {role}: captured alias differs from its v2 closure identity")
+
+    declaring_specs = closure.get("declaring_specs")
+    expected_specs = {
+        "benchmark_runs/volta-attention/controller/v2/role-attention-correctness_split16.spec.json",
+        "benchmark_runs/volta-attention/controller/v2/role-attention-sanitizer_split16.spec.json",
+        "benchmark_runs/volta-attention/controller/v2/role-attention-split16_decode_timing.spec.json",
+    }
+    if (not isinstance(declaring_specs, list) or
+            {item.get("path") for item in declaring_specs if isinstance(item, dict)} != expected_specs or
+            len(declaring_specs) != len(expected_specs)):
+        raise EvidenceError(f"attention {role}: v2 source closure spec set is invalid")
+    for spec in declaring_specs:
+        if not isinstance(spec, dict) or not isinstance(spec.get("sha256"), str):
+            raise EvidenceError(f"attention {role}: v2 source closure spec binding is malformed")
+        original = _repo_relative_identity(root, spec.get("path"),
+                                           f"attention {role} v2 spec path")
+        capture = captured_archives.get(str(original))
+        if capture is None or capture["sha256"] != spec["sha256"]:
+            raise EvidenceError(f"attention {role}: v2 source closure does not archive its declaring spec")
+        spec_data = read_json(capture["archive_path"])
+        inputs = spec_data.get("inputs") if isinstance(spec_data, dict) else None
+        if not isinstance(inputs, list):
+            raise EvidenceError(f"attention {role}: archived v2 spec has no declared inputs")
+        for item in inputs:
+            if not isinstance(item, str) or not item:
+                raise EvidenceError(f"attention {role}: archived v2 spec input list is malformed")
+            candidate = Path(item)
+            if candidate.is_absolute():
+                continue
+            declared = _repo_relative_identity(root, item, f"attention {role} v2 declared input")
+            if str(declared) not in captured_archives:
+                raise EvidenceError(f"attention {role}: v2 declared repository input is absent from its closure")
+    return closure_path
+
+
+def _check_attention_case(base: Path, root: Path, case: dict[str, Any],
+                          evidence_ids: set[str], contract_path: Path,
+                          contract_sha: str, contract: dict[str, Any]) -> None:
+    case_id = case["id"]
+    if case_id != "attention" or contract.get("case_id") != "attention":
+        raise EvidenceError("attention evidence must bind the canonical attention contract")
+    input_path, input_sha = sha_binding(root, case.get("represented_input"),
+                                        "attention represented input")
+    oracle_path, oracle_sha = sha_binding(root, case.get("oracle"), "attention FP64 reference")
+    case_index_path, case_index_sha = sha_binding(root, case.get("case_index"),
+                                                  "attention case index")
+    source_manifest_path, source_manifest_sha = sha_binding(root, case.get("source_manifest"),
+                                                            "attention source manifest")
+    contract_input = contract.get("represented_input")
+    contract_oracle = contract.get("oracle")
+    if (not isinstance(contract_input, dict) or not isinstance(contract_oracle, dict) or
+            input_sha != contract_input.get("sha256") or
+            oracle_sha != contract_oracle.get("sha256") or
+            input_path.name != contract_input.get("path") or
+            oracle_path.name != contract_oracle.get("path")):
+        raise EvidenceError("attention bundle/reference differs from the frozen contract")
+    case_specs = _attention_case_dimensions(contract)
+    case_index = read_json(case_index_path)
+    indexed_cases = case_index.get("cases") if isinstance(case_index, dict) else None
+    if (not isinstance(case_index, dict) or
+            case_index.get("format") != "KERNELWIKI-ATTENTION-CASES/1" or
+            not isinstance(indexed_cases, list) or len(indexed_cases) != len(case_specs) or
+            any(not isinstance(item, dict) or not isinstance(item.get("id"), str)
+                for item in indexed_cases) or
+            {item["id"] for item in indexed_cases} != set(case_specs)):
+        raise EvidenceError("attention case index differs from the frozen seven-case contract")
+    indexed_input = case_index.get("combined_input")
+    indexed_reference = case_index.get("combined_reference")
+    if (not isinstance(indexed_input, dict) or not isinstance(indexed_reference, dict) or
+            indexed_input.get("sha256") != input_sha or
+            indexed_reference.get("sha256") != oracle_sha):
+        raise EvidenceError("attention case index does not bind the combined input and FP64 reference")
+
+    case_oracles = case.get("case_oracles")
+    if not isinstance(case_oracles, list) or len(case_oracles) != len(case_specs):
+        raise EvidenceError("attention per-case FP64 oracle bindings are missing")
+    oracle_records: dict[str, dict[str, Any]] = {}
+    oracle_paths: dict[str, Path] = {}
+    for item in case_oracles:
+        if not isinstance(item, dict) or not isinstance(item.get("case_id"), str):
+            raise EvidenceError("attention per-case FP64 oracle binding is malformed")
+        per_case_id = item["case_id"]
+        if per_case_id not in case_specs or per_case_id in oracle_records:
+            raise EvidenceError("attention per-case FP64 oracle set is duplicated or unexpected")
+        path, sha = sha_binding(root, item, f"attention {per_case_id} FP64 oracle")
+        data = read_json(path)
+        expected = case_specs[per_case_id]
+        if (sha != next((entry.get("oracle_sha256") for entry in indexed_cases
+                         if isinstance(entry, dict) and entry.get("id") == per_case_id), None) or
+                data.get("format") != "KERNELWIKI-CPU-ORACLE/1" or
+                data.get("passed") is not True or data.get("case") != per_case_id or
+                data.get("shape") != expected["shape"] or
+                not isinstance(data.get("output_fp64"), list) or
+                len(data["output_fp64"]) != expected["outputs"] or
+                not isinstance(data.get("rows"), list) or len(data["rows"]) != expected["rows"]):
+            raise EvidenceError(f"attention {per_case_id} FP64 oracle differs from the frozen case contract")
+        oracle_records[per_case_id] = data
+        oracle_paths[per_case_id] = path
+    if set(oracle_records) != set(case_specs):
+        raise EvidenceError("attention per-case FP64 oracle set is incomplete")
+
+    captured_archives = _captured_input_archives(root, case, required=True)
+    _attention_source_closure(root, case, captured_archives)
+    source_manifest_record = case.get("source_manifest")
+    if isinstance(source_manifest_record, dict) and "original_path" in source_manifest_record:
+        original_manifest = _repo_relative_identity(root, source_manifest_record.get("original_path"),
+                                                    "attention source manifest original path")
+        archive = captured_archives.get(str(original_manifest))
+        if (archive is None or source_manifest_path != archive["archive_path"] or
+                source_manifest_sha != archive["sha256"]):
+            raise EvidenceError("attention source manifest does not match its v1 captured input")
+    elif source_manifest_record is not None:
+        raise EvidenceError("attention source manifest must identify its v1 captured input")
+    additional_inputs: dict[str, str] = {
+        str(case_index_path.resolve()): case_index_sha,
+    }
+    for item in indexed_cases:
+        contract_case = case_specs[item["id"]]["signature"]
+        if (item.get("shape") != contract_case.get("q_shape") or
+                item.get("kv_shape") != contract_case.get("kv_shape") or
+                any(item.get(field) != contract_case.get(field)
+                    for field in ("causal", "head_dim", "block_size",
+                                  "has_per_query_boolean_mask", "tolerance_group"))):
+            raise EvidenceError(f"attention case index metadata differs from contract for {item['id']}")
+        if not isinstance(item, dict):
+            raise EvidenceError("attention case index contains a malformed input entry")
+        for field, hash_field in (("input", "input_sha256"),
+                                  ("metadata", "metadata_sha256"),
+                                  ("oracle", "oracle_sha256")):
+            raw = item.get(field)
+            expected_sha = item.get(hash_field)
+            if (not isinstance(raw, str) or not isinstance(expected_sha, str) or
+                    len(expected_sha) != 64):
+                raise EvidenceError(f"attention case index {field} identity is malformed")
+            path = (case_index_path.parent / raw).resolve()
+            if (not path.is_relative_to(root) or not path.is_file() or digest(path) != expected_sha):
+                raise EvidenceError(f"attention case index {field} is missing or has a SHA-256 mismatch")
+            additional_inputs[str(path)] = expected_sha
+        if str(oracle_paths[item["id"]].resolve()) != str((case_index_path.parent / item["oracle"]).resolve()):
+            raise EvidenceError(f"attention {item['id']} FP64 oracle path differs from the case index")
+
+    captured_inputs = {str(item["original_path"]): item["sha256"]
+                       for item in captured_archives.values()}
+    implementations = case.get("implementations")
+    if not isinstance(implementations, dict):
+        raise EvidenceError("attention implementations are missing")
+    expected_impl_names = {item[0] for item in ATTENTION_REQUIRED_ROLES.values()}
+    runs = case.get("runs")
+    if not isinstance(runs, dict):
+        raise EvidenceError("attention controller runs are missing")
+    present_optional = set(runs) & set(ATTENTION_OPTIONAL_ROLES)
+    if present_optional and present_optional != set(ATTENTION_OPTIONAL_ROLES):
+        raise EvidenceError("attention split evidence must include correctness, sanitizer, and timing roles together")
+    if set(runs) - set(ATTENTION_REQUIRED_ROLES) - set(ATTENTION_OPTIONAL_ROLES):
+        raise EvidenceError("attention controller runs contain an unknown role")
+    if not set(ATTENTION_REQUIRED_ROLES).issubset(runs):
+        raise EvidenceError("attention controller runs are missing a required role")
+    if present_optional:
+        expected_impl_names.add("split")
+    if not expected_impl_names.issubset(implementations):
+        raise EvidenceError("attention implementation identity is missing for a measured role")
+
+    bound_impls: dict[str, dict[str, Any]] = {}
+    for name in expected_impl_names:
+        entry = implementations.get(name)
+        if not isinstance(entry, dict):
+            raise EvidenceError(f"attention {name} implementation is malformed")
+        source_path, source_sha = sha_binding(root, entry.get("source"), f"attention {name} source")
+        source_input_path = source_path
+        source_original_path: Path | None = None
+        source_record = entry.get("source")
+        if isinstance(source_record, dict) and "original_path" in source_record:
+            source_original_path = _repo_relative_identity(
+                root, source_record.get("original_path"),
+                f"attention {name} source original path")
+            source_input_path = source_original_path
+        else:
+            raise EvidenceError(f"attention {name} source lacks its original repository identity")
+        binary_path, binary_sha = sha_binding(root, entry.get("binary"), f"attention {name} binary")
+        binary_record = entry.get("binary")
+        executed_raw = entry.get("executed_path", binary_record.get("path") if isinstance(binary_record, dict) else None)
+        executed_path = absolute_repo_file(root, executed_raw, f"attention {name} executed binary")
+        bound_impls[name] = {"source_path": source_path, "source_input_path": source_input_path,
+                             "source_original_path": source_original_path,
+                             "source_sha": source_sha, "binary_path": binary_path,
+                             "executed_path": executed_path, "binary_sha": binary_sha}
+
+    libraries = case.get("libraries")
+    if not isinstance(libraries, list):
+        raise EvidenceError("attention linked library identity must be an explicit list")
+    bound_libraries = []
+    for item in libraries:
+        if (not isinstance(item, dict) or item.get("implementation") not in expected_impl_names or
+                not all(item.get(key) for key in ("name", "version", "path", "sha256"))):
+            raise EvidenceError("attention linked library entry lacks identity/version/path/hash")
+        raw_path = Path(str(item["path"]))
+        library_path = (raw_path if raw_path.is_absolute() else root / raw_path).resolve()
+        if not library_path.is_file() or digest(library_path) != item["sha256"]:
+            raise EvidenceError("attention linked library path/hash is unavailable or mismatched")
+        bound_libraries.append((item, library_path))
+
+    summaries: dict[str, dict[str, Any]] = {}
+    role_specs = dict(ATTENTION_REQUIRED_ROLES)
+    role_specs.update({key: value for key, value in ATTENTION_OPTIONAL_ROLES.items() if key in runs})
+    native_outputs: dict[str, Path] = {}
+    for role, (impl_name, native_impl, kind, mode, selected_case) in role_specs.items():
+        if impl_name not in bound_impls:
+            raise EvidenceError(f"attention {role}: implementation is not archived")
+        role_archives = captured_archives
+        if role in ATTENTION_OPTIONAL_ROLES:
+            role_archives = _captured_input_archives(
+                root, {"id": role, "captured_input_archives": runs[role].get("captured_input_archives")},
+                required=True)
+            _attention_role_source_closure(root, runs[role], role, role_archives)
+        role_captured_inputs = {str(item["original_path"]): item["sha256"]
+                                for item in role_archives.values()}
+        allow_duplicate_captured_inputs = {
+            str(path.resolve())
+            for path in (contract_path, input_path, oracle_path, case_index_path)
+        }
+        allow_duplicate_captured_inputs.update(
+            str(archive["original_path"])
+            for archive in role_archives.values()
+            if archive["original_path"].name == "source-manifest.json" and
+            "cases" in archive["original_path"].parts and
+            "attention" in archive["original_path"].parts
+        )
+        source_original = bound_impls[impl_name]["source_original_path"]
+        if source_original is not None:
+            source_capture = role_archives.get(str(source_original))
+            if (source_capture is None or
+                    bound_impls[impl_name]["source_path"] != source_capture["archive_path"] or
+                    bound_impls[impl_name]["source_sha"] != source_capture["sha256"]):
+                raise EvidenceError(f"attention {role}: implementation source differs from its role archive")
+        summary = _controller_run(
+            base, root, runs.get(role), f"attention {role}", kind, bound_impls[impl_name],
+            contract_path, contract_sha, input_path, input_sha, oracle_path, oracle_sha,
+            str(case.get("gpu_uuid", "")), evidence_ids, role_captured_inputs,
+            additional_inputs=additional_inputs,
+            allow_duplicate_captured_inputs=allow_duplicate_captured_inputs,
+        )
+        if role in ATTENTION_OPTIONAL_ROLES:
+            argv_summ = summary.get("provenance", {}).get("argv", [])
+            split_values = _argument_values(argv_summ, "--splits")
+            if len(split_values) != 1 or split_values[0] != "16":
+                raise EvidenceError(f"attention {role}: supplemental split role must use exactly 16 splits")
+            split_count = int(split_values[0])
+        else:
+            split_count = 1
+        _attention_validate_argv(summary, root, role, native_impl, mode, selected_case,
+                                 split_count, bound_impls[impl_name], input_path, oracle_path)
+        native_path = checked_file(base, runs[role].get("native_stdout"),
+                                   f"attention {role} native stdout")
+        native_outputs[role] = native_path
+        sanitizer_summary_path = None
+        sanitizer_log_path = None
+        if role in {"sanitizer_candidate", "sanitizer_split_decode"}:
+            sanitizer_summary_path = checked_file(
+                base, runs[role].get("sanitizer_summary"),
+                f"attention {role} sanitizer classifier summary")
+            sanitizer_log_path = checked_file(
+                base, runs[role].get("sanitizer_log"),
+                f"attention {role} raw Compute Sanitizer log")
+        _attention_bind_stdout_capture(base, root, runs[role], role, native_path,
+                                       sanitizer_summary_path, sanitizer_log_path)
+        native_result = read_json(native_path)
+        _attention_native_checks(native_result, contract, oracle_records,
+                                 str(case.get("gpu_uuid", "")), native_impl, mode,
+                                 selected_case, split_count, f"attention {role}")
+        summaries[role] = summary
+
+    for library, library_path in bound_libraries:
+        implementation = library["implementation"]
+        roles = [role for role, (impl_name, _native_impl, _kind, _mode, _case) in role_specs.items()
+                 if impl_name == implementation]
+        for role in roles:
+            if _input_bindings(summaries[role]).get(str(library_path)) != library["sha256"]:
+                raise EvidenceError(f"attention {role}: controller inputs do not bind {library['name']}")
+
+    sanitizer_roles = ["sanitizer_candidate"]
+    if "sanitizer_split_decode" in summaries:
+        sanitizer_roles.append("sanitizer_split_decode")
+    for role in sanitizer_roles:
+        sanitizer = checked_file(base, runs[role].get("sanitizer_summary"),
+                                 f"attention {role} sanitizer classifier summary")
+        sanitizer_data = read_json(sanitizer)
+        if (not isinstance(sanitizer_data, dict) or
+                sanitizer_data.get("tool") != "compute-sanitizer" or
+                sanitizer_data.get("status") != "partial" or
+                sanitizer_data.get("tool_detail") != "memcheck" or
+                sanitizer_data.get("conclusive") is not False or
+                type(sanitizer_data.get("exit_status")) is not int or sanitizer_data["exit_status"] != 0 or
+                type(sanitizer_data.get("error_count")) is not int or sanitizer_data["error_count"] != 0):
+            raise EvidenceError(f"attention {role} sanitizer classifier is not the accepted raw-zero partial memcheck result")
+        sanitizer_log = checked_file(base, runs[role].get("sanitizer_log"),
+                                     f"attention {role} raw Compute Sanitizer log")
+        try:
+            log_text = sanitizer_log.read_text(encoding="utf-8", errors="replace")
+        except OSError as exc:
+            raise EvidenceError(f"attention {role} raw Compute Sanitizer log cannot be read: {exc}") from exc
+        summary_lines = [line for line in log_text.splitlines() if "ERROR SUMMARY:" in line]
+        if len(summary_lines) != 1 or not any(
+                line.strip().endswith("0 errors") for line in summary_lines):
+            raise EvidenceError(f"attention {role} raw Compute Sanitizer log does not show exactly zero errors")
+
+    if "profile_candidate_decode" not in summaries:
+        raise EvidenceError("attention NCU profile role is missing")
+    _attention_validate_profile(root, base, runs["profile_candidate_decode"],
+                                summaries["profile_candidate_decode"],
+                                "attention profile_candidate_decode")
+
+
 def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> None:
     if not isinstance(case, dict) or not isinstance(case.get("id"), str):
         raise EvidenceError("case is malformed or lacks id")
@@ -815,6 +1643,9 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
     contract_data = read_json(contract)
     if contract_data.get("case_id") != case["id"] or not contract_data.get("case_signature") or not contract_data.get("numerical_contract"):
         raise EvidenceError(f"{case['id']}: contract lacks case signature or numerical policy")
+    if _is_attention_contract(contract_data):
+        _check_attention_case(base, root, case, evidence_ids, contract, contract_sha, contract_data)
+        return
     rows_contract = _is_rows_contract(contract_data)
     captured_archives = _captured_input_archives(root, case, required=rows_contract)
     if rows_contract and {archive["original_path"].relative_to(root).as_posix()

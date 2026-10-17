@@ -1,0 +1,49 @@
+{
+  "tool": "ncu",
+  "status": "partial",
+  "counter_valid": true,
+  "timing_valid": false,
+  "needs_more_data": true,
+  "measurement_scope": "kernel counters",
+  "collection_set": "",
+  "launch_count": null,
+  "reasons": [
+    "Nsight Compute is valid for kernel-cause diagnosis here, but not for throughput timing because replay changes runtime.",
+    "Hottest kernel class: mixed.",
+    "Primary next move: Pair this with Nsight Systems and the benchmark output before changing the kernel.",
+    "- Kernel sample count is light. Rerun with more repeated hot launches if you need stronger confidence."
+  ],
+  "recommended_route": "profile",
+  "recommended_route_reason": "The kernel summary is mixed, so pair it with timeline or benchmark evidence first.",
+  "hot_kernel": {
+    "name": "online_rows(const __half *, const __half *, const __half *, const unsigned char *, const int *, const int *, int, int, int, int, int, int, int, int, int, int, float *, float *, float *, float *, float *, float *)",
+    "share_pct": 100.0,
+    "samples": 1,
+    "class": "mixed",
+    "next_step": "Pair this with Nsight Systems and the benchmark output before changing the kernel.",
+    "dram_pct": 0.256876,
+    "sm_pct": 1.013819,
+    "tensor_pct": null,
+    "occupancy": null,
+    "registers_per_thread": 48.0
+  },
+  "top_kernels": [
+    {
+      "name": "online_rows(const __half *, const __half *, const __half *, const unsigned char *, const int *, const int *, int, int, int, int, int, int, int, int, int, int, float *, float *, float *, float *, float *, float *)",
+      "share_pct": 100.0,
+      "samples": 1,
+      "class": "mixed",
+      "next_step": "Pair this with Nsight Systems and the benchmark output before changing the kernel.",
+      "dram_pct": 0.256876,
+      "sm_pct": 1.013819,
+      "tensor_pct": null,
+      "occupancy": null,
+      "registers_per_thread": 48.0
+    }
+  ],
+  "next_step": "Pair this with Nsight Systems and the benchmark output before changing the kernel.",
+  "notes": [
+    "Use benchmark output or Nsight Systems for throughput comparisons.",
+    "Use Nsight Compute to decide whether poor performance comes from bytes moved, compute path choice, registers, or shared memory."
+  ]
+}

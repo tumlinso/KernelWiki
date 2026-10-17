@@ -185,6 +185,10 @@ __global__ void merge_split_kv(const float* partial_m, const float* partial_l,
       d > kMaxHeadDim || split_count <= 0 || partial_m == nullptr ||
       partial_l == nullptr || partial_u == nullptr || output == nullptr ||
       row_max == nullptr || row_normalizer == nullptr) return;
+  // Each row CTA needs only one writer warp. The 32 lanes cover up to 128
+  // output features through the four chunks below; letting all four warps run
+  // this loop creates duplicate global stores to the same locations.
+  if (warp != 0) return;
   for (int chunk = 0; chunk < 4; ++chunk) {
     const int feature = lane + chunk * kWarpWidth;
     if (feature < d) {

@@ -1,0 +1,22 @@
+origin_url: https://docs.nvidia.com/cuda/cuda-runtime-api/
+upstream_repo: KernelWiki-authored CUDA attention kernels based on the NVIDIA CUDA Runtime API, CUDA C++ Programming Guide, and cuBLAS
+license: MIT (KernelWiki-authored source; no upstream kernel implementation copied)
+retrieved_at: '2026-10-17'
+asset_mode: derived
+derived_from:
+- doc-volta-fastattention
+- doc-volta-sparkattention
+- doc-volta-cuda-12-9
+files:
+- local_path: README.md
+  role: approach-notes
+  mode: derived
+  sha256: f851991cf96280e0c56f3ea55bf63be55bb7fb23a98829dad0d0cc9fc0c2bef7
+- local_path: volta_attention_runner.cu
+  role: derived-source
+  mode: derived
+  sha256: ef4e590764978d9ebbd4994f4ce43d3c9cff67bf875dadfe5d74a1f84accff83
+- local_path: volta_attention_online.cuh
+  role: derived-source
+  mode: derived
+  sha256: ac7944ac0983a016493a5b52edc501fabd9b2c768c9b72f1506b0b65e180c37b

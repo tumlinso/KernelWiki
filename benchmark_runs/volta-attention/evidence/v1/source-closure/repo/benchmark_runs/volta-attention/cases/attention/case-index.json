@@ -1,0 +1,620 @@
+{
+  "format": "KERNELWIKI-ATTENTION-CASES/1",
+  "cases": [
+    {
+      "id": "prefill64-causal",
+      "input": "prefill64-causal.f16le",
+      "input_sha256": "90b9614f2aacfd4ade02b1b6fcc01d26e2ed01ed017ff96235a1455ab24de1e1",
+      "metadata": "prefill64-causal.inputs.json",
+      "metadata_sha256": "92c4b1bb2554b63a46db3d5db7c7731e078624779e7c7f8b0647c8d68eddf7bb",
+      "oracle": "prefill64-causal.oracle.json",
+      "oracle_sha256": "252b50cd79ae7f247a020b03e639db90bb1b73dbfbccef44158c893a8232d31c",
+      "shape": [
+        1,
+        4,
+        16,
+        64
+      ],
+      "kv_shape": [
+        1,
+        2,
+        32,
+        64
+      ],
+      "causal": true,
+      "head_dim": 64,
+      "block_size": 0,
+      "has_per_query_boolean_mask": false,
+      "selected_blocks": null,
+      "tolerance_group": "bounded-default"
+    },
+    {
+      "id": "prefill64-medium-causal",
+      "input": "prefill64-medium-causal.f16le",
+      "input_sha256": "7c299a82c461c324b4a633eb6cb856eddfb6815003c7438e18ea1d9dcffefcbf",
+      "metadata": "prefill64-medium-causal.inputs.json",
+      "metadata_sha256": "6a9bde44c8422c76a42690017e94eec4dc9fca35270646b3357583b842490bf0",
+      "oracle": "prefill64-medium-causal.oracle.json",
+      "oracle_sha256": "adea6ccb8f0f1946eac6f55ed8254e4c54c45d57ae097fc68c989e8e71dd3934",
+      "shape": [
+        1,
+        4,
+        64,
+        64
+      ],
+      "kv_shape": [
+        1,
+        2,
+        128,
+        64
+      ],
+      "causal": true,
+      "head_dim": 64,
+      "block_size": 0,
+      "has_per_query_boolean_mask": false,
+      "selected_blocks": null,
+      "tolerance_group": "bounded-default"
+    },
+    {
+      "id": "prefill64-long-causal",
+      "input": "prefill64-long-causal.f16le",
+      "input_sha256": "7aca9a63bae4ae3e1ec2bfe8f5f630ec99e7cc658485ceb95919fff186d1ce1d",
+      "metadata": "prefill64-long-causal.inputs.json",
+      "metadata_sha256": "900a44ea4eacc511a935d8c4643f17a627459e033b83856a76847cfd2a9499d5",
+      "oracle": "prefill64-long-causal.oracle.json",
+      "oracle_sha256": "f819c38d350eef97981c3dd8e3edb4d798210b7f576713469307009ae0a50120",
+      "shape": [
+        1,
+        4,
+        32,
+        64
+      ],
+      "kv_shape": [
+        1,
+        2,
+        512,
+        64
+      ],
+      "causal": true,
+      "head_dim": 64,
+      "block_size": 0,
+      "has_per_query_boolean_mask": false,
+      "selected_blocks": null,
+      "tolerance_group": "bounded-default"
+    },
+    {
+      "id": "prefill128-noncausal",
+      "input": "prefill128-noncausal.f16le",
+      "input_sha256": "5c88c74ff5b9c9c5f7281f4478a1d10a4318e8244b8ab332d54e14018a4fa577",
+      "metadata": "prefill128-noncausal.inputs.json",
+      "metadata_sha256": "e6e6e58d16df2a4b00b394b17ed322222e1acdecfd49f9fe42e6bee3dab7b3d7",
+      "oracle": "prefill128-noncausal.oracle.json",
+      "oracle_sha256": "7366315f808c4963102581c7dd192373359b63e213cf623cb4c2e65dfc22cb0a",
+      "shape": [
+        1,
+        4,
+        16,
+        128
+      ],
+      "kv_shape": [
+        1,
+        2,
+        64,
+        128
+      ],
+      "causal": false,
+      "head_dim": 128,
+      "block_size": 0,
+      "has_per_query_boolean_mask": false,
+      "selected_blocks": null,
+      "tolerance_group": "bounded-default"
+    },
+    {
+      "id": "decode70-causal",
+      "input": "decode70-causal.f16le",
+      "input_sha256": "e71aaa49bcfbec4ea5a19b83cef8c10f45332e15407bd523ff12dbaa98681e8a",
+      "metadata": "decode70-causal.inputs.json",
+      "metadata_sha256": "ed8b47d50048d17f02f2a6738b71eeff3a475bfc4fbdf47a91d4e69d4f0adb6d",
+      "oracle": "decode70-causal.oracle.json",
+      "oracle_sha256": "c4194bbd179517ab9ee0175006c67768e2ab3b9ffa98f3dc02f2abacc76b3df0",
+      "shape": [
+        1,
+        8,
+        1,
+        70
+      ],
+      "kv_shape": [
+        1,
+        2,
+        4096,
+        70
+      ],
+      "causal": true,
+      "head_dim": 70,
+      "block_size": 0,
+      "has_per_query_boolean_mask": false,
+      "selected_blocks": null,
+      "tolerance_group": "bounded-default"
+    },
+    {
+      "id": "selected64-causal",
+      "input": "selected64-causal.f16le",
+      "input_sha256": "494b4270b0c1e8b0aa9331b0437fc22c685b4100ee88597736922bb2751f59ee",
+      "metadata": "selected64-causal.inputs.json",
+      "metadata_sha256": "30209ce4fe6eff0fe503d6ffc3c40cc4eab1b2df6d900393772b3711a126170e",
+      "oracle": "selected64-causal.oracle.json",
+      "oracle_sha256": "bf6a64c906ac2df6136b6df5a4e5a027db4076cf0ca099b1e0980447fe1c6b34",
+      "shape": [
+        1,
+        4,
+        7,
+        64
+      ],
+      "kv_shape": [
+        1,
+        2,
+        19,
+        64
+      ],
+      "causal": true,
+      "head_dim": 64,
+      "block_size": 6,
+      "has_per_query_boolean_mask": true,
+      "selected_blocks": [
+        [
+          [
+            [
+              0,
+              3
+            ],
+            [],
+            [
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              3
+            ],
+            [],
+            [
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              3
+            ],
+            [],
+            [
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              3
+            ],
+            [],
+            [
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2
+            ],
+            [
+              1,
+              3
+            ],
+            [
+              3
+            ]
+          ]
+        ]
+      ],
+      "tolerance_group": "bounded-default"
+    },
+    {
+      "id": "score-stress64-noncausal",
+      "input": "score-stress64-noncausal.f16le",
+      "input_sha256": "46018ff717a4bbaf789011931c7aa5d2428e9c564543bdcf717dcd7a9ad9048e",
+      "metadata": "score-stress64-noncausal.inputs.json",
+      "metadata_sha256": "05556805f8cfd4ec9f4978e556c1faf7368d4da29fea373e749adfc182f92f03",
+      "oracle": "score-stress64-noncausal.oracle.json",
+      "oracle_sha256": "5d791af4df523550d4a6b62fb3560d71a4bb744e8097d81ffa5ae0ac455f46ca",
+      "shape": [
+        1,
+        2,
+        2,
+        64
+      ],
+      "kv_shape": [
+        1,
+        1,
+        17,
+        64
+      ],
+      "causal": false,
+      "head_dim": 64,
+      "block_size": 0,
+      "has_per_query_boolean_mask": false,
+      "selected_blocks": null,
+      "tolerance_group": "high-contrast-stress"
+    }
+  ],
+  "combined_input": {
+    "path": "attention_inputs.bin",
+    "sha256": "1fed25c14ebae3c5d41bc5820dafcd881637a95344772cdfa6c730c9318eef5d",
+    "records": [
+      {
+        "id": "prefill64-causal",
+        "shape": {
+          "q": [
+            1,
+            4,
+            16,
+            64
+          ],
+          "k": [
+            1,
+            2,
+            32,
+            64
+          ],
+          "v": [
+            1,
+            2,
+            32,
+            64
+          ]
+        },
+        "flags": 1,
+        "block_size": 0,
+        "max_selected_blocks": 0,
+        "offsets": {
+          "q": 1416,
+          "k": 9608,
+          "v": 17800,
+          "mask": 0,
+          "selected_ids": 0,
+          "selected_counts": 0
+        }
+      },
+      {
+        "id": "prefill64-medium-causal",
+        "shape": {
+          "q": [
+            1,
+            4,
+            64,
+            64
+          ],
+          "k": [
+            1,
+            2,
+            128,
+            64
+          ],
+          "v": [
+            1,
+            2,
+            128,
+            64
+          ]
+        },
+        "flags": 1,
+        "block_size": 0,
+        "max_selected_blocks": 0,
+        "offsets": {
+          "q": 25992,
+          "k": 58760,
+          "v": 91528,
+          "mask": 0,
+          "selected_ids": 0,
+          "selected_counts": 0
+        }
+      },
+      {
+        "id": "prefill64-long-causal",
+        "shape": {
+          "q": [
+            1,
+            4,
+            32,
+            64
+          ],
+          "k": [
+            1,
+            2,
+            512,
+            64
+          ],
+          "v": [
+            1,
+            2,
+            512,
+            64
+          ]
+        },
+        "flags": 1,
+        "block_size": 0,
+        "max_selected_blocks": 0,
+        "offsets": {
+          "q": 124296,
+          "k": 140680,
+          "v": 271752,
+          "mask": 0,
+          "selected_ids": 0,
+          "selected_counts": 0
+        }
+      },
+      {
+        "id": "prefill128-noncausal",
+        "shape": {
+          "q": [
+            1,
+            4,
+            16,
+            128
+          ],
+          "k": [
+            1,
+            2,
+            64,
+            128
+          ],
+          "v": [
+            1,
+            2,
+            64,
+            128
+          ]
+        },
+        "flags": 0,
+        "block_size": 0,
+        "max_selected_blocks": 0,
+        "offsets": {
+          "q": 402824,
+          "k": 419208,
+          "v": 451976,
+          "mask": 0,
+          "selected_ids": 0,
+          "selected_counts": 0
+        }
+      },
+      {
+        "id": "decode70-causal",
+        "shape": {
+          "q": [
+            1,
+            8,
+            1,
+            70
+          ],
+          "k": [
+            1,
+            2,
+            4096,
+            70
+          ],
+          "v": [
+            1,
+            2,
+            4096,
+            70
+          ]
+        },
+        "flags": 1,
+        "block_size": 0,
+        "max_selected_blocks": 0,
+        "offsets": {
+          "q": 484744,
+          "k": 485864,
+          "v": 1632744,
+          "mask": 0,
+          "selected_ids": 0,
+          "selected_counts": 0
+        }
+      },
+      {
+        "id": "selected64-causal",
+        "shape": {
+          "q": [
+            1,
+            4,
+            7,
+            64
+          ],
+          "k": [
+            1,
+            2,
+            19,
+            64
+          ],
+          "v": [
+            1,
+            2,
+            19,
+            64
+          ]
+        },
+        "flags": 7,
+        "block_size": 6,
+        "max_selected_blocks": 2,
+        "offsets": {
+          "q": 2779624,
+          "k": 2783208,
+          "v": 2788072,
+          "mask": 2792936,
+          "selected_ids": 2793468,
+          "selected_counts": 2793692
+        }
+      },
+      {
+        "id": "score-stress64-noncausal",
+        "shape": {
+          "q": [
+            1,
+            2,
+            2,
+            64
+          ],
+          "k": [
+            1,
+            1,
+            17,
+            64
+          ],
+          "v": [
+            1,
+            1,
+            17,
+            64
+          ]
+        },
+        "flags": 0,
+        "block_size": 0,
+        "max_selected_blocks": 0,
+        "offsets": {
+          "q": 2793804,
+          "k": 2794316,
+          "v": 2796492,
+          "mask": 0,
+          "selected_ids": 0,
+          "selected_counts": 0
+        }
+      }
+    ]
+  },
+  "combined_reference": {
+    "path": "attention_reference.bin",
+    "sha256": "d1f9cf4ebe78311f336970b7e3f91df9aa921ed191c6009a653ea663b931b969",
+    "records": [
+      {
+        "id": "prefill64-causal",
+        "shape": [
+          1,
+          4,
+          16,
+          64
+        ],
+        "output_count": 4096,
+        "row_count": 64
+      },
+      {
+        "id": "prefill64-medium-causal",
+        "shape": [
+          1,
+          4,
+          64,
+          64
+        ],
+        "output_count": 16384,
+        "row_count": 256
+      },
+      {
+        "id": "prefill64-long-causal",
+        "shape": [
+          1,
+          4,
+          32,
+          64
+        ],
+        "output_count": 8192,
+        "row_count": 128
+      },
+      {
+        "id": "prefill128-noncausal",
+        "shape": [
+          1,
+          4,
+          16,
+          128
+        ],
+        "output_count": 8192,
+        "row_count": 64
+      },
+      {
+        "id": "decode70-causal",
+        "shape": [
+          1,
+          8,
+          1,
+          70
+        ],
+        "output_count": 560,
+        "row_count": 8
+      },
+      {
+        "id": "selected64-causal",
+        "shape": [
+          1,
+          4,
+          7,
+          64
+        ],
+        "output_count": 1792,
+        "row_count": 28
+      },
+      {
+        "id": "score-stress64-noncausal",
+        "shape": [
+          1,
+          2,
+          2,
+          64
+        ],
+        "output_count": 256,
+        "row_count": 4
+      }
+    ]
+  }
+}

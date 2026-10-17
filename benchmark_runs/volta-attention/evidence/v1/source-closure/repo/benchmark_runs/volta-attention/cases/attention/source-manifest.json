@@ -1,0 +1,56 @@
+{
+  "format": "KERNELWIKI-ATTENTION-SOURCE-MANIFEST/1",
+  "sources": [
+    {
+      "path": "benchmark_runs/volta-attention/source/make_attention_inputs.py",
+      "sha256": "d7b98bd076c229499ac4cfdc5b45b67c3d91a73b5c73b433920fdb78f8e906be"
+    },
+    {
+      "path": "benchmark_runs/volta-attention/source/attention_oracle.py",
+      "sha256": "d250ef54c369fa62441ec3b0f1f1c8b6144002a500abe07ad28afa41afef2421"
+    },
+    {
+      "path": "benchmark_runs/volta-attention/source/attention_bundle.py",
+      "sha256": "66ea25ba94c8723ae643b3c70bc4ef5f22fa47784913244bf8f083a8c2b98240"
+    },
+    {
+      "path": "artifacts/kernels/volta-attention/variants/volta_attention_runner.cu",
+      "sha256": "ef4e590764978d9ebbd4994f4ce43d3c9cff67bf875dadfe5d74a1f84accff83"
+    },
+    {
+      "path": "artifacts/kernels/volta-attention/variants/volta_attention_online.cuh",
+      "sha256": "2b88a805c26585f52a502e4a2272026926191585a2a823bffb861db78e91d198"
+    },
+    {
+      "path": "benchmark_runs/volta-attention/source/tests/test_attention_oracle.py",
+      "sha256": "4d7a6817347d843ca88d8615b0c49ff6d9fc58d2a3af856b47c3967fb3be8aa8"
+    },
+    {
+      "path": "benchmark_runs/volta-attention/source/tests/test_attention_bundle.py",
+      "sha256": "7cc26142449f1e9dd10d30c8ee0132cf496a109376a1a60cfdd7ab143d3687eb"
+    }
+  ],
+  "artifacts": {
+    "input_bundle": {
+      "path": "attention_inputs.bin",
+      "sha256": "1fed25c14ebae3c5d41bc5820dafcd881637a95344772cdfa6c730c9318eef5d"
+    },
+    "reference_bundle": {
+      "path": "attention_reference.bin",
+      "sha256": "d1f9cf4ebe78311f336970b7e3f91df9aa921ed191c6009a653ea663b931b969"
+    },
+    "contract": {
+      "path": "attention_contract.json",
+      "sha256": "d66dc00a131035b99f6386250bf75ebaaaea26f9cbf66d27eb3c44ce22ceb810"
+    },
+    "case_index": {
+      "path": "case-index.json",
+      "sha256": "9b90922ebc789a010ba8017084870be5c4da5cdcfb56645c4f69d039b89af8d3"
+    }
+  },
+  "upstream_code_copied": [],
+  "native_build": "not performed",
+  "native_execution": "not performed",
+  "device_uuid": null,
+  "toolchain": null
+}

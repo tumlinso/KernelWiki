@@ -11,7 +11,7 @@ files:
 - local_path: README.md
   role: approach-notes
   mode: derived
-  sha256: f9235b55b240b2770c885aa9ae804ea6da0d4bc7584a5b083c795a5d8437d61b
+  sha256: f851991cf96280e0c56f3ea55bf63be55bb7fb23a98829dad0d0cc9fc0c2bef7
 - local_path: volta_attention_runner.cu
   role: derived-source
   mode: derived
@@ -19,4 +19,4 @@ files:
 - local_path: volta_attention_online.cuh
   role: derived-source
   mode: derived
-  sha256: 2b88a805c26585f52a502e4a2272026926191585a2a823bffb861db78e91d198
+  sha256: ac7944ac0983a016493a5b52edc501fabd9b2c768c9b72f1506b0b65e180c37b

@@ -33,8 +33,13 @@ timing.
 `volta_attention_online.cuh` contains a fused SIMT online `(m,l,u)` route and a
 split-KV partial/merge route. It handles head dimensions through 128, including
 ragged D=70 with bounds checks. The split candidate includes both partial
-production and merge; it is conditional on measured low-query parallelism.
-Neither route claims a Tensor Core fusion or native sparse acceleration.
+production and merge; its merge CTA assigns all output/statistic stores to
+warp 0, whose 32 lanes cover the supported D<=128 in four feature chunks. The
+first frozen v1 build did not execute this route; after its source was frozen,
+the duplicate-writer issue was corrected in the v2 source. The split candidate
+is only promoted if the versioned native correctness, sanitizer, and full-cost
+timing checks pass. Neither route claims a Tensor Core fusion or native sparse
+acceleration.
 
 All copies, kernels, cuBLAS work and timed events use one explicit nonblocking
 CUDA stream. Pageable-host setup uploads use `cudaMemcpyAsync` and are drained

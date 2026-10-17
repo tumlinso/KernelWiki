@@ -1,0 +1,39 @@
+{
+  "format": "KERNELWIKI-ATTENTION-INPUTS/1",
+  "arrays": {
+    "q": {
+      "shape": [
+        1,
+        2,
+        2,
+        64
+      ],
+      "dtype": "float16_le",
+      "byte_offset": 0,
+      "byte_length": 512
+    },
+    "k": {
+      "shape": [
+        1,
+        1,
+        17,
+        64
+      ],
+      "dtype": "float16_le",
+      "byte_offset": 512,
+      "byte_length": 2176
+    },
+    "v": {
+      "shape": [
+        1,
+        1,
+        17,
+        64
+      ],
+      "dtype": "float16_le",
+      "byte_offset": 2688,
+      "byte_length": 2176
+    }
+  },
+  "total_bytes": 4864
+}

@@ -1,0 +1,23 @@
+{
+  "format": "KERNELWIKI-ATTENTION-ROLE-ARCHIVE/1",
+  "role": "correctness_split16",
+  "evidence_id": "c590afea-494c-451d-8ea9-998c32c160d5",
+  "controller_status": "succeeded",
+  "runner_status": "passed",
+  "gpu_uuid_raw_hex": "21131915148823af38dd1743ae1f5cc8",
+  "compute_capability": "7.0",
+  "splits": 16,
+  "source_manifest_path": "benchmark_runs/volta-attention/cases/attention/v2/source-manifest.json",
+  "source_manifest_sha256": "b5b0fa8d03d73090175753f85515335e52279da98e90b838a25a134fa2668ac9",
+  "source_closure_path": "benchmark_runs/volta-attention/evidence/v2/source-closure/source-closure.json",
+  "source_closure_sha256": "1e5b38a333671ed37c752591cef379d2a25e9f2f9f706f7c64033604a92270a7",
+  "binary_path": "benchmark_runs/volta-attention/evidence/v2/binaries/volta_attention_runner",
+  "binary_sha256": "a09a8742a13ca8f2d6b2d970ec4a5a3663d1c93bfb485633b70a57ac1be3477b",
+  "files": {
+    "controller-run.json": "1a969cb9a9621e705a5ca4c9e438d331fbf65977e539c0bb7d0e75aeebdebe57",
+    "lease.json": "4c239e9fdb69c5fca166de547918858f4de6e0216b7245f8c19fe7ee1a2e9e96",
+    "project-control-result.json": "c44805230ed2f82f8857536d47793751ab9bbeab7c73533aae958a8f277f513b",
+    "runner.stderr.txt": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+    "runner.stdout.txt": "68cd4cd562e7e133f4d141cdade07451325f85410cb74188ab749ec5ac24e641"
+  }
+}
