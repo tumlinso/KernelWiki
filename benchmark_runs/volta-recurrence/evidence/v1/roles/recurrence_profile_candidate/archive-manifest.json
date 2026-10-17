@@ -1,0 +1,40 @@
+{
+  "binary": {
+    "path": "benchmark_runs/volta-recurrence/evidence/v1/bin/gdn_runner-8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1.elf",
+    "sha256": "8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1",
+    "size_bytes": 1305032
+  },
+  "compute_capability": "7.0",
+  "controller_status": "succeeded",
+  "evidence_id": "d39765c9-4d5b-4374-8138-fd7c6938e7bd",
+  "files": {
+    "controller-evidence.json": "34f2cd4f35a977c906836b69173a55cd786c5b8a711762e31cb827bfbeffecad",
+    "controller-run.json": "90e13ee1e7f7855ccc3146838b9738d19e62c733e7082987ef6c30206d472a22",
+    "foreground.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "foreground.stdout.txt": "a87f41eafd26b377ec501de71982b510178753d28e25c2bbb99c7f3a187523c7",
+    "lease.json": "469ed437d957b134e8fdf2231d919609d425c809e8a7ffa957953f327a8d17ba",
+    "ncu-shim.jsonl": "44235a3dda1a1c68bf38eab4a3611a431b4d6d0e5b771dfb29d32a164324b3f0",
+    "ncu/run/analysis.txt": "49c85937aa2f7f3cf948a3eb840fb399b6357c7b6816a7bc5981c19b4b077739",
+    "ncu/run/command.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ncu/run/command.stdout.txt": "941495d2685a5a67fb20fb935a7b9a380b9ec8e77d559537e0de1f2c904c4d23",
+    "ncu/run/ncu_version.txt": "6482ecd6fdfda40a45ef492a622da1b93962661b5315bc8ac43b2b62933a25cc",
+    "ncu/run/nvcc_version.txt": "77d7ef23109cd2437a8b9cf5efbc4e89996b816276077edb86143ee04f6d5269",
+    "ncu/run/nvidia_smi_L.txt": "df10441d8d8f835e73c071226341cfb903b99c9a9b68bc02b57edf495cf02b5e",
+    "ncu/run/nvidia_smi_topo.txt": "9f53980d9f8553e7e814ea0c66e09ebaaad0b20a5ec45f5ef51678a41a941fd6",
+    "ncu/run/process_env.txt": "1b92cc7910eae5885ee86ad431d41a9f26c56bb3d750f8abdec49dfa5b80b5c4",
+    "ncu/run/profiler.stderr.txt": "dadd75557b3fd583d09e7f860fabb0b93313f2af6cfe9c4ba0fa4f9a1f43cf6a",
+    "ncu/run/profiler.stdout.txt": "e1d702b5de7c60df9fadc2d2963ea4b06bc7b5108e32494c9d9ca49d89b6cb2e",
+    "ncu/run/raw.csv": "a4afa6661fe31df18f6f5fd4a769d87daa651729f401efba9f4ea6183fc25ac3",
+    "ncu/run/report.ncu-rep": "e8bb5fd75cb94aeac5f0351bcfd5b3177be73f30efdc146160102a672faeeb31",
+    "ncu/run/run.env": "7cc2623ef679dfc60588f70ff6b17e3e86d83dca35d12b1f3f7c4379bb3a63dc",
+    "ncu/run/summary.json": "c95357952c8495d02cabebad58db3744841407203c6f263c4b182801306ab3d2",
+    "ncu/run/summary.txt": "49c85937aa2f7f3cf948a3eb840fb399b6357c7b6816a7bc5981c19b4b077739",
+    "project-control-read-export.json": "03364dfeb050b02f830e1af54dafca474af0adf8be04bae0b60bb525298de475",
+    "role-manifest.json": "a98aba5dbda4e43cd5e3476d6e7f31804c26739d2a9c74e0d096f4f835445f25",
+    "source-snapshot-reference.json": "b134df42d869e5e454fee7778a159ad0b88564489aecea6a68ed042fa9bd3457"
+  },
+  "format": "KERNELWIKI-KWV08-ARCHIVE/1",
+  "gpu_uuid_raw_hex": "21131915148823af38dd1743ae1f5cc8",
+  "role": "recurrence_profile_candidate",
+  "runner_status": "passed"
+}

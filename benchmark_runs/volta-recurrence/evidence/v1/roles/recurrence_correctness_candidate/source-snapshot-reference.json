@@ -1,0 +1,129 @@
+{
+  "archived_source_root": "benchmark_runs/volta-recurrence/evidence/v1/source-snapshots/fcbad794bc3a509a56ab1dacb0673f7b199bb2e1dad9208882168911cc04e393",
+  "commit": "cf802ddc60bfd009cf26e692a782b55b776cbcf6",
+  "fingerprint": "fcbad794bc3a509a56ab1dacb0673f7b199bb2e1dad9208882168911cc04e393",
+  "patch_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "source_root_from_project_control": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/snapshots/fcbad794bc3a509a56ab1dacb0673f7b199bb2e1dad9208882168911cc04e393/source",
+  "untracked": [
+    {
+      "path": "artifacts/kernels/volta-recurrence/variants/PROVENANCE.yaml",
+      "sha256": "36bdc95025ab831b446fffa62e86ebc42121b446afe69c07144a0c48c62734bd"
+    },
+    {
+      "path": "artifacts/kernels/volta-recurrence/variants/README.md",
+      "sha256": "487bdc359675b1b52849211225cc58bf2bf3a7c29af1373bbf1885483e25842f"
+    },
+    {
+      "path": "artifacts/kernels/volta-recurrence/variants/bundle_contract.hpp",
+      "sha256": "608123beccab006944e05f521924e527cbeb2e2fa4d87541f120ab5be55fcfb0"
+    },
+    {
+      "path": "artifacts/kernels/volta-recurrence/variants/gdn_recurrent_state.cuh",
+      "sha256": "a2b1cf2edf1c6300ce30af202dc383b5bc2b4ed618869c9eeb1d3ccd4fe427d0"
+    },
+    {
+      "path": "artifacts/kernels/volta-recurrence/variants/gdn_runner.cu",
+      "sha256": "8c69b49874fec6146b8d56c3c129e5627e41f616261f2e88ba945353670c0d2a"
+    },
+    {
+      "path": "artifacts/kernels/volta-recurrence/variants/sha256.hpp",
+      "sha256": "478742e92e62db09ee58c2fcc15f727b9aa5e72908ef2173b21325ae1f6e67ed"
+    },
+    {
+      "path": "artifacts/kernels/volta-recurrence/variants/tests/test_bundle_reader.cpp",
+      "sha256": "a0bc8ef4bf6d893fcab5166a0af98bc5b512eeddc69c2b66a8b63d144d46d5bd"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/bin/gdn_runner",
+      "sha256": "8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/case_matrix.json",
+      "sha256": "82e5792154dc2c25abf5ced5bc227e41f2efc24f1589f590ade0e1a3ac707f17"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/contract.json",
+      "sha256": "96a338e1ad7623c2e356b5394589f7e4fe97f11605812fc76f9e588d1517ccb9"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/controller/make_role_specs.py",
+      "sha256": "8eb970cff8707f4aaa99b1dd17897aefa1958f61f9ac795b7c4342db35adb027"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_baseline_timing.spec.json",
+      "sha256": "ba394534a6e29c0adfb3abe9aedbc1d7f0220e042bc6b8d3ca15002de0d9fb1c"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_candidate_timing.spec.json",
+      "sha256": "bb6f6b1656f5aafa669abee1ea54b9a17d3963d711632c34c668962e591521e2"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_baseline.spec.json",
+      "sha256": "73ed83bcd21460e2a445ca573cb9bb2c1f5b4b7bde95cb759e9cd9275c380363"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_candidate.spec.json",
+      "sha256": "a2dbc86ccbe885cf4219c2a96992db75cc3e0a42d1cd6394f7988402d7a36ef6"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_profile_candidate.spec.json",
+      "sha256": "94e2f3de7453e92a883921e67c8aeee2e12d52731a471f1d2fba1ed3f02c8542"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_sanitizer_candidate.spec.json",
+      "sha256": "6c2f5af94e4274ef85c50cac6359f9d0b741ef8d7ed4f6507b8e7a94f933c447"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/cpu-oracle.json",
+      "sha256": "e8bc1e9256c7cf97e835b07b4d2f2f6673602193eb9f9e0d9d0cbc7ad0cfe147"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
+      "sha256": "e760eda922a42c0d6f6338e8cc0d0b0c7971c4205c956047a55791191fced4b5"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/recurrence_inputs.json",
+      "sha256": "6e0ebeb6f8dcc9bb4ed27769993f348915b777e265c2e848eb3b709c45b75419"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/source/bundle_io.py",
+      "sha256": "5a1e8f9829754a6b17d4b4236937817242f2d1058b28bfab90a4cbd1f654e58e"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/source/capture_nvcc_build.sh",
+      "sha256": "b261f375724bb2100dee43932c2224eaa8dbb21c4a1b64fd32d319a297d2c102"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/source/collect_native_evidence.py",
+      "sha256": "8201a01ab9e148c9281cdb7778f74abf61668b4e8642bf64e8b3674486d31e11"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/source/make_case_records.py",
+      "sha256": "01859d339b43faf21da895b771e99046121d29b161c76ab2242f7dcc1a500974"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/source/pack_source_closure.py",
+      "sha256": "2e2a556d220dc5851ad8930acb12788aa4c3391aa374b898b8012b4bc2116885"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/source/prepare_recurrence_bundle.py",
+      "sha256": "c46878d8a254ba64c54ac8f2782c29b676996b12f1307995f625e1b47d8c2357"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/source/probe_fp32_policy.py",
+      "sha256": "402811da5f26b0468f30b1a0f63ea898651316ea075893b60c957638c335e4d9"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/source/recurrence_oracle.py",
+      "sha256": "7c525ff7362423a76f7d3c09d387defe1f3e904468aba543affe35750c3de1b5"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/source/test_recurrence_bundle.py",
+      "sha256": "df3e899de33a976b870e31004a8f47c38a1c488b73c95b74e7d36e366944006c"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/source/test_recurrence_oracle.py",
+      "sha256": "47e9bb1baedc9fd9000d6b53e9f370961a3dd973a3bdb4181071afb98ef113db"
+    }
+  ]
+}

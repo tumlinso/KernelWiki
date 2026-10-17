@@ -1,0 +1,32 @@
+{
+  "binary": {
+    "path": "benchmark_runs/volta-recurrence/evidence/v1/bin/gdn_runner-8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1.elf",
+    "sha256": "8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1",
+    "size_bytes": 1305032
+  },
+  "compute_capability": "7.0",
+  "controller_status": "succeeded",
+  "evidence_id": "68a0aac1-6727-495b-b937-122b6f2a000c",
+  "files": {
+    "controller-evidence.json": "d06881ee36554ce8a89c1c5f480c37d034e57d4e64202719b2e6986c26d3a5ac",
+    "controller-run.json": "466cb8737f5816faeb180f7e53519d3521cd819e107bc14d1444575af505deb3",
+    "foreground.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "foreground.stdout.txt": "72368d8256c63931a80bb30eb2cbee31b0f5bd7f5976372020fcb329e43d0282",
+    "lease.json": "796c4f7c98cbd3ef059b4c76e4b536a63369fc10274dd40b41e0995053e28111",
+    "project-control-read-export.json": "e3f4c009f899986c115542851c44c3dbfbf25813a7f7bf0f668a586aa1f19dfe",
+    "role-manifest.json": "0e001e7034970818c6f9d1b53bbd4f9e246c057a01822b982cea43e81cf3954d",
+    "sanitizer-path-report.json": "950383f6917eba750f91b62fde89144123129ffb92fe73564a1ff5138b3e7f95",
+    "sanitizer/run/process_env.txt": "03b4e4fc55be44382b1a20664e51737f51f413368c918d28e0654a7bfbb784e3",
+    "sanitizer/run/raw.log": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+    "sanitizer/run/run_config.json": "924d43af8d63e9ba19ed93d4e1a183e3f2b8946e67473b5bdbbd6caff3423c7d",
+    "sanitizer/run/stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sanitizer/run/stdout.txt": "cbc41639a509b3748c456a62ae6c7a821382092fb31cd94c62b9dffcb812a105",
+    "sanitizer/run/summary.json": "b638884e9cb8d8a816ffb401d092cf1f0ec96c1199610a64d242176c72ae988b",
+    "sanitizer/run/summary.txt": "fcb23799a8d20adb6412215f2c2fb13237d3fc371eac10dc743117ac89d5c6a3",
+    "source-snapshot-reference.json": "b134df42d869e5e454fee7778a159ad0b88564489aecea6a68ed042fa9bd3457"
+  },
+  "format": "KERNELWIKI-KWV08-ARCHIVE/1",
+  "gpu_uuid_raw_hex": "21131915148823af38dd1743ae1f5cc8",
+  "role": "recurrence_sanitizer_candidate",
+  "runner_status": "passed"
+}

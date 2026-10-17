@@ -1,129 +1,120 @@
-# KWV-08 recurrence benchmark package
+# KWV-08 recurrent state ownership
 
-This staging package is prepared for the KWV-08 native state-ownership
-comparison. It contains no native CUDA execution evidence. The represented
-input bundle was copied byte-for-byte from the earlier scratch preparation;
-it was not regenerated here.
+This package contains a controller-backed SM70 comparison between a sequential
+per-token recurrence and a fused sequence kernel that retains the recurrent
+state rows across tokens. The measured result retains the fused route for the
+tested short and long prefill cases. Decode is inconclusive: both routes have
+overlapping seven-sample event ranges. This is a bounded result for the fixed
+bundle and Tesla V100-SXM2-16GB, not a general dispatch rule.
 
-## Operator and variants
+## Contract and artifacts
 
-The represented inputs are FP32 `k[t, seq, d_k]`, `v[t, seq, d_v]`,
-`q[t, seq, d_k]`, scalar FP32 gates, and FP32 state `[seq, d_v, d_k]`.
-At every live step the contract is:
+The state is FP32, row-major `[sequence,d_v,d_k]`. Inputs are time-major and
+interleaved by sequence. For every live token:
 
-```
+```text
 D = alpha * S_previous
-error = v - D @ k
-S = D + beta * outer(error, k)
+e = v - D @ k
+S = D + beta * outer(e, k)
 o = S @ q                 # post-update state
 ```
 
-The operator does not normalize keys, round or otherwise transform caller
-inputs, reset state at chunk boundaries, or truncate history. Test keys in the
-prepared bundle are explicitly unit length; the native reader verifies their
-represented norm and the kernel consumes them unchanged.
+The kernel consumes represented inputs unchanged and does not normalize keys,
+truncate history, or restart at segment boundaries. The immutable input bundle
+contains decode, short-prefill, and long-prefill cases, ragged lengths, nonzero
+initial states, exact zero and near-one gates, and FP64 references for every
+output and final state. Input file SHA-256 is
+`e760eda922a42c0d6f6338e8cc0d0b0c7971c4205c956047a55791191fced4b5` (56,285,400
+bytes); payload SHA-256 is
+`7c26087a2d035d692c90167cfc493756a3954cee84664a92c7ece2641611da80`.
 
-`gdn_recurrent_state.cuh` proposes two complete paths. `per_token` launches one
-state-update kernel per token, reading and writing the full FP32 state each
-step. `retained` launches once per sequence and keeps each lane's complete
-contiguous `d_k` row in its private array for the full sequence. One CTA owns
-one sequence; one lane owns one `d_v` row. Both return every live output and
-final state. The full-time comparison includes the baseline's T launches and
-host enqueue cost. Report host enqueue, host completion, and CUDA-event stream
-interval separately: host submission gaps may leave the GPU idle inside the
-event interval. This is a whole-operator mapping comparison, not isolated proof
-that state traffic caused any difference. The retained row may spill as `d_k`
-grows; inspect compiler register/spill data before interpreting results.
+The predeclared per-element rule is
+`abs(actual-reference) <= 2e-5 + 2e-4*abs(reference)`. Both native correctness
+variants passed all 18 checks over three cases, including every live output,
+untouched padded output, final state, segmented-carry output, segmented
+padding, and segmented final state. Across the bundle, each full and segmented
+evaluation checks 896,320 live outputs and 917,504 final-state values per
+variant; all failed and non-finite counts are zero. The maximum scaled output
+error was 0.004722 of the allowed tolerance. The native reader verifies the
+represented keys are unit length within its fixture tolerance; the kernel
+does not renormalize them.
 
-## Immutable input and independent oracle
+## Timing result
 
-`prepare_recurrence_bundle.py` writes `recurrence_inputs.bin` and the adjacent
-JSON manifest. The binary holds three cases (decode, short prefill, long
-prefill), all represented FP32 inputs, ragged lengths, nonzero initial states,
-every FP64 output, and every FP64 final state. Active keys are generated as
-unit vectors and are not changed by the native runner. All padded input slots
-carry NaN sentinels; the runner initializes padded output slots to a finite
-sentinel and checks that they remain untouched. The payload and complete file
-have SHA-256 identities.
+Each timing role runs two warmups and seven samples. State reset and its stream
+synchronization finish before a sample begins. Allocation, input transfers,
+output checking, and profiling are outside the timed interval. The per-token
+baseline submits T separate kernels and includes its complete host enqueue
+sequence. The retained route submits one fused sequence kernel. Host enqueue,
+host completion, and CUDA-event interval are distinct measurements. The event
+interval spans the complete launch sequence and may include device idle time
+while the host submits per-token launches; it is not the sum of isolated kernel
+times. Full seven-sample vectors are preserved in the role stdout captures.
 
-The native runner's `bundle_contract.hpp` validates the header, SHA-256,
-shapes, live finiteness, gates, represented key norms, padding markers, and
-zero-length state references before any GPU test. The references themselves
-are generated independently in `recurrence_oracle.py` with FP64 arithmetic.
-`test_recurrence_oracle.py` covers the formula, boundaries, long near-one
-history, sequence order, segmentation/carry, and ragged sequence isolation.
-`test_recurrence_bundle.py` checks binary round trips and rejects changed or
-trailing bytes. `test_bundle_reader.cpp` exercises the same native host reader
-and SHA implementation without CUDA.
+| Case (T × B, d_v × d_k) | Per-token event median [range] µs | Retained event median [range] µs | Readout |
+|---|---:|---:|---|
+| Decode (1 × 256, 32 × 32) | 19.264 [18.880, 20.160] | 19.456 [19.008, 21.536] | Ranges overlap; no clear difference |
+| Short prefill (33 × 128, 32 × 32) | 292.864 [292.608, 293.632] | 40.768 [39.968, 42.752] | 7.18× lower retained median |
+| Long prefill (257 × 128, 64 × 64) | 6,993.632 [6,365.856, 6,994.528] | 398.048 [397.024, 399.136] | 17.57× lower retained median |
 
-The fixed comparison rule is `abs(actual-reference) <= 2e-5 +
-2e-4*abs(reference)` for every live output and final-state element. The
-CPU-only `fp32_policy_probe.json` emulates the runner's FP32 multiply/FMA order
-and passed this rule for every short/decode sequence and eight long sequences,
-including the near-one cases. The largest scaled error was 0.00473 of the
-allowed tolerance; this is only a tolerance sanity check, and CUDA correctness
-still needs actual native runs.
+Host enqueue/completion medians (µs) were decode `5.726/26.280` per-token and
+`5.572/26.074` retained; short prefill `72.648/300.030` and
+`5.226/47.193`; long prefill `535.498/7001.124` and `6.240/404.865`.
+The per-token event interval includes submission gaps. The speedups combine
+the launch boundary, state ownership, and resource behavior of these two
+complete mappings. They do not isolate state traffic as the cause.
 
-## Native result and checks
+The source requests one state load and one state store per live step in the
+per-token path, and one initial load plus final store for each nonempty
+sequence in the retained path. These are nominal source-level global-memory
+requests, not HBM bytes. Exact counts and caveats are in the measurement note.
+The largest allocated state array is 2 MiB, below the V100's 6 MiB L2 capacity;
+that capacity comparison does not establish where requests were served.
 
-`gdn_runner.cu` accepts `--variant per_token|retained --mode
-correctness|time|profile --bundle <path>`. Profile mode requires one explicit
-`--case`; it checks every output and final-state element for that case, then
-uses one full-sequence launch for NCU. It reports raw `cudaDeviceProp.uuid` hex,
-compute capability, GPU name, both bundle hashes, and per-case checked,
-failed, non-finite, maximum absolute and scaled errors. `status: passed` is
-emitted only after every live output, final-state value, segmented-carry output,
-segmented final-state value, and padded-output sentinel passes. A failed or
-unavailable check retains its own counts and reason; it cannot be represented
-as `passed`.
+## Correctness and diagnostics
 
-Every native run repeats the same sequence as one call and as segments split
-at available boundaries near 1, 33, and 129 tokens. It carries the returned
-state between segments and checks all outputs and final state against the same
-FP64 oracle. The long case includes nonzero initial state, exact alpha/beta
-zero gates, repeated and orthogonal keys, a full near-one gate sequence, and
-ragged interleaving. The decode case has only one available token; it never
-batches future inputs.
+The first per-token correctness role built the only ELF; every later role used
+that exact executable (SHA-256
+`8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1`). PTXAS
+reported 152 registers/thread and zero spills for retained `d_k=64`, and 168
+registers/thread and zero spills for the per-token step. These compiler reports
+do not establish occupancy. NVCC 12.9, V12.9.86 built the ELF for `sm_70` with
+`-O3 -std=c++17 -lineinfo -arch=sm_70 -Xptxas=-v -Xcompiler=-Wall,-Wextra -Xcompiler=-fno-omit-frame-pointer`;
+the exact command and result are in the first correctness role's
+[`role-manifest.json`](evidence/v1/roles/recurrence_correctness_baseline/role-manifest.json).
+The selected Nsight Compute CLI was version 2025.2.1.0. One sample independently reported
+152 registers/thread, 4.50% DRAM and 8.95% SM throughput; classification was
+mixed, occupancy unavailable, counter status valid, replay timing invalid,
+and more data requested. This is a limited diagnostic, not timing evidence or
+a causal account of the speedup.
 
-Time mode first completes every correctness/carry check. It measures seven
-samples after two warmups, resetting state outside each sample. Host enqueue
-covers dispatch of the full operator, host completion covers dispatch through
-stream completion, and the CUDA-event interval is retained as a separate
-measurement that may include device idle time while the host submits many
-baseline launches. Allocations and input transfers are outside the timed
-region. All host/device copies and kernels use one explicit nonblocking stream;
-pageable host buffers remain alive until that stream is synchronized, including
-exception cleanup. Reset copies synchronize before the measured interval.
-A future native evidence record must bind compiler, executable, source,
-bundle file, controller receipts, and normal unprofiled timing. Sanitizer and
-selected profile evidence remain separate records.
+The native candidate application passed the Compute Sanitizer invocation and
+the raw log says `ERROR SUMMARY: 0 errors`, but the wrapper summary is
+`partial` and `conclusive=false`. It is not recorded as a conclusive sanitizer
+pass.
 
-## Build and controller use after claim
+## Reproduction and evidence
 
-The draft is one translation unit because `gdn_runner.cu` includes the
-header-only kernel source:
+The canonical summary links every controller receipt, lease, native output,
+archive manifest, and profile/sanitizer artifact:
+[`summary.json`](summary.json). Its six roles are baseline correctness,
+candidate correctness, candidate sanitizer, baseline timing, candidate timing,
+and one selected candidate profile. All roles used the explicit V100 UUID
+`GPU-21131915-1488-23af-38dd-1743ae1f5cc8`, compute capability 7.0, and the
+same immutable bundle and ELF. The frozen 39-input closure is
+[`source-closure.json`](evidence/v1/source-closure/source-closure.json),
+SHA-256 `fecce508e9e8e80567379b52b8a6bb88ea7c0a0f15222f711edd60a0e9598543`.
+Two full Project Control source-snapshot trees are also preserved in the local
+evidence directory, but are not part of the portable committed package; their
+archived roots refer to this checkout's local runtime. The frozen declared-input
+closure is the portable source and data evidence.
 
-```sh
-nvcc -O3 -std=c++17 -lineinfo -arch=sm_70 -Xptxas=-v \
-  -o <repo>/benchmark_runs/volta-recurrence/bin/gdn_runner \
-  <repo>/artifacts/kernels/volta-recurrence/variants/gdn_runner.cu
-```
+The independent FP64 oracle and represented bundle reader are under `source/`;
+the CUDA source is in
+[`artifacts/kernels/volta-recurrence/variants`](../../artifacts/kernels/volta-recurrence/variants).
+The native bundle, correctness policy, and limitations are summarized in the
+[measurement record](../../sources/blogs/volta-recurrence-measurements.md).
 
-The `-Xptxas=-v` report is needed to check registers and spills for the
-retained rows. The six controller roles compare the same immutable bundle and
-one executable: per-token baseline correctness (and the sole build), retained
-candidate correctness, retained candidate Compute Sanitizer, baseline timing,
-candidate timing, and one focused retained-state profile on the long prefill
-case. Every later role uses the exact first-build ELF. No clock or power
-settings are part of this proposal.
-
-## Scope boundary
-
-This proposal does not implement a chunked recurrence. Chunking remains
-deferred unless the claimed implementation supplies a cited equivalent
-derivation, proves that the caller already has each full chunk's inputs, and
-measures preparation, correction, conversion, and carry costs. The algorithm
-source does not establish that its released kernels ran on SM70.
-
-No CUDA source in this directory has been compiled or run. The C++ host bundle
-reader and the Python semantic suite have only been built or run on the CPU.
+Chunking is deferred. This artifact contains no chunk implementation or
+equivalence claim; it measures full-sequence retention on already available
+inputs and explicit segmented carry.

@@ -1,0 +1,51 @@
+{
+  "case_id": "recurrence_state_ownership_bundle",
+  "case_signature": "b4aae5c2c268dc0099b08cb4c375010ba1e9269725de11c440d80bf33bfcabcd",
+  "format": "KERNELWIKI-VOLTA-RECURRENCE-CONTRACT/1",
+  "numerical_contract": {
+    "accumulation": "FP32 native; scalar FP64 independent semantic oracle",
+    "active_key_norm": "unit norm in represented FP32 bundle; reader verifies; native kernel does not normalize",
+    "atol": 2e-05,
+    "comparison": "abs(actual-reference) <= atol + rtol*abs(reference) for every live output and every final-state element",
+    "exceptional_values": "active inputs and initial states finite; padding NaNs are excluded from live operation",
+    "gate_range": "0 <= alpha,beta <= 1, includes exact zero and near-one values",
+    "layout": "time-major interleaved [T,B,d_k/d_v], state row-major [B,d_v,d_k]",
+    "operator": "D=alpha*S_previous; e=v-D@k; S=D+beta*outer(e,k); o=S@q",
+    "output_state": "post-update",
+    "padding": "NaN input/reference sentinels only outside each sequence length; output sentinel must remain untouched",
+    "represented_inputs": "FP32 keys, values, queries, alpha, beta, and initial state; FP64 independent recurrence outputs/final states serialized in the same bundle",
+    "rtol": 0.0002,
+    "sequence_contract": "all live timesteps in order, preserve nonzero initial state, carry final state across segments, no history truncation or sequence mixing",
+    "state_orientation": "S[d_v,d_k]"
+  },
+  "represented_input": {
+    "path": "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
+    "sha256": "e760eda922a42c0d6f6338e8cc0d0b0c7971c4205c956047a55791191fced4b5"
+  },
+  "subcases": [
+    {
+      "B": 256,
+      "T": 1,
+      "case_id": "decode_many_sequences",
+      "d_k": 32,
+      "d_v": 32,
+      "live_steps": 137
+    },
+    {
+      "B": 128,
+      "T": 33,
+      "case_id": "short_prefill_many_sequences",
+      "d_k": 32,
+      "d_v": 32,
+      "live_steps": 1845
+    },
+    {
+      "B": 128,
+      "T": 257,
+      "case_id": "long_prefill_many_sequences",
+      "d_k": 64,
+      "d_v": 64,
+      "live_steps": 13014
+    }
+  ]
+}

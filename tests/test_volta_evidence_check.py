@@ -1673,5 +1673,251 @@ class GroupedLowbitNativeEvidenceTests(unittest.TestCase):
                     self.gpu, run, native_path, summary, raw_log)
 
 
+class RecurrenceNativeEvidenceTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.root = Path(__file__).parents[1]
+        cls.base = cls.root / "benchmark_runs" / "volta-recurrence"
+        cls.case = CHECK.read_json(cls.base / "summary.template.json")["cases"][0]
+        cls.contract = CHECK.read_json(cls.base / "contract.json")
+        cls.oracle_path = cls.base / "cpu-oracle.json"
+        cls.input_path = cls.base / "inputs" / "recurrence_inputs.bin"
+        cls.records = CHECK._kwv08_suite_records(
+            cls.base, cls.root, cls.case, cls.base / "contract.json", cls.contract,
+            cls.input_path, CHECK.digest(cls.input_path), cls.oracle_path,
+            CHECK.digest(cls.oracle_path))
+        cls.gpu = "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+
+    def native_result(self, role):
+        _kind, _implementation, variant, mode, selected = CHECK.KWV08_ROLES[role]
+        case_ids = [selected] if selected else list(self.records["cases"])
+        native_cases = []
+        for case_id in case_ids:
+            expected = self.records["cases"][case_id]
+            checks = []
+            names = list(CHECK.KWV08_CHECKS)
+            if mode == "profile":
+                names = names[:3]
+            counts = {
+                "outputs": expected["live_steps"] * expected["d_v"],
+                "padding": (expected["T"] * expected["B"] - expected["live_steps"]) * expected["d_v"],
+                "state": expected["B"] * expected["d_v"] * expected["d_k"],
+            }
+            for name in names:
+                kind = CHECK.KWV08_CHECKS[name]
+                checks.append({
+                    "name": name, "status": "passed", "checked": counts[kind],
+                    "failed": 0, "nonfinite": 0,
+                    "max_abs_error": 0.0, "max_scaled_error": 0.0,
+                })
+            timing = {"status": "not_run"}
+            if mode == "time":
+                timing = {"status": "passed"}
+                for field, median in (("host_enqueue_us", "host_enqueue_median_us"),
+                                      ("host_completion_us", "host_completion_median_us"),
+                                      ("device_event_interval_us", "device_event_interval_median_us")):
+                    timing[field] = [float(value) for value in range(1, 8)]
+                    timing[median] = 4.0
+            native_cases.append({
+                "case_id": case_id,
+                "shape": {key: expected[key] for key in ("T", "B", "d_v", "d_k")},
+                "variant": variant, "status": "passed", "checks": checks,
+                "timing": timing,
+            })
+        return {
+            "format": CHECK.KWV08_NATIVE_FORMAT, "status": "passed",
+            "variant": variant, "mode": mode, "gpu": "Tesla V100-SXM2-32GB",
+            "gpu_uuid": self.gpu.removeprefix("GPU-").replace("-", "").lower(),
+            "compute_capability": "7.0",
+            "bundle_file_sha256": self.records["bundle_file_sha256"],
+            "bundle_payload_sha256": self.records["bundle_payload_sha256"],
+            "tolerance": {"atol": self.records["atol"], "rtol": self.records["rtol"]},
+            "timing_semantics": {
+                "host_enqueue_us": "wall time through submission of all launches",
+                "host_completion_us": "wall time through stream completion",
+                "device_event_interval_us": "CUDA event interval; can include device idle while host submits per-token launches",
+            },
+            "cases": native_cases,
+        }
+
+    def test_cpu_contract_bundle_and_oracle_are_bound(self):
+        self.assertEqual(list(self.records["cases"]), [
+            "decode_many_sequences", "short_prefill_many_sequences", "long_prefill_many_sequences"])
+        self.assertEqual(self.records["bundle_file_sha256"], CHECK.KWV08_INPUT_SHA256)
+        self.assertEqual(self.records["bundle_payload_sha256"], CHECK.KWV08_PAYLOAD_SHA256)
+        self.assertEqual(self.records["cases"]["long_prefill_many_sequences"]["live_steps"], 13014)
+
+    def test_source_closure_binds_six_specs_and_all_repo_and_toolchain_inputs(self):
+        closure_path = self.base / "evidence" / "v1" / "source-closure" / "source-closure.json"
+        closure = CHECK.read_json(closure_path)
+        case = {
+            "id": "recurrence_state_ownership_bundle",
+            "gpu_uuid": closure["gpu_uuid_target"],
+            "source_closure": {
+                "path": str(closure_path.relative_to(self.root)),
+                "sha256": CHECK.digest(closure_path),
+            },
+            "captured_input_archives": [
+                {"original_path": row["original_path"],
+                 "archive_path": row["archived_path"], "sha256": row["sha256"]}
+                for row in closure["repository_inputs"]
+            ],
+        }
+        info, aliases, toolchain = CHECK._kwv08_source_closure(self.root, case)
+        self.assertEqual(info["sha256"], CHECK.KWV08_SOURCE_CLOSURE_SHA256)
+        self.assertEqual(len(aliases), 31)
+        self.assertEqual(len(toolchain), 8)
+        self.assertEqual({item["role"] for item in info["declared_specs"].values()},
+                         {f"recurrence_{role}" for role in CHECK.KWV08_ROLES})
+
+    def test_copied_file_paths_accept_collector_archive_aliases_without_escape(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "repo"
+            role_dir = root / "benchmark_runs/volta-recurrence/evidence/v1/roles/sanitizer"
+            copied = role_dir / "sanitizer/run/raw.log"
+            put(copied, b"ERROR SUMMARY: 0 errors\n")
+            expected = copied.resolve()
+            self.assertEqual(
+                CHECK._kwv08_copied_role_file(root, role_dir, str(copied), "absolute"),
+                expected,
+            )
+            self.assertEqual(
+                CHECK._kwv08_copied_role_file(
+                    root, role_dir,
+                    "benchmark_runs/volta-recurrence/evidence/v1/roles/sanitizer/sanitizer/run/raw.log",
+                    "repository relative"),
+                expected,
+            )
+            self.assertEqual(
+                CHECK._kwv08_copied_role_file(
+                    root, role_dir, "sanitizer/run/raw.log", "role relative"),
+                expected,
+            )
+            outside = root / "outside.txt"
+            put(outside, b"not an archived role artifact")
+            with self.assertRaisesRegex(CHECK.EvidenceError, "escapes its role archive"):
+                CHECK._kwv08_copied_role_file(root, role_dir, "../outside.txt", "escape")
+
+    def test_captured_sanitizer_archive_binds_nested_app_and_path_report(self):
+        role_dir = self.base / "evidence/v1/roles/recurrence_sanitizer_candidate"
+        archive = role_dir / "archive-manifest.json"
+        path_report = CHECK.read_json(role_dir / "sanitizer-path-report.json")
+        archive_prefix = role_dir.relative_to(self.root).as_posix()
+
+        def reported(relative):
+            archive_path = f"{archive_prefix}/{relative}"
+            return next(item["source_path"] for item in path_report["files"]
+                        if item["archive_path"] == archive_path)
+
+        def ref(relative):
+            path = role_dir / relative
+            return {"path": path.relative_to(self.base).as_posix(),
+                    "sha256": CHECK.digest(path)}
+
+        run = {
+            "archive_manifest": ref("archive-manifest.json"),
+            "evidence": ref("controller-evidence.json"),
+            "execution": ref("controller-run.json"),
+            "lease": {"path": role_dir.relative_to(self.root).joinpath("lease.json").as_posix(),
+                      "sha256": CHECK.digest(role_dir / "lease.json")},
+            "project_control_raw": ref("project-control-read-export.json"),
+            "native_stdout_capture": {
+                **ref("sanitizer/run/stdout.txt"),
+                "reported_path": reported("sanitizer/run/stdout.txt"),
+            },
+            "sanitizer_summary": {
+                **ref("sanitizer/run/summary.json"),
+                "reported_path": reported("sanitizer/run/summary.json"),
+            },
+            "sanitizer_log": {
+                **ref("sanitizer/run/raw.log"),
+                "reported_path": reported("sanitizer/run/raw.log"),
+            },
+        }
+        CHECK._kwv08_bind_stdout_capture(
+            self.base, self.root, "sanitizer_candidate", self.gpu, run,
+            role_dir / "sanitizer/run/stdout.txt")
+        self.assertEqual(CHECK.read_json(role_dir / "sanitizer/run/summary.json")["status"],
+                         "partial")
+
+    def test_captured_ncu_archive_binds_selected_stdout_and_excludes_profile_timing(self):
+        role_dir = self.base / "evidence/v1/roles/recurrence_profile_candidate"
+        outer_text = (role_dir / "foreground.stdout.txt").read_text()
+        reported_stdout = next(line.split("command stdout: ", 1)[1].strip()
+                               for line in outer_text.splitlines()
+                               if "command stdout: " in line)
+
+        def ref(relative):
+            path = role_dir / relative
+            return {"path": path.relative_to(self.base).as_posix(),
+                    "sha256": CHECK.digest(path)}
+
+        run = {
+            "archive_manifest": ref("archive-manifest.json"),
+            "evidence": ref("controller-evidence.json"),
+            "execution": ref("controller-run.json"),
+            "lease": {"path": role_dir.relative_to(self.root).joinpath("lease.json").as_posix(),
+                      "sha256": CHECK.digest(role_dir / "lease.json")},
+            "project_control_raw": ref("project-control-read-export.json"),
+            "native_stdout_capture": {
+                **ref("ncu/run/command.stdout.txt"), "reported_path": reported_stdout,
+            },
+            "profile": {
+                "summary": ref("ncu/run/summary.json"),
+                "analysis": ref("ncu/run/analysis.txt"),
+                "raw_csv": ref("ncu/run/raw.csv"),
+                "report": ref("ncu/run/report.ncu-rep"),
+                "shim_log": ref("ncu-shim.jsonl"),
+            },
+        }
+        CHECK._kwv08_bind_stdout_capture(
+            self.base, self.root, "profile_candidate", self.gpu, run,
+            role_dir / "ncu/run/command.stdout.txt")
+        native = CHECK.read_json(role_dir / "ncu/run/command.stdout.txt")
+        CHECK._kwv08_native_checks(native, self.records, self.gpu,
+                                   "profile_candidate", "profile candidate")
+        self.assertFalse(CHECK.read_json(role_dir / "ncu/run/summary.json")["timing_valid"])
+
+    def test_all_role_stdout_contracts_require_every_output_and_state(self):
+        for role in CHECK.KWV08_ROLES:
+            with self.subTest(role=role):
+                CHECK._kwv08_native_checks(self.native_result(role), self.records,
+                                           self.gpu, role, role)
+
+    def test_missing_segmented_final_state_is_rejected(self):
+        native = self.native_result("correctness_candidate")
+        native["cases"][0]["checks"] = [
+            item for item in native["cases"][0]["checks"]
+            if item["name"] != "segmented_carry_final_state"]
+        with self.assertRaisesRegex(CHECK.EvidenceError, "check set is incomplete"):
+            CHECK._kwv08_native_checks(native, self.records, self.gpu,
+                                      "correctness_candidate", "candidate")
+
+    def test_output_extent_and_tolerance_ratio_are_enforced(self):
+        native = self.native_result("correctness_baseline")
+        native["cases"][1]["checks"][0]["checked"] -= 1
+        with self.assertRaisesRegex(CHECK.EvidenceError, "full expected extent"):
+            CHECK._kwv08_native_checks(native, self.records, self.gpu,
+                                      "correctness_baseline", "baseline")
+        native = self.native_result("correctness_baseline")
+        native["cases"][0]["checks"][0]["max_scaled_error"] = 1.01
+        with self.assertRaisesRegex(CHECK.EvidenceError, "exceeds frozen tolerance"):
+            CHECK._kwv08_native_checks(native, self.records, self.gpu,
+                                      "correctness_baseline", "baseline")
+
+    def test_timing_medians_and_profile_scope_are_separate(self):
+        native = self.native_result("candidate_timing")
+        native["cases"][0]["timing"]["host_enqueue_median_us"] = 3.5
+        with self.assertRaisesRegex(CHECK.EvidenceError, "differs from its samples"):
+            CHECK._kwv08_native_checks(native, self.records, self.gpu,
+                                      "candidate_timing", "candidate timing")
+        profile = self.native_result("profile_candidate")
+        profile["cases"][0]["timing"] = {
+            "status": "passed", "device_event_interval_us": [42.0]}
+        with self.assertRaisesRegex(CHECK.EvidenceError, "unexpectedly contains timing evidence"):
+            CHECK._kwv08_native_checks(profile, self.records, self.gpu,
+                                      "profile_candidate", "profile")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,26 @@
+{
+  "binary": {
+    "path": "benchmark_runs/volta-recurrence/evidence/v1/bin/gdn_runner-8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1.elf",
+    "sha256": "8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1",
+    "size_bytes": 1305032
+  },
+  "compute_capability": "7.0",
+  "controller_status": "succeeded",
+  "evidence_id": "077ff3b0-421a-4cb9-b234-608441cb5d77",
+  "files": {
+    "controller-evidence.json": "be5b561aa3537597bb932b783675c3d8d25788138730020c0d3c26f5fd70c25f",
+    "controller-run.json": "6fbe7b290982dc26aa41e0d18f9923dd2d41baf9dad91ba81fc23a281154f174",
+    "foreground.stderr.txt": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+    "foreground.stdout.txt": "ec809b6164db222c7cdf2020c81a4647afc17043dde84707726b7ced549a73b5",
+    "lease.json": "0fb03bf49ae1892f34318fdfc389c314d15c9f7eb30c351a67f364d7495b4974",
+    "nvcc.stderr.txt": "98c5d5051ff182d2843274f0c49cf626c3c213c18f4ded131778cf08216677f8",
+    "nvcc.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "project-control-read-export.json": "bfed720b544f4d982acc6c037dad1e55df0d77269937a6186e99eb76f41b7010",
+    "role-manifest.json": "964601a61ca9201acca2877a5b26b9d5938f1acf095c9eaee95331d649a3925e",
+    "source-snapshot-reference.json": "5d5556f3698222a78b853cd3e704a2d064c51bc5e6b7ce6db7a9f70c408d6eb1"
+  },
+  "format": "KERNELWIKI-KWV08-ARCHIVE/1",
+  "gpu_uuid_raw_hex": "21131915148823af38dd1743ae1f5cc8",
+  "role": "recurrence_correctness_baseline",
+  "runner_status": "passed"
+}

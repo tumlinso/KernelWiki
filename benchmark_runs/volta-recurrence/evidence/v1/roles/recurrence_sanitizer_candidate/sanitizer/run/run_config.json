@@ -1,0 +1,8 @@
+{
+  "utc_timestamp": "2026-10-17T22:06:54Z",
+  "hostname": "testlsserver",
+  "pwd": "/home/tumlinson/KernelWiki",
+  "tool": "memcheck",
+  "sanitizer_bin": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+  "command": ["benchmark_runs/volta-recurrence/bin/gdn_runner", "--bundle", "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin", "--variant", "retained", "--mode", "correctness"]
+}

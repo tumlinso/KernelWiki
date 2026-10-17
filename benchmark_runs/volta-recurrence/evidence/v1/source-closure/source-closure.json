@@ -1,0 +1,293 @@
+{
+  "binary_policy": "one sm_70 ELF built by recurrence_correctness_baseline and reused byte-identically by all later roles",
+  "declaring_specs": [
+    {
+      "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_baseline_timing.spec.json",
+      "sha256": "ba394534a6e29c0adfb3abe9aedbc1d7f0220e042bc6b8d3ca15002de0d9fb1c"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_candidate_timing.spec.json",
+      "sha256": "bb6f6b1656f5aafa669abee1ea54b9a17d3963d711632c34c668962e591521e2"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_baseline.spec.json",
+      "sha256": "73ed83bcd21460e2a445ca573cb9bb2c1f5b4b7bde95cb759e9cd9275c380363"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_candidate.spec.json",
+      "sha256": "a2dbc86ccbe885cf4219c2a96992db75cc3e0a42d1cd6394f7988402d7a36ef6"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_profile_candidate.spec.json",
+      "sha256": "94e2f3de7453e92a883921e67c8aeee2e12d52731a471f1d2fba1ed3f02c8542"
+    },
+    {
+      "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_sanitizer_candidate.spec.json",
+      "sha256": "6c2f5af94e4274ef85c50cac6359f9d0b741ef8d7ed4f6507b8e7a94f933c447"
+    }
+  ],
+  "format": "KERNELWIKI-KWV08-SOURCE-CLOSURE/1",
+  "gpu_uuid_target": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8",
+  "project_root": "/home/tumlinson/KernelWiki",
+  "repository_inputs": [
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/artifacts/kernels/volta-recurrence/variants/PROVENANCE.yaml",
+      "original_path": "artifacts/kernels/volta-recurrence/variants/PROVENANCE.yaml",
+      "sha256": "36bdc95025ab831b446fffa62e86ebc42121b446afe69c07144a0c48c62734bd",
+      "size_bytes": 1385
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/artifacts/kernels/volta-recurrence/variants/README.md",
+      "original_path": "artifacts/kernels/volta-recurrence/variants/README.md",
+      "sha256": "487bdc359675b1b52849211225cc58bf2bf3a7c29af1373bbf1885483e25842f",
+      "size_bytes": 2181
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/artifacts/kernels/volta-recurrence/variants/bundle_contract.hpp",
+      "original_path": "artifacts/kernels/volta-recurrence/variants/bundle_contract.hpp",
+      "sha256": "608123beccab006944e05f521924e527cbeb2e2fa4d87541f120ab5be55fcfb0",
+      "size_bytes": 9814
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/artifacts/kernels/volta-recurrence/variants/gdn_recurrent_state.cuh",
+      "original_path": "artifacts/kernels/volta-recurrence/variants/gdn_recurrent_state.cuh",
+      "sha256": "a2b1cf2edf1c6300ce30af202dc383b5bc2b4ed618869c9eeb1d3ccd4fe427d0",
+      "size_bytes": 6984
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/artifacts/kernels/volta-recurrence/variants/gdn_runner.cu",
+      "original_path": "artifacts/kernels/volta-recurrence/variants/gdn_runner.cu",
+      "sha256": "8c69b49874fec6146b8d56c3c129e5627e41f616261f2e88ba945353670c0d2a",
+      "size_bytes": 27213
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/artifacts/kernels/volta-recurrence/variants/sha256.hpp",
+      "original_path": "artifacts/kernels/volta-recurrence/variants/sha256.hpp",
+      "sha256": "478742e92e62db09ee58c2fcc15f727b9aa5e72908ef2173b21325ae1f6e67ed",
+      "size_bytes": 3366
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/artifacts/kernels/volta-recurrence/variants/tests/test_bundle_reader.cpp",
+      "original_path": "artifacts/kernels/volta-recurrence/variants/tests/test_bundle_reader.cpp",
+      "sha256": "a0bc8ef4bf6d893fcab5166a0af98bc5b512eeddc69c2b66a8b63d144d46d5bd",
+      "size_bytes": 3413
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-environment/ncu-collection-shim.py",
+      "original_path": "benchmark_runs/volta-environment/ncu-collection-shim.py",
+      "sha256": "fda69450466b6617d627e638db32d094ac28d8e7d5bec80e512a4fdce3fce98f",
+      "size_bytes": 3193
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-gemm/controller/pc_controller.py",
+      "original_path": "benchmark_runs/volta-gemm/controller/pc_controller.py",
+      "sha256": "492d0419f5015188c1191f98c491f0a61afdad8642f91b75de4d093230a2de99",
+      "size_bytes": 3689
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/case_matrix.json",
+      "original_path": "benchmark_runs/volta-recurrence/case_matrix.json",
+      "sha256": "82e5792154dc2c25abf5ced5bc227e41f2efc24f1589f590ade0e1a3ac707f17",
+      "size_bytes": 4777
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/contract.json",
+      "original_path": "benchmark_runs/volta-recurrence/contract.json",
+      "sha256": "96a338e1ad7623c2e356b5394589f7e4fe97f11605812fc76f9e588d1517ccb9",
+      "size_bytes": 2119
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/controller/make_role_specs.py",
+      "original_path": "benchmark_runs/volta-recurrence/controller/make_role_specs.py",
+      "sha256": "8eb970cff8707f4aaa99b1dd17897aefa1958f61f9ac795b7c4342db35adb027",
+      "size_bytes": 5744
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/controller/role-recurrence_baseline_timing.spec.json",
+      "original_path": "benchmark_runs/volta-recurrence/controller/role-recurrence_baseline_timing.spec.json",
+      "sha256": "ba394534a6e29c0adfb3abe9aedbc1d7f0220e042bc6b8d3ca15002de0d9fb1c",
+      "size_bytes": 6156
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/controller/role-recurrence_candidate_timing.spec.json",
+      "original_path": "benchmark_runs/volta-recurrence/controller/role-recurrence_candidate_timing.spec.json",
+      "sha256": "bb6f6b1656f5aafa669abee1ea54b9a17d3963d711632c34c668962e591521e2",
+      "size_bytes": 6156
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_baseline.spec.json",
+      "original_path": "benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_baseline.spec.json",
+      "sha256": "73ed83bcd21460e2a445ca573cb9bb2c1f5b4b7bde95cb759e9cd9275c380363",
+      "size_bytes": 6954
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_candidate.spec.json",
+      "original_path": "benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_candidate.spec.json",
+      "sha256": "a2dbc86ccbe885cf4219c2a96992db75cc3e0a42d1cd6394f7988402d7a36ef6",
+      "size_bytes": 6168
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/controller/role-recurrence_profile_candidate.spec.json",
+      "original_path": "benchmark_runs/volta-recurrence/controller/role-recurrence_profile_candidate.spec.json",
+      "sha256": "94e2f3de7453e92a883921e67c8aeee2e12d52731a471f1d2fba1ed3f02c8542",
+      "size_bytes": 6204
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/controller/role-recurrence_sanitizer_candidate.spec.json",
+      "original_path": "benchmark_runs/volta-recurrence/controller/role-recurrence_sanitizer_candidate.spec.json",
+      "sha256": "6c2f5af94e4274ef85c50cac6359f9d0b741ef8d7ed4f6507b8e7a94f933c447",
+      "size_bytes": 6175
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/cpu-oracle.json",
+      "original_path": "benchmark_runs/volta-recurrence/cpu-oracle.json",
+      "sha256": "e8bc1e9256c7cf97e835b07b4d2f2f6673602193eb9f9e0d9d0cbc7ad0cfe147",
+      "size_bytes": 1240
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
+      "original_path": "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
+      "sha256": "e760eda922a42c0d6f6338e8cc0d0b0c7971c4205c956047a55791191fced4b5",
+      "size_bytes": 56285400
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/recurrence_inputs.json",
+      "original_path": "benchmark_runs/volta-recurrence/recurrence_inputs.json",
+      "sha256": "6e0ebeb6f8dcc9bb4ed27769993f348915b777e265c2e848eb3b709c45b75419",
+      "size_bytes": 1938
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/source/bundle_io.py",
+      "original_path": "benchmark_runs/volta-recurrence/source/bundle_io.py",
+      "sha256": "5a1e8f9829754a6b17d4b4236937817242f2d1058b28bfab90a4cbd1f654e58e",
+      "size_bytes": 7706
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/source/capture_nvcc_build.sh",
+      "original_path": "benchmark_runs/volta-recurrence/source/capture_nvcc_build.sh",
+      "sha256": "b261f375724bb2100dee43932c2224eaa8dbb21c4a1b64fd32d319a297d2c102",
+      "size_bytes": 405
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/source/collect_native_evidence.py",
+      "original_path": "benchmark_runs/volta-recurrence/source/collect_native_evidence.py",
+      "sha256": "8201a01ab9e148c9281cdb7778f74abf61668b4e8642bf64e8b3674486d31e11",
+      "size_bytes": 10816
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/source/make_case_records.py",
+      "original_path": "benchmark_runs/volta-recurrence/source/make_case_records.py",
+      "sha256": "01859d339b43faf21da895b771e99046121d29b161c76ab2242f7dcc1a500974",
+      "size_bytes": 8492
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/source/pack_source_closure.py",
+      "original_path": "benchmark_runs/volta-recurrence/source/pack_source_closure.py",
+      "sha256": "2e2a556d220dc5851ad8930acb12788aa4c3391aa374b898b8012b4bc2116885",
+      "size_bytes": 5859
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/source/prepare_recurrence_bundle.py",
+      "original_path": "benchmark_runs/volta-recurrence/source/prepare_recurrence_bundle.py",
+      "sha256": "c46878d8a254ba64c54ac8f2782c29b676996b12f1307995f625e1b47d8c2357",
+      "size_bytes": 4654
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/source/probe_fp32_policy.py",
+      "original_path": "benchmark_runs/volta-recurrence/source/probe_fp32_policy.py",
+      "sha256": "402811da5f26b0468f30b1a0f63ea898651316ea075893b60c957638c335e4d9",
+      "size_bytes": 3830
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/source/recurrence_oracle.py",
+      "original_path": "benchmark_runs/volta-recurrence/source/recurrence_oracle.py",
+      "sha256": "7c525ff7362423a76f7d3c09d387defe1f3e904468aba543affe35750c3de1b5",
+      "size_bytes": 3800
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/source/test_recurrence_bundle.py",
+      "original_path": "benchmark_runs/volta-recurrence/source/test_recurrence_bundle.py",
+      "sha256": "df3e899de33a976b870e31004a8f47c38a1c488b73c95b74e7d36e366944006c",
+      "size_bytes": 2869
+    },
+    {
+      "archived_path": "benchmark_runs/volta-recurrence/evidence/v1/source-closure/repo/benchmark_runs/volta-recurrence/source/test_recurrence_oracle.py",
+      "original_path": "benchmark_runs/volta-recurrence/source/test_recurrence_oracle.py",
+      "sha256": "47e9bb1baedc9fd9000d6b53e9f370961a3dd973a3bdb4181071afb98ef113db",
+      "size_bytes": 9108
+    }
+  ],
+  "repository_revision": "cf802ddc60bfd009cf26e692a782b55b776cbcf6",
+  "timing_policy": "per-token-kernel-launch baseline versus one fused retained-state launch; full sequence cost, host enqueue, and host completion are reported separately; no isolated traffic-causality claim",
+  "tool_versions": {
+    "compute_sanitizer": {
+      "argv": [
+        "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+        "--version"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "NVIDIA (R) Compute Sanitizer\nCopyright (c) 2020-2025 NVIDIA Corporation\nVersion 2025.2.1.0 (build 35969825) (public-release)"
+    },
+    "ncu": {
+      "argv": [
+        "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute/target/linux-desktop-glibc_2_11_3-x64/ncu",
+        "--version"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "NVIDIA (R) Nsight Compute Command Line Profiler\nCopyright (c) 2018-2025 NVIDIA Corporation\nVersion 2025.2.1.0 (build 35987062) (public-release)"
+    },
+    "nvcc": {
+      "argv": [
+        "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+        "--version"
+      ],
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Tue_May_27_02:21:03_PDT_2025\nCuda compilation tools, release 12.9, V12.9.86\nBuild cuda_12.9.r12.9/compiler.36037853_0"
+    }
+  },
+  "toolchain_inputs": [
+    {
+      "path": "/home/tumlinson/.agents/skills/cuda/scripts/cuda_controller.py",
+      "sha256": "07fd3704bdb441479c8accd75075e83fbccec824fd8d0b6e73f5e1df0c344959",
+      "size_bytes": 100529
+    },
+    {
+      "path": "/home/tumlinson/.agents/skills/cuda/scripts/cuda_toolchain.py",
+      "sha256": "ed4d8c8bd67604e521c32f7e2b58b5d3400e57a621fec68440d3a88eb19f2e5c",
+      "size_bytes": 2517
+    },
+    {
+      "path": "/home/tumlinson/.agents/skills/cuda/scripts/debug_compute_sanitizer.sh",
+      "sha256": "760fa5fe343e34ba331f7463d692607f7bb911bddcddb264a95a04a9493e2320",
+      "size_bytes": 4571
+    },
+    {
+      "path": "/home/tumlinson/.agents/skills/cuda/scripts/profile_ncu.sh",
+      "sha256": "6ab3f96e359d7c47def9a11f6ba90693210c1a9446e615b5d5ec872012181d61",
+      "size_bytes": 8420
+    },
+    {
+      "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+      "sha256": "df9974db233a0b7a6c6d59c0e5d74e011566104098bcb3553495ff1b95bdeaf6",
+      "size_bytes": 27515496
+    },
+    {
+      "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+      "sha256": "979adf037f4e3434a976b7f0912b0a05ce3b062e31b2a73397a1bf1cd5f57547",
+      "size_bytes": 7497584
+    },
+    {
+      "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute/ncu",
+      "sha256": "a44ff2c735c4dcf66c78f3f430155805d6a0b1f74f26331f98ecec03bfbf3f1a",
+      "size_bytes": 310
+    },
+    {
+      "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute/target/linux-desktop-glibc_2_11_3-x64/ncu",
+      "sha256": "da5e94a33c67f820e154da8a633755c44eb08b51a61e6fc3662ae592c5f59c82",
+      "size_bytes": 64328136
+    }
+  ]
+}

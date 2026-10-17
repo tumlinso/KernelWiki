@@ -1,0 +1,51 @@
+{
+  "application_stdout": "benchmark_runs/volta-recurrence/evidence/v1/roles/recurrence_sanitizer_candidate/sanitizer/run/stdout.txt",
+  "files": [
+    {
+      "archive_path": "benchmark_runs/volta-recurrence/evidence/v1/roles/recurrence_sanitizer_candidate/sanitizer/run/process_env.txt",
+      "sha256": "03b4e4fc55be44382b1a20664e51737f51f413368c918d28e0654a7bfbb784e3",
+      "size_bytes": 6091,
+      "source_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/4c2e9052-f1c6-40b8-99f7-f54825ab88aa/sanitizer/run/process_env.txt"
+    },
+    {
+      "archive_path": "benchmark_runs/volta-recurrence/evidence/v1/roles/recurrence_sanitizer_candidate/sanitizer/run/raw.log",
+      "sha256": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+      "size_bytes": 62,
+      "source_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/4c2e9052-f1c6-40b8-99f7-f54825ab88aa/sanitizer/run/raw.log"
+    },
+    {
+      "archive_path": "benchmark_runs/volta-recurrence/evidence/v1/roles/recurrence_sanitizer_candidate/sanitizer/run/run_config.json",
+      "sha256": "924d43af8d63e9ba19ed93d4e1a183e3f2b8946e67473b5bdbbd6caff3423c7d",
+      "size_bytes": 434,
+      "source_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/4c2e9052-f1c6-40b8-99f7-f54825ab88aa/sanitizer/run/run_config.json"
+    },
+    {
+      "archive_path": "benchmark_runs/volta-recurrence/evidence/v1/roles/recurrence_sanitizer_candidate/sanitizer/run/stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "source_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/4c2e9052-f1c6-40b8-99f7-f54825ab88aa/sanitizer/run/stderr.txt"
+    },
+    {
+      "archive_path": "benchmark_runs/volta-recurrence/evidence/v1/roles/recurrence_sanitizer_candidate/sanitizer/run/stdout.txt",
+      "sha256": "cbc41639a509b3748c456a62ae6c7a821382092fb31cd94c62b9dffcb812a105",
+      "size_bytes": 4036,
+      "source_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/4c2e9052-f1c6-40b8-99f7-f54825ab88aa/sanitizer/run/stdout.txt"
+    },
+    {
+      "archive_path": "benchmark_runs/volta-recurrence/evidence/v1/roles/recurrence_sanitizer_candidate/sanitizer/run/summary.json",
+      "sha256": "b638884e9cb8d8a816ffb401d092cf1f0ec96c1199610a64d242176c72ae988b",
+      "size_bytes": 5262,
+      "source_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/4c2e9052-f1c6-40b8-99f7-f54825ab88aa/sanitizer/run/summary.json"
+    },
+    {
+      "archive_path": "benchmark_runs/volta-recurrence/evidence/v1/roles/recurrence_sanitizer_candidate/sanitizer/run/summary.txt",
+      "sha256": "fcb23799a8d20adb6412215f2c2fb13237d3fc371eac10dc743117ac89d5c6a3",
+      "size_bytes": 359,
+      "source_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/4c2e9052-f1c6-40b8-99f7-f54825ab88aa/sanitizer/run/summary.txt"
+    }
+  ],
+  "format": "KERNELWIKI-KWV08-SANITIZER-PATHS/1",
+  "raw_log": "benchmark_runs/volta-recurrence/evidence/v1/roles/recurrence_sanitizer_candidate/sanitizer/run/raw.log",
+  "summary_json": "benchmark_runs/volta-recurrence/evidence/v1/roles/recurrence_sanitizer_candidate/sanitizer/run/summary.json",
+  "summary_text": "benchmark_runs/volta-recurrence/evidence/v1/roles/recurrence_sanitizer_candidate/sanitizer/run/summary.txt"
+}

@@ -83,6 +83,28 @@ ATTENTION_ARCHIVE_ROLE_ALIASES = {
 KWV07_SUITE_CONTRACT_FORMAT = "KERNELWIKI-KWV07-SUITE-CONTRACT/1"
 KWV07_SUITE_FORMAT = "KERNELWIKI-KWV07-SUITE/1"
 KWV07_NATIVE_FORMAT = "KERNELWIKI-KWV07-NATIVE/1"
+KWV08_CONTRACT_FORMAT = "KERNELWIKI-VOLTA-RECURRENCE-CONTRACT/1"
+KWV08_NATIVE_FORMAT = "KERNELWIKI-VOLTA-RECURRENCE-RUN/1"
+KWV08_SOURCE_CLOSURE_FORMAT = "KERNELWIKI-KWV08-SOURCE-CLOSURE/1"
+KWV08_INPUT_SHA256 = "e760eda922a42c0d6f6338e8cc0d0b0c7971c4205c956047a55791191fced4b5"
+KWV08_PAYLOAD_SHA256 = "7c26087a2d035d692c90167cfc493756a3954cee84664a92c7ece2641611da80"
+KWV08_SOURCE_CLOSURE_SHA256 = "fecce508e9e8e80567379b52b8a6bb88ea7c0a0f15222f711edd60a0e9598543"
+KWV08_ROLES = {
+    "correctness_baseline": ("foreground-baseline", "baseline", "per_token", "correctness", None),
+    "correctness_candidate": ("foreground-baseline", "candidate", "retained", "correctness", None),
+    "sanitizer_candidate": ("foreground-compute-sanitizer", "candidate", "retained", "correctness", None),
+    "baseline_timing": ("foreground-baseline", "baseline", "per_token", "time", None),
+    "candidate_timing": ("foreground-baseline", "candidate", "retained", "time", None),
+    "profile_candidate": ("foreground-ncu", "candidate", "retained", "profile", "long_prefill_many_sequences"),
+}
+KWV08_CHECKS = {
+    "full_sequence_all_outputs": "outputs",
+    "full_sequence_padding_untouched": "padding",
+    "full_sequence_final_state": "state",
+    "segmented_carry_all_outputs": "outputs",
+    "segmented_padding_untouched": "padding",
+    "segmented_carry_final_state": "state",
+}
 KWV07_FROZEN_BUNDLE_SHA256 = "646137b453a81b9a09245d2b768376fab428ab4b4123c8023973d1b30942d3d8"
 KWV07_FROZEN_SUITE_FILES_SHA256 = "c3de6df5f58c575eef30c565085b98dc07db6e413cb49eb52746d59c60e08e6e"
 KWV07_FROZEN_SUITES = {
@@ -469,6 +491,615 @@ def _is_attention_contract(contract: dict[str, Any]) -> bool:
 
 def _is_kwv07_contract(contract: dict[str, Any]) -> bool:
     return contract.get("format") == KWV07_SUITE_CONTRACT_FORMAT
+
+
+def _is_kwv08_contract(contract: dict[str, Any]) -> bool:
+    return contract.get("format") == KWV08_CONTRACT_FORMAT
+
+
+def _kwv08_finite_nonnegative(value: Any) -> bool:
+    return (not isinstance(value, bool) and isinstance(value, (int, float)) and
+            math.isfinite(float(value)) and float(value) >= 0.0)
+
+
+def _kwv08_native_checks(result: dict[str, Any], records: dict[str, Any],
+                          gpu_uuid: str, role: str, label: str) -> None:
+    """Check recurrence app JSON against the frozen bundle and role invocation."""
+    spec = KWV08_ROLES.get(role)
+    if spec is None:
+        raise EvidenceError(f"{label}: unknown KWV08 role")
+    _kind, implementation, variant, mode, selected_case = spec
+    expected_uuid = gpu_uuid.removeprefix("GPU-").replace("-", "").lower()
+    if (not isinstance(result, dict) or
+            result.get("format") != KWV08_NATIVE_FORMAT or
+            result.get("status") != "passed" or
+            result.get("variant") != variant or result.get("mode") != mode or
+            str(result.get("compute_capability")) != "7.0" or
+            result.get("gpu_uuid") != expected_uuid or
+            not isinstance(result.get("gpu"), str) or not result["gpu"] or
+            result.get("bundle_file_sha256") != records["bundle_file_sha256"] or
+            result.get("bundle_payload_sha256") != records["bundle_payload_sha256"]):
+        raise EvidenceError(f"{label}: native runner identity, status, GPU, or bundle binding failed")
+    tolerance = result.get("tolerance")
+    if (not isinstance(tolerance, dict) or
+            tolerance.get("atol") != records["atol"] or
+            tolerance.get("rtol") != records["rtol"]):
+        raise EvidenceError(f"{label}: native numerical tolerance differs from the frozen contract")
+    expected_semantics = {
+        "host_enqueue_us": "wall time through submission of all launches",
+        "host_completion_us": "wall time through stream completion",
+        "device_event_interval_us": "CUDA event interval; can include device idle while host submits per-token launches",
+    }
+    if result.get("timing_semantics") != expected_semantics:
+        raise EvidenceError(f"{label}: native timing scope differs from the frozen whole-operator definitions")
+
+    expected_ids = [selected_case] if selected_case else list(records["cases"])
+    cases = result.get("cases")
+    if (not isinstance(cases, list) or
+            [item.get("case_id") if isinstance(item, dict) else None for item in cases] != expected_ids):
+        raise EvidenceError(f"{label}: native case set or order differs from the role suite")
+    for item in cases:
+        case_id = item["case_id"]
+        expected = records["cases"].get(case_id)
+        if not isinstance(expected, dict):
+            raise EvidenceError(f"{label}: native runner returned an undeclared case")
+        expected_shape = {key: expected[key] for key in ("T", "B", "d_v", "d_k")}
+        shape = item.get("shape")
+        if (not isinstance(shape, dict) or
+                any(type(shape.get(key)) is not int for key in expected_shape) or
+                shape != expected_shape or item.get("status") != "passed" or
+                item.get("variant") != variant or item.get("error") not in (None, "")):
+            raise EvidenceError(f"{label} {case_id}: native case status or shape differs from contract")
+        checks = item.get("checks")
+        expected_checks = list(KWV08_CHECKS)
+        if mode == "profile":
+            expected_checks = expected_checks[:3]
+        if (not isinstance(checks, list) or
+                [check.get("name") if isinstance(check, dict) else None for check in checks] != expected_checks):
+            raise EvidenceError(f"{label} {case_id}: native full-output/final-state check set is incomplete")
+        expected_counts = {
+            "outputs": expected["live_steps"] * expected["d_v"],
+            "padding": (expected["T"] * expected["B"] - expected["live_steps"]) * expected["d_v"],
+            "state": expected["B"] * expected["d_v"] * expected["d_k"],
+        }
+        for check in checks:
+            kind = KWV08_CHECKS[check["name"]]
+            if (any(type(check.get(field)) is not int for field in ("checked", "failed", "nonfinite")) or
+                    check.get("status") != "passed" or
+                    check.get("checked") != expected_counts[kind] or
+                    check.get("failed") != 0 or check.get("nonfinite") != 0 or
+                    not _kwv08_finite_nonnegative(check.get("max_abs_error")) or
+                    not _kwv08_finite_nonnegative(check.get("max_scaled_error"))):
+                raise EvidenceError(f"{label} {case_id}: native {check['name']} did not check its full expected extent")
+            if kind in {"outputs", "state"} and check["max_scaled_error"] > 1.0:
+                raise EvidenceError(f"{label} {case_id}: native {check['name']} exceeds frozen tolerance")
+            if kind == "padding" and (check["max_abs_error"] != 0 or check["max_scaled_error"] != 0):
+                raise EvidenceError(f"{label} {case_id}: padded output sentinel changed")
+
+        timing = item.get("timing")
+        if not isinstance(timing, dict):
+            raise EvidenceError(f"{label} {case_id}: native timing record is missing")
+        if mode == "time":
+            fields = ("host_enqueue_us", "host_completion_us", "device_event_interval_us")
+            if timing.get("status") != "passed":
+                raise EvidenceError(f"{label} {case_id}: native timing did not pass")
+            for field, median_field in zip(fields, (
+                    "host_enqueue_median_us", "host_completion_median_us",
+                    "device_event_interval_median_us")):
+                samples = timing.get(field)
+                if (not isinstance(samples, list) or len(samples) != 7 or
+                        any(not _kwv08_finite_nonnegative(value) or float(value) <= 0 for value in samples)):
+                    raise EvidenceError(f"{label} {case_id}: native {field} lacks seven positive samples")
+                median = timing.get(median_field)
+                expected_median = statistics.median(float(value) for value in samples)
+                if (not _kwv08_finite_nonnegative(median) or
+                        not math.isclose(float(median), expected_median, rel_tol=1e-9, abs_tol=1e-9)):
+                    raise EvidenceError(f"{label} {case_id}: native {median_field} differs from its samples")
+        elif timing.get("status") != "not_run":
+            raise EvidenceError(f"{label} {case_id}: correctness/profile run unexpectedly contains timing evidence")
+
+
+def _kwv08_suite_records(base: Path, root: Path, case: dict[str, Any],
+                         contract_path: Path, contract: dict[str, Any],
+                         input_path: Path, input_sha: str,
+                         oracle_path: Path, oracle_sha: str) -> dict[str, Any]:
+    """Bind the recurrence contract, CPU oracle, and represented bundle to fixed shapes."""
+    case_id = str(case.get("id", "recurrence"))
+    expected_signature = "b4aae5c2c268dc0099b08cb4c375010ba1e9269725de11c440d80bf33bfcabcd"
+    expected_cases = [
+        {"case_id": "decode_many_sequences", "T": 1, "B": 256, "d_v": 32, "d_k": 32, "live_steps": 137},
+        {"case_id": "short_prefill_many_sequences", "T": 33, "B": 128, "d_v": 32, "d_k": 32, "live_steps": 1845},
+        {"case_id": "long_prefill_many_sequences", "T": 257, "B": 128, "d_v": 64, "d_k": 64, "live_steps": 13014},
+    ]
+    if (case_id != "recurrence_state_ownership_bundle" or
+            contract.get("format") != KWV08_CONTRACT_FORMAT or
+            contract.get("case_signature") != expected_signature or
+            contract.get("subcases") != expected_cases or
+            contract.get("numerical_contract") != {
+                "accumulation": "FP32 native; scalar FP64 independent semantic oracle",
+                "active_key_norm": "unit norm in represented FP32 bundle; reader verifies; native kernel does not normalize",
+                "atol": 2e-05,
+                "comparison": "abs(actual-reference) <= atol + rtol*abs(reference) for every live output and every final-state element",
+                "exceptional_values": "active inputs and initial states finite; padding NaNs are excluded from live operation",
+                "gate_range": "0 <= alpha,beta <= 1, includes exact zero and near-one values",
+                "layout": "time-major interleaved [T,B,d_k/d_v], state row-major [B,d_v,d_k]",
+                "operator": "D=alpha*S_previous; e=v-D@k; S=D+beta*outer(e,k); o=S@q",
+                "output_state": "post-update",
+                "padding": "NaN input/reference sentinels only outside each sequence length; output sentinel must remain untouched",
+                "represented_inputs": "FP32 keys, values, queries, alpha, beta, and initial state; FP64 independent recurrence outputs/final states serialized in the same bundle",
+                "rtol": 0.0002,
+                "sequence_contract": "all live timesteps in order, preserve nonzero initial state, carry final state across segments, no history truncation or sequence mixing",
+                "state_orientation": "S[d_v,d_k]",
+            }):
+        raise EvidenceError(f"{case_id}: contract identity, subcases, or numerical policy differs from frozen KWV08 contract")
+    represented = contract.get("represented_input")
+    if (not isinstance(represented, dict) or
+            represented.get("path") != "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin" or
+            input_sha != KWV08_INPUT_SHA256 or represented.get("sha256") != input_sha or
+            digest(input_path) != input_sha or input_path.stat().st_size != 56_285_400):
+        raise EvidenceError(f"{case_id}: recurrence represented-input identity or size differs from frozen bundle")
+
+    bundle_manifest_path = base / "recurrence_inputs.json"
+    bundle_manifest = read_json(bundle_manifest_path)
+    manifest_cases = bundle_manifest.get("cases") if isinstance(bundle_manifest, dict) else None
+    if (not isinstance(bundle_manifest, dict) or
+            bundle_manifest.get("format") != "KERNELWIKI-VOLTA-RECURRENCE-BUNDLE/1" or
+            bundle_manifest.get("bundle_file_sha256") != input_sha or
+            bundle_manifest.get("bundle_payload_sha256") != KWV08_PAYLOAD_SHA256 or
+            bundle_manifest.get("bundle_bytes") != input_path.stat().st_size or
+            not isinstance(manifest_cases, list) or len(manifest_cases) != len(expected_cases)):
+        raise EvidenceError(f"{case_id}: bundle manifest identity differs from the frozen represented data")
+    for actual, expected in zip(manifest_cases, expected_cases):
+        if (not isinstance(actual, dict) or
+                any(actual.get(key) != expected[key] for key in ("case_id", "T", "B", "d_v", "d_k", "live_steps")) or
+                actual.get("length_min") != 0 or actual.get("length_max") != expected["T"]):
+            raise EvidenceError(f"{case_id}: bundle manifest case dimensions or ragged lengths differ")
+
+    oracle = read_json(oracle_path)
+    if (oracle.get("format") != "KERNELWIKI-CPU-ORACLE/1" or
+            oracle.get("case_id") != case_id or oracle.get("passed") is not True or
+            oracle.get("represented_input") != represented):
+        raise EvidenceError(f"{case_id}: CPU oracle is not bound to the same passing represented bundle")
+    checks = oracle.get("checks")
+    required_oracle_checks = {
+        "expanded_rank_one_equation_small_semantic_case",
+        "segmented_carry_all_bundle_outputs",
+        "segmented_carry_all_bundle_final_states",
+    }
+    if (not isinstance(checks, list) or
+            {item.get("name") for item in checks if isinstance(item, dict)} != required_oracle_checks):
+        raise EvidenceError(f"{case_id}: independent CPU oracle lacks equation and segmented output/state checks")
+    for item in checks:
+        if not isinstance(item, dict):
+            raise EvidenceError(f"{case_id}: CPU oracle contains a malformed comparison")
+        error, reference, atol, rtol = (item.get(key) for key in
+                                        ("max_abs_error", "reference_max_abs", "atol", "rtol"))
+        if (not all(_kwv08_finite_nonnegative(value) for value in (error, reference, atol, rtol)) or
+                float(error) > float(atol) + float(rtol) * float(reference)):
+            raise EvidenceError(f"{case_id}: independent CPU oracle comparison fails its stated tolerance")
+    probe = read_json(base / "fp32_policy_probe.json")
+    if (probe.get("format") != "KERNELWIKI-RECURRENCE-FP32-POLICY-PROBE/1" or
+            probe.get("gpu_execution") is not False or
+            probe.get("bundle_file_sha256") != input_sha or
+            not isinstance(probe.get("cases"), list) or len(probe["cases"]) != len(expected_cases) or
+            any(not isinstance(item, dict) or item.get("within_predeclared_policy") is not True
+                for item in probe["cases"])):
+        raise EvidenceError(f"{case_id}: CPU-only FP32 policy probe is incomplete or failed")
+    case_matrix = read_json(base / "case_matrix.json")
+    matrix_cases = case_matrix.get("bundle", {}).get("cases") if isinstance(case_matrix, dict) else None
+    if matrix_cases != expected_cases:
+        raise EvidenceError(f"{case_id}: case matrix differs from the frozen recurrence bundle")
+    return {
+        "cases": {row["case_id"]: row for row in expected_cases},
+        "bundle_file_sha256": input_sha,
+        "bundle_payload_sha256": KWV08_PAYLOAD_SHA256,
+        "atol": 2e-05,
+        "rtol": 2e-4,
+        "oracle_path": oracle_path,
+        "oracle_sha256": oracle_sha,
+        "bundle_path": input_path,
+    }
+
+
+def _kwv08_source_closure(root: Path, case: dict[str, Any]
+                          ) -> tuple[dict[str, Any], dict[str, dict[str, Any]], dict[str, str]]:
+    case_id = str(case.get("id", "recurrence"))
+    closure_path, closure_sha = sha_binding(root, case.get("source_closure"),
+                                            f"{case_id} source closure")
+    closure = read_json(closure_path)
+    repository_inputs = closure.get("repository_inputs") if isinstance(closure, dict) else None
+    toolchain_inputs = closure.get("toolchain_inputs") if isinstance(closure, dict) else None
+    declarations = closure.get("declaring_specs") if isinstance(closure, dict) else None
+    if (closure_sha != KWV08_SOURCE_CLOSURE_SHA256 or
+            not isinstance(closure, dict) or closure.get("format") != KWV08_SOURCE_CLOSURE_FORMAT or
+            not isinstance(repository_inputs, list) or not repository_inputs or
+            not isinstance(toolchain_inputs, list) or not toolchain_inputs or
+            not isinstance(declarations, list) or len(declarations) != len(KWV08_ROLES)):
+        raise EvidenceError(f"{case_id}: source closure format or six-role declaration set is invalid")
+
+    captured = _captured_input_archives(root, case, required=True)
+    expected: dict[str, tuple[str, str, int]] = {}
+    for index, item in enumerate(repository_inputs):
+        label = f"{case_id} source closure repository input {index}"
+        if not isinstance(item, dict):
+            raise EvidenceError(f"{label}: malformed repository input")
+        original = _repo_relative_identity(root, item.get("original_path"), f"{label} original path")
+        archive_raw, expected_sha, size = item.get("archived_path"), item.get("sha256"), item.get("size_bytes")
+        if (not isinstance(archive_raw, str) or not isinstance(expected_sha, str) or len(expected_sha) != 64 or
+                type(size) is not int or size < 0):
+            raise EvidenceError(f"{label}: archive identity is malformed")
+        archive_path = absolute_repo_file(root, archive_raw, f"{label} archive")
+        if (archive_path.stat().st_size != size or digest(archive_path) != expected_sha or
+                str(original) in expected):
+            raise EvidenceError(f"{label}: archived hash, size, or original identity differs")
+        expected[str(original)] = (str(archive_path), expected_sha, size)
+    if set(expected) != set(captured):
+        raise EvidenceError(f"{case_id}: captured input aliases differ from repository source closure")
+    for original, (archive, expected_sha, size) in expected.items():
+        capture = captured[original]
+        if (str(capture["archive_path"]) != archive or capture["sha256"] != expected_sha or
+                capture["archive_path"].stat().st_size != size):
+            raise EvidenceError(f"{case_id}: captured alias differs from source closure")
+
+    expected_toolchain: dict[str, str] = {}
+    for index, item in enumerate(toolchain_inputs):
+        label = f"{case_id} source closure toolchain input {index}"
+        if not isinstance(item, dict):
+            raise EvidenceError(f"{label}: malformed external toolchain input")
+        raw_path, expected_sha, size = item.get("path"), item.get("sha256"), item.get("size_bytes")
+        if (not isinstance(raw_path, str) or not Path(raw_path).is_absolute() or
+                not isinstance(expected_sha, str) or len(expected_sha) != 64 or
+                type(size) is not int or size < 0 or raw_path in expected_toolchain):
+            raise EvidenceError(f"{label}: toolchain identity is malformed or duplicated")
+        path = Path(raw_path)
+        if not path.is_file() or path.stat().st_size != size or digest(path) != expected_sha:
+            raise EvidenceError(f"{label}: current toolchain file differs from captured identity")
+        expected_toolchain[raw_path] = expected_sha
+
+    expected_roles = {f"recurrence_{role}" for role in KWV08_ROLES}
+    expected_specs = {
+        f"benchmark_runs/volta-recurrence/controller/role-{role}.spec.json"
+        for role in expected_roles
+    }
+    declared: dict[str, dict[str, Any]] = {}
+    for index, item in enumerate(declarations):
+        label = f"{case_id} source closure role spec {index}"
+        if not isinstance(item, dict) or not isinstance(item.get("path"), str):
+            raise EvidenceError(f"{label}: malformed spec identity")
+        original = _repo_relative_identity(root, item["path"], f"{label} path")
+        capture = captured.get(str(original))
+        if (capture is None or capture["sha256"] != item.get("sha256") or
+                original.relative_to(root).as_posix() not in expected_specs):
+            raise EvidenceError(f"{label}: spec is not an exact captured KWV08 role spec")
+        spec = read_json(capture["archive_path"])
+        role = spec.get("role") if isinstance(spec, dict) else None
+        if role not in expected_roles or role in {entry.get("role") for entry in declared.values()}:
+            raise EvidenceError(f"{label}: spec role is unknown or duplicated")
+        inputs = spec.get("inputs")
+        if not isinstance(inputs, list) or not inputs:
+            raise EvidenceError(f"{label}: archived role spec inputs are missing")
+        for raw_input in inputs:
+            if not isinstance(raw_input, str) or not raw_input:
+                raise EvidenceError(f"{label}: declared input path is malformed")
+            if Path(raw_input).is_absolute():
+                if raw_input not in expected_toolchain:
+                    raise EvidenceError(f"{label}: absolute input is absent from toolchain closure")
+            else:
+                input_identity = _repo_relative_identity(root, raw_input, f"{label} declared input")
+                if str(input_identity) not in captured:
+                    raise EvidenceError(f"{label}: repository input is absent from source closure")
+        declared[str(original)] = {"role": role, "path": original, "spec": spec}
+    if ({str(record["path"].relative_to(root)) for record in declared.values()} != expected_specs or
+            {record["role"] for record in declared.values()} != expected_roles):
+        raise EvidenceError(f"{case_id}: source closure does not declare each exact role spec")
+    input_sets = [set(record["spec"]["inputs"]) for record in declared.values()]
+    if any(values != input_sets[0] for values in input_sets[1:]):
+        raise EvidenceError(f"{case_id}: six role specs do not share one immutable input set")
+    repository_spec_inputs = {
+        str(_repo_relative_identity(root, value, f"{case_id} role input identity"))
+        for value in input_sets[0] if not Path(value).is_absolute()
+    }
+    external_spec_inputs = {value for value in input_sets[0] if Path(value).is_absolute()}
+    if (repository_spec_inputs != set(captured) or external_spec_inputs != set(expected_toolchain)):
+        raise EvidenceError(f"{case_id}: source closure does not cover every declared role input")
+
+    gpu_uuid = str(case.get("gpu_uuid", ""))
+    if (closure.get("project_root") != str(root) or
+            closure.get("gpu_uuid_target") != gpu_uuid):
+        raise EvidenceError(f"{case_id}: source closure root or target GPU differs from the summary")
+    return ({"path": closure_path, "sha256": closure_sha, "data": closure,
+             "declared_specs": {record["role"]: record for record in declared.values()}},
+            captured, expected_toolchain)
+
+
+def _kwv08_validate_spec(root: Path, role: str, spec_record: dict[str, Any],
+                         binary_path: Path, gpu_uuid: str) -> None:
+    spec = spec_record["spec"]
+    _kind, _implementation_name, variant, mode, selected_case = KWV08_ROLES[role]
+    native_role = f"recurrence_{role}"
+    recipe = "ncu" if _kind == "foreground-ncu" else (
+        "compute-sanitizer" if _kind == "foreground-compute-sanitizer" else "baseline")
+    expected_argv = [str(binary_path.relative_to(root)), "--bundle",
+                      "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
+                      "--variant", variant, "--mode", mode]
+    if selected_case is not None:
+        expected_argv.extend(["--case", selected_case])
+    if (spec.get("role") != native_role or
+            spec.get("contract_id") != "kwv08-recurrence-state-ownership" or
+            spec.get("recipe") != recipe or spec.get("argv") != expected_argv or
+            spec.get("project_root") != str(root) or spec.get("command_cwd") != str(root) or
+            spec.get("resources", {}).get("gpu_uuids") != [gpu_uuid]):
+        raise EvidenceError(f"recurrence {role}: captured controller spec differs from the fixed native invocation")
+    benchmark = spec.get("benchmark")
+    build_argv = benchmark.get("build_argv") if isinstance(benchmark, dict) else None
+    if role == "correctness_baseline":
+        script = str((root / "benchmark_runs/volta-recurrence/source/capture_nvcc_build.sh").resolve())
+        source = str((root / "artifacts/kernels/volta-recurrence/variants/gdn_runner.cu").resolve())
+        if (not isinstance(build_argv, list) or len(build_argv) < 8 or
+                build_argv[0] != script or "--" not in build_argv or
+                "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc" not in build_argv or
+                "-arch=sm_70" not in build_argv or source not in build_argv or
+                build_argv[-2:] != ["-o", str(binary_path.resolve())]):
+            raise EvidenceError("recurrence baseline correctness role does not own the one SM70 build")
+    elif build_argv:
+        raise EvidenceError(f"recurrence {role}: shared executable was rebuilt after baseline correctness")
+
+
+def _kwv08_validate_argv(summary: dict[str, Any], root: Path, role: str,
+                         implementation: dict[str, Any]) -> None:
+    _kind, _implementation_name, variant, mode, selected_case = KWV08_ROLES[role]
+    provenance = summary.get("provenance")
+    argv = provenance.get("argv") if isinstance(provenance, dict) else None
+    if not isinstance(argv, list) or not argv or not isinstance(argv[0], str):
+        raise EvidenceError(f"recurrence {role}: controller application argv is missing")
+    executable = Path(argv[0])
+    if not executable.is_absolute():
+        executable = root / executable
+    if executable.resolve() != implementation["executed_path"].resolve():
+        raise EvidenceError(f"recurrence {role}: executed binary differs from the shared measured ELF")
+    expected = ["--bundle", "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
+                "--variant", variant, "--mode", mode]
+    if selected_case is not None:
+        expected += ["--case", selected_case]
+    if argv[1:] != expected:
+        raise EvidenceError(f"recurrence {role}: native argv does not match its fixed bundle/variant/mode selection")
+
+
+def _kwv08_archive_hash(manifest: dict[str, Any], path: Path, role_dir: Path,
+                        label: str) -> str:
+    try:
+        relative = path.resolve().relative_to(role_dir.resolve()).as_posix()
+    except ValueError as exc:
+        raise EvidenceError(f"{label}: archived file is outside its role directory") from exc
+    files = manifest.get("files")
+    if not isinstance(files, dict):
+        raise EvidenceError(f"{label}: derived archive file inventory is missing")
+    expected = files.get(relative)
+    actual = digest(path)
+    if not isinstance(expected, str) or expected != actual:
+        raise EvidenceError(f"{label}: archive index does not bind {relative}")
+    return actual
+
+
+def _kwv08_copied_role_file(root: Path, role_dir: Path, raw_path: str,
+                            label: str) -> Path:
+    """Resolve a collector file path while keeping it inside the archived role."""
+    supplied = Path(raw_path)
+    role_root = role_dir.resolve()
+    if supplied.is_absolute():
+        candidate = supplied.resolve()
+    else:
+        repo_candidate = (root / supplied).resolve()
+        try:
+            repo_candidate.relative_to(role_root)
+            candidate = repo_candidate
+        except ValueError:
+            candidate = (role_dir / supplied).resolve()
+    try:
+        candidate.relative_to(role_root)
+    except ValueError as exc:
+        raise EvidenceError(f"{label}: captured file escapes its role archive") from exc
+    if not candidate.is_file():
+        raise EvidenceError(f"{label}: captured file is missing")
+    return candidate
+
+
+def _kwv08_bind_stdout_capture(base: Path, root: Path, role: str, gpu_uuid: str,
+                               run: dict[str, Any], native_stdout: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+    archive_path = checked_file(base, run.get("archive_manifest"), f"recurrence {role} archive manifest")
+    archive = read_json(archive_path)
+    role_dir = archive_path.parent
+    role_name = f"recurrence_{role}"
+    files = archive.get("files") if isinstance(archive, dict) else None
+    if (not isinstance(archive, dict) or archive.get("format") != "KERNELWIKI-KWV08-ARCHIVE/1" or
+            archive.get("role") != role_name or not isinstance(files, dict)):
+        raise EvidenceError(f"recurrence {role}: derived archive manifest identity is malformed")
+    actual_files: dict[str, str] = {}
+    for path in sorted(role_dir.rglob("*")):
+        if path.is_symlink():
+            raise EvidenceError(f"recurrence {role}: role archive contains a symlink")
+        if path.is_file() and path.resolve() != archive_path.resolve():
+            actual_files[path.relative_to(role_dir).as_posix()] = digest(path)
+    if files != actual_files:
+        raise EvidenceError(f"recurrence {role}: archive index does not exactly inventory captured role files")
+
+    role_manifest_path = role_dir / "role-manifest.json"
+    role_manifest = read_json(role_manifest_path)
+    _kwv08_archive_hash(archive, role_manifest_path, role_dir, f"recurrence {role} role manifest")
+    if (not isinstance(role_manifest, dict) or
+            role_manifest.get("format") != "KERNELWIKI-KWV08-NATIVE-ROLE/1" or
+            role_manifest.get("role") != role_name or
+            role_manifest.get("evidence_id") != archive.get("evidence_id") or
+            role_manifest.get("controller_status") != "succeeded" or
+            role_manifest.get("controller_returncode") != 0 or
+            role_manifest.get("controller_result_status") != "succeeded" or
+            archive.get("runner_status") != "passed" or
+            not isinstance(role_manifest.get("copied_files"), list)):
+        raise EvidenceError(f"recurrence {role}: controller role manifest identity differs")
+    role_binary = role_manifest.get("binary")
+    archive_binary = archive.get("binary")
+    if (not isinstance(role_binary, dict) or not isinstance(archive_binary, dict) or
+            any(role_binary.get(key) != archive_binary.get(key) for key in ("path", "sha256", "size_bytes")) or
+            role_binary.get("available") is not True):
+        raise EvidenceError(f"recurrence {role}: role and derived archive manifests disagree on shared ELF")
+    archived_binary = absolute_repo_file(root, archive_binary.get("path"), f"recurrence {role} archived ELF")
+    if (digest(archived_binary) != archive_binary.get("sha256") or
+            archived_binary.stat().st_size != archive_binary.get("size_bytes")):
+        raise EvidenceError(f"recurrence {role}: archived ELF bytes differ from role manifest")
+    for item in role_manifest.get("copied_files", []):
+        if not isinstance(item, dict) or not isinstance(item.get("path"), str):
+            raise EvidenceError(f"recurrence {role}: copied-file receipt is malformed")
+        archived = _kwv08_copied_role_file(root, role_dir, item["path"],
+                                           f"recurrence {role} copied file")
+        archived = checked_file(base, {"path": archived.relative_to(base).as_posix(),
+                                       "sha256": item.get("sha256")},
+                                f"recurrence {role} copied file")
+        _kwv08_archive_hash(archive, archived, role_dir, f"recurrence {role} copied file")
+        if type(item.get("size_bytes")) is not int or archived.stat().st_size != item["size_bytes"]:
+            raise EvidenceError(f"recurrence {role}: copied-file size differs from role manifest")
+
+    evidence_path = checked_file(base, run.get("evidence"), f"recurrence {role} controller export")
+    exported = read_json(evidence_path)
+    evidence = exported.get("evidence") if isinstance(exported, dict) else None
+    artifacts = evidence.get("artifacts") if isinstance(evidence, dict) else None
+    evidence_id = evidence.get("id") if isinstance(evidence, dict) else None
+    controller_path = checked_file(base, run.get("execution"), f"recurrence {role} controller JSON")
+    controller = read_json(controller_path)
+    lease_record = run.get("lease")
+    if not isinstance(lease_record, dict):
+        raise EvidenceError(f"recurrence {role}: lease binding is missing")
+    lease_path = absolute_repo_file(root, lease_record.get("path"), f"recurrence {role} lease")
+    if (archive.get("evidence_id") != evidence_id or controller.get("evidence_id") != evidence_id or
+            digest(controller_path) != files.get("controller-run.json") or
+            digest(evidence_path) != files.get("controller-evidence.json") or
+            digest(lease_path) != files.get("lease.json") or digest(lease_path) != lease_record.get("sha256")):
+        raise EvidenceError(f"recurrence {role}: controller export, execution, or lease differs from archive index")
+    raw_export = checked_file(base, run.get("project_control_raw"), f"recurrence {role} raw Project Control export")
+    if digest(raw_export) != files.get("project-control-read-export.json"):
+        raise EvidenceError(f"recurrence {role}: raw Project Control export differs from archive index")
+
+    summary = evidence.get("summary") if isinstance(evidence, dict) else None
+    record = summary.get("record") if isinstance(summary, dict) else None
+    stdout_path = record.get("stdout") if isinstance(record, dict) else None
+    stdout_artifacts = [item for item in artifacts if isinstance(item, dict) and item.get("kind") == "stdout"] if isinstance(artifacts, list) else []
+    outer = role_dir / "foreground.stdout.txt"
+    outer_hash = files.get("foreground.stdout.txt")
+    expected_uuid = gpu_uuid.removeprefix("GPU-").replace("-", "").lower()
+    if (archive.get("gpu_uuid_raw_hex") != expected_uuid or
+            str(archive.get("compute_capability")) != "7.0" or
+            not isinstance(stdout_path, str) or len(stdout_artifacts) != 1 or
+            stdout_artifacts[0].get("complete") != 1 or
+            stdout_artifacts[0].get("path") != stdout_path or
+            stdout_artifacts[0].get("content_hash") != outer_hash or
+            not isinstance(outer_hash, str) or digest(outer) != outer_hash):
+        raise EvidenceError(f"recurrence {role}: controller stdout is not hash-bound to its captured artifact")
+    copied_stdout = [item for item in role_manifest.get("copied_files", [])
+                     if isinstance(item, dict) and
+                     Path(str(item.get("path", ""))).name == "foreground.stdout.txt"]
+    if (len(copied_stdout) != 1 or copied_stdout[0].get("source_path") != stdout_path or
+            copied_stdout[0].get("sha256") != outer_hash):
+        raise EvidenceError(f"recurrence {role}: archived outer stdout path differs from controller artifact identity")
+
+    capture = run.get("native_stdout_capture")
+    capture_path = checked_file(base, capture, f"recurrence {role} native stdout capture")
+    if capture_path.resolve() != native_stdout.resolve():
+        raise EvidenceError(f"recurrence {role}: app stdout path differs from declared native capture")
+    capture_hash = _kwv08_archive_hash(archive, capture_path, role_dir,
+                                       f"recurrence {role} native stdout")
+    if capture.get("sha256") != capture_hash:
+        raise EvidenceError(f"recurrence {role}: native stdout capture hash differs")
+    if role in {"correctness_baseline", "correctness_candidate", "baseline_timing", "candidate_timing"}:
+        if (capture_path.relative_to(role_dir).as_posix() != "foreground.stdout.txt" or
+                capture.get("reported_path") is not None or capture_hash != outer_hash or
+                stdout_artifacts[0].get("content_hash") != capture_hash):
+            raise EvidenceError(f"recurrence {role}: native stdout is not the captured controller stdout bytes")
+    else:
+        try:
+            relative_stdout = capture_path.relative_to(role_dir).as_posix()
+            outer_text = outer.read_text(encoding="utf-8", errors="replace")
+        except (ValueError, OSError) as exc:
+            raise EvidenceError(f"recurrence {role}: nested native stdout is outside the role archive") from exc
+        reported = capture.get("reported_path")
+        expected_relative = ("sanitizer/run/stdout.txt" if role == "sanitizer_candidate"
+                             else "ncu/run/command.stdout.txt")
+        marker = "stdout: " if role == "sanitizer_candidate" else "command stdout: "
+        if (relative_stdout != expected_relative or not isinstance(reported, str) or
+                not Path(reported).is_absolute() or f"{marker}{reported}" not in outer_text):
+            raise EvidenceError(f"recurrence {role}: nested native stdout path is not identified by controller output")
+        if role == "sanitizer_candidate":
+            path_report_path = role_dir / "sanitizer-path-report.json"
+            path_report = read_json(path_report_path)
+            archive_prefix = role_dir.relative_to(root).as_posix()
+            expected_archive_path = f"{archive_prefix}/{expected_relative}"
+            if (not isinstance(path_report, dict) or
+                    path_report.get("format") != "KERNELWIKI-KWV08-SANITIZER-PATHS/1" or
+                    path_report.get("application_stdout") != expected_archive_path or
+                    not isinstance(path_report.get("files"), list) or
+                    reported not in {item.get("source_path") for item in path_report.get("files", [])
+                                     if isinstance(item, dict) and item.get("archive_path") == expected_archive_path}):
+                raise EvidenceError(f"recurrence sanitizer: nested app stdout path report is inconsistent")
+            sanitizer_summary = checked_file(base, run.get("sanitizer_summary"),
+                                             "recurrence sanitizer classifier summary")
+            sanitizer_log = checked_file(base, run.get("sanitizer_log"),
+                                         "recurrence sanitizer raw memcheck log")
+            summary_sha = _kwv08_archive_hash(archive, sanitizer_summary, role_dir,
+                                              "recurrence sanitizer summary")
+            log_sha = _kwv08_archive_hash(archive, sanitizer_log, role_dir,
+                                          "recurrence sanitizer raw log")
+            summary_data = read_json(sanitizer_summary)
+            if (not isinstance(summary_data, dict) or
+                    sanitizer_summary.relative_to(role_dir).as_posix() != "sanitizer/run/summary.json" or
+                    sanitizer_log.relative_to(role_dir).as_posix() != "sanitizer/run/raw.log" or
+                    run["sanitizer_summary"].get("sha256") != summary_sha or
+                    run["sanitizer_log"].get("sha256") != log_sha or
+                    summary_data.get("tool") != "compute-sanitizer" or
+                    summary_data.get("status") != "partial" or
+                    summary_data.get("tool_detail") != "memcheck" or
+                    summary_data.get("conclusive") is not False or
+                    type(summary_data.get("exit_status")) is not int or summary_data["exit_status"] != 0 or
+                    type(summary_data.get("error_count")) is not int or summary_data["error_count"] != 0):
+                raise EvidenceError("recurrence sanitizer: classifier is not the accepted zero-error partial memcheck result")
+            raw_log_text = sanitizer_log.read_text(encoding="utf-8", errors="replace")
+            error_summaries = [line for line in raw_log_text.splitlines() if "ERROR SUMMARY:" in line]
+            reported_log = run["sanitizer_log"].get("reported_path")
+            if (len(error_summaries) != 1 or not error_summaries[0].strip().endswith("0 errors") or
+                    not isinstance(reported_log, str) or
+                    f"raw log: {reported_log}" not in outer_text):
+                raise EvidenceError("recurrence sanitizer: raw memcheck capture does not report exactly zero errors")
+            report_files = path_report.get("files")
+            for relative, reported_path, expected_sha in (
+                    ("sanitizer/run/raw.log", reported_log, log_sha),
+                    ("sanitizer/run/summary.json", run["sanitizer_summary"].get("reported_path"), summary_sha)):
+                archive_path = f"{archive_prefix}/{relative}"
+                if not isinstance(reported_path, str) or reported_path not in {
+                        item.get("source_path") for item in report_files
+                        if isinstance(item, dict) and item.get("archive_path") == archive_path and
+                        item.get("sha256") == expected_sha}:
+                    raise EvidenceError(f"recurrence sanitizer: nested {relative} path/hash is not captured")
+        else:
+            profile = run.get("profile")
+            if not isinstance(profile, dict):
+                raise EvidenceError("recurrence profile: NCU artifact bindings are missing")
+            expected_paths = {
+                "summary": "ncu/run/summary.json", "analysis": "ncu/run/analysis.txt",
+                "raw_csv": "ncu/run/raw.csv", "report": "ncu/run/report.ncu-rep",
+                "shim_log": "ncu-shim.jsonl",
+            }
+            for key, relative in expected_paths.items():
+                path = checked_file(base, profile.get(key), f"recurrence NCU {key}")
+                if path.relative_to(role_dir).as_posix() != relative:
+                    raise EvidenceError(f"recurrence profile: NCU {key} path differs from the captured artifact")
+                _kwv08_archive_hash(archive, path, role_dir, f"recurrence NCU {key}")
+                if profile[key].get("sha256") != digest(path):
+                    raise EvidenceError(f"recurrence profile: NCU {key} hash differs from archive")
+                if key == "raw_csv" and path.stat().st_size == 0:
+                    raise EvidenceError("recurrence profile: NCU raw counter CSV is empty")
+            ncu_summary = read_json(role_dir / expected_paths["summary"])
+            if (not isinstance(ncu_summary, dict) or
+                    ncu_summary.get("counter_valid") is not True or
+                    ncu_summary.get("timing_valid") is not False):
+                raise EvidenceError("recurrence profile: NCU counter/timing validity distinction is missing")
+    return archive, evidence
 
 
 def _row_contract_cases(contract: dict[str, Any]) -> list[dict[str, Any]]:
@@ -2522,6 +3153,133 @@ def _check_attention_case(base: Path, root: Path, case: dict[str, Any],
                                 "attention profile_candidate_decode")
 
 
+def _check_kwv08_case(base: Path, root: Path, case: dict[str, Any],
+                      evidence_ids: set[str], contract_path: Path,
+                      contract_sha: str, contract: dict[str, Any]) -> None:
+    case_id = case["id"]
+    if case_id != "recurrence_state_ownership_bundle":
+        raise EvidenceError("unknown KWV08 recurrence contract id")
+    input_path, input_sha = sha_binding(root, case.get("represented_input"),
+                                        f"{case_id} represented input")
+    oracle_path = checked_file(base, case.get("oracle"), f"{case_id} CPU oracle")
+    oracle_sha = digest(oracle_path)
+    if case.get("oracle", {}).get("sha256") != oracle_sha:
+        raise EvidenceError(f"{case_id}: CPU oracle SHA binding differs")
+    records = _kwv08_suite_records(base, root, case, contract_path, contract,
+                                   input_path, input_sha, oracle_path, oracle_sha)
+    closure, captured_archives, external_inputs = _kwv08_source_closure(root, case)
+    captured_inputs = {original: item["sha256"] for original, item in captured_archives.items()}
+
+    if case.get("source_closure", {}).get("path") != str(closure["path"].relative_to(root)):
+        raise EvidenceError(f"{case_id}: source closure does not use the canonical frozen repository snapshot")
+    expected_source = "artifacts/kernels/volta-recurrence/variants/gdn_recurrent_state.cuh"
+    expected_launcher = "artifacts/kernels/volta-recurrence/variants/gdn_runner.cu"
+    implementations = case.get("implementations")
+    if not isinstance(implementations, dict):
+        raise EvidenceError(f"{case_id}: baseline/candidate implementation identities are missing")
+    executed_path = (root / "benchmark_runs/volta-recurrence/bin/gdn_runner").resolve()
+    bound_impls: dict[str, dict[str, Any]] = {}
+    binary_identity: tuple[Path, str] | None = None
+    for name in ("baseline", "candidate"):
+        entry = implementations.get(name)
+        if not isinstance(entry, dict):
+            raise EvidenceError(f"{case_id}: {name} implementation identity is missing")
+        source = entry.get("source")
+        source_path, source_sha = sha_binding(root, source, f"{case_id} {name} kernel source")
+        source_original = _repo_relative_identity(root, source.get("original_path"),
+                                                  f"{case_id} {name} source original path")
+        source_capture = captured_archives.get(str(source_original))
+        if (str(source_original.relative_to(root)) != expected_source or
+                source_capture is None or source_path != source_capture["archive_path"] or
+                source_sha != source_capture["sha256"]):
+            raise EvidenceError(f"{case_id}: {name} source differs from the archived recurrent kernel header")
+        launcher = entry.get("launcher_source")
+        launcher_path, launcher_sha = sha_binding(root, launcher, f"{case_id} {name} runner source")
+        launcher_original = _repo_relative_identity(root, launcher.get("original_path"),
+                                                    f"{case_id} {name} runner source original path")
+        launcher_capture = captured_archives.get(str(launcher_original))
+        if (str(launcher_original.relative_to(root)) != expected_launcher or
+                launcher_capture is None or launcher_path != launcher_capture["archive_path"] or
+                launcher_sha != launcher_capture["sha256"]):
+            raise EvidenceError(f"{case_id}: {name} runner source differs from its archived compiler input")
+        binary_path, binary_sha = sha_binding(root, entry.get("binary"),
+                                              f"{case_id} {name} measured executable")
+        if (not binary_path.name.startswith("gdn_runner-") or
+                not binary_path.name.endswith(".elf") or
+                binary_path.parent != (base / "evidence/v1/bin").resolve() or
+                entry.get("executed_path") != "benchmark_runs/volta-recurrence/bin/gdn_runner" or
+                not executed_path.is_file() or digest(executed_path) != binary_sha):
+            raise EvidenceError(f"{case_id}: {name} implementation does not bind the one built shared ELF")
+        if binary_identity is None:
+            binary_identity = (binary_path, binary_sha)
+        elif binary_identity != (binary_path, binary_sha):
+            raise EvidenceError(f"{case_id}: baseline and candidate use different native ELF bytes")
+        bound_impls[name] = {
+            "source_path": source_path, "source_input_path": source_original,
+            "source_sha": source_sha, "launcher_source_path": launcher_path,
+            "binary_path": binary_path, "executed_path": executed_path,
+            "binary_sha": binary_sha,
+        }
+    if case.get("libraries") != []:
+        raise EvidenceError(f"{case_id}: recurrence has no linked math-library comparison inputs")
+
+    runs = case.get("runs")
+    if not isinstance(runs, dict) or set(runs) != set(KWV08_ROLES):
+        raise EvidenceError(f"{case_id}: exact six controller-backed recurrence roles are required")
+    spec_records = closure["declared_specs"]
+    summaries: dict[str, dict[str, Any]] = {}
+    for role, (kind, implementation_name, _variant, _mode, _selected) in KWV08_ROLES.items():
+        if implementation_name not in bound_impls:
+            raise EvidenceError(f"recurrence {role}: implementation is not archived")
+        spec_record = spec_records.get(f"recurrence_{role}")
+        if not isinstance(spec_record, dict):
+            raise EvidenceError(f"recurrence {role}: exact source-closed spec is missing")
+        _kwv08_validate_spec(root, role, spec_record, executed_path, str(case["gpu_uuid"]))
+        summary = _controller_run(
+            base, root, runs[role], f"recurrence {role}", kind,
+            bound_impls[implementation_name], contract_path, contract_sha,
+            input_path, input_sha, oracle_path, oracle_sha,
+            str(case["gpu_uuid"]), evidence_ids, captured_inputs,
+            additional_inputs=external_inputs,
+        )
+        _kwv08_validate_argv(summary, root, role, bound_impls[implementation_name])
+        capture = runs[role].get("native_stdout_capture")
+        native_path = checked_file(base, capture, f"recurrence {role} native stdout")
+        _kwv08_bind_stdout_capture(base, root, role, str(case["gpu_uuid"]),
+                                   runs[role], native_path)
+        native_result = read_json(native_path)
+        _kwv08_native_checks(native_result, records, str(case["gpu_uuid"]),
+                             role, f"recurrence {role}")
+        summaries[role] = summary
+
+    if binary_identity is None:
+        raise EvidenceError(f"{case_id}: measured ELF identity is unavailable")
+    for role, summary in summaries.items():
+        role_dir = checked_file(base, runs[role].get("archive_manifest"),
+                                f"recurrence {role} archive manifest").parent
+        archive = read_json(role_dir / "archive-manifest.json")
+        binary = archive.get("binary")
+        if (not isinstance(binary, dict) or
+                binary.get("path") != str(binary_identity[0].relative_to(root)) or
+                binary.get("sha256") != binary_identity[1] or
+                not (role_dir / "role-manifest.json").is_file()):
+            raise EvidenceError(f"recurrence {role}: archive does not bind the shared measured ELF")
+
+    build_role = "correctness_baseline"
+    build_dir = checked_file(base, runs[build_role].get("archive_manifest"),
+                             "recurrence build archive manifest").parent
+    build_manifest = read_json(build_dir / "archive-manifest.json")
+    for name in ("nvcc.stdout.txt", "nvcc.stderr.txt"):
+        build_log = build_dir / name
+        if not build_log.is_file():
+            raise EvidenceError(f"recurrence build: first-build {name} is missing")
+        _kwv08_archive_hash(build_manifest, build_log, build_dir, f"recurrence build {name}")
+    ptxas = (build_dir / "nvcc.stderr.txt").read_text(encoding="utf-8", errors="replace")
+    if ("ptxas info" not in ptxas or "for 'sm_70'" not in ptxas or
+            "spill stores" not in ptxas or "Used " not in ptxas):
+        raise EvidenceError("recurrence build: captured compiler stderr lacks the SM70 ptxas resource report")
+
+
 def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> None:
     if not isinstance(case, dict) or not isinstance(case.get("id"), str):
         raise EvidenceError("case is malformed or lacks id")
@@ -2540,6 +3298,9 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
         return
     if _is_kwv07_contract(contract_data):
         _check_kwv07_case(base, root, case, evidence_ids, contract, contract_sha, contract_data)
+        return
+    if _is_kwv08_contract(contract_data):
+        _check_kwv08_case(base, root, case, evidence_ids, contract, contract_sha, contract_data)
         return
     rows_contract = _is_rows_contract(contract_data)
     captured_archives = _captured_input_archives(root, case, required=rows_contract)

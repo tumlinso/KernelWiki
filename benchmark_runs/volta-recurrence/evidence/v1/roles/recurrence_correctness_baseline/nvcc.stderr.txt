@@ -1,0 +1,22 @@
+nvcc warning : Support for offline compilation for architectures prior to '<compute/sm/lto>_75' will be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_ZN5kwv0823recurrent_retain_kernelILi64ELi64EEEvPKfS2_S2_S2_S2_PKiPfS5_ii' for 'sm_70'
+ptxas info    : Function properties for _ZN5kwv0823recurrent_retain_kernelILi64ELi64EEEvPKfS2_S2_S2_S2_PKiPfS5_ii
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 152 registers, used 1 barriers, 776 bytes smem, 424 bytes cmem[0]
+ptxas info    : Compile time = 31.666 ms
+ptxas info    : Compiling entry function '_ZN5kwv0821recurrent_step_kernelILi64ELi64EEEvPKfS2_S2_S2_S2_PKiPfS5_iii' for 'sm_70'
+ptxas info    : Function properties for _ZN5kwv0821recurrent_step_kernelILi64ELi64EEEvPKfS2_S2_S2_S2_PKiPfS5_iii
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 168 registers, used 1 barriers, 776 bytes smem, 428 bytes cmem[0]
+ptxas info    : Compile time = 22.815 ms
+ptxas info    : Compiling entry function '_ZN5kwv0823recurrent_retain_kernelILi32ELi32EEEvPKfS2_S2_S2_S2_PKiPfS5_ii' for 'sm_70'
+ptxas info    : Function properties for _ZN5kwv0823recurrent_retain_kernelILi32ELi32EEEvPKfS2_S2_S2_S2_PKiPfS5_ii
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, used 1 barriers, 392 bytes smem, 424 bytes cmem[0]
+ptxas info    : Compile time = 14.092 ms
+ptxas info    : Compiling entry function '_ZN5kwv0821recurrent_step_kernelILi32ELi32EEEvPKfS2_S2_S2_S2_PKiPfS5_iii' for 'sm_70'
+ptxas info    : Function properties for _ZN5kwv0821recurrent_step_kernelILi32ELi32EEEvPKfS2_S2_S2_S2_PKiPfS5_iii
+    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads
+ptxas info    : Used 80 registers, used 1 barriers, 392 bytes smem, 428 bytes cmem[0]
+ptxas info    : Compile time = 10.185 ms

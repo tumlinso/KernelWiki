@@ -1,0 +1,24 @@
+{
+  "binary": {
+    "path": "benchmark_runs/volta-recurrence/evidence/v1/bin/gdn_runner-8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1.elf",
+    "sha256": "8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1",
+    "size_bytes": 1305032
+  },
+  "compute_capability": "7.0",
+  "controller_status": "succeeded",
+  "evidence_id": "f9c25586-e5f9-4ef8-8795-4b6fbd406204",
+  "files": {
+    "controller-evidence.json": "a929f9def97372a8a3b31b90637785bb9468368ab71e4f1efdd1962bb5cece8b",
+    "controller-run.json": "3133d13bb7f8e3bd7a755096bd8af7b2caef7c42c64bfa7fb3d265267ac141d0",
+    "foreground.stderr.txt": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+    "foreground.stdout.txt": "5ebc700253b4bc4c73d8c6f2bb8bf97ffad537531cb5ef33f2d518643f85f7c7",
+    "lease.json": "7dbaf8ab6da36c474f11af14a10f369ce8cb331f090bfaa718b2c7a329bc0520",
+    "project-control-read-export.json": "d9853f59ea9ffeb04d29d06c95abf007636f4cfe6d02ecf56c90df32c219c4a2",
+    "role-manifest.json": "0f0a6f915d2494b4a47ee839ed0f0e9f9fcdf981ba16ecaedccc4d14181bc821",
+    "source-snapshot-reference.json": "b134df42d869e5e454fee7778a159ad0b88564489aecea6a68ed042fa9bd3457"
+  },
+  "format": "KERNELWIKI-KWV08-ARCHIVE/1",
+  "gpu_uuid_raw_hex": "21131915148823af38dd1743ae1f5cc8",
+  "role": "recurrence_candidate_timing",
+  "runner_status": "passed"
+}

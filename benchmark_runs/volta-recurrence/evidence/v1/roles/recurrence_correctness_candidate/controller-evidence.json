@@ -1,0 +1,748 @@
+{
+  "evidence": {
+    "artifacts": [
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "cbc41639a509b3748c456a62ae6c7a821382092fb31cd94c62b9dffcb812a105",
+        "created_at": 1792274763.9146516,
+        "id": "2cc88eb7-7604-488a-b3c8-0d5206323f00",
+        "job_id": "4540f902-cf33-4209-a049-d20ba443fafe",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/fbe0226a-2184-4180-b1c4-ec29ce697eff/foreground.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+        "created_at": 1792274763.9146516,
+        "id": "8a8ae982-14b8-4e31-8778-5177a89ba6a8",
+        "job_id": "4540f902-cf33-4209-a049-d20ba443fafe",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/fbe0226a-2184-4180-b1c4-ec29ce697eff/foreground.stderr.txt"
+      }
+    ],
+    "classification": "decision-result",
+    "contaminated": 0,
+    "created_at": 1792274763.9146516,
+    "id": "83d4bd3b-901a-42af-8e4f-73b0114c7e35",
+    "job_id": "4540f902-cf33-4209-a049-d20ba443fafe",
+    "kind": "foreground-baseline",
+    "parser_version": "cuda-controller/1",
+    "severity": 0,
+    "snapshot": {
+      "commit": "cf802ddc60bfd009cf26e692a782b55b776cbcf6",
+      "dirty": true,
+      "fingerprint": "fcbad794bc3a509a56ab1dacb0673f7b199bb2e1dad9208882168911cc04e393",
+      "patch_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "project_root": "/home/tumlinson/KernelWiki",
+      "safe": true,
+      "source_root": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/snapshots/fcbad794bc3a509a56ab1dacb0673f7b199bb2e1dad9208882168911cc04e393/source",
+      "untracked": [
+        {
+          "path": "artifacts/kernels/volta-recurrence/variants/PROVENANCE.yaml",
+          "sha256": "36bdc95025ab831b446fffa62e86ebc42121b446afe69c07144a0c48c62734bd"
+        },
+        {
+          "path": "artifacts/kernels/volta-recurrence/variants/README.md",
+          "sha256": "487bdc359675b1b52849211225cc58bf2bf3a7c29af1373bbf1885483e25842f"
+        },
+        {
+          "path": "artifacts/kernels/volta-recurrence/variants/bundle_contract.hpp",
+          "sha256": "608123beccab006944e05f521924e527cbeb2e2fa4d87541f120ab5be55fcfb0"
+        },
+        {
+          "path": "artifacts/kernels/volta-recurrence/variants/gdn_recurrent_state.cuh",
+          "sha256": "a2b1cf2edf1c6300ce30af202dc383b5bc2b4ed618869c9eeb1d3ccd4fe427d0"
+        },
+        {
+          "path": "artifacts/kernels/volta-recurrence/variants/gdn_runner.cu",
+          "sha256": "8c69b49874fec6146b8d56c3c129e5627e41f616261f2e88ba945353670c0d2a"
+        },
+        {
+          "path": "artifacts/kernels/volta-recurrence/variants/sha256.hpp",
+          "sha256": "478742e92e62db09ee58c2fcc15f727b9aa5e72908ef2173b21325ae1f6e67ed"
+        },
+        {
+          "path": "artifacts/kernels/volta-recurrence/variants/tests/test_bundle_reader.cpp",
+          "sha256": "a0bc8ef4bf6d893fcab5166a0af98bc5b512eeddc69c2b66a8b63d144d46d5bd"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/bin/gdn_runner",
+          "sha256": "8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/case_matrix.json",
+          "sha256": "82e5792154dc2c25abf5ced5bc227e41f2efc24f1589f590ade0e1a3ac707f17"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/contract.json",
+          "sha256": "96a338e1ad7623c2e356b5394589f7e4fe97f11605812fc76f9e588d1517ccb9"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/controller/make_role_specs.py",
+          "sha256": "8eb970cff8707f4aaa99b1dd17897aefa1958f61f9ac795b7c4342db35adb027"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_baseline_timing.spec.json",
+          "sha256": "ba394534a6e29c0adfb3abe9aedbc1d7f0220e042bc6b8d3ca15002de0d9fb1c"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_candidate_timing.spec.json",
+          "sha256": "bb6f6b1656f5aafa669abee1ea54b9a17d3963d711632c34c668962e591521e2"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_baseline.spec.json",
+          "sha256": "73ed83bcd21460e2a445ca573cb9bb2c1f5b4b7bde95cb759e9cd9275c380363"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_candidate.spec.json",
+          "sha256": "a2dbc86ccbe885cf4219c2a96992db75cc3e0a42d1cd6394f7988402d7a36ef6"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_profile_candidate.spec.json",
+          "sha256": "94e2f3de7453e92a883921e67c8aeee2e12d52731a471f1d2fba1ed3f02c8542"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_sanitizer_candidate.spec.json",
+          "sha256": "6c2f5af94e4274ef85c50cac6359f9d0b741ef8d7ed4f6507b8e7a94f933c447"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/cpu-oracle.json",
+          "sha256": "e8bc1e9256c7cf97e835b07b4d2f2f6673602193eb9f9e0d9d0cbc7ad0cfe147"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
+          "sha256": "e760eda922a42c0d6f6338e8cc0d0b0c7971c4205c956047a55791191fced4b5"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/recurrence_inputs.json",
+          "sha256": "6e0ebeb6f8dcc9bb4ed27769993f348915b777e265c2e848eb3b709c45b75419"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/source/bundle_io.py",
+          "sha256": "5a1e8f9829754a6b17d4b4236937817242f2d1058b28bfab90a4cbd1f654e58e"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/source/capture_nvcc_build.sh",
+          "sha256": "b261f375724bb2100dee43932c2224eaa8dbb21c4a1b64fd32d319a297d2c102"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/source/collect_native_evidence.py",
+          "sha256": "8201a01ab9e148c9281cdb7778f74abf61668b4e8642bf64e8b3674486d31e11"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/source/make_case_records.py",
+          "sha256": "01859d339b43faf21da895b771e99046121d29b161c76ab2242f7dcc1a500974"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/source/pack_source_closure.py",
+          "sha256": "2e2a556d220dc5851ad8930acb12788aa4c3391aa374b898b8012b4bc2116885"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/source/prepare_recurrence_bundle.py",
+          "sha256": "c46878d8a254ba64c54ac8f2782c29b676996b12f1307995f625e1b47d8c2357"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/source/probe_fp32_policy.py",
+          "sha256": "402811da5f26b0468f30b1a0f63ea898651316ea075893b60c957638c335e4d9"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/source/recurrence_oracle.py",
+          "sha256": "7c525ff7362423a76f7d3c09d387defe1f3e904468aba543affe35750c3de1b5"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/source/test_recurrence_bundle.py",
+          "sha256": "df3e899de33a976b870e31004a8f47c38a1c488b73c95b74e7d36e366944006c"
+        },
+        {
+          "path": "benchmark_runs/volta-recurrence/source/test_recurrence_oracle.py",
+          "sha256": "47e9bb1baedc9fd9000d6b53e9f370961a3dd973a3bdb4181071afb98ef113db"
+        }
+      ]
+    },
+    "source_fingerprint": "fcbad794bc3a509a56ab1dacb0673f7b199bb2e1dad9208882168911cc04e393",
+    "status": "succeeded",
+    "summary": {
+      "benchmark": null,
+      "binaries": [
+        {
+          "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/bin/gdn_runner",
+          "sha256": "8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1"
+        }
+      ],
+      "build": null,
+      "classification": "decision-result",
+      "context": null,
+      "correctness": null,
+      "parser_version": "cuda-controller/1",
+      "provenance": {
+        "argv": [
+          "benchmark_runs/volta-recurrence/bin/gdn_runner",
+          "--bundle",
+          "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
+          "--variant",
+          "retained",
+          "--mode",
+          "correctness"
+        ],
+        "binary": {
+          "path": "benchmark_runs/volta-recurrence/bin/gdn_runner",
+          "sha256": "8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1"
+        },
+        "environment": {},
+        "gpus": [
+          {
+            "clocks_sm_mhz": 1312.0,
+            "compute_capability": "7.0",
+            "driver_version": "580.178.04",
+            "index": 0,
+            "memory_free_mib": 16145,
+            "memory_total_mib": 16384,
+            "name": "Tesla V100-SXM2-16GB",
+            "pci_bus_id": "00000000:02:00.0",
+            "temperature_c": 36.0,
+            "throttle_reasons": "0x0000000000000000",
+            "utilization_percent": 0.0,
+            "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+          }
+        ],
+        "inputs": [
+          {
+            "path": "/home/tumlinson/.agents/skills/cuda/scripts/cuda_controller.py",
+            "sha256": "07fd3704bdb441479c8accd75075e83fbccec824fd8d0b6e73f5e1df0c344959"
+          },
+          {
+            "path": "/home/tumlinson/.agents/skills/cuda/scripts/cuda_toolchain.py",
+            "sha256": "ed4d8c8bd67604e521c32f7e2b58b5d3400e57a621fec68440d3a88eb19f2e5c"
+          },
+          {
+            "path": "/home/tumlinson/.agents/skills/cuda/scripts/debug_compute_sanitizer.sh",
+            "sha256": "760fa5fe343e34ba331f7463d692607f7bb911bddcddb264a95a04a9493e2320"
+          },
+          {
+            "path": "/home/tumlinson/.agents/skills/cuda/scripts/profile_ncu.sh",
+            "sha256": "6ab3f96e359d7c47def9a11f6ba90693210c1a9446e615b5d5ec872012181d61"
+          },
+          {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+            "sha256": "df9974db233a0b7a6c6d59c0e5d74e011566104098bcb3553495ff1b95bdeaf6"
+          },
+          {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+            "sha256": "979adf037f4e3434a976b7f0912b0a05ce3b062e31b2a73397a1bf1cd5f57547"
+          },
+          {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute/ncu",
+            "sha256": "a44ff2c735c4dcf66c78f3f430155805d6a0b1f74f26331f98ecec03bfbf3f1a"
+          },
+          {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute/target/linux-desktop-glibc_2_11_3-x64/ncu",
+            "sha256": "da5e94a33c67f820e154da8a633755c44eb08b51a61e6fc3662ae592c5f59c82"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-recurrence/variants/PROVENANCE.yaml",
+            "sha256": "36bdc95025ab831b446fffa62e86ebc42121b446afe69c07144a0c48c62734bd"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-recurrence/variants/README.md",
+            "sha256": "487bdc359675b1b52849211225cc58bf2bf3a7c29af1373bbf1885483e25842f"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-recurrence/variants/bundle_contract.hpp",
+            "sha256": "608123beccab006944e05f521924e527cbeb2e2fa4d87541f120ab5be55fcfb0"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-recurrence/variants/gdn_recurrent_state.cuh",
+            "sha256": "a2b1cf2edf1c6300ce30af202dc383b5bc2b4ed618869c9eeb1d3ccd4fe427d0"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-recurrence/variants/gdn_runner.cu",
+            "sha256": "8c69b49874fec6146b8d56c3c129e5627e41f616261f2e88ba945353670c0d2a"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-recurrence/variants/sha256.hpp",
+            "sha256": "478742e92e62db09ee58c2fcc15f727b9aa5e72908ef2173b21325ae1f6e67ed"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-recurrence/variants/tests/test_bundle_reader.cpp",
+            "sha256": "a0bc8ef4bf6d893fcab5166a0af98bc5b512eeddc69c2b66a8b63d144d46d5bd"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/ncu-collection-shim.py",
+            "sha256": "fda69450466b6617d627e638db32d094ac28d8e7d5bec80e512a4fdce3fce98f"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm/controller/pc_controller.py",
+            "sha256": "492d0419f5015188c1191f98c491f0a61afdad8642f91b75de4d093230a2de99"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/case_matrix.json",
+            "sha256": "82e5792154dc2c25abf5ced5bc227e41f2efc24f1589f590ade0e1a3ac707f17"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/contract.json",
+            "sha256": "96a338e1ad7623c2e356b5394589f7e4fe97f11605812fc76f9e588d1517ccb9"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/controller/make_role_specs.py",
+            "sha256": "8eb970cff8707f4aaa99b1dd17897aefa1958f61f9ac795b7c4342db35adb027"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/controller/role-recurrence_baseline_timing.spec.json",
+            "sha256": "ba394534a6e29c0adfb3abe9aedbc1d7f0220e042bc6b8d3ca15002de0d9fb1c"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/controller/role-recurrence_candidate_timing.spec.json",
+            "sha256": "bb6f6b1656f5aafa669abee1ea54b9a17d3963d711632c34c668962e591521e2"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_baseline.spec.json",
+            "sha256": "73ed83bcd21460e2a445ca573cb9bb2c1f5b4b7bde95cb759e9cd9275c380363"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_candidate.spec.json",
+            "sha256": "a2dbc86ccbe885cf4219c2a96992db75cc3e0a42d1cd6394f7988402d7a36ef6"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/controller/role-recurrence_profile_candidate.spec.json",
+            "sha256": "94e2f3de7453e92a883921e67c8aeee2e12d52731a471f1d2fba1ed3f02c8542"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/controller/role-recurrence_sanitizer_candidate.spec.json",
+            "sha256": "6c2f5af94e4274ef85c50cac6359f9d0b741ef8d7ed4f6507b8e7a94f933c447"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/cpu-oracle.json",
+            "sha256": "e8bc1e9256c7cf97e835b07b4d2f2f6673602193eb9f9e0d9d0cbc7ad0cfe147"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
+            "sha256": "e760eda922a42c0d6f6338e8cc0d0b0c7971c4205c956047a55791191fced4b5"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/recurrence_inputs.json",
+            "sha256": "6e0ebeb6f8dcc9bb4ed27769993f348915b777e265c2e848eb3b709c45b75419"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/source/bundle_io.py",
+            "sha256": "5a1e8f9829754a6b17d4b4236937817242f2d1058b28bfab90a4cbd1f654e58e"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/source/capture_nvcc_build.sh",
+            "sha256": "b261f375724bb2100dee43932c2224eaa8dbb21c4a1b64fd32d319a297d2c102"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/source/collect_native_evidence.py",
+            "sha256": "8201a01ab9e148c9281cdb7778f74abf61668b4e8642bf64e8b3674486d31e11"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/source/make_case_records.py",
+            "sha256": "01859d339b43faf21da895b771e99046121d29b161c76ab2242f7dcc1a500974"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/source/pack_source_closure.py",
+            "sha256": "2e2a556d220dc5851ad8930acb12788aa4c3391aa374b898b8012b4bc2116885"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/source/prepare_recurrence_bundle.py",
+            "sha256": "c46878d8a254ba64c54ac8f2782c29b676996b12f1307995f625e1b47d8c2357"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/source/probe_fp32_policy.py",
+            "sha256": "402811da5f26b0468f30b1a0f63ea898651316ea075893b60c957638c335e4d9"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/source/recurrence_oracle.py",
+            "sha256": "7c525ff7362423a76f7d3c09d387defe1f3e904468aba543affe35750c3de1b5"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/source/test_recurrence_bundle.py",
+            "sha256": "df3e899de33a976b870e31004a8f47c38a1c488b73c95b74e7d36e366944006c"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/source/test_recurrence_oracle.py",
+            "sha256": "47e9bb1baedc9fd9000d6b53e9f370961a3dd973a3bdb4181071afb98ef113db"
+          }
+        ],
+        "parser_version": "cuda-controller/1",
+        "project_root": "/home/tumlinson/KernelWiki",
+        "source": {
+          "commit": "cf802ddc60bfd009cf26e692a782b55b776cbcf6",
+          "dirty": true,
+          "fingerprint": "fcbad794bc3a509a56ab1dacb0673f7b199bb2e1dad9208882168911cc04e393",
+          "patch_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "project_root": "/home/tumlinson/KernelWiki",
+          "safe": true,
+          "source_root": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/snapshots/fcbad794bc3a509a56ab1dacb0673f7b199bb2e1dad9208882168911cc04e393/source",
+          "untracked": [
+            {
+              "path": "artifacts/kernels/volta-recurrence/variants/PROVENANCE.yaml",
+              "sha256": "36bdc95025ab831b446fffa62e86ebc42121b446afe69c07144a0c48c62734bd"
+            },
+            {
+              "path": "artifacts/kernels/volta-recurrence/variants/README.md",
+              "sha256": "487bdc359675b1b52849211225cc58bf2bf3a7c29af1373bbf1885483e25842f"
+            },
+            {
+              "path": "artifacts/kernels/volta-recurrence/variants/bundle_contract.hpp",
+              "sha256": "608123beccab006944e05f521924e527cbeb2e2fa4d87541f120ab5be55fcfb0"
+            },
+            {
+              "path": "artifacts/kernels/volta-recurrence/variants/gdn_recurrent_state.cuh",
+              "sha256": "a2b1cf2edf1c6300ce30af202dc383b5bc2b4ed618869c9eeb1d3ccd4fe427d0"
+            },
+            {
+              "path": "artifacts/kernels/volta-recurrence/variants/gdn_runner.cu",
+              "sha256": "8c69b49874fec6146b8d56c3c129e5627e41f616261f2e88ba945353670c0d2a"
+            },
+            {
+              "path": "artifacts/kernels/volta-recurrence/variants/sha256.hpp",
+              "sha256": "478742e92e62db09ee58c2fcc15f727b9aa5e72908ef2173b21325ae1f6e67ed"
+            },
+            {
+              "path": "artifacts/kernels/volta-recurrence/variants/tests/test_bundle_reader.cpp",
+              "sha256": "a0bc8ef4bf6d893fcab5166a0af98bc5b512eeddc69c2b66a8b63d144d46d5bd"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/bin/gdn_runner",
+              "sha256": "8e6cb928f4925cfbb8470c784eb5f4498ffd4622e3b62a1c57b0d7725e75bef1"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/case_matrix.json",
+              "sha256": "82e5792154dc2c25abf5ced5bc227e41f2efc24f1589f590ade0e1a3ac707f17"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/contract.json",
+              "sha256": "96a338e1ad7623c2e356b5394589f7e4fe97f11605812fc76f9e588d1517ccb9"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/controller/make_role_specs.py",
+              "sha256": "8eb970cff8707f4aaa99b1dd17897aefa1958f61f9ac795b7c4342db35adb027"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_baseline_timing.spec.json",
+              "sha256": "ba394534a6e29c0adfb3abe9aedbc1d7f0220e042bc6b8d3ca15002de0d9fb1c"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_candidate_timing.spec.json",
+              "sha256": "bb6f6b1656f5aafa669abee1ea54b9a17d3963d711632c34c668962e591521e2"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_baseline.spec.json",
+              "sha256": "73ed83bcd21460e2a445ca573cb9bb2c1f5b4b7bde95cb759e9cd9275c380363"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_correctness_candidate.spec.json",
+              "sha256": "a2dbc86ccbe885cf4219c2a96992db75cc3e0a42d1cd6394f7988402d7a36ef6"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_profile_candidate.spec.json",
+              "sha256": "94e2f3de7453e92a883921e67c8aeee2e12d52731a471f1d2fba1ed3f02c8542"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/controller/role-recurrence_sanitizer_candidate.spec.json",
+              "sha256": "6c2f5af94e4274ef85c50cac6359f9d0b741ef8d7ed4f6507b8e7a94f933c447"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/cpu-oracle.json",
+              "sha256": "e8bc1e9256c7cf97e835b07b4d2f2f6673602193eb9f9e0d9d0cbc7ad0cfe147"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
+              "sha256": "e760eda922a42c0d6f6338e8cc0d0b0c7971c4205c956047a55791191fced4b5"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/recurrence_inputs.json",
+              "sha256": "6e0ebeb6f8dcc9bb4ed27769993f348915b777e265c2e848eb3b709c45b75419"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/source/bundle_io.py",
+              "sha256": "5a1e8f9829754a6b17d4b4236937817242f2d1058b28bfab90a4cbd1f654e58e"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/source/capture_nvcc_build.sh",
+              "sha256": "b261f375724bb2100dee43932c2224eaa8dbb21c4a1b64fd32d319a297d2c102"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/source/collect_native_evidence.py",
+              "sha256": "8201a01ab9e148c9281cdb7778f74abf61668b4e8642bf64e8b3674486d31e11"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/source/make_case_records.py",
+              "sha256": "01859d339b43faf21da895b771e99046121d29b161c76ab2242f7dcc1a500974"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/source/pack_source_closure.py",
+              "sha256": "2e2a556d220dc5851ad8930acb12788aa4c3391aa374b898b8012b4bc2116885"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/source/prepare_recurrence_bundle.py",
+              "sha256": "c46878d8a254ba64c54ac8f2782c29b676996b12f1307995f625e1b47d8c2357"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/source/probe_fp32_policy.py",
+              "sha256": "402811da5f26b0468f30b1a0f63ea898651316ea075893b60c957638c335e4d9"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/source/recurrence_oracle.py",
+              "sha256": "7c525ff7362423a76f7d3c09d387defe1f3e904468aba543affe35750c3de1b5"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/source/test_recurrence_bundle.py",
+              "sha256": "df3e899de33a976b870e31004a8f47c38a1c488b73c95b74e7d36e366944006c"
+            },
+            {
+              "path": "benchmark_runs/volta-recurrence/source/test_recurrence_oracle.py",
+              "sha256": "47e9bb1baedc9fd9000d6b53e9f370961a3dd973a3bdb4181071afb98ef113db"
+            }
+          ]
+        },
+        "timestamp": 1792274763.9143035,
+        "tools": {
+          "ncu": {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute/ncu",
+            "version": "NVIDIA (R) Nsight Compute Command Line Profiler | Copyright (c) 2018-2025 NVIDIA Corporation | Version 2025.2.1.0 (build 35987062) (public-release)"
+          },
+          "nsys": {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Systems_2025.3/bin/nsys",
+            "version": "NVIDIA Nsight Systems version 2025.3.1.90-253135822126v0"
+          },
+          "nvcc": {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+            "version": "nvcc: NVIDIA (R) Cuda compiler driver | Copyright (c) 2005-2025 NVIDIA Corporation | Built on Tue_May_27_02:21:03_PDT_2025"
+          }
+        }
+      },
+      "record": {
+        "argv": [
+          "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+          "--label",
+          "cuda-controller-foreground",
+          "--",
+          "benchmark_runs/volta-recurrence/bin/gdn_runner",
+          "--bundle",
+          "benchmark_runs/volta-recurrence/inputs/recurrence_inputs.bin",
+          "--variant",
+          "retained",
+          "--mode",
+          "correctness"
+        ],
+        "elapsed_seconds": 3.423326743999496,
+        "returncode": 0,
+        "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/fbe0226a-2184-4180-b1c4-ec29ce697eff/foreground.stderr.txt",
+        "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/fbe0226a-2184-4180-b1c4-ec29ce697eff/foreground.stdout.txt",
+        "timeout": false
+      },
+      "resource_samples": {
+        "after": {
+          "busy": false,
+          "foreign_processes": false,
+          "idle": true,
+          "samples": [
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792274746.0301135
+            },
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792274753.5288868
+            },
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792274760.9924603
+            }
+          ]
+        },
+        "before": {
+          "busy": false,
+          "foreign_processes": false,
+          "idle": true,
+          "samples": [
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792274734.342917
+            }
+          ]
+        },
+        "quiescence": {
+          "device_uuids": [
+            "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+          ],
+          "elapsed_seconds": 22.318839989005937,
+          "format": "CUDA-QUIESCENCE/1",
+          "observations": [
+            {
+              "busy": false,
+              "foreign_processes": false,
+              "idle": true,
+              "samples": [
+                {
+                  "devices": [
+                    {
+                      "clocks_sm_mhz": 1312.0,
+                      "compute_capability": "7.0",
+                      "driver_version": "580.178.04",
+                      "index": 0,
+                      "memory_free_mib": 16145,
+                      "memory_total_mib": 16384,
+                      "name": "Tesla V100-SXM2-16GB",
+                      "pci_bus_id": "00000000:02:00.0",
+                      "temperature_c": 36.0,
+                      "throttle_reasons": "0x0000000000000000",
+                      "utilization_percent": 0.0,
+                      "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                    }
+                  ],
+                  "foreign_processes": [],
+                  "timestamp": 1792274719.270826
+                }
+              ]
+            },
+            {
+              "busy": false,
+              "foreign_processes": false,
+              "idle": true,
+              "samples": [
+                {
+                  "devices": [
+                    {
+                      "clocks_sm_mhz": 1312.0,
+                      "compute_capability": "7.0",
+                      "driver_version": "580.178.04",
+                      "index": 0,
+                      "memory_free_mib": 16145,
+                      "memory_total_mib": 16384,
+                      "name": "Tesla V100-SXM2-16GB",
+                      "pci_bus_id": "00000000:02:00.0",
+                      "temperature_c": 36.0,
+                      "throttle_reasons": "0x0000000000000000",
+                      "utilization_percent": 0.0,
+                      "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                    }
+                  ],
+                  "foreign_processes": [],
+                  "timestamp": 1792274726.790749
+                }
+              ]
+            },
+            {
+              "busy": false,
+              "foreign_processes": false,
+              "idle": true,
+              "samples": [
+                {
+                  "devices": [
+                    {
+                      "clocks_sm_mhz": 1312.0,
+                      "compute_capability": "7.0",
+                      "driver_version": "580.178.04",
+                      "index": 0,
+                      "memory_free_mib": 16145,
+                      "memory_total_mib": 16384,
+                      "name": "Tesla V100-SXM2-16GB",
+                      "pci_bus_id": "00000000:02:00.0",
+                      "temperature_c": 36.0,
+                      "throttle_reasons": "0x0000000000000000",
+                      "utilization_percent": 0.0,
+                      "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                    }
+                  ],
+                  "foreign_processes": [],
+                  "timestamp": 1792274734.342917
+                }
+              ]
+            }
+          ],
+          "observed_consecutive_samples": 3,
+          "required_consecutive_samples": 3,
+          "samples_observed": 3,
+          "schema_version": 1,
+          "state": "quiescent",
+          "uncontaminated": true
+        }
+      },
+      "severity": 0,
+      "status": "succeeded",
+      "toolchain": {
+        "environment": {
+          "CUDACXX": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+          "CUDAToolkit_ROOT": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+          "PATH": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer:/home/tumlinson/.local/bin:/home/tumlinson/.codex/packages/standalone/releases/0.162.1-x86_64-unknown-linux-musl/codex-path:/home/tumlinson/.local/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/tumlinson/.nvm/versions/node/v22.23.2/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Systems_2025.3/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/nvvm/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/comm_libs/12.9/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/comm_libs/12.9/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/comm_libs/hpcx/bin:/home/tumlinson/.codex/tmp/arg0/codex-arg0NVmlLM:/home/tumlinson/.cargo/bin:/home/tumlinson/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/home/tumlinson/Software/miniconda3/bin:/home/tumlinson/Software/miniconda3/condabin:/usr/local/sbin:/usr/games:/usr/local/games:/snap/bin:/home/tumlinson/Software/llama.cpp/build/bin:/home/tumlinson/Software/sratoolkit.3.3.0-ubuntu64/bin"
+        },
+        "nvcc": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+        "root": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+        "sanitizer": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+        "version": "12.9"
+      },
+      "valid": true
+    },
+    "task_id": null,
+    "todo_revision": null,
+    "valid": 1
+  }
+}

@@ -1,0 +1,5 @@
+==WARNING== Note: Running with unmodified GPU clocks. If not controlled otherwise, profiling results may be inconsistent.
+==PROF== Connected to process 1084472 (/home/tumlinson/KernelWiki/benchmark_runs/volta-recurrence/bin/gdn_runner)
+==PROF== Profiling "recurrent_retain_kernel" - 0: 0%....50%....100% - 8 passes
+==PROF== Disconnected from process 1084472
+==PROF== Report: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/14ce3a80-cf31-44e2-80f5-426cd634de92/ncu/run/report.ncu-rep

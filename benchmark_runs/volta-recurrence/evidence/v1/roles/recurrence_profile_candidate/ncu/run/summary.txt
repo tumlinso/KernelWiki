@@ -1,0 +1,26 @@
+V100 Nsight Compute Decision
+
+status: partial
+counter_valid: yes
+timing_valid: no
+needs_more_data: yes
+measurement_scope: kernel counters
+
+decision:
+- Nsight Compute is valid for kernel-cause diagnosis here, but not for throughput timing because replay changes runtime.
+- Hottest kernel class: mixed.
+- Primary next move: Pair this with Nsight Systems and the benchmark output before changing the kernel.
+- Kernel sample count is light. Rerun with more repeated hot launches if you need stronger confidence.
+- Recommended route: profile. The kernel summary is mixed, so pair it with timeline or benchmark evidence first.
+
+top_kernels:
+- void recurrent_retain_kernel<64, 64>(const float *, const float *, const float *, const float *, const float *, const int *, float *, float *, int, int) | share=100.0% | samples=1 | class=mixed | dram=4.5% | sm=9.0% | regs=152
+  next: Pair this with Nsight Systems and the benchmark output before changing the kernel.
+
+notes:
+- Use benchmark output or Nsight Systems for throughput comparisons.
+- Use Nsight Compute to decide whether poor performance comes from bytes moved, compute path choice, registers, or shared memory.
+
+recommended_route: profile
+recommended_route_reason: The kernel summary is mixed, so pair it with timeline or benchmark evidence first.
+next_step: Pair this with Nsight Systems and the benchmark output before changing the kernel.
