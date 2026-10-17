@@ -11,7 +11,7 @@ All page IDs below resolve via `get_page.py <id>`. All paths are relative to the
 
 ## Volta / V100 (SM70)
 
-Use [`references/volta.md`](volta.md) to route Volta questions. Exact V100 queries use `--architecture V100` (canonical `sm70`); `--architecture volta` requests family evidence and can include neighboring `sm72`. Family evidence does not establish exact V100 applicability. These six pages are `source-reported` concept guidance, with no new local compilation or performance claims:
+Use [`references/volta.md`](volta.md) to route Volta questions. Exact V100 queries use `--architecture V100` (canonical `sm70`); `--architecture volta` requests family evidence and can include neighboring `sm72`. Family evidence does not establish exact V100 applicability. The six hardware pages below remain source-reported concept guidance; native kernel studies are separate experimental results:
 
 | Topic | Page ID | Path |
 |---|---|---|
@@ -23,6 +23,28 @@ Use [`references/volta.md`](volta.md) to route Volta questions. Exact V100 queri
 | Profiling-led operand delivery | `hw-volta-operand-delivery` | `wiki/hardware/volta-operand-delivery.md` |
 
 Follow each page's `sources:` IDs before applying guidance. `doc-volta-gdn` is an algorithmic paper record with no architecture assignment; it does not establish SM70 implementation applicability.
+
+Native exact-V100 implementation routes:
+
+| Family | Page ID | Bounded outcome |
+|---|---|---|
+| GEMM | `kernel-volta-gemm` | Library wins dense/small-M; ragged PTX comparison is inconclusive, pinned CUTLASS wins the tested shape |
+| Row operations | `kernel-volta-row-kernels` | CTA softmax/aligned vector RMSNorm improve selected tested shapes |
+| Attention | `kernel-volta-attention` | Long prefill inconclusive; unsplit decode loses; split16 wins one D=70 decode including merge; sparse selection has no timing claim |
+| Grouped/gated | `kernel-volta-grouped-gated` | Ranking changes with group distribution |
+| W4A16 | `kernel-volta-w4a16` | Resident materialized decode plus dense GEMM favored over direct software decode in tested cases |
+| Recurrent state | `kernel-volta-gated-delta` | Retained state wins tested prefill; decode inconclusive; chunking deferred |
+
+Open a kernel page and follow its source IDs. Use
+`python3 scripts/get_page.py <kernel-id> --include-code` to inspect the local
+artifact when one is declared. An upstream snippet or a source citation alone
+does not establish a runnable implementation. The ordered GEMM frontend under
+`artifacts/kernels/volta-gemm-ordered/variants/` has a separate correctness
+continuation; do not attach fresh correctness-only receipts to historical
+performance values.
+For the compact study-by-study outcome map and exact query/source-access
+receipts, see
+`planning/volta-bootstrap/implementation/IMPLEMENTATION-HANDOFF.md`.
 
 ---
 

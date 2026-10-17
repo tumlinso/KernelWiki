@@ -1,0 +1,9 @@
+{
+  "format": "KERNELWIKI-VOLTA-ORDERED-GEMM-BUILD/1",
+  "source": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-gemm-ordered/variants/gemm_runner.cu",
+  "source_sha256": "9ab1ba79270f128d5b3cbbd56da8db991799326604ef87973085981672dd3e9c",
+  "binary": "/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm-ordered/bin/gemm_runner",
+  "binary_sha256": "448a2b252a49e1029d12a1180ebf89878318d7ac04ec95257cdde5f769db82ca",
+  "archive": "/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm-ordered/evidence/shared/bin/gemm_runner-source-9ab1ba79270f128d5b3cbbd56da8db991799326604ef87973085981672dd3e9c.bin",
+  "archive_sha256": "448a2b252a49e1029d12a1180ebf89878318d7ac04ec95257cdde5f769db82ca"
+}

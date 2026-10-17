@@ -8,10 +8,11 @@
 > https://github.com/mit-han-lab/kernel-design-agents
 
 > **Evidence boundaries:** the audited upstream PR corpus closes at 2026-05-20;
-> documentation, releases, and leaderboard snapshots were verified through
-> 2026-08-18 UTC.
+> legacy documentation, releases, and leaderboard snapshots were verified through
+> 2026-08-18 UTC. The local Volta studies are dated 2026-10-17; their source and
+> execution records carry separate evidence dates.
 
-A structured knowledge base with an initial source-backed Volta/V100 (SM70) hardware layer and a larger NVIDIA Blackwell (SM100, B200) and Hopper (SM90, H100) kernel corpus, packaged as a Claude Code skill. The repository root **is** the skill directory — clone it directly into `~/.claude/skills/` and it works out of the box.
+A structured knowledge base with source-backed Volta/V100 (SM70) hardware guidance and bounded, locally measured native kernel studies, alongside a larger NVIDIA Blackwell (SM100, B200) and Hopper (SM90, H100) kernel corpus. It is packaged as a Claude Code skill. The repository root **is** the skill directory — clone it directly into `~/.claude/skills/` and it works out of the box.
 
 ## Install as a Claude Code Skill
 
@@ -48,7 +49,8 @@ export BLACKWELL_WIKI_ROOT=/path/to/KernelWiki
 - Auto-generated cross-reference indices — [by architecture](queries/by-architecture.md) / problem / technique / hardware feature / repo / kernel type / language.
 - Reviewed candidate ledgers with include/defer/exclude decisions.
 - **Hybrid version-claim registry** ([`data/version-claims.yaml`](data/version-claims.yaml)) — per-page `version_sensitive: <id>` pointers + central registry, validated for bidirectional consistency
-- **Volta/V100 (SM70)** — six source-reported concept pages cover MMA/WMMA boundaries, resources, synchronization, numerical representation, and feature limits. They do not claim new local compilation or performance results.
+- **Volta/V100 (SM70)** — six source-reported hardware concept pages sit beside locally compiled, correctness-checked, and measured GEMM, row, attention, grouped/gated, W4A16, and recurrent-state studies. Their results are experimental and limited to the published contracts and shapes; they do not imply global optimality or transfer automatically to SM72, Hopper, or Blackwell.
+- [Volta implementation handoff](planning/volta-bootstrap/implementation/IMPLEMENTATION-HANDOFF.md) — compact kernel-family outcomes, exact/family query receipts, source-following and code-access results, and remaining limits.
 - Run `python3 scripts/repo_status.py` for current corpus counts.
 
 ## Query Tools
@@ -133,7 +135,7 @@ These commands also work without PyYAML. Installing `requirements.txt` is option
 
 ## Scope Rules
 
-- **Architecture scope** — Volta/V100 (SM70) has a separate exact route. Blackwell remains the primary kernel corpus; its legacy Hopper-only pages require `blackwell_relevance`, while source pages are exempt.
+- **Architecture scope** — Volta/V100 (SM70) has a separate exact route for both hardware guidance and measured case studies. Blackwell remains the larger kernel corpus; its legacy Hopper-only pages require `blackwell_relevance`, while source pages are exempt. A `volta` family query can include neighboring `sm72` material; exact V100 implementation claims remain `sm70`-scoped.
 - **Kernel-only** — No distributed-system topics (DeepEP, DualPipe, EPLB are out of scope).
 - **English canonical** — All content in English.
 - **First-class DSLs** — CuTe DSL, CUDA C++, PTX, Triton. TileLang / cuTile / JAX-Pallas mentioned but no dedicated guides.

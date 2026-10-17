@@ -1,0 +1,52 @@
+{
+  "binaries": [
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/bin/gemm_runner",
+      "sha256": "448a2b252a49e1029d12a1180ebf89878318d7ac04ec95257cdde5f769db82ca"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/evidence/shared/bin/gemm_runner-source-9ab1ba79270f128d5b3cbbd56da8db991799326604ef87973085981672dd3e9c.bin",
+      "sha256": "448a2b252a49e1029d12a1180ebf89878318d7ac04ec95257cdde5f769db82ca"
+    }
+  ],
+  "build_manifest": {
+    "path": "benchmark_runs/volta-gemm-ordered/evidence/shared/runner-build-source-9ab1ba79270f128d5b3cbbd56da8db991799326604ef87973085981672dd3e9c.json",
+    "sha256": "d35d5b47e93bf167daf5f864fd2c331993dab5347d8794ef9372e4808e3ba8c2"
+  },
+  "controller_ok": true,
+  "controller_returncode": 0,
+  "controller_status": "succeeded",
+  "evidence": {
+    "path": "evidence.json",
+    "sha256": "c11ea7b5c76667da8aa7b4e916382770d635e9f93e22507ef1656483e77fa3a8"
+  },
+  "evidence_contaminated": false,
+  "evidence_id": "8aecb574-2ac7-4615-a81f-9eb1dc3c262e",
+  "evidence_status": "succeeded",
+  "evidence_valid": true,
+  "execution": {
+    "path": "controller.json",
+    "sha256": "24184d2f5b1992352aa99181b7ca6b277823320aae9c2d1971a5b61d1f233f4c"
+  },
+  "format": "KERNELWIKI-VOLTA-ORDERED-ROLE-RECEIPT/1",
+  "lease": {
+    "path": "lease.json",
+    "runtime_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/4436b2df-0805-4d69-be6c-f446050407cf/lease.json",
+    "sha256": "7af3c013c93890037a9cbfeb74810fcce13d5081ed5c51d1d631e303420bddbe"
+  },
+  "role": "large_dense",
+  "spec": {
+    "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm-ordered/controller/role-large_dense-correctness.spec.json",
+    "sha256": "8b63e75327d75b6a5dbc2bea116b06a453ab6000acf1a7e8d203b11a40ddf3d2"
+  },
+  "target_output": {
+    "stderr": {
+      "path": "target.stderr.txt",
+      "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb"
+    },
+    "stdout": {
+      "path": "target.stdout.txt",
+      "sha256": "1034060ac114c02013a28143b585a9fefcdc1d9c9b208ac9ff145f29a0096e90"
+    }
+  }
+}

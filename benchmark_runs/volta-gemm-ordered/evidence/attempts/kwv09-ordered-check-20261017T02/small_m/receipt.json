@@ -1,0 +1,52 @@
+{
+  "binaries": [
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/bin/gemm_runner",
+      "sha256": "448a2b252a49e1029d12a1180ebf89878318d7ac04ec95257cdde5f769db82ca"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/evidence/shared/bin/gemm_runner-source-9ab1ba79270f128d5b3cbbd56da8db991799326604ef87973085981672dd3e9c.bin",
+      "sha256": "448a2b252a49e1029d12a1180ebf89878318d7ac04ec95257cdde5f769db82ca"
+    }
+  ],
+  "build_manifest": {
+    "path": "benchmark_runs/volta-gemm-ordered/evidence/shared/runner-build-source-9ab1ba79270f128d5b3cbbd56da8db991799326604ef87973085981672dd3e9c.json",
+    "sha256": "d35d5b47e93bf167daf5f864fd2c331993dab5347d8794ef9372e4808e3ba8c2"
+  },
+  "controller_ok": true,
+  "controller_returncode": 0,
+  "controller_status": "succeeded",
+  "evidence": {
+    "path": "evidence.json",
+    "sha256": "4e9ce61a1a94e3662663c98b00b48f7530d5d17177957f0a0e60ff9e66fd3ad9"
+  },
+  "evidence_contaminated": false,
+  "evidence_id": "cd7786f8-66a8-40b2-b29e-db88272e2720",
+  "evidence_status": "succeeded",
+  "evidence_valid": true,
+  "execution": {
+    "path": "controller.json",
+    "sha256": "f80b0c8d87544e90ed92987b259ae8a0b44b42c5023cf58a6a3eac209d1d3f81"
+  },
+  "format": "KERNELWIKI-VOLTA-ORDERED-ROLE-RECEIPT/1",
+  "lease": {
+    "path": "lease.json",
+    "runtime_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/a34cf4cd-3150-4cb3-8a78-c7d5015e5b28/lease.json",
+    "sha256": "f9952f4f7ccbe835c03d010cbd93c5debfe3d6615cceb732522c3f0a9af14aa4"
+  },
+  "role": "small_m",
+  "spec": {
+    "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm-ordered/controller/role-small_m-correctness.spec.json",
+    "sha256": "323a4cd6c3d759527fce40d04bab394b3679619ce9cd0c52ec976c8d3fe0fba2"
+  },
+  "target_output": {
+    "stderr": {
+      "path": "target.stderr.txt",
+      "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb"
+    },
+    "stdout": {
+      "path": "target.stdout.txt",
+      "sha256": "361c41ac0669515398e4348dc4b303c980eb11867ad6ff994866b4dfd946dc8f"
+    }
+  }
+}

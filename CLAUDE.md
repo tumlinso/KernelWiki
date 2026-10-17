@@ -1,6 +1,6 @@
 # Volta, Hopper & Blackwell KernelWiki — Schema
 
-A structured knowledge base with a source-backed Volta/V100 (SM70) hardware reference and a larger NVIDIA Blackwell (SM100) and Hopper (SM90) kernel corpus, optimized for LLM agent retrieval.
+A structured knowledge base with source-backed Volta/V100 (SM70) hardware guidance, bounded native V100 kernel studies, and a larger NVIDIA Blackwell (SM100) and Hopper (SM90) kernel corpus, optimized for LLM agent retrieval.
 
 ## Navigation
 
@@ -17,6 +17,7 @@ See `SKILL.md` (skill entry point) and `references/examples.md` for query patter
 1. **Start**: Read `index.md` for curated top-level navigation
 2. **By architecture**: Read `queries/by-architecture.md` → choose exact, family-only, or validated-unknown evidence
    - `--architecture V100` selects exact `sm70`; `--architecture volta` selects the Volta family, including the neighboring `sm72` attribution boundary.
+   - For the exact V100 hardware and native-kernel route, see `references/volta.md`; hardware concept guidance and experimental kernel timings are distinct evidence classes.
 3. **By problem**: Read `queries/by-problem.md` → find symptom → follow links to pattern pages
 4. **By technique**: Read `queries/by-technique.md` → find technique → follow to technique page
 5. **By hardware**: Read `queries/by-hardware-feature.md` → find feature → follow to hardware page
@@ -42,6 +43,8 @@ Synthesized knowledge pages. Cross-referenced by `id`.
 - `wiki/kernels/` — Kernel case studies (FlashAttention-4, DeepGEMM, etc.)
 - `wiki/languages/` — DSL/language guides (CuTe DSL, Triton, CUDA C++, PTX)
 - `wiki/migration/` — Hopper → Blackwell migration patterns
+- `wiki/hardware/volta-*.md` — source-reported V100/SM70 concept guidance
+- `wiki/kernels/volta-*.md` — local native case studies with explicit contracts, code and measurement limits; see `references/volta.md`
 - `wiki/hardware/volta-*.md` — source-reported V100/SM70 concept guidance; see `references/volta.md` for the route
 
 ### Layer 3: Queries (`queries/`)
@@ -120,7 +123,7 @@ performance_claims:
 
 ## Scope Rules
 
-- **Architecture scope**: Volta/V100 concept pages have independent `sm70` attribution and retain `source-reported` / `concept` evidence labels. The Blackwell-focused corpus remains primary; its Hopper-only wiki pages require explicit `blackwell_relevance`, while source pages preserve upstream evidence and are exempt. `sm72` is a neighboring attribution boundary, not a V100 implementation target.
+- **Architecture scope**: Volta/V100 hardware concept pages retain `source-reported` / `concept` labels. Native `sm70` kernel case studies are `experimental` and bind claims to exact local source, input, binary, and timing evidence. Neither kind of Volta evidence automatically covers neighboring `sm72`. The Blackwell-focused corpus remains primary; its Hopper-only wiki pages require explicit `blackwell_relevance`, while source pages preserve upstream evidence and are exempt.
 - **Kernel-only**: No distributed system topics (DeepEP, DualPipe, EPLB excluded).
 - **English canonical**: All content in English.
 - **First-class DSLs**: CuTe DSL, CUDA C++, PTX, Triton. Others mentioned but no dedicated pages.

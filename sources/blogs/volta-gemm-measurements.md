@@ -116,3 +116,14 @@ under `benchmark_runs/volta-gemm/`. The measured runner SHA-256 is
 runtime cuBLAS library is `libcublas.so.12.9.1.4`, SHA-256
 `d63456d94f1b8e2408a8a9538c8740eb474c9eba48a84f420b15e2e10fbcd048`, and
 the program queried API version `120901`.
+
+## Ordered frontend continuation
+
+The preserved runner uploads pageable inputs on the default stream and uses a
+nonblocking compute stream, leaving a possible ordering race. A separate
+[ordered frontend](../../artifacts/kernels/volta-gemm-ordered/variants/README.md)
+submits both uploads and computation to the same explicit stream.
+Its [fresh correctness records](../../benchmark_runs/volta-gemm-ordered/RESULTS.md)
+pass all six routes on all three shapes and both one-hot stage counts. That
+new ELF has no timing or profiler result; the historical measurements and raw
+records above are unchanged.

@@ -63,6 +63,18 @@ performance_claims:
 artifact_dir: artifacts/kernels/volta-gemm/variants
 ---
 
+# Current host frontend
+
+Use the [ordered frontend](../../artifacts/kernels/volta-gemm-ordered/variants/README.md)
+for new builds. It submits input uploads and computation on the same explicit
+stream, closing a possible ordering race between the historical runner's
+default-stream uploads and nonblocking compute stream.
+[Fresh correctness checks](../../benchmark_runs/volta-gemm-ordered/RESULTS.md)
+passed all six routes on dense, small-M and ragged cases, plus both one-hot
+stage counts, on one separately built ELF. No new timing or profiler result
+was collected. The measurements below remain tied to the preserved historical
+source and binary.
+
 # Contract
 
 The checked operator is row-major `A[M,K] * B[K,N]` with represented FP16

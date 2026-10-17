@@ -7,13 +7,13 @@ allowed-tools: "Bash Read Grep Glob"
 
 # KernelWiki — Volta, Hopper & Blackwell Kernel Optimization Wiki
 
-Query a structured, cross-referenced knowledge base with an initial source-backed Volta/V100 (SM70) hardware layer and a larger Blackwell (SM100) and Hopper (SM90) kernel corpus. Volta family evidence is not automatically exact V100 evidence. The repository update date is recorded in `README.md`; run `python3 scripts/repo_status.py` for current corpus counts.
+Query a structured, cross-referenced knowledge base with source-backed Volta/V100 (SM70) hardware guidance, bounded local native V100 kernel studies, and a larger Blackwell (SM100) and Hopper (SM90) kernel corpus. Local Volta timings are experimental case results, not general dispatch guarantees. Volta family evidence is not automatically exact V100 evidence. The repository update date is recorded in `README.md`; run `python3 scripts/repo_status.py` for current corpus counts.
 
 ## When To Use This Skill
 
 Trigger this skill when the user asks about:
 
-- **Volta/V100 (SM70)** — explicit MMA and WMMA boundaries, PTX/CUDA contracts, synchronization, resources, numerical representation, or applying source-reported Volta material
+- **Volta/V100 (SM70)** — source-reported MMA/WMMA, PTX/CUDA, synchronization, resource, and numerical contracts; or locally measured GEMM, row, attention, grouped/gated, W4A16, and recurrent-state cases
 - **Blackwell/SM100 kernel programming** — tcgen05.mma, TMEM, CLC, 2-SM cooperative, NVFP4, FP8/FP4 block scaling, PDL/GDC
 - **Kernel implementations** — FlashAttention-4, DeepGEMM, FlashMLA, NSA, GatedDeltaNet, NVFP4 GEMM/GEMV, fused MoE, gated dual GEMM
 - **Performance patterns** — low SM utilization, memory-bound, register pressure, compute-bound, tail effects, pipeline stalls
@@ -46,6 +46,7 @@ implementation.
 ```bash
 python3 scripts/query.py "how to fuse gate-up dual GEMM on Blackwell"
 python3 scripts/query.py --architecture V100 --type hardware --compact
+python3 scripts/query.py --architecture V100 --type kernel --compact
 python3 scripts/query.py --architecture volta --compact
 python3 scripts/query.py --tag nvfp4 --type kernel
 python3 scripts/query.py --repo cutlass --limit 20
@@ -65,6 +66,7 @@ neighboring `sm72`, which is not exact V100 evidence.
 python3 scripts/get_page.py kernel-flash-attention-4
 python3 scripts/get_page.py pr-cutlass-2472
 python3 scripts/get_page.py kernel-flash-attention-4 --follow-sources
+python3 scripts/get_page.py kernel-volta-attention --follow-sources --include-code
 python3 scripts/get_page.py hw-volta-mma --follow-sources
 python3 scripts/get_page.py kernel-flash-attention-4 --body-only
 ```
@@ -81,9 +83,9 @@ python3 scripts/grep_wiki.py "nvfp4" "block_scale" --any
 
 Auto-generated under `queries/`:
 
-- `queries/by-architecture.md` — exact SM, family-only, and validated-unknown architecture evidence
+- `queries/by-architecture.md` — exact SM, family-only, and validated-unknown architecture evidence; the exact V100 route now includes native experimental kernels
 - `queries/by-problem.md` — symptom → pattern page → candidate techniques
-- `queries/by-technique.md` — 17 techniques with architectures, confidence, reproducibility, source count
+- `queries/by-technique.md` — techniques with architectures, confidence, reproducibility, source count
 - `queries/by-hardware-feature.md` — tcgen05/tmem/clc/tma/nvfp4/etc. → related wiki + PR pages
 - `queries/by-kernel-type.md` — gemm/attention/moe/mla/gated-delta-net → pages
 - `queries/by-language.md` — cute-dsl/cuda-cpp/ptx/triton → guide page + related kernels/sources
@@ -106,7 +108,7 @@ When answering from this KB:
 2. **Follow `sources:` fields** to trace claims back to PRs/blogs/docs.
 3. **Respect confidence levels** — `verified` > `source-reported` > `inferred` > `experimental`. Call out when a claim is `experimental` or `inferred`.
 4. **Include code snippets** from wiki pages when they exist — technique/kernel/language pages are guaranteed `snippet`-reproducibility (validator-enforced).
-5. **Report performance claims with all six fields** — `gpu`, `dtype`, `shape`, `metric`, `value`, `source_id`.
+5. **Report performance claims with complete provenance** — `gpu`, `dtype`, `shape`, `metric`, `value`, `source_id`, and an exact `source_locator`.
 
 ## Knowledge Base Contents
 
@@ -117,7 +119,8 @@ When answering from this KB:
 - **Hybrid version-claim registry** — per-page `version_sensitive: <id>` pointers + `data/version-claims.yaml` central registry, validated for bidirectional consistency
 - **Status script** `scripts/repo_status.py` — current corpus counts
 - **Validator** `scripts/validate.py` — schema, link, artifact, and ledger checks
-- **Blackwell-first legacy corpus** — Hopper-only wiki pages carry explicit `blackwell_relevance`; Volta pages have their own exact SM70 scope, and source pages preserve upstream evidence.
+- **Volta/V100 native studies** — `wiki/kernels/volta-*.md` links runnable source, immutable inputs, native correctness/timing/profile receipts, and bounded claims for GEMM, rows, attention, grouped/gated, W4A16, and recurrent state.
+- **Blackwell-first legacy corpus** — Hopper-only wiki pages carry explicit `blackwell_relevance`; Volta hardware and implementation pages have their own exact SM70 scope, and source pages preserve upstream evidence.
 
 To refresh the corpus: run `scripts/refresh_candidate_ledger.py`, regenerate PR pages and query indices, then validate.
 

@@ -1,0 +1,52 @@
+{
+  "binaries": [
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/bin/gemm_runner",
+      "sha256": "448a2b252a49e1029d12a1180ebf89878318d7ac04ec95257cdde5f769db82ca"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/evidence/shared/bin/gemm_runner-source-9ab1ba79270f128d5b3cbbd56da8db991799326604ef87973085981672dd3e9c.bin",
+      "sha256": "448a2b252a49e1029d12a1180ebf89878318d7ac04ec95257cdde5f769db82ca"
+    }
+  ],
+  "build_manifest": {
+    "path": "benchmark_runs/volta-gemm-ordered/evidence/shared/runner-build-source-9ab1ba79270f128d5b3cbbd56da8db991799326604ef87973085981672dd3e9c.json",
+    "sha256": "d35d5b47e93bf167daf5f864fd2c331993dab5347d8794ef9372e4808e3ba8c2"
+  },
+  "controller_ok": true,
+  "controller_returncode": 0,
+  "controller_status": "succeeded",
+  "evidence": {
+    "path": "evidence.json",
+    "sha256": "5b9c11222abc379182fc7174df60a4ad7a5925fdc155c08ffb1565b9db370e5b"
+  },
+  "evidence_contaminated": false,
+  "evidence_id": "2cd11e64-20e9-46b7-9380-cb7564d8cd6c",
+  "evidence_status": "succeeded",
+  "evidence_valid": true,
+  "execution": {
+    "path": "controller.json",
+    "sha256": "ec1d52fd962aaf36e9669255a08b40ebd063bfcbbe1304273e108afb044afdb7"
+  },
+  "format": "KERNELWIKI-VOLTA-ORDERED-ROLE-RECEIPT/1",
+  "lease": {
+    "path": "lease.json",
+    "runtime_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/9a6ed577-fda9-43c4-a875-5be1dca5b7f5/lease.json",
+    "sha256": "ee55a4fa34812210e73336a0316d02ebcaaa0d6460146842d1aa603a20e7182e"
+  },
+  "role": "ragged",
+  "spec": {
+    "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm-ordered/controller/role-ragged-correctness.spec.json",
+    "sha256": "92aec644ee2c22cd1686b9c0390be6e4ced0882b39670d942d489bb4c427dfef"
+  },
+  "target_output": {
+    "stderr": {
+      "path": "target.stderr.txt",
+      "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb"
+    },
+    "stdout": {
+      "path": "target.stdout.txt",
+      "sha256": "de6842da6966be4a5a83508d57d09cf338de359e30b882fb8fbdacd96ce6da95"
+    }
+  }
+}

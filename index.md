@@ -1,6 +1,6 @@
 # Volta, Hopper & Blackwell Kernel Optimization Knowledge Base
 
-> Blackwell (SM100) and Hopper (SM90) kernel corpus, with an initial source-backed hardware reference for Volta/V100 (SM70).
+> Blackwell (SM100) and Hopper (SM90) kernel corpus, with source-backed Volta/V100 (SM70) hardware guidance and bounded native V100 kernel case studies.
 > Optimized for LLM agent retrieval. See [CLAUDE.md](CLAUDE.md) for schema and conventions.
 > **For Claude Code agents**: this repository is a Claude Code skill — see [SKILL.md](SKILL.md).
 
@@ -39,7 +39,7 @@ See [references/examples.md](references/examples.md) for 10 worked query pattern
 
 ## Volta / V100 (SM70) Reference
 
-These six pages are source-reported concept guidance. They contain no new local kernel compilation or performance results. Exact V100 queries use `sm70`; the `volta` family route can also include neighboring `sm72` evidence.
+These six hardware pages are source-reported concept guidance. Exact V100 queries use `sm70`; the `volta` family route can also include neighboring `sm72` evidence. Local kernel measurements below are separate experimental results, bounded to their exact contracts and shapes.
 
 - [hw-volta-mma](wiki/hardware/volta-mma.md) — explicit MMA and opaque WMMA boundaries
 - [hw-volta-numerics](wiki/hardware/volta-numerics.md) — representation and accumulation contracts
@@ -49,6 +49,27 @@ These six pages are source-reported concept guidance. They contain no new local 
 - [hw-volta-operand-delivery](wiki/hardware/volta-operand-delivery.md) — profiling-led operand delivery investigation
 
 Use [`references/volta.md`](references/volta.md) to route a question and follow each page's source IDs before applying it.
+
+## Native V100 Kernel Studies
+
+Each page links its source, runnable artifact, immutable case contract, and
+native evidence. These are measured case studies, not universally optimal
+implementations or cross-architecture recommendations.
+
+| Family | Page | Tested boundary / result |
+|---|---|---|
+| GEMM | [kernel-volta-gemm](wiki/kernels/volta-gemm.md) | FP16 input / FP32 accumulation; cuBLAS favored dense and small-M, ragged comparison inconclusive between cuBLAS/PTX while pinned CUTLASS won that tested ragged case |
+| Row kernels | [kernel-volta-row-kernels](wiki/kernels/volta-row-kernels.md) | CTA softmax and aligned vector RMSNorm beat matched routes for three tested shapes |
+| Attention | [kernel-volta-attention](wiki/kernels/volta-attention.md) | Prefill inconclusive; unsplit SIMT decode lost; 16-way split won one exact D=70 decode shape including merge; selected-block speedup unmeasured |
+| Grouped/gated | [kernel-volta-grouped-gated](wiki/kernels/volta-grouped-gated.md) | Paired SIMT won balanced groups; split cuBLAS won a skewed distribution |
+| W4A16 | [kernel-volta-w4a16](wiki/kernels/volta-w4a16.md) | Software decode plus dense cuBLAS favored repeated resident batches; no native 4-bit instruction claim |
+| Recurrent state | [kernel-volta-gated-delta](wiki/kernels/volta-gated-delta.md) | Retained state favored two prefill cases; one-token decode inconclusive; chunking deferred |
+
+The separate ordered GEMM frontend is documented in
+[`artifacts/kernels/volta-gemm-ordered/variants/README.md`](artifacts/kernels/volta-gemm-ordered/variants/README.md)
+with [fresh correctness results](benchmark_runs/volta-gemm-ordered/RESULTS.md)
+for all six routes on three shapes and both one-hot stage counts. This
+separately built frontend has no new timing result.
 
 ## Optimization Techniques
 
@@ -62,6 +83,8 @@ Use [`references/volta.md`](references/volta.md) to route a question and follow 
 - [technique-software-exp](wiki/techniques/software-exp.md) — Software-emulated exponential
 - [technique-fine-grained-quantization](wiki/techniques/fine-grained-quantization.md) - Fine-grained FP8/FP4 quantization
 - [technique-vectorized-loads](wiki/techniques/vectorized-loads.md) — Wide vectorized loads and cache policies
+- [technique-volta-attention-dataflow](wiki/techniques/volta-attention-dataflow.md) — Online and split attention dataflow with a bounded decode result
+- [technique-volta-grouping-and-decoding](wiki/techniques/volta-grouping-and-decoding.md) — Grouped work and W4A16 decode placement
 
 ## Kernel Case Studies
 
