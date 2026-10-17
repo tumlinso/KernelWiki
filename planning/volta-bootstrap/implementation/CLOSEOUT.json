@@ -1,0 +1,73 @@
+{
+  "format": "KERNELWIKI-VOLTA-CLOSEOUT/1",
+  "qualified_material_commit": "af63ac2cf0dd5834ac953019bfa6002065d9bc05",
+  "run_id": "KWV-RUN-1",
+  "project_revision": 87,
+  "run_completed": true,
+  "lane_state": "closed",
+  "release_gates": [
+    {
+      "id": "KWV-09-CPU",
+      "status": "passed",
+      "evidence_id": "5083242b-f273-4b22-b92d-54212a5e6977"
+    },
+    {
+      "id": "KWV-09-KERNELS",
+      "status": "passed",
+      "evidence_id": "0b329e95-ca63-45c1-9ae2-e92139b8853e"
+    },
+    {
+      "id": "KWV-09-WIKI",
+      "status": "passed",
+      "evidence_id": "43edb692-cd10-4ab8-83f6-24c3b47451ee"
+    }
+  ],
+  "task_completion_gates": [
+    {
+      "id": "KWV-000-KWV-01-DONE",
+      "status": "passed",
+      "evidence_id": "b77887c2-ec7c-42a5-b921-45946a1a2ca0"
+    },
+    {
+      "id": "KWV-000-KWV-02-DONE",
+      "status": "passed",
+      "evidence_id": "f6d712b2-d4f2-490d-a5cf-d8c39d1b06e2"
+    },
+    {
+      "id": "KWV-000-KWV-03-DONE",
+      "status": "passed",
+      "evidence_id": "77269e4c-e028-4f72-a59f-d5b6676f11d9"
+    },
+    {
+      "id": "KWV-000-KWV-04-DONE",
+      "status": "passed",
+      "evidence_id": "34ee89e3-fbe9-4a2a-a194-8c4c3631980c"
+    },
+    {
+      "id": "KWV-000-KWV-05-DONE",
+      "status": "passed",
+      "evidence_id": "02123785-a955-450c-86d4-cfaa5b158cbc"
+    },
+    {
+      "id": "KWV-000-KWV-06-DONE",
+      "status": "passed",
+      "evidence_id": "9574fd26-c0ac-4b7b-ac83-f2c9854e2b41"
+    },
+    {
+      "id": "KWV-000-KWV-07-DONE",
+      "status": "passed",
+      "evidence_id": "bff120ed-7da1-4d88-9f0e-df8e7f93c921"
+    },
+    {
+      "id": "KWV-000-KWV-08-DONE",
+      "status": "passed",
+      "evidence_id": "67d9c256-105f-465c-b4aa-77705df6f562"
+    },
+    {
+      "id": "KWV-000-KWV-09-DONE",
+      "status": "passed",
+      "evidence_id": "dbf059b4-f5bb-4bbd-8f5c-794a1006db74"
+    }
+  ],
+  "consumer_receipt": "KDA-CONSUMER-CHECK.json"
+}

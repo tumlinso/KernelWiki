@@ -3,7 +3,7 @@
 <!-- todo-orchestrator:v2-managed:start -->
 # Todo Status v2 Projection
 
-Project revision: `60`
+Project revision: `87`
 
 ## Workstreams
 - `KWV-01` | status: done | execution: closed | next: Read KWV-01 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.
@@ -14,6 +14,6 @@ Project revision: `60`
 - `KWV-06` | status: done | execution: closed | next: Read KWV-06 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.
 - `KWV-07` | status: done | execution: closed | next: Read KWV-07 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.
 - `KWV-08` | status: done | execution: closed | next: Read KWV-08 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.
-- `KWV-09` | status: in_progress | execution: claimed | next: Read KWV-09 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.
-- `KWV-000` | status: planned | execution: inactive | next: Close only after the nine task-owned outcomes and publication handoff are complete. Do not expand scope to create work.
+- `KWV-09` | status: done | execution: closed | next: Read KWV-09 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.
+- `KWV-000` | status: done | execution: closed | next: Close only after the nine task-owned outcomes and publication handoff are complete. Do not expand scope to create work.
 <!-- todo-orchestrator:v2-managed:end -->

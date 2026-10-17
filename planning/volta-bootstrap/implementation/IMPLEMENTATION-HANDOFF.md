@@ -103,6 +103,11 @@ are ignored by Git. Human-readable task projections remain tracked. The
 recurrence collector's full workspace snapshots are local-only; its committed
 declared-input closure supplies the source and data needed by this check.
 
+The actual KDA submodule clone passed all nine archived cases and eight
+retrieval/source/code-access checks at publication commit
+`af63ac2cf0dd5834ac953019bfa6002065d9bc05`. The commands, output digests and
+results are recorded in [`KDA-CONSUMER-CHECK.json`](KDA-CONSUMER-CHECK.json).
+
 ## Remaining limits
 
 - The corpus is a small measured V100 kernel family, not a broad shape sweep,

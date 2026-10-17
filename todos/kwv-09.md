@@ -3,16 +3,16 @@
 <!-- todo-orchestrator:v2-managed:start -->
 # KWV-09: Publish the coherent corpus and produce the KDA handoff
 
-Task revision: `60`; current project revision is in `todo-status.md`.
+Task revision: `67`; current project revision is in `todo-status.md`.
 
 ## Objective
 Close the source/artifact/query links, run the compact regressions and native validation, and supply a tested dependency commit with explicit performance limits.
 
 ## State
-- Lifecycle: `in_progress`
-- Execution: `claimed`
+- Lifecycle: `done`
+- Execution: `closed`
 - Parallel policy: `serial`
-- Result: `-`
+- Result: `validated`
 
 ## Next Action
 Read KWV-09 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.

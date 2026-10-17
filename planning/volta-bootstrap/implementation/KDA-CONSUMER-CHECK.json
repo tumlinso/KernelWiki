@@ -1,0 +1,194 @@
+{
+  "checks": {
+    "archived_evidence": {
+      "cases": {
+        "attention": {
+          "checked_cases": 1,
+          "errors": [],
+          "format": "KERNELWIKI-VOLTA-EVIDENCE-CHECK/1",
+          "valid": true
+        },
+        "environment": {
+          "checked_cases": 1,
+          "errors": [],
+          "format": "KERNELWIKI-VOLTA-EVIDENCE-CHECK/1",
+          "valid": true
+        },
+        "gemm": {
+          "checked_cases": 3,
+          "errors": [],
+          "format": "KERNELWIKI-VOLTA-EVIDENCE-CHECK/1",
+          "valid": true
+        },
+        "grouped-lowbit": {
+          "checked_cases": 2,
+          "errors": [],
+          "format": "KERNELWIKI-VOLTA-EVIDENCE-CHECK/1",
+          "valid": true
+        },
+        "recurrence": {
+          "checked_cases": 1,
+          "errors": [],
+          "format": "KERNELWIKI-VOLTA-EVIDENCE-CHECK/1",
+          "valid": true
+        },
+        "rows": {
+          "checked_cases": 1,
+          "errors": [],
+          "format": "KERNELWIKI-VOLTA-EVIDENCE-CHECK/1",
+          "valid": true
+        }
+      },
+      "checked_cases": 9,
+      "errors": [],
+      "format": "KERNELWIKI-VOLTA-EVIDENCE-CHECK/1",
+      "valid": true
+    },
+    "attention_sources_code": {
+      "argv": [
+        "python3",
+        "scripts/get_page.py",
+        "kernel-volta-attention",
+        "--follow-sources",
+        "--include-code"
+      ],
+      "passed": true,
+      "required_strings": [
+        "blog-volta-attention-measurements",
+        "volta_attention_runner.cu",
+        "volta_attention_online.cuh"
+      ],
+      "stdout_bytes": 69820,
+      "stdout_sha256": "7a448ffbdd9ecda835c4b80fedcc9740dc3a06b7aa43b3f7480395e3077e8017"
+    },
+    "blackwell": {
+      "argv": [
+        "python3",
+        "scripts/query.py",
+        "--architecture",
+        "B200",
+        "--type",
+        "kernel",
+        "--compact",
+        "--limit",
+        "20"
+      ],
+      "passed": true,
+      "required_strings": [
+        "kernel-flash-attention-4"
+      ],
+      "stdout_bytes": 1362,
+      "stdout_sha256": "4a73945af67a1e39071b6292aab9c5db15afa30ffeb7f34e4401190baabf699e"
+    },
+    "hardware_sources": {
+      "argv": [
+        "python3",
+        "scripts/get_page.py",
+        "hw-volta-mma",
+        "--follow-sources"
+      ],
+      "passed": true,
+      "required_strings": [
+        "doc-volta-ptx-8-8"
+      ],
+      "stdout_bytes": 2934,
+      "stdout_sha256": "e3b999da65d881b0ed71006a7c6cfaecf62dd995e2c1345bb9fe39c8b22d45b9"
+    },
+    "hopper": {
+      "argv": [
+        "python3",
+        "scripts/query.py",
+        "--architecture",
+        "H100",
+        "--type",
+        "kernel",
+        "--compact",
+        "--limit",
+        "20"
+      ],
+      "passed": true,
+      "required_strings": [
+        "kernel-deepgemm"
+      ],
+      "stdout_bytes": 811,
+      "stdout_sha256": "f5c3c6bf06aabe2cacfec6c5a2f996dd0ff7ea7dc2de22eedeab12dfe8938252"
+    },
+    "legacy_sources_code": {
+      "argv": [
+        "python3",
+        "scripts/get_page.py",
+        "kernel-deepgemm",
+        "--follow-sources",
+        "--include-code"
+      ],
+      "passed": true,
+      "required_strings": [
+        "Cited Sources",
+        "PROVENANCE.yaml"
+      ],
+      "stdout_bytes": 58021,
+      "stdout_sha256": "6bd4eb1985e59a6ca1f38ca8de464bbab78bffe0de47498be151388da1f9c1ef"
+    },
+    "v100_attention": {
+      "argv": [
+        "python3",
+        "scripts/query.py",
+        "--architecture",
+        "V100",
+        "--tag",
+        "attention",
+        "--type",
+        "kernel",
+        "--compact"
+      ],
+      "passed": true,
+      "required_strings": [
+        "kernel-volta-attention"
+      ],
+      "stdout_bytes": 150,
+      "stdout_sha256": "55142900b8564c144b64cb92021ea788dab29ee55c07fa78acc3ee71583c978b"
+    },
+    "v100_hardware": {
+      "argv": [
+        "python3",
+        "scripts/query.py",
+        "--architecture",
+        "V100",
+        "--type",
+        "hardware",
+        "--compact",
+        "--limit",
+        "20"
+      ],
+      "passed": true,
+      "required_strings": [
+        "hw-volta-mma"
+      ],
+      "stdout_bytes": 752,
+      "stdout_sha256": "305bcbe6a9f77c90e1dd02dcff5015448e0b7c2333397d86073dbd794e1a58d8"
+    },
+    "v100_kernels": {
+      "argv": [
+        "python3",
+        "scripts/query.py",
+        "--architecture",
+        "V100",
+        "--type",
+        "kernel",
+        "--compact",
+        "--limit",
+        "20"
+      ],
+      "passed": true,
+      "required_strings": [
+        "kernel-volta-gated-delta",
+        "kernel-volta-attention"
+      ],
+      "stdout_bytes": 742,
+      "stdout_sha256": "f04940eddea02c4fb99b57bb8cbbbdadaaa76651d5747e23d0127ad19242dc54"
+    }
+  },
+  "commit": "af63ac2cf0dd5834ac953019bfa6002065d9bc05",
+  "consumer_root": "/home/tumlinson/kda/skills/KernelWiki",
+  "format": "KERNELWIKI-KDA-CONSUMER-CHECK/1"
+}
