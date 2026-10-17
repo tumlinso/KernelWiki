@@ -1,0 +1,93 @@
+{
+  "argv": [
+    "benchmark_runs/volta-gemm-ordered/evidence/shared/bin/gemm_runner-source-9ab1ba79270f128d5b3cbbd56da8db991799326604ef87973085981672dd3e9c.bin",
+    "--onehot-multitile-smoke"
+  ],
+  "binary_paths": [
+    "benchmark_runs/volta-gemm-ordered/bin/gemm_runner",
+    "benchmark_runs/volta-gemm-ordered/evidence/shared/bin/gemm_runner-source-9ab1ba79270f128d5b3cbbd56da8db991799326604ef87973085981672dd3e9c.bin"
+  ],
+  "campaign_id": "kwv09-ordered-gemm-onehot-correctness",
+  "command_cwd": "/home/tumlinson/KernelWiki",
+  "inputs": [
+    "artifacts/kernels/volta-gemm-ordered/variants/gemm_runner.cu",
+    "artifacts/kernels/volta-gemm-ordered/variants/README.md",
+    "artifacts/kernels/volta-gemm-ordered/variants/PROVENANCE.yaml",
+    "artifacts/kernels/volta-gemm-ordered/variants/build.sh",
+    "benchmark_runs/volta-gemm-ordered/controller/README.md",
+    "benchmark_runs/volta-gemm-ordered/controller/compare_ordered.py",
+    "benchmark_runs/volta-gemm-ordered/controller/export_receipt.py",
+    "benchmark_runs/volta-gemm-ordered/controller/verify_source_closure.py",
+    "benchmark_runs/volta-gemm-ordered/controller/run_correctness_roles.sh",
+    "artifacts/kernels/volta-gemm/variants/gemm_baselines.cu",
+    "artifacts/kernels/volta-gemm/variants/gemm_baselines.cuh",
+    "artifacts/kernels/volta-gemm/variants/gemm_contract.hpp",
+    "artifacts/kernels/volta-gemm/variants/gemm_cpu_oracle.cpp",
+    "artifacts/kernels/volta-gemm/variants/gemm_e09_smoke.cu",
+    "artifacts/kernels/volta-gemm/variants/gemm_e09_smoke.cuh",
+    "artifacts/kernels/volta-gemm/variants/gemm_runner.cu",
+    "artifacts/kernels/volta-gemm/variants/prepare_gemm_case.py",
+    "artifacts/kernels/volta-gemm/variants/test_gemm_contract.cpp",
+    "artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cu",
+    "artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cuh",
+    "artifacts/kernels/volta-gemm/variants/CUTLASS-PIN.md",
+    "artifacts/kernels/volta-gemm/variants/PROVENANCE.yaml",
+    "artifacts/kernels/volta-gemm/variants/README.md",
+    "benchmark_runs/volta-gemm/supplemental/compare_matrix.py",
+    "benchmark_runs/volta-gemm/controller/pc_controller.py",
+    "benchmark_runs/volta-gemm/cases/large_dense/contract.json",
+    "benchmark_runs/volta-gemm/cases/large_dense/cpu-oracle.json",
+    "benchmark_runs/volta-gemm/cases/large_dense/inputs.bin",
+    "benchmark_runs/volta-gemm/cases/large_dense/reference.f64le",
+    "benchmark_runs/volta-gemm/cases/small_m/contract.json",
+    "benchmark_runs/volta-gemm/cases/small_m/cpu-oracle.json",
+    "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+    "benchmark_runs/volta-gemm/cases/small_m/reference.f64le",
+    "benchmark_runs/volta-gemm/cases/ragged/contract.json",
+    "benchmark_runs/volta-gemm/cases/ragged/cpu-oracle.json",
+    "benchmark_runs/volta-gemm/cases/ragged/inputs.bin",
+    "benchmark_runs/volta-gemm/cases/ragged/reference.f64le",
+    "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/LICENSE.txt",
+    "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/include/cutlass/arch/mma_sm70.h",
+    "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/include/cutlass/layout/tensor_op_multiplicand_sm70.h",
+    "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/math_libs/12.9/targets/x86_64-linux/lib/libcublas.so.12.9.1.4",
+    "benchmark_runs/volta-gemm-ordered/controller/source-closure.json",
+    "benchmark_runs/volta-gemm-ordered/evidence/shared/runner-build-source-9ab1ba79270f128d5b3cbbd56da8db991799326604ef87973085981672dd3e9c.json",
+    "benchmark_runs/volta-gemm-ordered/controller/role-large_dense-correctness.spec.json",
+    "benchmark_runs/volta-gemm-ordered/controller/role-small_m-correctness.spec.json",
+    "benchmark_runs/volta-gemm-ordered/controller/role-ragged-correctness.spec.json",
+    "benchmark_runs/volta-gemm-ordered/controller/role-onehot-correctness.spec.json",
+    "benchmark_runs/volta-gemm-ordered/README.md"
+  ],
+  "paths": [
+    "artifacts/kernels/volta-gemm-ordered/variants",
+    "artifacts/kernels/volta-gemm/variants",
+    "benchmark_runs/volta-gemm/cases",
+    "benchmark_runs/volta-gemm/supplemental",
+    "benchmark_runs/volta-gemm-ordered/controller",
+    "benchmark_runs/volta-gemm-ordered/bin",
+    "benchmark_runs/volta-gemm-ordered/evidence/shared"
+  ],
+  "project_root": "/home/tumlinson/KernelWiki",
+  "quiescence": {
+    "consecutive_idle_samples": 3,
+    "interval_seconds": 0.25,
+    "timeout_seconds": 60
+  },
+  "recipe": "baseline",
+  "resources": {
+    "cpu_threads": 2,
+    "gpu_uuids": [
+      "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+    ],
+    "gpus": 1,
+    "isolate_nvlink_domain": false,
+    "isolate_pcie_root": false
+  },
+  "schema_version": 1,
+  "timeout": 3600,
+  "toolchain": {
+    "require_sanitizer": true,
+    "root": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9"
+  }
+}

@@ -1,0 +1,30 @@
+origin_url: https://docs.nvidia.com/cuda/archive/12.9.1/cuda-runtime-api/api-sync-behavior.html
+upstream_repo: KernelWiki-derived CUDA host runner based on NVIDIA CUDA Runtime and PTX documentation
+license: MIT (authored/adapted KernelWiki source; no NVIDIA implementation copied)
+retrieved_at: '2026-10-17'
+asset_mode: derived
+derived_from:
+  - blog-volta-gemm-measurements
+  - doc-volta-cuda-12-9
+  - doc-volta-ptx-8-8
+  - hw-volta-mma
+derived_from_artifact:
+  path: artifacts/kernels/volta-gemm/variants/gemm_runner.cu
+  sha256: 229ccef78580915f7e9082b317b8c2a9b4aa9e8bbd1af24e73338bfdff04a25e
+change_summary: >-
+  Preserve the measured GEMM host runner while queuing pageable input uploads
+  on the same nonblocking compute stream as their consumers. The device
+  kernels and all measured historical artifacts remain in the original bundle.
+files:
+  - local_path: README.md
+    role: approach-notes
+    mode: derived
+    sha256: f30311b8aadde5a60968c80102e28e9785ea0221ec68ff16e496b6d29986ee14
+  - local_path: build.sh
+    role: derived-source
+    mode: derived
+    sha256: b2faa16f293a48586938d78b2172f53c2544b3d1f2be00b5bc40bcfc9f6f0460
+  - local_path: gemm_runner.cu
+    role: derived-source
+    mode: derived
+    sha256: 9ab1ba79270f128d5b3cbbd56da8db991799326604ef87973085981672dd3e9c

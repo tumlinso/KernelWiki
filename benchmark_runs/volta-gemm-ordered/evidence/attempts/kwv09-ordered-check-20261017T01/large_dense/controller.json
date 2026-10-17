@@ -1,0 +1,14 @@
+{
+  "build": {
+    "argv": [
+      "bash",
+      "artifacts/kernels/volta-gemm-ordered/variants/build.sh"
+    ],
+    "returncode": 1,
+    "stderr_sha256": "74087e81e411b50077fff91802fe19d18603b3a5b0f117a69898eea35cf45b00",
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "code": "foreground_build_failed",
+  "ok": false,
+  "stderr": "nvcc fatal   : Unknown option '-Wl,-rpath,/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/math_libs/12.9/targets/x86_64-linux/lib'\n"
+}

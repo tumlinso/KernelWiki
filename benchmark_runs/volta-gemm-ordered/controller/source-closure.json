@@ -1,0 +1,189 @@
+{
+  "files": [
+    {
+      "path": "artifacts/kernels/volta-gemm-ordered/variants/gemm_runner.cu",
+      "sha256": "9ab1ba79270f128d5b3cbbd56da8db991799326604ef87973085981672dd3e9c"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm-ordered/variants/README.md",
+      "sha256": "f30311b8aadde5a60968c80102e28e9785ea0221ec68ff16e496b6d29986ee14"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm-ordered/variants/PROVENANCE.yaml",
+      "sha256": "017fffec72c969354dfeea593be928571a4f5ba5d561ad4fe5d540485f4ddf34"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm-ordered/variants/build.sh",
+      "sha256": "b2faa16f293a48586938d78b2172f53c2544b3d1f2be00b5bc40bcfc9f6f0460"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/controller/README.md",
+      "sha256": "c8d1af116d36b7c51e5818f996e2f45be9fc4df481909c0cf7d482159ffa8359"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/controller/compare_ordered.py",
+      "sha256": "d1b9ed5f132801ae3a26075f4406f9ec36e03f5325cf68a75f7a749dc3c3147e"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/controller/export_receipt.py",
+      "sha256": "119c4ebfc30ad8fe967034b7629974c164eb0b77388fc7c1f220f79e200b8c74"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/controller/verify_source_closure.py",
+      "sha256": "fa2d02f9335fb25d832793e44cfedfa33b1c7a06e05e6ebea41ef93c5760f16f"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/controller/run_correctness_roles.sh",
+      "sha256": "ef3a1ae76d41a5f626598426eca30242c76a2f91dc295bb09ed8611fe6378f0c"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/gemm_baselines.cu",
+      "sha256": "f96ebc2c4cbc18883f5ddcd7feb0278823e6d913a7b612226a8d32a45cae5e50"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/gemm_baselines.cuh",
+      "sha256": "d2d4569836c12c7ad0bb91f968b65f45be2273ab6501c8a7c5d58fbfb195874c"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/gemm_contract.hpp",
+      "sha256": "2e88386f1b6afa3ba3e45ff26d95037cf5764b00d44d2a3a42a064441be18fef"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/gemm_cpu_oracle.cpp",
+      "sha256": "7da18b3ae23f71ba096bf3b1b91de6d9f0ad77d96fba2cf483f4403d83651e01"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/gemm_e09_smoke.cu",
+      "sha256": "85acbd0bb48067f8f19c88548862a5a06aaa60eb9397f96b55c75e93bd7f4a6b"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/gemm_e09_smoke.cuh",
+      "sha256": "e6357c9dc12d81eeb0ccfae37ddd66a31a01e85ac54993b7450e2f6b94b5283f"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/gemm_runner.cu",
+      "sha256": "229ccef78580915f7e9082b317b8c2a9b4aa9e8bbd1af24e73338bfdff04a25e"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/prepare_gemm_case.py",
+      "sha256": "aeba9f729d001b663d385dea2bd7743b3973ccb21b2e5c114e0330c96e7f0aab"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/test_gemm_contract.cpp",
+      "sha256": "8912efe330c665055f4a524a80539a13c854933a4fc789d4c1b8e6c847bd456a"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cu",
+      "sha256": "db47085c542dd50f7b17125cfc88c84595a6e11aaff62fa0d2ebfc0c831af4ed"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cuh",
+      "sha256": "25b381c336b2f466959d661f10fed33671d66817c4767d04ea37b2a9fbc30028"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/CUTLASS-PIN.md",
+      "sha256": "cd84a08bd704cfb65bcdc1b5dd36adf482c4a3d950bc66d7ef756dd7b6858ede"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/PROVENANCE.yaml",
+      "sha256": "090e98185a221cf1caf0c3358e636e1d4bbc3e96c075b6be6dbf1ce0ebae4af9"
+    },
+    {
+      "path": "artifacts/kernels/volta-gemm/variants/README.md",
+      "sha256": "9ce63e5bdebcf78dac2291b437e98165de92a3e592b93a74a5563c1bc1c6b4ab"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/supplemental/compare_matrix.py",
+      "sha256": "56d7f90242edf92170d7c4b8be7224ff4b427a40a7136fe520e4870b0e2b969b"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/controller/pc_controller.py",
+      "sha256": "492d0419f5015188c1191f98c491f0a61afdad8642f91b75de4d093230a2de99"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/cases/large_dense/contract.json",
+      "sha256": "e4ff49692bd6fa71035fc64a7cf0259412257880d0083c858a57f56a1641757b"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/cases/large_dense/cpu-oracle.json",
+      "sha256": "635cdcf03477e8d4dc1946764ba69d3ee090d6877c0dfa9735c0af0797d4859b"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/cases/large_dense/inputs.bin",
+      "sha256": "4a10e1084e9a934f1082cf3737f65902734fc9997a51dc8ce3365faa4f354ea7"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/cases/large_dense/reference.f64le",
+      "sha256": "d857fafab808da8ced9f3b64166c2f0377d1ef40e437628d75d4f1cf4b92146a"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/cases/small_m/contract.json",
+      "sha256": "e54aa8378731423b29d382b2824a79c9db88a1c4660d56a2d1480e8bea634a51"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/cases/small_m/cpu-oracle.json",
+      "sha256": "9758064145575c11f45b395d15e524b57a5cff91d21dd1f213304cbaa62edcfb"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+      "sha256": "ed1bdb4a268e252ce4cc9d1fdfbcf5f636f658cb525766b1f54ec038c8e43ca0"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/cases/small_m/reference.f64le",
+      "sha256": "2744fe8ced972afb676b16da618fd8da94eef92a66f74b41665f8a7821633209"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/cases/ragged/contract.json",
+      "sha256": "c4782a317116a7b54f844f32b2439ed160e9ca87ff8594e0f62c898bb39b28d0"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/cases/ragged/cpu-oracle.json",
+      "sha256": "ec53dcc2273307e51fde0caa0faf98b99b675b7fec8204b74d5e17ec7ba53011"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/cases/ragged/inputs.bin",
+      "sha256": "59be4d97102a1ebbdc6653ad41f01cd34dee75636ddcf597af05f592d9aec439"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm/cases/ragged/reference.f64le",
+      "sha256": "e34819dd1772853a600b3b46b601c60b6fefba428be78987ee88e54f066c73a4"
+    },
+    {
+      "path": "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/LICENSE.txt",
+      "sha256": "5f0ea053230eb92267e9e80ed67ec08899ebc55d093eff4a2273a7b340a48cca"
+    },
+    {
+      "path": "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/include/cutlass/arch/mma_sm70.h",
+      "sha256": "f670a45ffc54b5b9487104d173b3695f822ebff3311b00f357ae1200fde79903"
+    },
+    {
+      "path": "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/include/cutlass/layout/tensor_op_multiplicand_sm70.h",
+      "sha256": "4ba44a947e82899c760913f79e5def50b86c610c0c20652fec4aac9ef73e8101"
+    },
+    {
+      "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/math_libs/12.9/targets/x86_64-linux/lib/libcublas.so.12.9.1.4",
+      "sha256": "d63456d94f1b8e2408a8a9538c8740eb474c9eba48a84f420b15e2e10fbcd048"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/README.md",
+      "sha256": "445103f8e6764696959920da43be4dd9a1c97a79dc11b02cd849184c2e9c27de"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/controller/role-large_dense-correctness.spec.json",
+      "sha256": "8b63e75327d75b6a5dbc2bea116b06a453ab6000acf1a7e8d203b11a40ddf3d2"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/controller/role-small_m-correctness.spec.json",
+      "sha256": "323a4cd6c3d759527fce40d04bab394b3679619ce9cd0c52ec976c8d3fe0fba2"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/controller/role-ragged-correctness.spec.json",
+      "sha256": "92aec644ee2c22cd1686b9c0390be6e4ced0882b39670d942d489bb4c427dfef"
+    },
+    {
+      "path": "benchmark_runs/volta-gemm-ordered/controller/role-onehot-correctness.spec.json",
+      "sha256": "f359930c2eee962892e92119b1d5f48f3c83f660882bdb67663528a8b1659749"
+    }
+  ],
+  "format": "KERNELWIKI-VOLTA-ORDERED-SOURCE-CLOSURE/1"
+}
