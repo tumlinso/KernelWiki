@@ -37,6 +37,18 @@ GEMM_PRIMARY_ROLES = {
     "candidate_timing": ("candidate", "ptx", "time", "2"),
     "profile_candidate": ("candidate", "ptx", "single", "2"),
 }
+ROW_CONTRACT_FORMAT = "KERNELWIKI-ROW-CONTRACT/1"
+ROW_CHECK_FORMAT = "KERNELWIKI-ROW-CHECK/1"
+ROW_TIMING_FORMAT = "KERNELWIKI-ROW-TIMING/1"
+ROW_PROFILE_CASE_ID = "softmax_wide_streaming"
+ROW_PRIMARY_ROLES = {
+    "correctness_baseline": ("baseline", "correctness", None, None, None, None),
+    "correctness_candidate": ("candidate", "correctness", None, None, None, None),
+    "sanitizer_candidate": ("candidate", "correctness", None, None, None, None),
+    "baseline_timing": ("baseline", "time", "timing", 5, 21, 2),
+    "candidate_timing": ("candidate", "time", "timing", 5, 21, 2),
+    "profile_candidate": ("candidate", "time", "profile", 0, 1, 1),
+}
 
 
 class EvidenceError(ValueError):
@@ -241,6 +253,305 @@ def _is_gemm_contract(contract: dict[str, Any]) -> bool:
             numerical_contract.get("operator") == GEMM_OPERATOR)
 
 
+def _is_rows_contract(contract: dict[str, Any]) -> bool:
+    return contract.get("format") == ROW_CONTRACT_FORMAT
+
+
+def _row_contract_cases(contract: dict[str, Any]) -> list[dict[str, Any]]:
+    if (contract.get("case_id") != "rows" or
+            contract.get("suite_id") != "rows_correctness_suite" or
+            contract.get("operators") != ["softmax", "rmsnorm"]):
+        raise EvidenceError("rows contract does not identify the fixed softmax/RMSNorm suite")
+    cases = contract.get("cases")
+    if not isinstance(cases, list) or not cases:
+        raise EvidenceError("rows contract per-case declarations are missing")
+    ids: list[str] = []
+    allowed_paths = {
+        "softmax": ({"softmax_warp"}, {"softmax_cta"}),
+        "rmsnorm": ({"rmsnorm_cta_scalar"}, {"vec4", "scalar_fallback"}),
+    }
+    for item in cases:
+        if not isinstance(item, dict):
+            raise EvidenceError("rows contract contains a malformed case declaration")
+        case_id, operation = item.get("case_id"), item.get("operation")
+        rows, cols, expected = item.get("rows"), item.get("cols"), item.get("expected_outputs")
+        if (not isinstance(case_id, str) or not case_id or case_id in ids or
+                not isinstance(operation, str) or operation not in allowed_paths or
+                type(rows) is not int or rows < 0 or
+                type(cols) is not int or cols <= 0 or type(expected) is not int or
+                expected != rows * cols):
+            raise EvidenceError("rows contract contains invalid case identity or dimensions")
+        baseline_path, candidate_path = item.get("baseline_path"), item.get("candidate_path")
+        if rows == 0:
+            if baseline_path != "no_launch" or candidate_path != "no_launch":
+                raise EvidenceError(f"rows contract {case_id}: zero-row route must be no_launch")
+        else:
+            baseline_routes, candidate_routes = allowed_paths[operation]
+            if (not isinstance(baseline_path, str) or not isinstance(candidate_path, str) or
+                    baseline_path not in baseline_routes or candidate_path not in candidate_routes):
+                raise EvidenceError(f"rows contract {case_id}: implementation route is invalid")
+        if item.get("check_identity") != f"logical-row-major:{case_id}":
+            raise EvidenceError(f"rows contract {case_id}: output check identity is invalid")
+        ids.append(case_id)
+    if contract.get("case_ids") != ids or contract.get("correctness_case_ids") != ids:
+        raise EvidenceError("rows contract case ID lists do not match its ordered declarations")
+    return cases
+
+
+def _validate_rows_oracle_contract(contract: dict[str, Any], oracle: dict[str, Any]) -> list[dict[str, Any]]:
+    cases = _row_contract_cases(contract)
+    checks = oracle.get("checks")
+    if not isinstance(checks, list) or len(checks) != len(cases):
+        raise EvidenceError("rows CPU oracle case checks do not match the contract suite")
+    for spec, check in zip(cases, checks):
+        if (not isinstance(check, dict) or
+                check.get("case_id") != spec["case_id"] or
+                check.get("operation") != spec["operation"] or
+                type(check.get("rows")) is not int or
+                check.get("rows") != spec["rows"] or
+                type(check.get("cols")) is not int or
+                check.get("cols") != spec["cols"] or
+                type(check.get("reference_values")) is not int or
+                check.get("reference_values") != spec["expected_outputs"] or
+                check.get("passed") is not True):
+            raise EvidenceError(f"rows CPU oracle does not match contract case {spec['case_id']}")
+    return cases
+
+
+def _rows_contract_artifact(base: Path, contract_path: Path, record: Any,
+                            label: str) -> tuple[Path, str]:
+    if not isinstance(record, dict):
+        raise EvidenceError(f"{label}: rows contract artifact path/hash is missing")
+    raw_path, expected = record.get("path"), record.get("sha256")
+    if not isinstance(raw_path, str) or not raw_path or not isinstance(expected, str):
+        raise EvidenceError(f"{label}: rows contract artifact path/hash is malformed")
+    path = (contract_path.parent / raw_path).resolve()
+    if not path.is_relative_to(base.resolve()) or not path.is_file():
+        raise EvidenceError(f"{label}: rows contract artifact is missing or outside the evidence directory")
+    if digest(path) != expected:
+        raise EvidenceError(f"{label}: rows contract artifact SHA-256 mismatch")
+    return path, expected
+
+
+def _validate_rows_contract_artifacts(base: Path, contract_path: Path,
+                                      contract: dict[str, Any], input_path: Path,
+                                      input_sha: str, oracle_path: Path,
+                                      oracle_sha: str, oracle: dict[str, Any]) -> tuple[Path, str]:
+    represented_path, represented_sha = _rows_contract_artifact(
+        base, contract_path, contract.get("represented_input"), "rows represented input")
+    if represented_path.resolve() != input_path.resolve() or represented_sha != input_sha:
+        raise EvidenceError("rows contract does not bind the manifest represented input")
+    reference_path, reference_sha = _rows_contract_artifact(
+        base, contract_path, contract.get("reference_output"), "rows reference output")
+    oracle_contract_path, oracle_contract_sha = _rows_contract_artifact(
+        base, contract_path, contract.get("cpu_oracle"), "rows CPU oracle")
+    if oracle_contract_path.resolve() != oracle_path.resolve() or oracle_contract_sha != oracle_sha:
+        raise EvidenceError("rows contract does not bind the manifest CPU oracle")
+    if (oracle.get("represented_input_sha256") != input_sha or
+            oracle.get("reference_sha256") != reference_sha):
+        raise EvidenceError("rows CPU oracle hashes do not match represented input/reference output")
+    return reference_path, reference_sha
+
+
+def _rows_native_pass_matches_contract(result: dict[str, Any], contract: dict[str, Any],
+                                       gpu_uuid: str, implementation: str) -> bool:
+    try:
+        cases = _row_contract_cases(contract)
+    except EvidenceError:
+        return False
+    expected_uuid = gpu_uuid.removeprefix("GPU-").replace("-", "").lower()
+    if (result.get("format") != ROW_CHECK_FORMAT or result.get("status") != "passed" or
+            result.get("operator") != "row_suite" or
+            result.get("implementation") != implementation or
+            result.get("case_scope") != "full_suite" or
+            result.get("compute_capability") != "7.0" or
+            result.get("gpu_uuid") != expected_uuid or
+            type(result.get("case_count")) is not int or
+            result.get("case_count") != len(cases)):
+        return False
+    expected_total = sum(item["expected_outputs"] for item in cases)
+    if (type(result.get("expected_outputs")) is not int or
+            result.get("expected_outputs") != expected_total or
+            type(result.get("checked_outputs")) is not int or
+            result.get("checked_outputs") != expected_total or
+            any(type(result.get(field)) is not int or result[field] != 0
+                for field in ("failed_outputs", "nonfinite_outputs", "padding_writes"))):
+        return False
+    observed = result.get("cases")
+    if not isinstance(observed, list) or len(observed) != len(cases):
+        return False
+    common = contract.get("numerical_contract", {}).get("common", {})
+    atol, rtol = common.get("tolerance_atol"), common.get("tolerance_rtol")
+    if not (_finite_nonnegative_number(atol) and _finite_nonnegative_number(rtol)):
+        return False
+    route_key = "baseline_path" if implementation == "baseline" else "candidate_path"
+    for spec, item in zip(cases, observed):
+        if not isinstance(item, dict):
+            return False
+        if any(type(item.get(field)) is not int for field in ("rows", "cols", "expected_outputs")):
+            return False
+        if any(item.get(field) != spec[field] for field in
+               ("case_id", "operation", "rows", "cols", "expected_outputs", "check_identity")):
+            return False
+        if (item.get("implementation_path") != spec[route_key] or
+                item.get("passed") is not True or
+                any(type(item.get(field)) is not int or item[field] != 0
+                    for field in ("failed_outputs", "nonfinite_outputs", "padding_writes", "failed_checks")) or
+                type(item.get("checked_outputs")) is not int or
+                item.get("checked_outputs") != spec["expected_outputs"] or
+                type(item.get("padding_checked")) is not int or item.get("padding_checked") < 0):
+            return False
+        metrics = ("max_abs_error", "max_admission_tolerance", "max_tolerance_ratio")
+        if (not all(_finite_nonnegative_number(item.get(field)) for field in metrics) or
+                float(item["max_abs_error"]) > float(item["max_admission_tolerance"]) or
+                float(item["max_tolerance_ratio"]) > 1.0 or
+                not _finite_nonnegative_number(item.get("atol")) or
+                not _finite_nonnegative_number(item.get("rtol")) or
+                float(item["atol"]) != float(atol) or float(item["rtol"]) != float(rtol)):
+            return False
+    return True
+
+
+def _row_option(argv: list[Any], role: str, flag: str, expected: str | None) -> None:
+    occurrences = [i for i, item in enumerate(argv)
+                   if isinstance(item, str) and (item == flag or item.startswith(flag + "="))]
+    expected_count = 0 if expected is None else 1
+    if len(occurrences) != expected_count:
+        raise EvidenceError(f"{role}: row controller argv must contain {expected_count} {flag} selector(s)")
+    if expected is None:
+        return
+    index = occurrences[0]
+    if (argv[index] != flag or index + 1 >= len(argv) or
+            not isinstance(argv[index + 1], str) or argv[index + 1].startswith("--") or
+            argv[index + 1] != expected):
+        raise EvidenceError(f"{role}: row controller argv {flag} selector does not match the frozen role")
+
+
+def _validate_rows_primary_argv(summaries: dict[str, dict[str, Any]], root: Path,
+                                contract: dict[str, Any], input_path: Path,
+                                input_sha: str, reference_path: Path,
+                                reference_sha: str,
+                                implementations: dict[str, dict[str, Any]]) -> None:
+    cases = _row_contract_cases(contract)
+    timing_cases = contract.get("selected_timing_case_ids")
+    if (not isinstance(timing_cases, list) or not timing_cases or
+            any(not isinstance(item, str) for item in timing_cases) or
+            timing_cases != [item["case_id"] for item in cases if item["case_id"] in timing_cases]):
+        raise EvidenceError("rows contract selected timing case IDs are invalid")
+    role_selectors = {}
+    for role, (implementation, mode, selection, warmups, repetitions, rotations) in ROW_PRIMARY_ROLES.items():
+        if selection == "timing":
+            case_selector = ",".join(timing_cases)
+        elif selection == "profile":
+            case_selector = ROW_PROFILE_CASE_ID
+            if case_selector not in timing_cases:
+                raise EvidenceError("rows profile case is not in selected timing cases")
+        else:
+            case_selector = None
+        role_selectors[role] = (implementation, mode, case_selector, warmups, repetitions, rotations)
+
+    for role, (implementation, mode, case_selector, warmups, repetitions, rotations) in role_selectors.items():
+        summary = summaries.get(role)
+        provenance = summary.get("provenance") if isinstance(summary, dict) else None
+        argv = provenance.get("argv") if isinstance(provenance, dict) else None
+        if not isinstance(argv, list) or not argv or not isinstance(argv[0], str):
+            raise EvidenceError(f"{role}: controller provenance argv is missing for rows")
+        source = provenance.get("source")
+        project_root = source.get("project_root") if isinstance(source, dict) else None
+        if not isinstance(project_root, str) or not project_root:
+            raise EvidenceError(f"{role}: controller source project_root is missing for rows argv")
+        capture_root = Path(project_root).resolve()
+        executable = Path(argv[0])
+        if not executable.is_absolute():
+            executable = capture_root / executable
+        binary = provenance.get("binary")
+        binary_raw = binary.get("path") if isinstance(binary, dict) else None
+        if not isinstance(binary_raw, str) or not binary_raw:
+            raise EvidenceError(f"{role}: controller binary path is missing for rows argv")
+        provenance_binary = Path(binary_raw)
+        if not provenance_binary.is_absolute():
+            provenance_binary = capture_root / provenance_binary
+        implementation_record = implementations.get(implementation)
+        expected_executable = implementation_record.get("executed_path") if isinstance(implementation_record, dict) else None
+        if (not isinstance(expected_executable, Path) or
+                executable.resolve() != expected_executable.resolve() or
+                provenance_binary.resolve() != expected_executable.resolve()):
+            raise EvidenceError(f"{role}: controller argv[0] differs from the declared rows executable")
+
+        expected_input = str(input_path.resolve().relative_to(root.resolve()))
+        expected_reference = str(reference_path.resolve().relative_to(root.resolve()))
+        _row_option(argv, role, "--input", expected_input)
+        _row_option(argv, role, "--reference", expected_reference)
+        _row_option(argv, role, "--impl", implementation)
+        _row_option(argv, role, "--mode", mode)
+        _row_option(argv, role, "--case", case_selector)
+        _row_option(argv, role, "--warmups", str(warmups) if warmups is not None else None)
+        _row_option(argv, role, "--repetitions", str(repetitions) if repetitions is not None else None)
+        _row_option(argv, role, "--rotations", str(rotations) if rotations is not None else None)
+        expected_argv = ["--input", expected_input, "--reference", expected_reference,
+                         "--impl", implementation, "--mode", mode]
+        if case_selector is not None:
+            expected_argv.extend(("--case", case_selector))
+        if warmups is not None:
+            expected_argv.extend(("--warmups", str(warmups), "--repetitions", str(repetitions),
+                                  "--rotations", str(rotations)))
+        if argv[1:] != expected_argv:
+            raise EvidenceError(f"{role}: controller argv differs from the frozen rows role")
+        if _input_bindings(summary).get(str(reference_path.resolve())) != reference_sha:
+            raise EvidenceError(f"{role}: controller inputs do not bind the rows reference output")
+
+
+def _read_rows_stdout(base: Path, run: Any, label: str) -> dict[str, Any]:
+    if not isinstance(run, dict):
+        raise EvidenceError(f"{label}: row runner stdout receipt is missing")
+    path = checked_file(base, run.get("stdout"), f"{label} row runner stdout")
+    try:
+        result = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise EvidenceError(f"{label}: row runner stdout is not one JSON object") from exc
+    if not isinstance(result, dict):
+        raise EvidenceError(f"{label}: row runner stdout is not a JSON object")
+    return result
+
+
+def _validate_rows_timing_output(result: dict[str, Any], contract: dict[str, Any],
+                                 gpu_uuid: str, role: str) -> None:
+    selectors = ROW_PRIMARY_ROLES[role]
+    implementation, _mode, selection, warmups, repetitions, rotations = selectors
+    expected_ids = (contract.get("selected_timing_case_ids") if selection == "timing"
+                    else [ROW_PROFILE_CASE_ID])
+    specs = {item["case_id"]: item for item in _row_contract_cases(contract)}
+    if (not isinstance(expected_ids, list) or any(item not in specs for item in expected_ids) or
+            result.get("format") != ROW_TIMING_FORMAT or result.get("status") != "completed" or
+            result.get("implementation") != implementation or
+            result.get("gpu_uuid") != gpu_uuid.removeprefix("GPU-").replace("-", "").lower() or
+            result.get("compute_capability") != "7.0" or
+            type(result.get("warmups")) is not int or result.get("warmups") != warmups or
+            type(result.get("repetitions")) is not int or result.get("repetitions") != repetitions or
+            type(result.get("rotation_count")) is not int or result.get("rotation_count") != rotations):
+        raise EvidenceError(f"{role}: native rows timing header differs from the frozen role")
+    observed = result.get("cases")
+    if not isinstance(observed, list) or len(observed) != len(expected_ids):
+        raise EvidenceError(f"{role}: native rows timing cases do not match the selected role")
+    path_key = "baseline_path" if implementation == "baseline" else "candidate_path"
+    for case_id, item in zip(expected_ids, observed):
+        spec = specs[case_id]
+        samples = item.get("samples_us") if isinstance(item, dict) else None
+        if (not isinstance(item, dict) or item.get("case_id") != case_id or
+                item.get("operation") != spec["operation"] or
+                type(item.get("rows")) is not int or type(item.get("cols")) is not int or
+                item.get("rows") != spec["rows"] or item.get("cols") != spec["cols"] or
+                item.get("implementation_path") != spec[path_key] or
+                not isinstance(samples, list) or len(samples) != repetitions or
+                any(not _finite_positive_number(value) for value in samples)):
+            raise EvidenceError(f"{role}: native rows timing output is invalid for {case_id}")
+
+
+def _finite_positive_number(value: Any) -> bool:
+    return (not isinstance(value, bool) and isinstance(value, (int, float)) and
+            math.isfinite(float(value)) and float(value) > 0)
+
+
 def _finite_nonnegative_number(value: Any) -> bool:
     if isinstance(value, bool) or not isinstance(value, (int, float)):
         return False
@@ -375,15 +686,19 @@ def _partial_memcheck_has_application_pass(summary: dict[str, Any], gpu_uuid: st
                                             contract: dict[str, Any] | None = None) -> bool:
     """Accept only the known partial memcheck classification with a raw target PASS."""
     if (summary.get("tool") != "compute-sanitizer" or
+            summary.get("status") != "partial" or
             summary.get("tool_detail") != "memcheck" or
             type(summary.get("exit_status")) is not int or
             summary.get("exit_status") != 0 or summary.get("conclusive") is not False):
+        return False
+    if type(summary.get("error_count")) is not int or summary.get("error_count") != 0:
         return False
     expected_uuid = gpu_uuid.removeprefix("GPU-").replace("-", "").lower()
     lines = summary.get("stdout_tail")
     if not isinstance(lines, list):
         return False
     gemm_contract = isinstance(contract, dict) and _is_gemm_contract(contract)
+    rows_contract = isinstance(contract, dict) and _is_rows_contract(contract)
     for line in lines:
         if not isinstance(line, str):
             continue
@@ -393,6 +708,11 @@ def _partial_memcheck_has_application_pass(summary: dict[str, Any], gpu_uuid: st
             continue
         if gemm_contract:
             if isinstance(result, dict) and _gemm_native_pass_matches_contract(result, contract):
+                return True
+            continue
+        if rows_contract:
+            if (isinstance(result, dict) and
+                    _rows_native_pass_matches_contract(result, contract, gpu_uuid, "candidate")):
                 return True
             continue
         raw_uuid = result.get("gpu_uuid") if isinstance(result, dict) else None
@@ -471,6 +791,14 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
         if (not all(math.isfinite(v) and v >= 0 for v in (error, reference, atol, rtol)) or
                 error > atol + rtol * reference):
             raise EvidenceError(f"{case['id']}: CPU oracle numerical contract failed")
+    rows_reference_path: Path | None = None
+    rows_reference_sha: str | None = None
+    if _is_rows_contract(contract_data):
+        _validate_rows_oracle_contract(contract_data, oracle)
+        rows_reference_path, rows_reference_sha = _validate_rows_contract_artifacts(
+            base, contract, contract_data, input_path, input_sha, oracle_path,
+            oracle_sha, oracle,
+        )
 
     runs = case.get("runs")
     if not isinstance(runs, dict):
@@ -485,6 +813,22 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
         )
     if _is_gemm_contract(contract_data):
         _validate_gemm_primary_argv(summaries, root, contract_data, input_path, bound_impls)
+    elif _is_rows_contract(contract_data):
+        if rows_reference_path is None or rows_reference_sha is None:
+            raise EvidenceError(f"{case['id']}: rows reference binding is missing")
+        _validate_rows_primary_argv(
+            summaries, root, contract_data, input_path, input_sha,
+            rows_reference_path, rows_reference_sha, bound_impls,
+        )
+        for role, implementation in (("correctness_baseline", "baseline"),
+                                     ("correctness_candidate", "candidate")):
+            native = _read_rows_stdout(base, runs.get(role), f"{case['id']} {role}")
+            if not _rows_native_pass_matches_contract(
+                    native, contract_data, str(case.get("gpu_uuid", "")), implementation):
+                raise EvidenceError(f"{case['id']} {role}: native rows correctness receipt does not pass the frozen contract")
+        for role in ("baseline_timing", "candidate_timing", "profile_candidate"):
+            native = _read_rows_stdout(base, runs.get(role), f"{case['id']} {role}")
+            _validate_rows_timing_output(native, contract_data, str(case.get("gpu_uuid", "")), role)
     library_roles = {
         "baseline": ("correctness_baseline", "baseline_timing"),
         "candidate": ("correctness_candidate", "sanitizer_candidate", "candidate_timing", "profile_candidate"),

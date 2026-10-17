@@ -1,0 +1,68 @@
+{
+  "format": "KERNELWIKI-ROW-CASE-MATRIX/1",
+  "correctness_suites": {
+    "softmax": [
+      "softmax_n31", "softmax_n32", "softmax_n33", "softmax_n128",
+      "softmax_n768", "softmax_n4096", "softmax_n8193",
+      "softmax_mask_tail_stride", "softmax_zero_rows"
+    ],
+    "rmsnorm": [
+      "rmsnorm_n31", "rmsnorm_n32", "rmsnorm_n33", "rmsnorm_n128",
+      "rmsnorm_n768", "rmsnorm_n4096", "rmsnorm_n8193",
+      "rmsnorm_zero_row", "rmsnorm_zero_rows", "rmsnorm_n33_misaligned"
+    ],
+    "fixed_bundle": "rows_correctness_suite contains both operators and the selected timing shapes in one hashed input/reference pair",
+    "full_bundle_case_ids": [
+      "softmax_n31", "softmax_n32", "softmax_n33", "softmax_n128",
+      "softmax_n768", "softmax_n4096", "softmax_n8193",
+      "softmax_mask_tail_stride", "softmax_zero_rows",
+      "rmsnorm_n31", "rmsnorm_n32", "rmsnorm_n33", "rmsnorm_n128",
+      "rmsnorm_n768", "rmsnorm_n4096", "rmsnorm_n8193",
+      "rmsnorm_zero_row", "rmsnorm_zero_rows", "rmsnorm_n33_misaligned",
+      "softmax_wide_single_row", "softmax_wide_streaming",
+      "rmsnorm_vec4_wide_streaming"
+    ],
+    "correctness_scope": "Baseline, candidate, and sanitizer run all 22 fixed cases, including the three timing shapes. Timing selects the three declared performance cases and reports one raw sample array per case.",
+    "receipt_policy": "One native correctness invocation per baseline/candidate aggregates the fixed cases. Keep the six controller roles distinct; do not create timing/profile/controller receipts for every width."
+  },
+  "selected_performance_comparisons": [
+    {
+      "id": "softmax_wide_single_row",
+      "operation": "softmax",
+      "rows": 1,
+      "cols": 4096,
+      "baseline": "one warp per row, four warps per CTA",
+      "candidate": "one CTA per row, four warps",
+      "question": "Does CTA cooperation repay cross-warp reduction cost when only one wide row is available?",
+      "timing": "Preallocated resident kernel invocation; record runtime L2."
+    },
+    {
+      "id": "softmax_wide_streaming",
+      "operation": "softmax",
+      "rows": 512,
+      "cols": 4096,
+      "baseline": "one warp per row, four rows per CTA",
+      "candidate": "one CTA per row, four warps",
+      "question": "Does CTA cooperation help this width when row-level parallelism is abundant?",
+      "working_set": "8 MiB X plus 8 MiB Y per buffer; with two alternating buffers verify aggregate against the queried V100 L2 size."
+    },
+    {
+      "id": "rmsnorm_vec4_wide_streaming",
+      "operation": "rmsnorm",
+      "rows": 512,
+      "cols": 4096,
+      "baseline": "scalar CTA",
+      "candidate": "aligned float4 CTA",
+      "question": "Does a vector candidate retain a measured benefit when row parallelism is abundant?",
+      "working_set": "8 MiB X plus 8 MiB Y per buffer; with two alternating buffers verify the aggregate against runtime L2."
+    }
+  ],
+  "evidence_rules": [
+    "Baseline and candidate must implement the same named operator on identical represented input and references.",
+    "Residual+bias normalization is a separate operator and can only be compared as fused full-path versus unfused producer/consumer path.",
+    "Use unprofiled paired timing. Do not infer occupancy, bank conflicts, transaction count, or traffic cause from timing alone.",
+    "Query current cudaDeviceProp.l2CacheSize; a capacity comparison is not proof of actual cache residency or HBM traffic.",
+    "Record registers, spills, and shared memory; profile only selected representative kernels through the repository NCU path.",
+    "One aggregate rows contract and six distinct controller roles cover the fixed bundle; do not create roles per case or width."
+  ]
+}

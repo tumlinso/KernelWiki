@@ -239,6 +239,99 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
         changed[occurrences[0] + 1] = value
         return changed
 
+    def rows_contract(self):
+        cases = [
+            {"case_id": "softmax_small", "operation": "softmax", "rows": 2, "cols": 2,
+             "expected_outputs": 4, "baseline_path": "softmax_warp", "candidate_path": "softmax_cta",
+             "check_identity": "logical-row-major:softmax_small"},
+            {"case_id": "softmax_wide_streaming", "operation": "softmax", "rows": 1, "cols": 4,
+             "expected_outputs": 4, "baseline_path": "softmax_warp", "candidate_path": "softmax_cta",
+             "check_identity": "logical-row-major:softmax_wide_streaming"},
+            {"case_id": "softmax_zero_rows", "operation": "softmax", "rows": 0, "cols": 3,
+             "expected_outputs": 0, "baseline_path": "no_launch", "candidate_path": "no_launch",
+             "check_identity": "logical-row-major:softmax_zero_rows"},
+            {"case_id": "rmsnorm_vec4_wide_streaming", "operation": "rmsnorm", "rows": 1, "cols": 4,
+             "expected_outputs": 4, "baseline_path": "rmsnorm_cta_scalar", "candidate_path": "vec4",
+             "check_identity": "logical-row-major:rmsnorm_vec4_wide_streaming"},
+            {"case_id": "rmsnorm_misaligned", "operation": "rmsnorm", "rows": 1, "cols": 3,
+             "expected_outputs": 3, "baseline_path": "rmsnorm_cta_scalar", "candidate_path": "scalar_fallback",
+             "check_identity": "logical-row-major:rmsnorm_misaligned"},
+        ]
+        ids = [item["case_id"] for item in cases]
+        return {
+            "format": CHECK.ROW_CONTRACT_FORMAT, "case_id": "rows",
+            "suite_id": "rows_correctness_suite", "operators": ["softmax", "rmsnorm"],
+            "case_ids": ids, "correctness_case_ids": ids, "cases": cases,
+            "selected_timing_case_ids": ["softmax_wide_streaming", "rmsnorm_vec4_wide_streaming"],
+            "numerical_contract": {"common": {"tolerance_atol": 2.0 ** -30,
+                                                "tolerance_rtol": 2.0 ** -14}},
+        }
+
+    def rows_native_result(self, contract, implementation="candidate"):
+        path_key = "baseline_path" if implementation == "baseline" else "candidate_path"
+        checks = []
+        for spec in contract["cases"]:
+            checks.append({
+                "case_id": spec["case_id"], "operation": spec["operation"],
+                "rows": spec["rows"], "cols": spec["cols"],
+                "expected_outputs": spec["expected_outputs"],
+                "implementation_path": spec[path_key], "check_identity": spec["check_identity"],
+                "checked_outputs": spec["expected_outputs"], "failed_outputs": 0,
+                "nonfinite_outputs": 0, "padding_checked": 4, "padding_writes": 0,
+                "failed_checks": 0, "max_abs_error": 0.0,
+                "max_admission_tolerance": 0.01, "max_tolerance_ratio": 0.0,
+                "atol": 2.0 ** -30, "rtol": 2.0 ** -14, "passed": True,
+            })
+        total = sum(item["expected_outputs"] for item in contract["cases"])
+        return {
+            "format": CHECK.ROW_CHECK_FORMAT, "status": "passed", "gpu_uuid": "00000000000000000000000000000001",
+            "compute_capability": "7.0", "operator": "row_suite", "implementation": implementation,
+            "case_scope": "full_suite", "case_count": len(checks),
+            "expected_outputs": total, "checked_outputs": total,
+            "failed_outputs": 0, "nonfinite_outputs": 0, "padding_writes": 0,
+            "cases": checks,
+        }
+
+    def rows_role_summaries(self, contract, input_path, reference_path, reference_sha):
+        timing_cases = ",".join(contract["selected_timing_case_ids"])
+        summaries = {}
+        for role, (implementation, mode, selection, warmups, repetitions, rotations) in CHECK.ROW_PRIMARY_ROLES.items():
+            argv = [str(self.impl[implementation]["binary_path"].relative_to(self.root)),
+                    "--input", str(input_path.relative_to(self.root)),
+                    "--reference", str(reference_path.relative_to(self.root)),
+                    "--impl", implementation, "--mode", mode]
+            if selection == "timing":
+                argv.extend(("--case", timing_cases))
+            elif selection == "profile":
+                argv.extend(("--case", CHECK.ROW_PROFILE_CASE_ID))
+            if warmups is not None:
+                argv.extend(("--warmups", str(warmups), "--repetitions", str(repetitions),
+                             "--rotations", str(rotations)))
+            summaries[role] = {"provenance": {
+                "source": {"project_root": str(self.root)},
+                "argv": argv,
+                "binary": {"path": str(self.impl[implementation]["binary_path"].resolve())},
+                "inputs": [{"path": str(reference_path.resolve()), "sha256": reference_sha}],
+            }}
+        return summaries
+
+    def rows_timing_result(self, contract, role):
+        implementation, _mode, selection, warmups, repetitions, rotations = CHECK.ROW_PRIMARY_ROLES[role]
+        ids = contract["selected_timing_case_ids"] if selection == "timing" else [CHECK.ROW_PROFILE_CASE_ID]
+        specs = {item["case_id"]: item for item in contract["cases"]}
+        path_key = "baseline_path" if implementation == "baseline" else "candidate_path"
+        return {
+            "format": CHECK.ROW_TIMING_FORMAT, "status": "completed",
+            "gpu_uuid": "00000000000000000000000000000001", "compute_capability": "7.0",
+            "implementation": implementation, "warmups": warmups, "repetitions": repetitions,
+            "rotation_count": rotations,
+            "cases": [{"case_id": case_id, "operation": specs[case_id]["operation"],
+                       "rows": specs[case_id]["rows"], "cols": specs[case_id]["cols"],
+                       "implementation_path": specs[case_id][path_key],
+                       "samples_us": [2.5] * repetitions}
+                      for case_id in ids],
+        }
+
     def test_complete_matched_evidence_passes(self):
         result = self.validate()
         self.assertTrue(result["valid"], result["errors"])
@@ -587,6 +680,163 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
                 self.assertFalse(CHECK._partial_memcheck_has_application_pass(
                     partial, self.gpu, bad_contract
                 ))
+
+    def test_rows_native_receipt_binds_full_mixed_suite_and_declared_routes(self):
+        contract = self.rows_contract()
+        for implementation in ("baseline", "candidate"):
+            native = self.rows_native_result(contract, implementation)
+            self.assertTrue(CHECK._rows_native_pass_matches_contract(
+                native, contract, self.gpu, implementation
+            ))
+        native = self.rows_native_result(contract)
+        partial = {
+            "tool": "compute-sanitizer", "status": "partial", "conclusive": False,
+            "tool_detail": "memcheck", "exit_status": 0, "error_count": 0,
+            "stdout_tail": [json.dumps(native)],
+        }
+        self.assertTrue(CHECK._partial_memcheck_has_application_pass(partial, self.gpu, contract))
+
+        invalid = []
+        for field, value in (
+            ("status", "failed"), ("implementation", "baseline"),
+            ("case_scope", "selected_subset"), ("gpu_uuid", "0" * 32),
+            ("case_count", True), ("checked_outputs", 14),
+            ("failed_outputs", True), ("nonfinite_outputs", 1),
+        ):
+            changed = json.loads(json.dumps(native))
+            changed[field] = value
+            invalid.append(changed)
+        changed_case = json.loads(json.dumps(native))
+        changed_case["cases"][0]["implementation_path"] = "other_route"
+        invalid.append(changed_case)
+        changed_case = json.loads(json.dumps(native))
+        changed_case["cases"][0]["check_identity"] = "other-output"
+        invalid.append(changed_case)
+        changed_case = json.loads(json.dumps(native))
+        changed_case["cases"][0]["max_tolerance_ratio"] = 1.01
+        invalid.append(changed_case)
+        changed_case = json.loads(json.dumps(native))
+        changed_case["cases"][0]["rows"] = True
+        invalid.append(changed_case)
+        for changed in invalid:
+            with self.subTest(native=changed):
+                self.assertFalse(CHECK._rows_native_pass_matches_contract(
+                    changed, contract, self.gpu, "candidate"
+                ))
+
+        for status, exit_status, error_count in (("partial", 1, 0), ("partial", 0, None),
+                                                  ("passed", 0, 0)):
+            bad_partial = dict(partial, status=status, exit_status=exit_status,
+                               error_count=error_count, stdout_tail=[json.dumps(native)])
+            self.assertFalse(CHECK._partial_memcheck_has_application_pass(
+                bad_partial, self.gpu, contract
+            ))
+
+    def test_rows_contract_case_declarations_match_cpu_oracle(self):
+        contract = self.rows_contract()
+        oracle = {"checks": [{
+            "case_id": item["case_id"], "operation": item["operation"],
+            "rows": item["rows"], "cols": item["cols"],
+            "reference_values": item["expected_outputs"], "passed": True,
+        } for item in contract["cases"]]}
+        self.assertEqual(contract["cases"], CHECK._validate_rows_oracle_contract(contract, oracle))
+        oracle["checks"][1]["cols"] = True
+        with self.assertRaisesRegex(CHECK.EvidenceError, "does not match contract case"):
+            CHECK._validate_rows_oracle_contract(contract, oracle)
+        malformed = json.loads(json.dumps(contract))
+        malformed["cases"][0]["operation"] = []
+        with self.assertRaises(CHECK.EvidenceError):
+            CHECK._row_contract_cases(malformed)
+
+    def test_rows_contract_binds_exact_input_reference_and_oracle_files(self):
+        reference_path = self.base / "inputs" / "rows-reference.bin"
+        reference_sha = put(reference_path, b"row reference bytes")
+        oracle = {"format": "KERNELWIKI-CPU-ORACLE/1", "passed": True,
+                  "represented_input_sha256": self.input_sha,
+                  "reference_sha256": reference_sha, "checks": []}
+        oracle_sha = json_file(self.oracle_path, oracle)
+        contract = self.rows_contract()
+        contract.update({
+            "represented_input": {"path": "../inputs/represented.bin", "sha256": self.input_sha},
+            "reference_output": {"path": "../inputs/rows-reference.bin", "sha256": reference_sha},
+            "cpu_oracle": {"path": "../oracle/case.json", "sha256": oracle_sha},
+        })
+        contract_path = self.base / "contracts" / "rows-contract.json"
+        json_file(contract_path, contract)
+        resolved, resolved_sha = CHECK._validate_rows_contract_artifacts(
+            self.base, contract_path, contract, self.input_path, self.input_sha,
+            self.oracle_path, oracle_sha, oracle,
+        )
+        self.assertEqual(resolved, reference_path.resolve())
+        self.assertEqual(resolved_sha, reference_sha)
+
+        wrong_path = json.loads(json.dumps(contract))
+        wrong_path["reference_output"]["path"] = "../inputs/not-the-reference.bin"
+        with self.assertRaisesRegex(CHECK.EvidenceError, "missing or outside"):
+            CHECK._validate_rows_contract_artifacts(
+                self.base, contract_path, wrong_path, self.input_path, self.input_sha,
+                self.oracle_path, oracle_sha, oracle,
+            )
+
+    def test_rows_controller_argv_is_bound_for_each_frozen_role(self):
+        contract = self.rows_contract()
+        reference_path = self.base / "inputs" / "rows-reference.bin"
+        reference_sha = put(reference_path, b"row reference bytes")
+        summaries = self.rows_role_summaries(contract, self.input_path, reference_path, reference_sha)
+        implementations = {
+            name: {"executed_path": entry["binary_path"]}
+            for name, entry in self.impl.items()
+        }
+        CHECK._validate_rows_primary_argv(
+            summaries, self.root, contract, self.input_path, self.input_sha,
+            reference_path, reference_sha, implementations,
+        )
+
+        invalid_argvs = [
+            ("sanitizer_candidate", lambda a: self.replace_argv_option(a, "--impl", "baseline")),
+            ("candidate_timing", lambda a: self.replace_argv_option(a, "--case", "softmax_small")),
+            ("profile_candidate", lambda a: self.replace_argv_option(a, "--repetitions", "21")),
+            ("correctness_candidate", lambda a: a + ["--input", str(self.input_path.relative_to(self.root))]),
+            ("correctness_baseline", lambda a: a + ["--unrecorded-option"]),
+        ]
+        for role, mutate in invalid_argvs:
+            changed = json.loads(json.dumps(summaries))
+            changed[role]["provenance"]["argv"] = mutate(changed[role]["provenance"]["argv"])
+            with self.subTest(role=role), self.assertRaises(CHECK.EvidenceError):
+                CHECK._validate_rows_primary_argv(
+                    changed, self.root, contract, self.input_path, self.input_sha,
+                    reference_path, reference_sha, implementations,
+                )
+
+        changed = json.loads(json.dumps(summaries))
+        changed["sanitizer_candidate"]["provenance"]["argv"][0] = "/tmp/unrelated-row-runner"
+        with self.assertRaisesRegex(CHECK.EvidenceError, r"argv\[0\] differs"):
+            CHECK._validate_rows_primary_argv(
+                changed, self.root, contract, self.input_path, self.input_sha,
+                reference_path, reference_sha, implementations,
+            )
+
+        changed = json.loads(json.dumps(summaries))
+        changed["baseline_timing"]["provenance"]["inputs"][0]["sha256"] = "0" * 64
+        with self.assertRaisesRegex(CHECK.EvidenceError, "do not bind the rows reference"):
+            CHECK._validate_rows_primary_argv(
+                changed, self.root, contract, self.input_path, self.input_sha,
+                reference_path, reference_sha, implementations,
+            )
+
+    def test_rows_native_timing_keeps_unprofiled_samples_separate_from_profile(self):
+        contract = self.rows_contract()
+        for role in ("baseline_timing", "candidate_timing", "profile_candidate"):
+            result = self.rows_timing_result(contract, role)
+            CHECK._validate_rows_timing_output(result, contract, self.gpu, role)
+        result = self.rows_timing_result(contract, "candidate_timing")
+        result["cases"][0]["samples_us"] = [2.0]
+        with self.assertRaisesRegex(CHECK.EvidenceError, "timing output is invalid"):
+            CHECK._validate_rows_timing_output(result, contract, self.gpu, "candidate_timing")
+        result = self.rows_timing_result(contract, "profile_candidate")
+        result["cases"][0]["case_id"] = "rmsnorm_vec4_wide_streaming"
+        with self.assertRaisesRegex(CHECK.EvidenceError, "timing output is invalid"):
+            CHECK._validate_rows_timing_output(result, contract, self.gpu, "profile_candidate")
 
     def test_profile_report_must_be_present(self):
         self.manifest["cases"][0]["runs"]["profile_candidate"]["profile"].pop("report")

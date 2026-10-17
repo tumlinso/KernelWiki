@@ -1,0 +1,318 @@
+{
+  "case_id": "rows",
+  "case_ids": [
+    "softmax_n31",
+    "softmax_n32",
+    "softmax_n33",
+    "softmax_n128",
+    "softmax_n768",
+    "softmax_n4096",
+    "softmax_n8193",
+    "softmax_mask_tail_stride",
+    "softmax_zero_rows",
+    "rmsnorm_n31",
+    "rmsnorm_n32",
+    "rmsnorm_n33",
+    "rmsnorm_n128",
+    "rmsnorm_n768",
+    "rmsnorm_n4096",
+    "rmsnorm_n8193",
+    "rmsnorm_zero_row",
+    "rmsnorm_zero_rows",
+    "rmsnorm_n33_misaligned",
+    "softmax_wide_single_row",
+    "softmax_wide_streaming",
+    "rmsnorm_vec4_wide_streaming"
+  ],
+  "case_signature": "6be308579deb3cc7c6b14268549ce521dd9b63bef3ca8c5e120c7fc02d35ae13",
+  "cases": [
+    {
+      "baseline_path": "softmax_warp",
+      "candidate_path": "softmax_cta",
+      "case_id": "softmax_n31",
+      "check_identity": "logical-row-major:softmax_n31",
+      "cols": 31,
+      "expected_outputs": 93,
+      "operation": "softmax",
+      "rows": 3
+    },
+    {
+      "baseline_path": "softmax_warp",
+      "candidate_path": "softmax_cta",
+      "case_id": "softmax_n32",
+      "check_identity": "logical-row-major:softmax_n32",
+      "cols": 32,
+      "expected_outputs": 96,
+      "operation": "softmax",
+      "rows": 3
+    },
+    {
+      "baseline_path": "softmax_warp",
+      "candidate_path": "softmax_cta",
+      "case_id": "softmax_n33",
+      "check_identity": "logical-row-major:softmax_n33",
+      "cols": 33,
+      "expected_outputs": 99,
+      "operation": "softmax",
+      "rows": 3
+    },
+    {
+      "baseline_path": "softmax_warp",
+      "candidate_path": "softmax_cta",
+      "case_id": "softmax_n128",
+      "check_identity": "logical-row-major:softmax_n128",
+      "cols": 128,
+      "expected_outputs": 384,
+      "operation": "softmax",
+      "rows": 3
+    },
+    {
+      "baseline_path": "softmax_warp",
+      "candidate_path": "softmax_cta",
+      "case_id": "softmax_n768",
+      "check_identity": "logical-row-major:softmax_n768",
+      "cols": 768,
+      "expected_outputs": 2304,
+      "operation": "softmax",
+      "rows": 3
+    },
+    {
+      "baseline_path": "softmax_warp",
+      "candidate_path": "softmax_cta",
+      "case_id": "softmax_n4096",
+      "check_identity": "logical-row-major:softmax_n4096",
+      "cols": 4096,
+      "expected_outputs": 12288,
+      "operation": "softmax",
+      "rows": 3
+    },
+    {
+      "baseline_path": "softmax_warp",
+      "candidate_path": "softmax_cta",
+      "case_id": "softmax_n8193",
+      "check_identity": "logical-row-major:softmax_n8193",
+      "cols": 8193,
+      "expected_outputs": 24579,
+      "operation": "softmax",
+      "rows": 3
+    },
+    {
+      "baseline_path": "softmax_warp",
+      "candidate_path": "softmax_cta",
+      "case_id": "softmax_mask_tail_stride",
+      "check_identity": "logical-row-major:softmax_mask_tail_stride",
+      "cols": 33,
+      "expected_outputs": 165,
+      "operation": "softmax",
+      "rows": 5
+    },
+    {
+      "baseline_path": "no_launch",
+      "candidate_path": "no_launch",
+      "case_id": "softmax_zero_rows",
+      "check_identity": "logical-row-major:softmax_zero_rows",
+      "cols": 33,
+      "expected_outputs": 0,
+      "operation": "softmax",
+      "rows": 0
+    },
+    {
+      "baseline_path": "rmsnorm_cta_scalar",
+      "candidate_path": "vec4",
+      "case_id": "rmsnorm_n31",
+      "check_identity": "logical-row-major:rmsnorm_n31",
+      "cols": 31,
+      "expected_outputs": 93,
+      "operation": "rmsnorm",
+      "rows": 3
+    },
+    {
+      "baseline_path": "rmsnorm_cta_scalar",
+      "candidate_path": "vec4",
+      "case_id": "rmsnorm_n32",
+      "check_identity": "logical-row-major:rmsnorm_n32",
+      "cols": 32,
+      "expected_outputs": 96,
+      "operation": "rmsnorm",
+      "rows": 3
+    },
+    {
+      "baseline_path": "rmsnorm_cta_scalar",
+      "candidate_path": "vec4",
+      "case_id": "rmsnorm_n33",
+      "check_identity": "logical-row-major:rmsnorm_n33",
+      "cols": 33,
+      "expected_outputs": 99,
+      "operation": "rmsnorm",
+      "rows": 3
+    },
+    {
+      "baseline_path": "rmsnorm_cta_scalar",
+      "candidate_path": "vec4",
+      "case_id": "rmsnorm_n128",
+      "check_identity": "logical-row-major:rmsnorm_n128",
+      "cols": 128,
+      "expected_outputs": 384,
+      "operation": "rmsnorm",
+      "rows": 3
+    },
+    {
+      "baseline_path": "rmsnorm_cta_scalar",
+      "candidate_path": "vec4",
+      "case_id": "rmsnorm_n768",
+      "check_identity": "logical-row-major:rmsnorm_n768",
+      "cols": 768,
+      "expected_outputs": 2304,
+      "operation": "rmsnorm",
+      "rows": 3
+    },
+    {
+      "baseline_path": "rmsnorm_cta_scalar",
+      "candidate_path": "vec4",
+      "case_id": "rmsnorm_n4096",
+      "check_identity": "logical-row-major:rmsnorm_n4096",
+      "cols": 4096,
+      "expected_outputs": 12288,
+      "operation": "rmsnorm",
+      "rows": 3
+    },
+    {
+      "baseline_path": "rmsnorm_cta_scalar",
+      "candidate_path": "vec4",
+      "case_id": "rmsnorm_n8193",
+      "check_identity": "logical-row-major:rmsnorm_n8193",
+      "cols": 8193,
+      "expected_outputs": 24579,
+      "operation": "rmsnorm",
+      "rows": 3
+    },
+    {
+      "baseline_path": "rmsnorm_cta_scalar",
+      "candidate_path": "vec4",
+      "case_id": "rmsnorm_zero_row",
+      "check_identity": "logical-row-major:rmsnorm_zero_row",
+      "cols": 33,
+      "expected_outputs": 33,
+      "operation": "rmsnorm",
+      "rows": 1
+    },
+    {
+      "baseline_path": "no_launch",
+      "candidate_path": "no_launch",
+      "case_id": "rmsnorm_zero_rows",
+      "check_identity": "logical-row-major:rmsnorm_zero_rows",
+      "cols": 33,
+      "expected_outputs": 0,
+      "operation": "rmsnorm",
+      "rows": 0
+    },
+    {
+      "baseline_path": "rmsnorm_cta_scalar",
+      "candidate_path": "scalar_fallback",
+      "case_id": "rmsnorm_n33_misaligned",
+      "check_identity": "logical-row-major:rmsnorm_n33_misaligned",
+      "cols": 33,
+      "expected_outputs": 165,
+      "operation": "rmsnorm",
+      "rows": 5
+    },
+    {
+      "baseline_path": "softmax_warp",
+      "candidate_path": "softmax_cta",
+      "case_id": "softmax_wide_single_row",
+      "check_identity": "logical-row-major:softmax_wide_single_row",
+      "cols": 4096,
+      "expected_outputs": 4096,
+      "operation": "softmax",
+      "rows": 1
+    },
+    {
+      "baseline_path": "softmax_warp",
+      "candidate_path": "softmax_cta",
+      "case_id": "softmax_wide_streaming",
+      "check_identity": "logical-row-major:softmax_wide_streaming",
+      "cols": 4096,
+      "expected_outputs": 2097152,
+      "operation": "softmax",
+      "rows": 512
+    },
+    {
+      "baseline_path": "rmsnorm_cta_scalar",
+      "candidate_path": "vec4",
+      "case_id": "rmsnorm_vec4_wide_streaming",
+      "check_identity": "logical-row-major:rmsnorm_vec4_wide_streaming",
+      "cols": 4096,
+      "expected_outputs": 2097152,
+      "operation": "rmsnorm",
+      "rows": 512
+    }
+  ],
+  "correctness_case_ids": [
+    "softmax_n31",
+    "softmax_n32",
+    "softmax_n33",
+    "softmax_n128",
+    "softmax_n768",
+    "softmax_n4096",
+    "softmax_n8193",
+    "softmax_mask_tail_stride",
+    "softmax_zero_rows",
+    "rmsnorm_n31",
+    "rmsnorm_n32",
+    "rmsnorm_n33",
+    "rmsnorm_n128",
+    "rmsnorm_n768",
+    "rmsnorm_n4096",
+    "rmsnorm_n8193",
+    "rmsnorm_zero_row",
+    "rmsnorm_zero_rows",
+    "rmsnorm_n33_misaligned",
+    "softmax_wide_single_row",
+    "softmax_wide_streaming",
+    "rmsnorm_vec4_wide_streaming"
+  ],
+  "cpu_oracle": {
+    "path": "cpu-oracle.json",
+    "sha256": "3ef95dbcfeb88ccb8609838e79580ac27ffe3b61aa137add0ad2c86a3c366857"
+  },
+  "format": "KERNELWIKI-ROW-CONTRACT/1",
+  "numerical_contract": {
+    "common": {
+      "comparison": "every logical output: abs(actual-reference) <= atol + rtol*abs(reference)",
+      "layout": "1<=N<=8193; zero rows allowed and skip launch; row strides >=N; independent offsets; no aliasing",
+      "padding": "ignored input padding; output padding must remain unchanged",
+      "storage": "exact little-endian IEEE FP32 represented input; independent Python binary64 oracle",
+      "tolerance_atol": 9.313225746154785e-10,
+      "tolerance_rtol": 6.103515625e-05
+    },
+    "rmsnorm": {
+      "definition": "plain gamma*x*rsqrt(epsilon+sum(x*x)/N); no mask, residual, or bias",
+      "domain": "logical finite FP32 abs(x)<=64, abs(gamma)<=4, epsilon in [1e-5,1e-2]",
+      "maximum_width": 8193,
+      "sum_of_squares_upper_bound": 33558528
+    },
+    "softmax": {
+      "definition": "masked row-stable softmax; all-masked rows return zero",
+      "domain": "logical finite FP32 x in [-16,16]; masks are bytes 0/1"
+    }
+  },
+  "operators": [
+    "softmax",
+    "rmsnorm"
+  ],
+  "reference_output": {
+    "format": "KWVRREF1: per-case logical row-major FP64 outputs",
+    "path": "reference.f64le",
+    "sha256": "d483d4110b4414d5bbfbf27a0e9976ead21152ca9464d455d7ae6b6ef9b45d43"
+  },
+  "represented_input": {
+    "path": "inputs.bin",
+    "sha256": "78ca394b1441b60b59a283be943301c21488d7ee7a864643c445c4ed3793d909"
+  },
+  "selected_timing_case_ids": [
+    "softmax_wide_single_row",
+    "softmax_wide_streaming",
+    "rmsnorm_vec4_wide_streaming"
+  ],
+  "suite_id": "rows_correctness_suite"
+}

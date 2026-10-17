@@ -1,0 +1,132 @@
+format: KERNELWIKI-KWV05-PROVENANCE/2
+state: source_frozen_before_v2_device_execution
+scope: Stable FP32 softmax and plain RMSNorm on Volta SM70; stream-ordered setup,
+  kernels, and correctness readback.
+repository_root: /home/tumlinson/KernelWiki
+frozen_date_utc: '2026-10-17'
+build:
+  compiler: /opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc
+  compiler_version: Cuda compilation tools, release 12.9, V12.9.86; build cuda_12.9.r12.9/compiler.36037853_0
+  command:
+  - /opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc
+  - -O3
+  - -std=c++17
+  - -arch=sm_70
+  - -lineinfo
+  - -Xptxas=-v
+  - -Xcompiler=-fno-omit-frame-pointer
+  - -Xcompiler=-Wall,-Wextra
+  - -o
+  - benchmark_runs/volta-rows/build/row_runner-v2-preflight
+  - artifacts/kernels/volta-rows/full/row_runner.cu
+  architecture: sm_70
+  fast_math: false
+  compile_status: passed
+  preflight_binary: benchmark_runs/volta-rows/build/row_runner-v2-preflight
+  preflight_binary_sha256: 3fb3fd7359e25ab95c8d7aa8af3bf32ad1ba52ecf5f80293afa2f194c8e60465
+  preflight_binary_bytes: 1313544
+  controller_builds: Each controller role rebuilds the executable. Archive the exact
+    built binary after every role at evidence/v2/binaries/<role>-<sha256>. Capture
+    each hash separately; it may differ from this preflight build.
+  ptxas_summary:
+    softmax_warp: 31 registers, 0 bytes spill stores, 0 bytes spill loads, 0 bytes
+      shared memory
+    softmax_cta: 32 registers, 0 bytes spill stores, 0 bytes spill loads, 16 bytes
+      shared memory
+    rmsnorm_warp: 30 registers, 0 bytes spill stores, 0 bytes spill loads, 0 bytes
+      shared memory
+    rmsnorm_cta_scalar: 32 registers, 0 bytes spill stores, 0 bytes spill loads, 16
+      bytes shared memory
+    rmsnorm_cta_vec4: 32 registers, 0 bytes spill stores, 0 bytes spill loads, 16
+      bytes shared memory
+sources:
+  artifacts/kernels/volta-rows/full/row_kernels.cu: 84228f37a1c3668b2b712af6b1a772d3a7cb6a1039638b20e7f64448f44892d9
+  artifacts/kernels/volta-rows/full/row_runner.cu: 0a7aa2b3d3d9406d2a65cb4d2069430895705a812ea1e1864a81b4aac15a3287
+  artifacts/kernels/volta-rows/full/README.md: fc80be8bee88111ef0eabd03dd1698b9266c98a95feaae787844ae814d855731
+  benchmark_runs/volta-rows/source/row_oracle.py: 53a528880521bd1637cfcd5f073fc1d617bac6a229eed7372ae2185b6ac2f6b2
+  benchmark_runs/volta-rows/source/prepare_rows.py: a15d798708b350d0d320aed401ddf1ddf73e21aa34ca7a4b2b995fb1fab55df7
+  benchmark_runs/volta-rows/source/test_row_oracle.py: f257a047883376748986fb5f84e195e7fc4021e52609f7df024c3c9cb86334f3
+  benchmark_runs/volta-rows/case_matrix.json: cbe948c753454e41698b5c314cbf8cf80a0e98dbe31b43cd47f2cd1ad984725a
+  benchmark_runs/volta-rows/controller/pc_controller.py: ad6e921272f2dd34e31701d8fd7e5b686341bb2396ba0125b6dcbbc92e11589b
+  benchmark_runs/volta-rows/controller/ncu-collection-shim.py: fda69450466b6617d627e638db32d094ac28d8e7d5bec80e512a4fdce3fce98f
+fixed_bundle:
+  contract: benchmark_runs/volta-rows/cases/rows/contract.json
+  contract_format: KERNELWIKI-ROW-CONTRACT/1
+  contract_sha256: 816fd497f250e912c4a1dc1b7256e199a5ceed385db2748aa16f3eda0426944f
+  case_signature: 6be308579deb3cc7c6b14268549ce521dd9b63bef3ca8c5e120c7fc02d35ae13
+  case_count: 22
+  correctness_case_count: 22
+  correctness_case_ids:
+  - softmax_n31
+  - softmax_n32
+  - softmax_n33
+  - softmax_n128
+  - softmax_n768
+  - softmax_n4096
+  - softmax_n8193
+  - softmax_mask_tail_stride
+  - softmax_zero_rows
+  - rmsnorm_n31
+  - rmsnorm_n32
+  - rmsnorm_n33
+  - rmsnorm_n128
+  - rmsnorm_n768
+  - rmsnorm_n4096
+  - rmsnorm_n8193
+  - rmsnorm_zero_row
+  - rmsnorm_zero_rows
+  - rmsnorm_n33_misaligned
+  - softmax_wide_single_row
+  - softmax_wide_streaming
+  - rmsnorm_vec4_wide_streaming
+  represented_input:
+    path: benchmark_runs/volta-rows/cases/rows/inputs.bin
+    sha256: 78ca394b1441b60b59a283be943301c21488d7ee7a864643c445c4ed3793d909
+    bytes: 17186335
+  reference_output:
+    path: benchmark_runs/volta-rows/cases/rows/reference.f64le
+    sha256: d483d4110b4414d5bbfbf27a0e9976ead21152ca9464d455d7ae6b6ef9b45d43
+    bytes: 34228484
+  independent_cpu_oracle:
+    path: benchmark_runs/volta-rows/cases/rows/cpu-oracle.json
+    sha256: 3ef95dbcfeb88ccb8609838e79580ac27ffe3b61aa137add0ad2c86a3c366857
+  route_and_shape_declarations: contract.cases
+  comparison: 'per logical output: abs(actual-reference) <= 2^-30 + 2^-14*abs(reference)'
+controller_roles:
+  contract_scope: rows_correctness_suite
+  gpu_uuid: GPU-21131915-1488-23af-38dd-1743ae1f5cc8
+  compute_capability: '7.0'
+  correctness_and_sanitizer: full 22-case bundle
+  selected_timing_case_ids:
+  - softmax_wide_single_row
+  - softmax_wide_streaming
+  - rmsnorm_vec4_wide_streaming
+  distinct_roles:
+  - baseline_correctness
+  - candidate_correctness
+  - candidate_compute_sanitizer
+  - baseline_timing
+  - candidate_timing
+  - candidate_ncu_profile
+  profile_case_id: softmax_wide_streaming
+  profile_kernel_launches: 1
+prior_attempt:
+  status: failed_and_preserved
+  manifest: benchmark_runs/volta-rows/evidence/v1-failure/manifest.json
+  manifest_sha256: deea701f6272c47f6408349725f2adf0f364ac025ed8f67037de2d1ecab43ed3
+  note: v1 failed only in two large cases; it used pageable default-stream cudaMemcpy
+    for setup before launches on a nonblocking stream. It is not v2 evidence.
+cpu_validation:
+  tests: python3 -m unittest discover -s benchmark_runs/volta-rows/source -p 'test_row_oracle.py'
+    -v
+  result: 'passed: 10 tests'
+  py_compile: passed
+  json_and_yaml_validation: passed
+  deterministic_fixture_hashes: 'passed: regenerated input, reference, CPU-oracle,
+    and contract bytes exactly match the fixed bundle'
+device_validation_at_freeze:
+  cuda_correctness: pending
+  compute_sanitizer: pending
+  unprofiled_timing: pending
+  ncu_profile: pending
+  controller_role_receipts: pending
