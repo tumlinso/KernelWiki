@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "policy": {
+    "repository_path": "scripts/pr_policy.py",
+    "archive_path": "audit/policies/pr_policy-aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86.py.txt",
+    "sha256": "aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86",
+    "baseline_git_commit": "d5d2637aa9651e5fad835ea5192c20a2393da8ab"
+  },
+  "receipts": {
+    "data/pr-architecture-evidence.json": {
+      "sha256": "bf3861616bea6af6781c1afaf45a2d65adeff937539f676b475455aeebb2ac37",
+      "identity": {
+        "source_capture_date": "2026-08-18",
+        "source_snapshot_sha256": "f681fb0ab0b8fbb4623076325581426ad8c218ff00b1cea158e9cffff21927c5",
+        "upstream_file_corpus_sha256": "3ea81261f3008d77caff713d1a44d3ce01e807445d9bf92efa8a0d8bbcbb638f",
+        "comparison_base": "52b8eb06f95ca9b6a1906200b1153e3e21d89c32"
+      }
+    },
+    "audit/pr-file-cap-reconstruction.json": {
+      "sha256": "e2de0182964a1063e34df431f6329717ed03fbc3d1a0153b9d2d817db46e9b57",
+      "identity": {
+        "accessed_at": "2026-08-19",
+        "api_contract": "GitHub List pull request files returns at most 3000 files",
+        "reconstruction_contract": "The complete GitHub pull .diff path count must equal the pull object's authoritative changed_files total, and the shared full scope policy is applied to all parsed paths and hunks. Inconclusive .cu hunks are bound to immutable complete files at the pull head.",
+        "row_keys": [
+          [
+            "NVIDIA/TensorRT-LLM",
+            12470
+          ],
+          [
+            "NVIDIA/TensorRT-LLM",
+            12612
+          ],
+          [
+            "NVIDIA/TensorRT-LLM",
+            12937
+          ],
+          [
+            "NVIDIA/TensorRT-LLM",
+            13505
+          ],
+          [
+            "NVIDIA/TensorRT-LLM",
+            13652
+          ],
+          [
+            "NVIDIA/TensorRT-LLM",
+            14291
+          ]
+        ]
+      }
+    }
+  },
+  "source_pages": {
+    "path": "sources/prs",
+    "glob": "PR-*.md",
+    "count": 944,
+    "sha256_method": "sorted relative POSIX path and raw bytes, each prefixed by 4-byte and 8-byte big-endian lengths",
+    "sha256": "e3c24ed67b846a76dd01e1a29658ab9249a862b5a0349ab4d86c341fe3796316"
+  },
+  "limitations": {
+    "raw_architecture_source_snapshot_retained": false,
+    "full_cap_diff_payloads_retained": false,
+    "full_current_policy_reclassification_performed": false,
+    "live_sample_gate_run_for_this_origin_record": false
+  },
+  "policy_scope": {
+    "historical_corpus": "The frozen receipts remain bound to the archived pre-Volta policy and the exact unchanged sources/pr page corpus.",
+    "current_policy": "scripts/verify_pr_architecture_upstream.py is the separate live sample gate; this origin record does not claim it ran or fully reclassifies the historical corpus."
+  }
+}

@@ -60,6 +60,19 @@ block-scale:
   - MX
 
 # Architecture names
+volta:
+  - Volta
+
+sm70:
+  - V100
+  - GV100
+  - "SM70"
+  - "sm_70"
+
+sm72:
+  - "SM72"
+  - "sm_72"
+
 blackwell:
   - Blackwell
 

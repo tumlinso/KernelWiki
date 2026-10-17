@@ -140,7 +140,7 @@ class ArchitecturePolicyTests(unittest.TestCase):
             yaml.safe_load((ROOT / "data" / "tags.yaml").read_text())["architectures"]
         )
         self.assertEqual(set(SUPPORTED_EXACT_ARCHITECTURES), architectures - {
-            "blackwell", "hopper", "ampere", "ada", "turing"
+            "blackwell", "hopper", "ampere", "ada", "turing", "volta"
         })
 
     def test_invalid_suffix_and_overlong_sm_tokens_are_not_exact_targets(self):

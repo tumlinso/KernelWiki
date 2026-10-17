@@ -261,10 +261,10 @@ def generate_by_language(pages):
     ]
     valid_langs = load_valid_languages()
 
-    # Map: canonical language tag -> {guide: page, consumers: [pages]}
+    # Map: canonical language tag -> {guides: [pages], consumers: [pages]}
     lang_data = {}
     for lang in sorted(valid_langs):
-        lang_data[lang] = {"guide": None, "consumers": []}
+        lang_data[lang] = {"guides": [], "consumers": []}
 
     # Find dedicated language guide pages
     # Match by: first tag that's a valid language, OR id-derived tag as fallback
@@ -284,7 +284,7 @@ def generate_by_language(pages):
                     if candidate in valid_langs:
                         primary_lang = candidate
             if primary_lang and primary_lang in lang_data:
-                lang_data[primary_lang]["guide"] = p
+                lang_data[primary_lang]["guides"].append(p)
 
     # Explicit languages is authoritative; tags only when field is absent/empty
     for p in pages:
@@ -304,12 +304,25 @@ def generate_by_language(pages):
 
     for lang in sorted(lang_data.keys()):
         data = lang_data[lang]
-        if not data["guide"] and not data["consumers"]:
+        if not data["guides"] and not data["consumers"]:
             continue
-        guide_link = ""
-        if data["guide"]:
-            g = data["guide"]
-            guide_link = f"[{g.get('title', lang)}]({qlink(g['_path'])})"
+        guide_links = []
+        seen_guides = set()
+        for guide in sorted(
+            data["guides"],
+            key=lambda value: (
+                str(value.get("title", lang)).casefold(),
+                str(value.get("_path", "")),
+            ),
+        ):
+            guide_id = guide.get("id", guide.get("_path", ""))
+            if guide_id in seen_guides:
+                continue
+            seen_guides.add(guide_id)
+            guide_links.append(
+                f"[{guide.get('title', lang)}]({qlink(guide['_path'])})"
+            )
+        guide_link = ", ".join(guide_links)
         related = []
         seen = set()
         for p in data["consumers"]:

@@ -1,0 +1,212 @@
+{
+  "note": "Primary sources used for synthesis and explicit implementation candidates. Access does not imply local reproduction, runtime qualification, endorsement of every claim, or permission to copy unlicensed code. Resolve mutable references to commits before capture.",
+  "sources": [
+    {
+      "id": "EXT-VTG",
+      "title": "NVIDIA Volta Tuning Guide (CUDA 12.9.1 archive)",
+      "url": "https://docs.nvidia.com/cuda/archive/12.9.1/volta-tuning-guide/index.html",
+      "kind": "primary_documentation",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Architecture, software staging and resource constraints; sections 1.4.1–1.4.3."
+    },
+    {
+      "id": "EXT-PTX",
+      "title": "NVIDIA PTX ISA 8.8 (CUDA 12.9.1 archive)",
+      "url": "https://docs.nvidia.com/cuda/archive/12.9.1/parallel-thread-execution/index.html",
+      "kind": "primary_documentation",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Exact instruction target/fragment/participation contracts; do not relabel as PTX 9.4."
+    },
+    {
+      "id": "EXT-PROG",
+      "title": "NVIDIA CUDA C++ Programming Guide 12.9.1",
+      "url": "https://docs.nvidia.com/cuda/archive/12.9.1/cuda-c-programming-guide/index.html",
+      "kind": "primary_documentation",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "WMMA, synchronization, feature boundaries and runtime resource attributes."
+    },
+    {
+      "id": "EXT-LEGACY",
+      "title": "NVIDIA legacy CUDA compute capability list",
+      "url": "https://developer.nvidia.com/cuda/gpus/legacy",
+      "kind": "primary_documentation",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "V100 exact capability 7.0 versus Xavier 7.2; family is not exact target."
+    },
+    {
+      "id": "EXT-CUDA-SUPPORT",
+      "title": "NVIDIA: Navigating GPU Architecture Support",
+      "url": "https://developer.nvidia.com/blog/navigating-gpu-architecture-support-a-guide-for-nvidia-cuda-developers/",
+      "kind": "primary_documentation",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "CUDA 13 native compilation boundary and continued use of compatible earlier toolkits."
+    },
+    {
+      "id": "EXT-NCU",
+      "title": "Nsight Compute 2025.2 Profiling Guide",
+      "url": "https://docs.nvidia.com/nsight-compute/2025.2/ProfilingGuide/index.html",
+      "kind": "primary_documentation",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Profiling/replay/metric interpretation; redirects to NVIDIA archive. Interface supplied by user port."
+    },
+    {
+      "id": "EXT-CUBLAS",
+      "title": "NVIDIA cuBLAS 12.9.1",
+      "url": "https://docs.nvidia.com/cuda/archive/12.9.1/cublas/index.html",
+      "kind": "primary_documentation",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Supported GEMM/algorithm numerical contracts; query actual cuBLASLt choices."
+    },
+    {
+      "id": "EXT-CUSPARSE",
+      "title": "NVIDIA cuSPARSE 12.9.1",
+      "url": "https://docs.nvidia.com/cuda/archive/12.9.1/cusparse/index.html",
+      "kind": "primary_documentation",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Blocked-ELL SpMM type/capability and operation restrictions, section 6.6.8."
+    },
+    {
+      "id": "EXT-CUTE-DSL",
+      "title": "NVIDIA CuTe Python DSL FAQ",
+      "url": "https://docs.nvidia.com/cutlass/media/docs/pythonDSL/faqs.html",
+      "kind": "primary_documentation",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Distinguish Python DSL documented supported architectures from CuTe C++ implementation templates."
+    },
+    {
+      "id": "EXT-SPARK",
+      "title": "SparkAttention",
+      "url": "https://arxiv.org/html/2502.12784v1",
+      "kind": "primary_paper",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Sections 3.2.1–3.2.2: online state and Volta fragment conversion; numerical/equation caveats recorded.",
+      "pin": "arXiv:2502.12784v1"
+    },
+    {
+      "id": "EXT-FASTATTN",
+      "title": "FastAttention",
+      "url": "https://arxiv.org/html/2410.16663v1",
+      "kind": "primary_paper",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Section 4.3 and Appendix B: Volta data layouts and different accumulator paths.",
+      "pin": "arXiv:2410.16663v1"
+    },
+    {
+      "id": "EXT-FTTN",
+      "title": "FTTN: Feature-Targeted Testing for Numerical Properties of Matrix Accelerators",
+      "url": "https://arxiv.org/html/2403.00232v1",
+      "kind": "primary_paper",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Adversarial numerical feature selection; measured properties not ISA-wide guarantees.",
+      "pin": "arXiv:2403.00232v1"
+    },
+    {
+      "id": "EXT-SOFTMAX",
+      "title": "Online normalizer calculation for softmax",
+      "url": "https://arxiv.org/abs/1805.02867",
+      "kind": "primary_paper",
+      "inspection": "abstract/metadata and relevant algorithmic framing inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Primary source for online normalization; this package derives the merge independently."
+    },
+    {
+      "id": "EXT-GDN",
+      "title": "Gated Delta Networks: Improving Mamba2 with Delta Rule",
+      "url": "https://arxiv.org/html/2412.06464v3",
+      "kind": "primary_paper",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Equation 10 and chunkwise formulation; exact state orientation/admission must be fixed in implementation.",
+      "pin": "arXiv:2412.06464v3"
+    },
+    {
+      "id": "EXT-JIA",
+      "title": "Dissecting the NVIDIA Volta GPU Architecture via Microbenchmarking",
+      "url": "https://arxiv.org/pdf/1804.06826",
+      "kind": "primary_paper",
+      "inspection": "targeted text and register-bank PDF page visually inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Sections on registers/operand reuse/instruction delivery; register-bank page screenshot inspected. Historical compiler measurements, not current constants.",
+      "pin": "2018 paper; toolchain as reported by authors"
+    },
+    {
+      "id": "EXT-CUTLASS-MMA",
+      "title": "CUTLASS Sm70 MMA implementation",
+      "url": "https://github.com/NVIDIA/cutlass/blob/v2.11.0/include/cutlass/arch/mma_sm70.h",
+      "kind": "primary_code",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Exact supported m8n8k4 implementation precedent. Relevant lines 45–175 fetched via GitHub.",
+      "pin": {
+        "ref": "v2.11.0",
+        "blob_sha": "9f93714ba9b96c0d67c25816e993a04f7ff0914e"
+      }
+    },
+    {
+      "id": "EXT-CUTLASS-LAYOUT",
+      "title": "CUTLASS Volta multiplicand layouts",
+      "url": "https://github.com/NVIDIA/cutlass/blob/v2.11.0/include/cutlass/layout/tensor_op_multiplicand_sm70.h",
+      "kind": "primary_code",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Congruous layout/addressing implementation; relevant lines 45–205 fetched via GitHub.",
+      "pin": {
+        "ref": "v2.11.0",
+        "blob_sha": "b127bffe394ddd02eed66fff5cb952a1101518e6"
+      }
+    },
+    {
+      "id": "EXT-TRITON",
+      "title": "Triton PR 5066: deprecate MMA-v1 / fallback to FMA below CC80",
+      "url": "https://github.com/triton-lang/triton/pull/5066",
+      "kind": "primary_maintainer_record",
+      "inspection": "relevant content inspected",
+      "accessed_date": "2026-10-17",
+      "use": "Exact compiler lowering matters; neither version number nor successful compilation proves a Volta Tensor Core path."
+    },
+    {
+      "id": "EXT-FT",
+      "title": "NVIDIA FasterTransformer",
+      "url": "https://github.com/NVIDIA/FasterTransformer",
+      "kind": "primary_code",
+      "inspection": "repository documentation inspected; specific implementation validation delegated",
+      "accessed_date": "2026-10-17",
+      "use": "Candidate source of established FP16-era kernels; extract only an appropriate pinned operator."
+    },
+    {
+      "id": "CAND-1CAT",
+      "title": "1Cat-vLLM SM70 engineering fork",
+      "url": "https://github.com/1CatAI/1Cat-vLLM",
+      "kind": "community_primary_engineering",
+      "inspection": "README/reported contracts inspected; source-level qualification required",
+      "accessed_date": "2026-10-17",
+      "use": "Candidate work on GQA packing, vectorized KV loads and software quantization. Do not use serving headlines as kernel evidence."
+    },
+    {
+      "id": "CAND-1CAT-666",
+      "title": "1Cat-vLLM PR 666: local head/projection layouts and precision repairs",
+      "url": "https://github.com/1CatAI/1Cat-vLLM/pull/666",
+      "kind": "community_primary_engineering",
+      "inspection": "GitHub PR metadata/description inspected; not the complete 51-file diff",
+      "accessed_date": "2026-10-17",
+      "use": "Pinned candidate starting point; description exposes precision, scale-order and quality limits. Do not import unrelated serving changes.",
+      "pin": {
+        "merged": true,
+        "merge_commit_sha": "949728e891aaeb43285e6730aa8b7abc8b986acc",
+        "head_sha": "c3fcf449d6cc545ebc5f028338773a0c173ebddc"
+      }
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "python": "3.13.5",
+  "numpy": "2.3.5",
+  "groups": [
+    {
+      "name": "online_softmax_merge_empty_masks_partition_order",
+      "cases": 16,
+      "max_abs_error": 4.440892098500626e-16
+    },
+    {
+      "name": "gated_delta_orientation_and_gate_placement",
+      "cases": 5,
+      "max_abs_error": 2.220446049250313e-16
+    },
+    {
+      "name": "recurrent_state_carry_preserves_full_history",
+      "cases": 5,
+      "max_abs_error": 0.0
+    },
+    {
+      "name": "unit_key_inherited_error_contraction_sanity",
+      "cases": 8,
+      "limit": "Finite numerical illustration; analytical bound is derived in M05, not established by sampling."
+    },
+    {
+      "name": "gqa_rows_share_kv_not_normalizers",
+      "cases": 3,
+      "max_abs_error": 1.1102230246251565e-16
+    },
+    {
+      "name": "signed_int4_two_nibbles_all_encodings",
+      "cases": 256
+    }
+  ],
+  "limits": [
+    "CPU float64/reference algebra only; no CUDA kernel or Tensor Core behavior tested.",
+    "These tolerances are not acceptance tolerances for a future mixed-precision implementation."
+  ]
+}

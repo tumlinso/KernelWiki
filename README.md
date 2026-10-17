@@ -1,4 +1,4 @@
-# KernelWiki — Blackwell & Hopper Kernel Optimization Knowledge Base
+# KernelWiki — Volta, Hopper & Blackwell Kernel Optimization Knowledge Base
 > [!IMPORTANT]
 > This skill is maintained as a standalone submodule of
 > [Kernel Design Agents (KDA)](https://github.com/mit-han-lab/kernel-design-agents)
@@ -11,7 +11,7 @@
 > documentation, releases, and leaderboard snapshots were verified through
 > 2026-08-18 UTC.
 
-A structured knowledge base of NVIDIA Blackwell (SM100, B200) and Hopper (SM90, H100) GPU kernel optimization, packaged as a Claude Code skill. The repository root **is** the skill directory — clone it directly into `~/.claude/skills/` and it works out of the box.
+A structured knowledge base with an initial source-backed Volta/V100 (SM70) hardware layer and a larger NVIDIA Blackwell (SM100, B200) and Hopper (SM90, H100) kernel corpus, packaged as a Claude Code skill. The repository root **is** the skill directory — clone it directly into `~/.claude/skills/` and it works out of the box.
 
 ## Install as a Claude Code Skill
 
@@ -48,6 +48,7 @@ export BLACKWELL_WIKI_ROOT=/path/to/KernelWiki
 - Auto-generated cross-reference indices — [by architecture](queries/by-architecture.md) / problem / technique / hardware feature / repo / kernel type / language.
 - Reviewed candidate ledgers with include/defer/exclude decisions.
 - **Hybrid version-claim registry** ([`data/version-claims.yaml`](data/version-claims.yaml)) — per-page `version_sensitive: <id>` pointers + central registry, validated for bidirectional consistency
+- **Volta/V100 (SM70)** — six source-reported concept pages cover MMA/WMMA boundaries, resources, synchronization, numerical representation, and feature limits. They do not claim new local compilation or performance results.
 - Run `python3 scripts/repo_status.py` for current corpus counts.
 
 ## Query Tools
@@ -66,6 +67,7 @@ Examples:
 python3 scripts/query.py "ping-pong attention" --limit 5
 python3 scripts/query.py --tag UMMA --type hardware --compact          # alias → tcgen05
 python3 scripts/query.py --architecture B200 --type kernel             # alias → sm100
+python3 scripts/query.py --architecture V100 --type hardware --compact # exact sm70
 python3 scripts/get_page.py kernel-flash-attention-4 --follow-sources
 python3 scripts/grep_wiki.py "tcgen05" --only wiki
 ```
@@ -74,6 +76,7 @@ python3 scripts/grep_wiki.py "tcgen05" --only wiki
 
 - [`SKILL.md`](SKILL.md) — Skill entry point: when to engage, 5 navigation paths, output contract.
 - [`references/primer.md`](references/primer.md) — Topic map: hardware features, techniques, kernels, symptoms → canonical page IDs.
+- [`references/volta.md`](references/volta.md) — Volta/V100 route, with exact-target and family-filter guidance.
 - [`references/schema.md`](references/schema.md) — Frontmatter schema, confidence rules, reproducibility ladder, controlled vocabulary, canonical aliases.
 - [`references/examples.md`](references/examples.md) — 10 worked query patterns (user question → command sequence → synthesis).
 - [`CLAUDE.md`](CLAUDE.md) — Extended schema + navigation reference for Claude Code.
@@ -125,12 +128,12 @@ These commands also work without PyYAML. Installing `requirements.txt` is option
 - 0 broken links across all internal references
 - All `verified` wiki pages have official-doc + upstream-code evidence (enforced by `evidence_basis` field)
 - All technique/kernel/language pages have compilable code snippets (`reproducibility >= snippet`)
-- All Hopper-only wiki pages explain their `blackwell_relevance`; source pages preserve upstream evidence and are exempt
+- Hopper-only wiki pages in the Blackwell-focused corpus explain their `blackwell_relevance`; Volta pages use independent SM70 attribution, and source pages preserve upstream evidence
 - Version-sensitive claims (currently Triton 3.6) carry `version_sensitive: <id>` pointers resolving to the central registry
 
 ## Scope Rules
 
-- **Blackwell-first** — SM100 content is primary. Hopper-only wiki pages require an explicit `blackwell_relevance` field; source pages are exempt.
+- **Architecture scope** — Volta/V100 (SM70) has a separate exact route. Blackwell remains the primary kernel corpus; its legacy Hopper-only pages require `blackwell_relevance`, while source pages are exempt.
 - **Kernel-only** — No distributed-system topics (DeepEP, DualPipe, EPLB are out of scope).
 - **English canonical** — All content in English.
 - **First-class DSLs** — CuTe DSL, CUDA C++, PTX, Triton. TileLang / cuTile / JAX-Pallas mentioned but no dedicated guides.

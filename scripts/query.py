@@ -25,7 +25,12 @@ from _yaml_compat import yaml  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from _wiki_root import WIKI_ROOT  # noqa: E402
-from pr_policy import architecture_matches_filter  # noqa: E402
+from pr_policy import (  # noqa: E402
+    architecture_family_for_filter,
+    architecture_matches_filter,
+    normalize_architecture_filter,
+    is_architecture_family_filter,
+)
 
 
 _ALIAS_CACHE = None
@@ -265,16 +270,40 @@ def filter_pages(pages, args):
 
 def architecture_filter_exclusion_counts(pages, requested):
     """Counts disclosed when an exact query omits broader evidence classes."""
-    normalized = requested.lower().replace("_", "")
-    if normalized in {"blackwell", "hopper", "ampere", "ada", "unknown"}:
+    normalized = normalize_architecture_filter(requested)
+    if normalized == "unknown" or is_architecture_family_filter(requested):
         return None
-    family_only = sum(p["fm"].get("architecture_disposition") == "family" for p in pages)
+    family = architecture_family_for_filter(requested)
+    family_only = sum(
+        family is not None
+        and p["fm"].get("architecture_disposition") == "family"
+        and family in (p["fm"].get("architectures") or [])
+        for p in pages
+    )
     unknown = sum(
         p["fm"].get("architecture_disposition") == "unknown"
         and not (p["fm"].get("architectures") or [])
         for p in pages
     )
     return family_only, unknown
+
+
+def architecture_filter_diagnostic(pages, requested):
+    """Explain broader evidence omitted by an exact architecture filter."""
+    counts = architecture_filter_exclusion_counts(pages, requested)
+    if counts is None:
+        return None
+    family_only, unknown = counts
+    broader_sets = []
+    family = architecture_family_for_filter(requested)
+    if family:
+        broader_sets.append(f"--architecture {family} for family-level evidence")
+    broader_sets.append("--architecture unknown for unknown pages")
+    suggestions = " and ".join(broader_sets)
+    return (
+        f"Architecture filter excluded {family_only} family-only page(s) and "
+        f"{unknown} architecture-unknown page(s); use {suggestions}."
+    )
 
 
 def format_result(page, compact=False):
@@ -317,7 +346,7 @@ def main():
     parser.add_argument("--tag", help="Filter by tag (must appear in tags/techniques/hardware_features/kernel_types/languages)")
     parser.add_argument("--repo", help="Filter by source repo (partial match, e.g. 'cutlass')")
     parser.add_argument("--language", help="Filter by language/DSL (cute-dsl, cuda-cpp, ptx, triton, etc.)")
-    parser.add_argument("--architecture", help="Filter by exact architecture, blackwell family hierarchy, or unknown")
+    parser.add_argument("--architecture", help="Filter by exact architecture target, family, or unknown")
     parser.add_argument("--symptom", help="Filter by pattern symptom (memory-bound, register-pressure, etc.)")
     parser.add_argument("--confidence", help="Filter by confidence (verified, source-reported, inferred, experimental)")
     parser.add_argument("--has-code", action="store_true", help="Only return pages whose artifact_dir contains at least one source file")
@@ -327,26 +356,20 @@ def main():
     args = parser.parse_args()
 
     all_pages = load_all_pages()
-    architecture_stats = None
     if args.architecture:
         without_architecture = copy.copy(args)
         without_architecture.architecture = None
         eligible_pages = filter_pages(all_pages, without_architecture)
         pages = filter_pages(eligible_pages, args)
-        architecture_stats = architecture_filter_exclusion_counts(
+        diagnostic = architecture_filter_diagnostic(
             eligible_pages, args.architecture
         )
     else:
         pages = filter_pages(all_pages, args)
+        diagnostic = None
 
-    if architecture_stats is not None:
-        family_only, unknown = architecture_stats
-        print(
-            f"Exact architecture filter excluded {family_only} family-only "
-            f"page(s) and {unknown} architecture-unknown page(s); use "
-            "--architecture blackwell or --architecture unknown for those broader sets.",
-            file=sys.stderr,
-        )
+    if diagnostic:
+        print(diagnostic, file=sys.stderr)
 
     # Score by keywords if any. Flatten multi-word quoted args into tokens so
     # `query.py "how to fuse dual GEMM"` behaves like `query.py how to fuse dual GEMM`.

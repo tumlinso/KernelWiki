@@ -25,6 +25,7 @@ UPSTREAM_EXCERPT_LIMIT = 1200
 
 ARCHITECTURE_FAMILY_PREFIXES = {
     "turing": ("sm75",),
+    "volta": ("sm70", "sm72"),
     "ampere": ("sm80", "sm86", "sm87", "sm88"),
     "ada": ("sm89",),
     "hopper": ("sm90",),
@@ -35,7 +36,7 @@ BLACKWELL_EXACT_PREFIXES = ARCHITECTURE_FAMILY_PREFIXES["blackwell"]
 # Canonical exact targets accepted by both extraction and schema validation.
 # SM88 is intentional: CUDA 13.3 NVCC lists ``sm_88`` as a supported GPU code.
 SUPPORTED_EXACT_ARCHITECTURES = (
-    "sm75",
+    "sm70", "sm72", "sm75",
     "sm80", "sm86", "sm87", "sm88", "sm89",
     "sm90", "sm90a",
     "sm100", "sm100a", "sm100f",
@@ -47,7 +48,7 @@ SUPPORTED_EXACT_ARCHITECTURES = (
 _SUPPORTED_EXACT_ARCHITECTURE_SET = set(SUPPORTED_EXACT_ARCHITECTURES)
 
 _EXACT_SM_RE = re.compile(
-    r"(?i:sm)[_ -]?(75|80|86|87|88|89|90|100|103|110|120|121)([aAfF]?)(?![0-9])"
+    r"(?i:sm)[_ -]?(70|72|75|80|86|87|88|89|90|100|103|110|120|121)([aAfF]?)(?![0-9])"
 )
 _FAMILY_PATTERNS = {
     family: re.compile(rf"(?<![a-z0-9]){family}(?![a-z0-9])", re.IGNORECASE)
@@ -67,11 +68,11 @@ _ARCHITECTURE_GUARD_LINE_RE = re.compile(
     re.IGNORECASE,
 )
 _NUMERIC_CUDA_ARCH_RE = re.compile(
-    r"__CUDA_ARCH__\s*(?:==|>=)\s*(750|800|860|870|880|890|900|1000|1030|1100|1200|1210)\b"
+    r"__CUDA_ARCH__\s*(?:==|>=)\s*(700|720|750|800|860|870|880|890|900|1000|1030|1100|1200|1210)\b"
 )
 _NUMERIC_RUNTIME_ARCH_RE = re.compile(
     r"(?:get_sm_version\s*\([^)]*\)|sm_version|compute_capability)\s*"
-    r"(?:==|>=)\s*(75|80|86|87|88|89|90|100|103|110|120|121)\b",
+    r"(?:==|>=)\s*(70|72|75|80|86|87|88|89|90|100|103|110|120|121)\b",
     re.IGNORECASE,
 )
 _TARGET_ASSERTION_RE = re.compile(
@@ -98,6 +99,14 @@ _NON_TARGET_PRODUCT_BOUNDARY_RE = re.compile(
 # its compute capability by the cited NVIDIA page; no other product name is
 # canonicalized by inference.
 PRODUCT_ARCHITECTURE_MAPPINGS = {
+    "v100": (
+        "sm70",
+        "https://developer.nvidia.com/cuda/gpus/legacy",
+    ),
+    "gv100": (
+        "sm70",
+        "https://developer.nvidia.com/cuda/gpus/legacy",
+    ),
     "b200": (
         "sm100",
         "https://developer.nvidia.com/cuda/gpus",
@@ -730,10 +739,33 @@ def _iter_products(text: str):
 
 
 def _family_for_exact(architecture: str) -> str | None:
+    if architecture not in _SUPPORTED_EXACT_ARCHITECTURE_SET:
+        return None
     for family, prefixes in ARCHITECTURE_FAMILY_PREFIXES.items():
         if architecture.startswith(prefixes):
             return family
     return None
+
+
+def normalize_architecture_filter(requested: str) -> str:
+    """Normalize architecture filter spelling and documented product names."""
+    normalized = str(requested).lower().replace("_", "")
+    if normalized in PRODUCT_ARCHITECTURE_MAPPINGS:
+        return PRODUCT_ARCHITECTURE_MAPPINGS[normalized][0]
+    return normalized
+
+
+def architecture_family_for_filter(requested: str) -> str | None:
+    """Return the recognized family for a family or supported exact filter."""
+    normalized = normalize_architecture_filter(requested)
+    if normalized in ARCHITECTURE_FAMILY_PREFIXES:
+        return normalized
+    return _family_for_exact(normalized)
+
+
+def is_architecture_family_filter(requested: str) -> bool:
+    """Whether a filter names a family rather than an exact target."""
+    return normalize_architecture_filter(requested) in ARCHITECTURE_FAMILY_PREFIXES
 
 
 def derive_architectures(title: str, body: str, files: Iterable[Any]) -> tuple[list[str], str, list[dict[str, str]]]:
@@ -1091,13 +1123,11 @@ def body_contract_errors(frontmatter: dict[str, Any], body: str) -> list[str]:
 def architecture_matches_filter(architectures: Iterable[str], disposition: str, requested: str) -> bool:
     """Canonical user-facing architecture hierarchy semantics."""
     archs = {str(value).lower() for value in architectures or []}
-    requested = requested.lower().replace("_", "")
-    if requested in PRODUCT_ARCHITECTURE_MAPPINGS:
-        requested = PRODUCT_ARCHITECTURE_MAPPINGS[requested][0]
+    requested = normalize_architecture_filter(requested)
     if requested == "unknown":
         return disposition == "unknown" and not archs
     if requested in ARCHITECTURE_FAMILY_PREFIXES:
         return requested in archs or any(
-            value.startswith(ARCHITECTURE_FAMILY_PREFIXES[requested]) for value in archs
+            _family_for_exact(value) == requested for value in archs
         )
     return requested in archs

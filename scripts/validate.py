@@ -26,6 +26,49 @@ ARTIFACTS_DIR = REPO_ROOT / "artifacts"
 CANDIDATES_DIR = REPO_ROOT / "candidates"
 PR_ARCHITECTURE_RECEIPT = DATA_DIR / "pr-architecture-evidence.json"
 PR_CAP_RECONSTRUCTION_RECEIPT = REPO_ROOT / "audit" / "pr-file-cap-reconstruction.json"
+POLICY_ORIGIN_MANIFEST = REPO_ROOT / "audit" / "pr-policy-origin.json"
+HISTORICAL_POLICY_ARCHIVE = (
+    REPO_ROOT
+    / "audit"
+    / "policies"
+    / "pr_policy-aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86.py.txt"
+)
+
+# These two receipts were captured against the pre-Volta policy. Their original
+# inputs are no longer in this checkout, so historical acceptance is limited to
+# their exact bytes, the archived policy, and the unchanged 944-page PR corpus.
+# The fixed manifest digest prevents receipts from selecting another origin.
+HISTORICAL_POLICY_SHA256 = "aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86"
+HISTORICAL_POLICY_ORIGIN_SHA256 = "32ddf5f19e9fa3ef3a56027df8cc1a8859fb2fcb04e714bc8361f29d9dddd2fc"
+HISTORICAL_SOURCE_PAGE_COUNT = 944
+HISTORICAL_SOURCE_PAGE_SHA256 = "e3c24ed67b846a76dd01e1a29658ab9249a862b5a0349ab4d86c341fe3796316"
+HISTORICAL_RECEIPTS = {
+    "data/pr-architecture-evidence.json": {
+        "sha256": "bf3861616bea6af6781c1afaf45a2d65adeff937539f676b475455aeebb2ac37",
+        "identity": {
+            "source_capture_date": "2026-08-18",
+            "source_snapshot_sha256": "f681fb0ab0b8fbb4623076325581426ad8c218ff00b1cea158e9cffff21927c5",
+            "upstream_file_corpus_sha256": "3ea81261f3008d77caff713d1a44d3ce01e807445d9bf92efa8a0d8bbcbb638f",
+            "comparison_base": "52b8eb06f95ca9b6a1906200b1153e3e21d89c32",
+        },
+    },
+    "audit/pr-file-cap-reconstruction.json": {
+        "sha256": "e2de0182964a1063e34df431f6329717ed03fbc3d1a0153b9d2d817db46e9b57",
+        "identity": {
+            "accessed_at": "2026-08-19",
+            "api_contract": "GitHub List pull request files returns at most 3000 files",
+            "reconstruction_contract": "The complete GitHub pull .diff path count must equal the pull object's authoritative changed_files total, and the shared full scope policy is applied to all parsed paths and hunks. Inconclusive .cu hunks are bound to immutable complete files at the pull head.",
+            "row_keys": [
+                ["NVIDIA/TensorRT-LLM", 12470],
+                ["NVIDIA/TensorRT-LLM", 12612],
+                ["NVIDIA/TensorRT-LLM", 12937],
+                ["NVIDIA/TensorRT-LLM", 13505],
+                ["NVIDIA/TensorRT-LLM", 13652],
+                ["NVIDIA/TensorRT-LLM", 14291],
+            ],
+        },
+    },
+}
 
 REPRO_ORDER = ["concept", "pseudocode", "snippet", "runnable", "benchmarked"]
 
@@ -293,26 +336,161 @@ def cap_complete_file_evidence_errors(row, rel="cap reconstruction row"):
     return errors
 
 
+def source_pr_corpus_identity():
+    """Hash the checked-in PR pages with their relative names and exact bytes."""
+    page_root = SOURCES_DIR / "prs"
+    pages = sorted(page_root.rglob("PR-*.md"))
+    digest = hashlib.sha256()
+    for path in pages:
+        relative = path.relative_to(page_root).as_posix().encode("utf-8")
+        content = path.read_bytes()
+        digest.update(len(relative).to_bytes(4, "big"))
+        digest.update(relative)
+        digest.update(len(content).to_bytes(8, "big"))
+        digest.update(content)
+    return len(pages), digest.hexdigest()
+
+
+def validate_historical_policy_origin():
+    """Validate the one pinned legacy policy origin and its frozen corpus."""
+    errors = []
+    if not POLICY_ORIGIN_MANIFEST.is_file():
+        return ["audit/pr-policy-origin.json: required historical policy origin is missing"]
+    try:
+        manifest_bytes = POLICY_ORIGIN_MANIFEST.read_bytes()
+        json.loads(manifest_bytes)
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"audit/pr-policy-origin.json: cannot parse historical policy origin: {exc}"]
+    if hashlib.sha256(manifest_bytes).hexdigest() != HISTORICAL_POLICY_ORIGIN_SHA256:
+        errors.append("audit/pr-policy-origin.json: historical policy origin digest mismatch")
+
+    try:
+        archived_policy_sha = hashlib.sha256(HISTORICAL_POLICY_ARCHIVE.read_bytes()).hexdigest()
+    except OSError as exc:
+        errors.append(f"historical pr_policy.py archive is unavailable: {exc}")
+    else:
+        if archived_policy_sha != HISTORICAL_POLICY_SHA256:
+            errors.append("historical pr_policy.py archive digest mismatch")
+
+    try:
+        page_count, page_sha = source_pr_corpus_identity()
+    except OSError as exc:
+        errors.append(f"sources/prs historical corpus is unavailable: {exc}")
+    else:
+        if page_count != HISTORICAL_SOURCE_PAGE_COUNT or page_sha != HISTORICAL_SOURCE_PAGE_SHA256:
+            errors.append("sources/prs historical corpus digest mismatch")
+
+    receipt_paths = {
+        "data/pr-architecture-evidence.json": PR_ARCHITECTURE_RECEIPT,
+        "audit/pr-file-cap-reconstruction.json": PR_CAP_RECONSTRUCTION_RECEIPT,
+    }
+    for relative_path, binding in HISTORICAL_RECEIPTS.items():
+        path = receipt_paths[relative_path]
+        try:
+            raw = path.read_bytes()
+            receipt = json.loads(raw)
+        except (OSError, json.JSONDecodeError) as exc:
+            errors.append(f"{relative_path}: frozen historical receipt is unavailable: {exc}")
+            continue
+        if hashlib.sha256(raw).hexdigest() != binding["sha256"]:
+            errors.append(f"{relative_path}: frozen historical receipt digest mismatch")
+        if not historical_receipt_identity_matches(relative_path, receipt):
+            errors.append(f"{relative_path}: frozen historical receipt identity mismatch")
+        if not isinstance(receipt, dict) or receipt.get("policy_sha256") != HISTORICAL_POLICY_SHA256:
+            errors.append(f"{relative_path}: frozen historical receipt policy identity mismatch")
+    return errors
+
+
+def historical_receipt_identity_matches(relative_path, receipt):
+    """Match stable capture identifiers before treating a receipt as current."""
+    if not isinstance(receipt, dict):
+        return False
+    binding = HISTORICAL_RECEIPTS.get(relative_path)
+    if binding is None:
+        return False
+    if "row_keys" in binding["identity"]:
+        rows = receipt.get("rows")
+        if not isinstance(rows, list) or any(
+            not isinstance(row, dict)
+            or not isinstance(row.get("repo"), str)
+            or not isinstance(row.get("pr"), int)
+            or isinstance(row.get("pr"), bool)
+            for row in rows
+        ):
+            return False
+    for key, value in binding["identity"].items():
+        if key == "row_keys":
+            actual = sorted([[row["repo"], row["pr"]] for row in receipt["rows"]])
+            if actual != value:
+                return False
+        elif receipt.get(key) != value:
+            return False
+    return True
+
+
+def policy_receipt_origin_errors(relative_path, receipt, receipt_bytes):
+    """Accept current policy receipts or the two exact pinned historical receipts."""
+    if not isinstance(receipt, dict):
+        return [f"{relative_path}: receipt must be a JSON object"]
+    current_policy_sha = hashlib.sha256(
+        (REPO_ROOT / "scripts" / "pr_policy.py").read_bytes()
+    ).hexdigest()
+    binding = HISTORICAL_RECEIPTS.get(relative_path)
+    if historical_receipt_identity_matches(relative_path, receipt):
+        errors = validate_historical_policy_origin()
+        if hashlib.sha256(receipt_bytes).hexdigest() != binding["sha256"]:
+            errors.append(f"{relative_path}: frozen historical receipt digest mismatch")
+        if receipt.get("policy_sha256") != HISTORICAL_POLICY_SHA256:
+            errors.append(f"{relative_path}: frozen historical receipt policy identity mismatch")
+        return errors
+    if receipt.get("policy_sha256") == current_policy_sha:
+        return []
+    if (
+        binding is None
+        or receipt.get("policy_sha256") != HISTORICAL_POLICY_SHA256
+    ):
+        return [f"{relative_path}: pr_policy.py digest mismatch"]
+    errors = validate_historical_policy_origin()
+    if hashlib.sha256(receipt_bytes).hexdigest() != binding["sha256"]:
+        errors.append(f"{relative_path}: frozen historical receipt digest mismatch")
+    if not historical_receipt_identity_matches(relative_path, receipt):
+        errors.append(f"{relative_path}: frozen historical receipt identity mismatch")
+    return errors
+
+
 def validate_cap_reconstruction_receipt():
     """Validate the complete dynamic capped-PR roster and current page outcomes."""
     if not PR_CAP_RECONSTRUCTION_RECEIPT.is_file():
         return ["audit/pr-file-cap-reconstruction.json: required receipt is missing"]
     try:
-        receipt = json.loads(PR_CAP_RECONSTRUCTION_RECEIPT.read_text(encoding="utf-8"))
+        receipt_bytes = PR_CAP_RECONSTRUCTION_RECEIPT.read_bytes()
+        receipt = json.loads(receipt_bytes)
     except (OSError, json.JSONDecodeError) as exc:
         return [f"audit/pr-file-cap-reconstruction.json: cannot parse receipt: {exc}"]
+    if not isinstance(receipt, dict):
+        return ["audit/pr-file-cap-reconstruction.json: receipt must be a JSON object"]
     errors = []
-    policy_sha = hashlib.sha256(
-        (REPO_ROOT / "scripts" / "pr_policy.py").read_bytes()
-    ).hexdigest()
-    if receipt.get("policy_sha256") != policy_sha:
-        errors.append("audit/pr-file-cap-reconstruction.json: pr_policy.py digest mismatch")
+    errors.extend(policy_receipt_origin_errors(
+        "audit/pr-file-cap-reconstruction.json",
+        receipt,
+        receipt_bytes,
+    ))
     rows = receipt.get("rows") or []
+    if not isinstance(rows, list):
+        errors.append("audit/pr-file-cap-reconstruction.json: rows must be a list")
+        rows = []
+    valid_rows = [
+        row for row in rows
+        if isinstance(row, dict)
+        and isinstance(row.get("repo"), str)
+        and isinstance(row.get("pr"), int)
+        and not isinstance(row.get("pr"), bool)
+    ]
     by_key = {
         (row.get("repo"), row.get("pr")): row
-        for row in rows if isinstance(row, dict)
+        for row in valid_rows
     }
-    if len(by_key) != len(rows):
+    if len(valid_rows) != len(rows) or len(by_key) != len(valid_rows):
         errors.append("audit/pr-file-cap-reconstruction.json: duplicate or invalid rows")
     expected_keys = set()
     for ledger_path in sorted(CANDIDATES_DIR.glob("*.yaml")):
@@ -401,7 +579,7 @@ def architecture_receipt_record(fm):
     ]
 
 
-def compare_pr_architecture_receipt(actual_rows, receipt):
+def compare_pr_architecture_receipt(actual_rows, receipt, policy_errors=None):
     """Compare page-derived rows to the committed frozen-evidence receipt."""
     errors = []
     if not isinstance(receipt, dict) or receipt.get("schema_version") != 1:
@@ -418,11 +596,14 @@ def compare_pr_architecture_receipt(actual_rows, receipt):
     ]
     if receipt.get("row_fields") != expected_fields:
         errors.append("data/pr-architecture-evidence.json: row_fields contract mismatch")
-    current_policy_sha = hashlib.sha256(
-        (REPO_ROOT / "scripts" / "pr_policy.py").read_bytes()
-    ).hexdigest()
-    if receipt.get("policy_sha256") != current_policy_sha:
-        errors.append("data/pr-architecture-evidence.json: pr_policy.py digest mismatch")
+    if policy_errors is None:
+        current_policy_sha = hashlib.sha256(
+            (REPO_ROOT / "scripts" / "pr_policy.py").read_bytes()
+        ).hexdigest()
+        if receipt.get("policy_sha256") != current_policy_sha:
+            errors.append("data/pr-architecture-evidence.json: pr_policy.py digest mismatch")
+    else:
+        errors.extend(policy_errors)
     missing = sorted(set(expected_rows) - set(actual_rows))
     unexpected = sorted(set(actual_rows) - set(expected_rows))
     if missing:
@@ -454,16 +635,20 @@ def validate_pr_architecture_receipt():
     if not PR_ARCHITECTURE_RECEIPT.is_file():
         return ["data/pr-architecture-evidence.json: required architecture receipt is missing"]
     try:
-        receipt = json.loads(PR_ARCHITECTURE_RECEIPT.read_text(encoding="utf-8"))
+        receipt_bytes = PR_ARCHITECTURE_RECEIPT.read_bytes()
+        receipt = json.loads(receipt_bytes)
     except (OSError, json.JSONDecodeError) as exc:
         return [f"data/pr-architecture-evidence.json: cannot parse receipt: {exc}"]
+    policy_errors = policy_receipt_origin_errors(
+        "data/pr-architecture-evidence.json", receipt, receipt_bytes
+    )
     actual_rows = {}
     for page_path in sorted((SOURCES_DIR / "prs").rglob("PR-*.md")):
         fm = extract_frontmatter(page_path)
         if isinstance(fm, dict):
             key = page_path.relative_to(SOURCES_DIR / "prs").as_posix()
             actual_rows[key] = architecture_receipt_record(fm)
-    return compare_pr_architecture_receipt(actual_rows, receipt)
+    return compare_pr_architecture_receipt(actual_rows, receipt, policy_errors=policy_errors)
 
 
 def detect_page_type(filepath, fm):

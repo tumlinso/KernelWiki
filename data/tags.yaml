@@ -3,6 +3,9 @@
 ## The validator (scripts/validate.py) rejects unknown tags.
 
 architectures:
+  - volta
+  - sm70
+  - sm72
   - blackwell
   - hopper
   - ampere
@@ -33,6 +36,9 @@ architectures:
   - sm89
 
 hardware_features:
+  - mma-sm70
+  - wmma
+  - warp-collectives
   - tcgen05
   - tmem
   - tma

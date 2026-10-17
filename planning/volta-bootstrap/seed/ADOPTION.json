@@ -1,0 +1,29 @@
+{
+  "status": "draft source-backed content; not applied or hardware-qualified",
+  "required_vocabulary_additions": {
+    "architectures": [
+      "volta",
+      "sm70",
+      "sm72"
+    ],
+    "hardware_features": [
+      "mma-sm70",
+      "wmma",
+      "warp-collectives"
+    ]
+  },
+  "sm72_note": "taxonomic neighboring-target boundary only, not a Xavier implementation program",
+  "source_pages": 11,
+  "hardware_pages": 6,
+  "instructions": [
+    "Review source adjudications and current native schema.",
+    "Register architecture/vocabulary before adopting pages.",
+    "Keep source-reported/concept labels; do not infer compilation or local benchmarks.",
+    "Preserve unique IDs and resolve sources/related links.",
+    "Use native validator; add version-sensitive pointers only where actually required.",
+    "Author kernel/technique pages with real compilable artifacts during implementation."
+  ],
+  "notes": [
+    "The Gated Delta Net source is algorithmic and has architectures: []; SM70 implementation applicability must be established on the kernel page."
+  ]
+}

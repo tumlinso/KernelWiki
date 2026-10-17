@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "checks": [
+    "JSON files parse",
+    "Source IDs, locators and hash syntax",
+    "Plan IDs, DAG, references, gate scope and lane assignment (structural only)",
+    "Markdown local links and cited ledger IDs",
+    "Seed field presence, IDs, links, draft maturity and algorithm/hardware boundary (not full native schema)"
+  ],
+  "warnings": [],
+  "errors": [],
+  "limits": [
+    "No native Todo validator or application executed",
+    "No full KernelWiki native validation executed",
+    "No CUDA compilation, GPU execution or performance measurement executed"
+  ]
+}

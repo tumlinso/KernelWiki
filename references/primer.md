@@ -9,6 +9,21 @@ A compact, authoritative map of the knowledge base. Use this as a fast lookup ta
 
 All page IDs below resolve via `get_page.py <id>`. All paths are relative to the wiki root (the directory containing `data/`, `wiki/`, `sources/`, `queries/`).
 
+## Volta / V100 (SM70)
+
+Use [`references/volta.md`](volta.md) to route Volta questions. Exact V100 queries use `--architecture V100` (canonical `sm70`); `--architecture volta` requests family evidence and can include neighboring `sm72`. Family evidence does not establish exact V100 applicability. These six pages are `source-reported` concept guidance, with no new local compilation or performance claims:
+
+| Topic | Page ID | Path |
+|---|---|---|
+| Explicit MMA and opaque WMMA boundaries | `hw-volta-mma` | `wiki/hardware/volta-mma.md` |
+| Numerical representation and accumulation | `hw-volta-numerics` | `wiki/hardware/volta-numerics.md` |
+| Register, shared-memory, and residency budgets | `hw-volta-resources` | `wiki/hardware/volta-resources.md` |
+| Collective participation and progress | `hw-volta-participation` | `wiki/hardware/volta-participation.md` |
+| Native features and software representations | `hw-volta-feature-boundaries` | `wiki/hardware/volta-feature-boundaries.md` |
+| Profiling-led operand delivery | `hw-volta-operand-delivery` | `wiki/hardware/volta-operand-delivery.md` |
+
+Follow each page's `sources:` IDs before applying guidance. `doc-volta-gdn` is an algorithmic paper record with no architecture assignment; it does not establish SM70 implementation applicability.
+
 ---
 
 ## Hardware Features (SM100)
@@ -144,6 +159,9 @@ When the user types one of these, match to the canonical term shown:
 | 2-SM cooperative, two-SM cooperative, 2CTA, cta_group::2 | `2sm-cooperative` |
 | NVFP4, nv_float4, E2M1, FP4 E2M1 | `nvfp4` |
 | block scaling, UE8M0, microscaling, MX | `block-scale` |
+| Volta | `volta` family |
+| V100, GV100, SM70, `sm_70` | `sm70` (exact V100 target) |
+| SM72, `sm_72` | `sm72` (neighboring target; not V100) |
 | Blackwell | `blackwell` family |
 | B200, GB200, SM100 | `sm100` |
 | B300, GB300, SM103 | `sm103` |

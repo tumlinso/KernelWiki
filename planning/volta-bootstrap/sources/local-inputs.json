@@ -1,0 +1,472 @@
+{
+  "snapshot_note": "Content hashes identify inspected files/ranges in the working tree, not a single pinned whole-repository commit. Reconcile only materially changed inputs before implementation. No raw private source corpus is bundled.",
+  "inputs": [
+    {
+      "id": "KW-README",
+      "project": "kernelwiki",
+      "path": "README.md",
+      "content_sha256": "5ba4d90670ceafc0bbfea5690fc8c99e594ceed7cff1631d3b95d80c9436cc69",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Native layout, scope, maintenance and quality gates.",
+      "revision": null
+    },
+    {
+      "id": "KW-SKILL",
+      "project": "kernelwiki",
+      "path": "SKILL.md",
+      "content_sha256": "c84764f4de8e38e7045d863e89fd67841cb9f58b6bf6129c3ba10b2d590bf838",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Blackwell/Hopper activation; native output contract.",
+      "revision": null
+    },
+    {
+      "id": "KW-TAGS",
+      "project": "kernelwiki",
+      "path": "data/tags.yaml",
+      "content_sha256": "08b54dc0b0d96e6fb0fa8073d4c4d45970a0cf600ea757c1ba46866849126d08",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Controlled vocabulary currently lacks Volta/SM70.",
+      "revision": null
+    },
+    {
+      "id": "KW-SCHEMA",
+      "project": "kernelwiki",
+      "path": "data/schemas.yaml",
+      "content_sha256": "58f03245b6370cef9cdcc968a7bf8e02914bfbf6c5da4d781533e2387b7f679b",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Page schemas, source categories, asset and version-claim contracts.",
+      "revision": null
+    },
+    {
+      "id": "KW-ALIASES",
+      "project": "kernelwiki",
+      "path": "data/aliases.yaml",
+      "content_sha256": "750e49094dbec69687cc2b025a758deca6094b8718eef3e820167875c8347897",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Keyword/tag aliases distinct from architecture policy.",
+      "revision": null
+    },
+    {
+      "id": "KW-POLICY",
+      "project": "kernelwiki",
+      "path": "scripts/pr_policy.py",
+      "content_sha256": "aed6a1dd3520b894fda15be1382f6d8c64282fcf216ed23eebe0ff342c443f86",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Family/exact/product/guard recognition; architecture_matches_filter; relevant source ranges.",
+      "revision": null
+    },
+    {
+      "id": "KW-QUERY",
+      "project": "kernelwiki",
+      "path": "scripts/query.py",
+      "content_sha256": "53b9d1d479db0618f4620f6c3f4d21364d8ea9602956f9a70ba4602c9aaf818f",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Recursive retrieval, scoring, filters, hard-coded exclusion diagnostics.",
+      "revision": null
+    },
+    {
+      "id": "KW-INDEX",
+      "project": "kernelwiki",
+      "path": "scripts/generate-indices.py",
+      "content_sha256": "8af3408b95afd929dad347b7ec14084323340d5566347a8b535ad305c6173d43",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Recursive discovery, architecture index, single language-guide slot; relevant ranges.",
+      "revision": null
+    },
+    {
+      "id": "KW-VALIDATE",
+      "project": "kernelwiki",
+      "path": "scripts/validate.py",
+      "content_sha256": "6b0414f3cc5ad068e67918eff010b19432488693d53037dcb2137e6846a7da54",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Hopper relevance check, code-fence heuristic, provenance/performance/evidence checks; relevant ranges.",
+      "revision": null
+    },
+    {
+      "id": "KW-REFRESH",
+      "project": "kernelwiki",
+      "path": "scripts/refresh_candidate_ledger.py",
+      "content_sha256": "c39dd016b065f803bc2189e809715fd1ce3183e4e61bbc5762f21fbee9ee1ccd",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Bounded PR search is not an exhaustive historical source inventory.",
+      "revision": null
+    },
+    {
+      "id": "KW-PRIMER",
+      "project": "kernelwiki",
+      "path": "references/primer.md",
+      "content_sha256": "3957265dd7d95b3131a4734e264058fcb89762e7529743e0833e28a8d72ec60c",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Existing feature, technique, kernel and language coverage.",
+      "revision": null
+    },
+    {
+      "id": "SK-ROOT",
+      "project": "skills",
+      "path": "cuda/SKILL.md",
+      "content_sha256": "b821b34a890d6081ebf9ad1c83cb4f5345ed6cf51c62342749a4d3a1004905b8",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Current CUDA routing and execution controls.",
+      "revision": null
+    },
+    {
+      "id": "SK-ROUTER",
+      "project": "skills",
+      "path": "cuda/references/architectures/volta/router.md",
+      "content_sha256": "9aefc09ec735eb2676be966fe25c129e83827bdec3e48c85cc1743a5e447d8c7",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Volta routes; historical host ordinals are not placement authority.",
+      "revision": null
+    },
+    {
+      "id": "SK-TENSOR",
+      "project": "skills",
+      "path": "cuda/references/architectures/volta/tensor-cores.md",
+      "content_sha256": "893bde6e1ff6173f5eea70438cc7d77ea43f999ceff27f17cf2d95c2ef59cbb5",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Library/TC eligibility, padding and custom ownership tradeoffs.",
+      "revision": null
+    },
+    {
+      "id": "SK-LOW-TENSOR",
+      "project": "skills",
+      "path": "cuda/references/architectures/volta/tensor-core-low-level.md",
+      "content_sha256": "b1f5b1ab7e47154b6a20d27460a04b90e03264e7ae7c34295affb1c4b5a05e02",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Justification for owning a native fused/blocked tensor path.",
+      "revision": null
+    },
+    {
+      "id": "SK-FUSION",
+      "project": "skills",
+      "path": "cuda/references/architectures/volta/fusion-and-specialization.md",
+      "content_sha256": "bdab8035516715fe022a624f20283a03bf7312b643b936f0f16474e2f129761a",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "HBM pass elimination, splitting and launch/capture distinctions.",
+      "revision": null
+    },
+    {
+      "id": "SK-REG",
+      "project": "skills",
+      "path": "cuda/references/architectures/volta/register-pressure-and-occupancy.md",
+      "content_sha256": "110be7edc594bb26d22988a94d14f3d99fec74e60cbc245af76453d688e85212",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Registers, spills and useful occupancy; compiler summaries first.",
+      "revision": null
+    },
+    {
+      "id": "SK-PROFILE",
+      "project": "skills",
+      "path": "cuda/references/architectures/volta/profiling-interpretation.md",
+      "content_sha256": "8962f862c33951292bc8fc274ba018bb9adda0a513c713348191b83b32bb439e",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Summary-first interpretation and replay/timing distinction.",
+      "revision": null
+    },
+    {
+      "id": "SK-OPT",
+      "project": "skills",
+      "path": "cuda/references/architectures/volta/optimization-guide.md",
+      "content_sha256": "718c2dd07f7d141973df8992e3ad72e859b006f42b0f4b0d92ede1252429bbf9",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Native compiler and implementation guidance; samples are not blanket support evidence.",
+      "revision": null
+    },
+    {
+      "id": "SK-MACHINE",
+      "project": "skills",
+      "path": "cuda/references/common/machine-aligned-design.md",
+      "content_sha256": "78b489b241c5be8907f36f8f26e70edd39c9d4bfb26e337d0fe7eb0ce693e779",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Semantic unit, ownership, complete cost and falsifiable representation choices.",
+      "revision": null
+    },
+    {
+      "id": "SK-HOST",
+      "project": "skills",
+      "path": "cuda/references/execution/host-execution.md",
+      "content_sha256": "5e8ba8349c57fe513c084a23b444ed44df72682c91947ca192320b30a5a9714d",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Mandatory shared-host controller, toolkit, admission and foreground controls.",
+      "revision": null
+    },
+    {
+      "id": "SK-BENCH",
+      "project": "skills",
+      "path": "cuda/references/profiling/benchmark-standardization.md",
+      "content_sha256": "9fdd0c808ce791d27025e5e0fb5311384a9cad05bebfee703af80572d7ece6d8",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Reuse established run/summary conventions; adapt only applicable kernel scope.",
+      "revision": null
+    },
+    {
+      "id": "AT-ROOT",
+      "project": "circuit-bending-atlas",
+      "path": "README.md",
+      "content_sha256": "0fb9a57c75e9e1378ce96e5a9fe331814fe3cf830562977b63fe133e09f83d07",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Edition, later campaign and evidence access boundaries.",
+      "revision": null
+    },
+    {
+      "id": "AT-FIELD",
+      "project": "circuit-bending-atlas",
+      "path": "FIELD_GUIDE.md",
+      "content_sha256": "c3b3775ad60eb018a38ce2b761ae90e938788200934a449b88ec22bda5c7d5f0",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Representation-first mechanisms; only kernel-relevant routes imported.",
+      "revision": null
+    },
+    {
+      "id": "AT-SOURCES",
+      "project": "circuit-bending-atlas",
+      "path": "sources/SOURCES.md",
+      "content_sha256": "b8601336afec9be100e7ee0f791fe3771c8cd90be89a896d280d1ca86ce4ed1a",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "All 42 source registrations reviewed for scope, not all external documents independently reaudited.",
+      "revision": null
+    },
+    {
+      "id": "AT-R01",
+      "project": "circuit-bending-atlas",
+      "path": "reference/R01.md",
+      "content_sha256": "b740fa2377d45dd62ed35f839b0ff326ec558e90e2ddf748c45e3eefe9c947b0",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Resource/ownership hierarchy; distinguish SKU from architecture.",
+      "revision": null
+    },
+    {
+      "id": "AT-R02",
+      "project": "circuit-bending-atlas",
+      "path": "reference/R02.md",
+      "content_sha256": "e91ef8c5c3e68118156600088793de33dd8fb3654d9c5090eb946932148fef0b",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Dependency/operand graphs and historical microarchitecture observations.",
+      "revision": null
+    },
+    {
+      "id": "AT-R03",
+      "project": "circuit-bending-atlas",
+      "path": "reference/R03.md",
+      "content_sha256": "f45bb0517d9c7566eb223f4590c745dbb8573ac824a3a12180268d6b7e95d6ef",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Useful bytes versus traffic/requests and producer-consumer layouts.",
+      "revision": null
+    },
+    {
+      "id": "AT-R04",
+      "project": "circuit-bending-atlas",
+      "path": "reference/R04.md",
+      "content_sha256": "c1419a7fde4e5ee8fba12f4a61679966da0b1c31303b2add37cb75cd94114501",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Intrinsic/PTX/SASS distinctions and target boundaries.",
+      "revision": null
+    },
+    {
+      "id": "AT-R05",
+      "project": "circuit-bending-atlas",
+      "path": "reference/R05.md",
+      "content_sha256": "f2e560c3eebb6861e4e0a12d26f4d059f65037b9f8d4febce0cf9ab4b06e1ba7",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Explicit SM70 fragment geometry versus opaque WMMA.",
+      "revision": null
+    },
+    {
+      "id": "AT-R06",
+      "project": "circuit-bending-atlas",
+      "path": "reference/R06.md",
+      "content_sha256": "4b02909469914911d50a73f3128880cec97a2d7f02060a4ae280d98c85718a1c",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Participation, visibility and progress.",
+      "revision": null
+    },
+    {
+      "id": "AT-R11",
+      "project": "circuit-bending-atlas",
+      "path": "reference/R11.md",
+      "content_sha256": "60f8d09e5dbcb3c7289f5e02c7f76d12e63e6be4d212de11c018e78689df0ca6",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Complete-cost lower bounds and reuse break-even.",
+      "revision": null
+    },
+    {
+      "id": "AT-R14",
+      "project": "circuit-bending-atlas",
+      "path": "reference/R14.md",
+      "content_sha256": "c3da6260170366919962bcc777fd043afe92002608957348208f9ada6998f834",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Shared-resource constraints in overlapped execution.",
+      "revision": null
+    },
+    {
+      "id": "AT-R15",
+      "project": "circuit-bending-atlas",
+      "path": "reference/R15.md",
+      "content_sha256": "94a646a6424c462fefa594a8f5a8036a04b690f1bdee5175c7973ea8579648df",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Numerical representation contracts and limits of empirical bounds.",
+      "revision": null
+    },
+    {
+      "id": "AT-M24",
+      "project": "circuit-bending-atlas",
+      "path": "mechanisms/M24.md",
+      "content_sha256": "de346ed0ac3bb590b122b65fdbaacb038e6fc7b4f68b637312f03031dcae4218",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Four independent native products are a substrate, not an arbitrary coupled operator.",
+      "revision": null
+    },
+    {
+      "id": "AT-M25",
+      "project": "circuit-bending-atlas",
+      "path": "mechanisms/M25.md",
+      "content_sha256": "c16aa57cf3017bda94b163bfb4473fbe7753dbd3791b2e328c02d2090db95d9a",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Native fragment ownership and intermediate movement.",
+      "revision": null
+    },
+    {
+      "id": "AT-LIMITS",
+      "project": "circuit-bending-atlas",
+      "path": "experiments/CLAIM_LIMITS.md",
+      "content_sha256": "b5fa423f537a0816e487633cbb2ba790e783af3da8593649dfd0423ad1c48e82",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Case-by-case nonclaims for the 2026-10-06 campaign.",
+      "revision": null
+    },
+    {
+      "id": "AT-INTERPRET",
+      "project": "circuit-bending-atlas",
+      "path": "experiments/INTERPRETING_RESULTS.md",
+      "content_sha256": "186a642c862aeff2e1e712a4962dd36f2dd0f84ece80f4303aed47f9c349b94d",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Observation versus explanation; timed boundaries and evidence grades.",
+      "revision": null
+    },
+    {
+      "id": "AT-E09",
+      "project": "circuit-bending-atlas",
+      "path": "experiments/E09.md",
+      "content_sha256": "fef8e8f5e5a5d99882db398c1e942dbc63bb83d7b35e1977a2bdaa1b84d13a1d",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "256 explicit PTX coordinate checks; WMMA canonical output only.",
+      "revision": null
+    },
+    {
+      "id": "AT-E10",
+      "project": "circuit-bending-atlas",
+      "path": "experiments/E10.md",
+      "content_sha256": "740c1d902f31e5170ce0effa65180804ae11ee36c1b989bf2f902f8e25f12d2e",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Finite numerical fingerprint, not general arithmetic certification.",
+      "revision": null
+    },
+    {
+      "id": "AT-E06",
+      "project": "circuit-bending-atlas",
+      "path": "experiments/E06.md",
+      "content_sha256": "4bd53fa93ecb03e22f59a0953c843d28d68dc67523694bcdb6d48c29069e6233",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Shared/shuffle semantic controls; no causal bank-counter claim.",
+      "revision": null
+    },
+    {
+      "id": "AT-E16",
+      "project": "circuit-bending-atlas",
+      "path": "experiments/E16.md",
+      "content_sha256": "657dd6e798589ecea8af6c3f41c857bd5365bc7c2fcd4b0cd39d2ae92f8a0abf",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Resident execution lost to batching/graphs on the selected sample.",
+      "revision": null
+    },
+    {
+      "id": "PC-PLAN",
+      "project": "project-control",
+      "path": "src/todo_orchestrator/plan.py",
+      "content_sha256": "fde2ca5a4b74ec47dc02d46d1ca9d286c902074f3589d1886988e348243e170d",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Native schema versions, tasks/runs/lanes/dependencies/path validation and upsert; relevant ranges.",
+      "revision": null
+    },
+    {
+      "id": "PC-GATES",
+      "project": "project-control",
+      "path": "src/todo_orchestrator/gates.py",
+      "content_sha256": "e8c1c9f96810f0d050b080f6f35aa89a5c76fc92c14af77885c4db0c2868474b",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Native command/task_state/manual gates and CUDA admission fields; relevant ranges.",
+      "revision": null
+    },
+    {
+      "id": "PC-CLI",
+      "project": "project-control",
+      "path": "tests/test_cli_profiles.py",
+      "content_sha256": "5dcea352db40610d6044b7ce850802719bbe8f4c114a8b4d4ffd758bdec38286",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Plan validate/apply --project --file grammar; unrelated secret fixture redacted by provider.",
+      "revision": null
+    },
+    {
+      "id": "PC-APPLY",
+      "project": "project-control",
+      "path": "tests/test_plan_apply.py",
+      "content_sha256": "b8c1e9e8673a59cd0030227ff337dced719d66f9d906f1e9fd368295ce79e5ee",
+      "inspection": "exact-path Project Control read; relevant ranges where noted",
+      "observed_date": "2026-10-17",
+      "scope": "Native nonmutating validation, prospective change and transactional identity checks.",
+      "revision": null
+    }
+  ],
+  "atlas_campaign": {
+    "id": "v100-20261006T145155Z-4bd01216",
+    "source_commit": "f223c51dcfacab602e9bc68b3e65cc75730dc7f8",
+    "original_archive_commit": "5c1f805db80a81f7476ede8292abba69821d104f",
+    "portable_evidence_root": "experiments/evidence/v100-20261006",
+    "raw_evidence": "local benchmark_runs; not assumed available in Git"
+  }
+}

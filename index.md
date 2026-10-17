@@ -1,6 +1,6 @@
-# Blackwell Kernel Optimization Knowledge Base
+# Volta, Hopper & Blackwell Kernel Optimization Knowledge Base
 
-> Comprehensive knowledge base for GPU kernel optimization on NVIDIA Blackwell (SM100) and Hopper (SM90).
+> Blackwell (SM100) and Hopper (SM90) kernel corpus, with an initial source-backed hardware reference for Volta/V100 (SM70).
 > Optimized for LLM agent retrieval. See [CLAUDE.md](CLAUDE.md) for schema and conventions.
 > **For Claude Code agents**: this repository is a Claude Code skill — see [SKILL.md](SKILL.md).
 
@@ -18,6 +18,7 @@ See [references/examples.md](references/examples.md) for 10 worked query pattern
 
 | I want to... | Go to |
 |---|---|
+| Ask about V100 / Volta (`sm70`) | [Volta routing reference](references/volta.md) |
 | Browse exact, family-only, or unknown architecture evidence | [queries/by-architecture.md](queries/by-architecture.md) |
 | Fix a performance problem | [queries/by-problem.md](queries/by-problem.md) |
 | Learn a specific technique | [queries/by-technique.md](queries/by-technique.md) |
@@ -35,6 +36,19 @@ See [references/examples.md](references/examples.md) for 10 worked query pattern
 - [hw-2sm-cooperative](wiki/hardware/2sm-cooperative.md) — Two-SM cooperative MMA
 - [hw-nvfp4](wiki/hardware/nvfp4.md) — NVFP4 and block-scaled narrow precision
 - [hw-pdl-gdc](wiki/hardware/pdl-gdc.md) — Programmatic Dependent Launch / Grid Dependency Control
+
+## Volta / V100 (SM70) Reference
+
+These six pages are source-reported concept guidance. They contain no new local kernel compilation or performance results. Exact V100 queries use `sm70`; the `volta` family route can also include neighboring `sm72` evidence.
+
+- [hw-volta-mma](wiki/hardware/volta-mma.md) — explicit MMA and opaque WMMA boundaries
+- [hw-volta-numerics](wiki/hardware/volta-numerics.md) — representation and accumulation contracts
+- [hw-volta-resources](wiki/hardware/volta-resources.md) — coupled register, shared-memory, and residency budgets
+- [hw-volta-participation](wiki/hardware/volta-participation.md) — collective participation and progress
+- [hw-volta-feature-boundaries](wiki/hardware/volta-feature-boundaries.md) — native SM70 features and software representations
+- [hw-volta-operand-delivery](wiki/hardware/volta-operand-delivery.md) — profiling-led operand delivery investigation
+
+Use [`references/volta.md`](references/volta.md) to route a question and follow each page's source IDs before applying it.
 
 ## Optimization Techniques
 

@@ -14,5 +14,6 @@ The project identity and portable snapshot live in `.todo-orchestrator/`.
 The live SQLite authority lives under the Git common directory at
 `todo-orchestrator/<project_uuid>/state.sqlite3`.
 
-No implementation backlog has been seeded. Add tasks when project goals and
-scope are defined.
+The Volta bootstrap plan is installed under `planning/volta-bootstrap/` and
+applied as run `KWV-RUN-1`. Use the native task authority for its current state;
+`volta-bootstrap-readiness.md` records preparation and integration decisions.

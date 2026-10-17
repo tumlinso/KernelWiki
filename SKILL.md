@@ -1,18 +1,19 @@
 ---
 name: KernelWiki
-description: Use when the user asks about optimizing NVIDIA Blackwell (SM100, B200) or Hopper (SM90, H100) GPU kernels — tcgen05/TMEM/CLC/NVFP4/2-SM cooperative, warp specialization, FlashAttention-4, DeepGEMM, FlashMLA, MoE, grouped GEMM, CuTe-DSL/PTX/Triton on Blackwell, or wants concrete PR references from CUTLASS/SGLang/vLLM/FlashInfer/PyTorch. Do NOT use for generic CUDA Q&A that is not Blackwell/Hopper-specific, host-side framework integration, or distributed systems (DeepEP/EPLB/DualPipe).
+description: Use when the user asks about NVIDIA Volta/V100 (SM70), Hopper (SM90), or Blackwell (SM100) GPU kernels, including Volta MMA/WMMA and CUDA/PTX contracts, Blackwell tcgen05/TMEM/CLC/NVFP4, attention, GEMM, grouped kernels, or concrete upstream implementation references. Do NOT use for generic CUDA Q&A unrelated to these targets, host-side framework integration, or distributed systems (DeepEP/EPLB/DualPipe).
 argument-hint: "[natural-language-question] | [--tag foo --type kernel] | [page-id]"
 allowed-tools: "Bash Read Grep Glob"
 ---
 
-# KernelWiki — Blackwell & Hopper Kernel Optimization Wiki
+# KernelWiki — Volta, Hopper & Blackwell Kernel Optimization Wiki
 
-Query a structured, cross-referenced knowledge base of GPU kernel optimization for NVIDIA Blackwell (SM100) and Hopper (SM90). The repository update date is recorded in `README.md`; run `python3 scripts/repo_status.py` for current corpus counts.
+Query a structured, cross-referenced knowledge base with an initial source-backed Volta/V100 (SM70) hardware layer and a larger Blackwell (SM100) and Hopper (SM90) kernel corpus. Volta family evidence is not automatically exact V100 evidence. The repository update date is recorded in `README.md`; run `python3 scripts/repo_status.py` for current corpus counts.
 
 ## When To Use This Skill
 
 Trigger this skill when the user asks about:
 
+- **Volta/V100 (SM70)** — explicit MMA and WMMA boundaries, PTX/CUDA contracts, synchronization, resources, numerical representation, or applying source-reported Volta material
 - **Blackwell/SM100 kernel programming** — tcgen05.mma, TMEM, CLC, 2-SM cooperative, NVFP4, FP8/FP4 block scaling, PDL/GDC
 - **Kernel implementations** — FlashAttention-4, DeepGEMM, FlashMLA, NSA, GatedDeltaNet, NVFP4 GEMM/GEMV, fused MoE, gated dual GEMM
 - **Performance patterns** — low SM utilization, memory-bound, register pressure, compute-bound, tail effects, pipeline stalls
@@ -23,7 +24,7 @@ Trigger this skill when the user asks about:
 
 Do NOT use this skill for:
 
-- Generic CUDA questions unrelated to Blackwell/Hopper tensor cores
+- Generic CUDA questions unrelated to the documented Volta, Hopper, and Blackwell targets
 - Host-side framework integration (model loading, request routing, scheduling policy)
 - Distributed systems topics — DeepEP, EPLB, DualPipe are out of scope
 
@@ -44,6 +45,8 @@ implementation.
 
 ```bash
 python3 scripts/query.py "how to fuse gate-up dual GEMM on Blackwell"
+python3 scripts/query.py --architecture V100 --type hardware --compact
+python3 scripts/query.py --architecture volta --compact
 python3 scripts/query.py --tag nvfp4 --type kernel
 python3 scripts/query.py --repo cutlass --limit 20
 python3 scripts/query.py --symptom tail-effect --compact
@@ -52,7 +55,9 @@ python3 scripts/query.py --symptom tail-effect --compact
 Filters: `--type`, `--tag`, `--repo`, `--language`, `--architecture`,
 `--symptom`, `--confidence`, `--limit`, `--compact`, `--paths-only`. `--tag`
 and `--architecture` accept aliases — `--tag UMMA` matches `tcgen05`,
-`--architecture B200` matches `sm100`, etc.
+`--architecture B200` matches `sm100`, and `--architecture V100` matches exact
+`sm70`. Use the `volta` family filter for broader evidence; it also includes
+neighboring `sm72`, which is not exact V100 evidence.
 
 ### Path 2: Fetch a specific page by id or path
 
@@ -60,6 +65,7 @@ and `--architecture` accept aliases — `--tag UMMA` matches `tcgen05`,
 python3 scripts/get_page.py kernel-flash-attention-4
 python3 scripts/get_page.py pr-cutlass-2472
 python3 scripts/get_page.py kernel-flash-attention-4 --follow-sources
+python3 scripts/get_page.py hw-volta-mma --follow-sources
 python3 scripts/get_page.py kernel-flash-attention-4 --body-only
 ```
 
@@ -88,6 +94,7 @@ Auto-generated under `queries/`:
 Companion docs under `references/`:
 
 - `references/primer.md` — topic map: hardware features, techniques, symptoms, canonical page IDs. Read this first when the question is broad.
+- `references/volta.md` — Volta/V100 route and exact-versus-family query guidance.
 - `references/schema.md` — condensed frontmatter schema, confidence rules, reproducibility ladder, controlled vocabulary, canonical aliases.
 - `references/examples.md` — 10 worked query patterns mapping user questions → command sequences → synthesis.
 
@@ -110,7 +117,7 @@ When answering from this KB:
 - **Hybrid version-claim registry** — per-page `version_sensitive: <id>` pointers + `data/version-claims.yaml` central registry, validated for bidirectional consistency
 - **Status script** `scripts/repo_status.py` — current corpus counts
 - **Validator** `scripts/validate.py` — schema, link, artifact, and ledger checks
-- **Blackwell-first** — Hopper-only wiki pages carry explicit `blackwell_relevance`; source pages preserve upstream evidence and are exempt
+- **Blackwell-first legacy corpus** — Hopper-only wiki pages carry explicit `blackwell_relevance`; Volta pages have their own exact SM70 scope, and source pages preserve upstream evidence.
 
 To refresh the corpus: run `scripts/refresh_candidate_ledger.py`, regenerate PR pages and query indices, then validate.
 
