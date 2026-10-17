@@ -1,0 +1,430 @@
+{
+  "evidence": {
+    "artifacts": [
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "ff136fdfbe976fd55b847e8a904c450aed6a2225a19a2cdd24ea0dba311a5d39",
+        "created_at": 1792261053.169688,
+        "id": "c7077b8e-11d8-482e-a55d-e37a4f27b0bf",
+        "job_id": "a0810e72-54df-4ffb-a3f6-5849928a8ee0",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/a2a98659-d057-4e73-905b-5c5a16af9baf/foreground.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+        "created_at": 1792261053.169688,
+        "id": "3fb78746-0adf-4a39-9518-21c558922090",
+        "job_id": "a0810e72-54df-4ffb-a3f6-5849928a8ee0",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/a2a98659-d057-4e73-905b-5c5a16af9baf/foreground.stderr.txt"
+      }
+    ],
+    "classification": "decision-result",
+    "contaminated": 0,
+    "created_at": 1792261053.169688,
+    "id": "355a3769-72c9-4927-af3b-9f8025a3eec9",
+    "job_id": "a0810e72-54df-4ffb-a3f6-5849928a8ee0",
+    "kind": "foreground-baseline",
+    "parser_version": "cuda-controller/1",
+    "severity": 0,
+    "snapshot": {
+      "commit": "1436879c0c6cba8910044f5dac25a7aea89d284b",
+      "dirty": true,
+      "fingerprint": "76608c07d4a1f3cbe9307dbc5ae908cf5996b9862bea36cebfd4262611c14f9c",
+      "patch_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "project_root": "/home/tumlinson/KernelWiki",
+      "safe": true,
+      "source_root": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/snapshots/76608c07d4a1f3cbe9307dbc5ae908cf5996b9862bea36cebfd4262611c14f9c/source",
+      "untracked": [
+        {
+          "path": "artifacts/kernels/volta-common/variants/volta_smoke.cu",
+          "sha256": "2d8ac189ed8cd5190788ed5adb5f38ad90fc18c105a4b4eb697da0448df25a48"
+        },
+        {
+          "path": "benchmark_runs/volta-environment/contract.json",
+          "sha256": "51802e733e0918094f57a5cb7716634c2668d8cc1b10807787d3c78983742430"
+        },
+        {
+          "path": "benchmark_runs/volta-environment/cpu-oracle.json",
+          "sha256": "edb770cbd8ccf3cf3718591482f1c2ab3ffb1257284a846f2eeaaaeb6c8e051b"
+        },
+        {
+          "path": "benchmark_runs/volta-environment/inputs.f16le",
+          "sha256": "5c231f0961921f9a3dfe86d633e8cc0c6f6b974c04b47a7d6f203f835a3cf98e"
+        },
+        {
+          "path": "benchmark_runs/volta-environment/required-gate.json",
+          "sha256": "33b1b949e15ef537fe28894647d2d4451bd25f76fa5e8e1db3616cc7b40dbc0a"
+        },
+        {
+          "path": "benchmark_runs/volta-environment/run_config.json",
+          "sha256": "751b3793779d601ce649f21b3905418ecddc620928a35d715d5097b53892335b"
+        }
+      ]
+    },
+    "source_fingerprint": "76608c07d4a1f3cbe9307dbc5ae908cf5996b9862bea36cebfd4262611c14f9c",
+    "status": "succeeded",
+    "summary": {
+      "benchmark": null,
+      "binaries": [
+        {
+          "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/bin/volta_smoke",
+          "sha256": "5a87420217bc6e79713f7f335d83e3bc2d6f70cec08f9b5502df80180f1daea8"
+        }
+      ],
+      "build": null,
+      "classification": "decision-result",
+      "context": null,
+      "correctness": {
+        "argv": [
+          "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/bin/volta_smoke",
+          "--self-test",
+          "--input",
+          "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/inputs.f16le"
+        ],
+        "elapsed_seconds": 2.5207033879996743,
+        "returncode": 0,
+        "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/a2a98659-d057-4e73-905b-5c5a16af9baf/foreground.stderr.txt",
+        "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/a2a98659-d057-4e73-905b-5c5a16af9baf/foreground.stdout.txt",
+        "timeout": false
+      },
+      "parser_version": "cuda-controller/1",
+      "provenance": {
+        "argv": [
+          "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/bin/volta_smoke",
+          "--self-test",
+          "--input",
+          "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/inputs.f16le"
+        ],
+        "binary": {
+          "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/bin/volta_smoke",
+          "sha256": "5a87420217bc6e79713f7f335d83e3bc2d6f70cec08f9b5502df80180f1daea8"
+        },
+        "environment": {},
+        "gpus": [
+          {
+            "clocks_sm_mhz": 1312.0,
+            "compute_capability": "7.0",
+            "driver_version": "580.178.04",
+            "index": 0,
+            "memory_free_mib": 16145,
+            "memory_total_mib": 16384,
+            "name": "Tesla V100-SXM2-16GB",
+            "pci_bus_id": "00000000:02:00.0",
+            "temperature_c": 36.0,
+            "throttle_reasons": "0x0000000000000000",
+            "utilization_percent": 0.0,
+            "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+          }
+        ],
+        "inputs": [
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-common/variants/volta_smoke.cu",
+            "sha256": "2d8ac189ed8cd5190788ed5adb5f38ad90fc18c105a4b4eb697da0448df25a48"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/inputs.f16le",
+            "sha256": "5c231f0961921f9a3dfe86d633e8cc0c6f6b974c04b47a7d6f203f835a3cf98e"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/contract.json",
+            "sha256": "51802e733e0918094f57a5cb7716634c2668d8cc1b10807787d3c78983742430"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/cpu-oracle.json",
+            "sha256": "edb770cbd8ccf3cf3718591482f1c2ab3ffb1257284a846f2eeaaaeb6c8e051b"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/run_config.json",
+            "sha256": "751b3793779d601ce649f21b3905418ecddc620928a35d715d5097b53892335b"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/required-gate.json",
+            "sha256": "33b1b949e15ef537fe28894647d2d4451bd25f76fa5e8e1db3616cc7b40dbc0a"
+          }
+        ],
+        "parser_version": "cuda-controller/1",
+        "project_root": "/home/tumlinson/KernelWiki",
+        "source": {
+          "commit": "1436879c0c6cba8910044f5dac25a7aea89d284b",
+          "dirty": true,
+          "fingerprint": "76608c07d4a1f3cbe9307dbc5ae908cf5996b9862bea36cebfd4262611c14f9c",
+          "patch_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "project_root": "/home/tumlinson/KernelWiki",
+          "safe": true,
+          "source_root": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/snapshots/76608c07d4a1f3cbe9307dbc5ae908cf5996b9862bea36cebfd4262611c14f9c/source",
+          "untracked": [
+            {
+              "path": "artifacts/kernels/volta-common/variants/volta_smoke.cu",
+              "sha256": "2d8ac189ed8cd5190788ed5adb5f38ad90fc18c105a4b4eb697da0448df25a48"
+            },
+            {
+              "path": "benchmark_runs/volta-environment/contract.json",
+              "sha256": "51802e733e0918094f57a5cb7716634c2668d8cc1b10807787d3c78983742430"
+            },
+            {
+              "path": "benchmark_runs/volta-environment/cpu-oracle.json",
+              "sha256": "edb770cbd8ccf3cf3718591482f1c2ab3ffb1257284a846f2eeaaaeb6c8e051b"
+            },
+            {
+              "path": "benchmark_runs/volta-environment/inputs.f16le",
+              "sha256": "5c231f0961921f9a3dfe86d633e8cc0c6f6b974c04b47a7d6f203f835a3cf98e"
+            },
+            {
+              "path": "benchmark_runs/volta-environment/required-gate.json",
+              "sha256": "33b1b949e15ef537fe28894647d2d4451bd25f76fa5e8e1db3616cc7b40dbc0a"
+            },
+            {
+              "path": "benchmark_runs/volta-environment/run_config.json",
+              "sha256": "751b3793779d601ce649f21b3905418ecddc620928a35d715d5097b53892335b"
+            }
+          ]
+        },
+        "timestamp": 1792261053.169375,
+        "tools": {
+          "ncu": {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute/ncu",
+            "version": "NVIDIA (R) Nsight Compute Command Line Profiler | Copyright (c) 2018-2025 NVIDIA Corporation | Version 2025.2.1.0 (build 35987062) (public-release)"
+          },
+          "nsys": {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Systems_2025.3/bin/nsys",
+            "version": "NVIDIA Nsight Systems version 2025.3.1.90-253135822126v0"
+          },
+          "nvcc": {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+            "version": "nvcc: NVIDIA (R) Cuda compiler driver | Copyright (c) 2005-2025 NVIDIA Corporation | Built on Tue_May_27_02:21:03_PDT_2025"
+          }
+        }
+      },
+      "record": {
+        "argv": [
+          "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+          "--label",
+          "cuda-controller-foreground",
+          "--",
+          "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/bin/volta_smoke",
+          "--self-test",
+          "--input",
+          "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/inputs.f16le"
+        ],
+        "elapsed_seconds": 2.572009846000583,
+        "returncode": 0,
+        "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/a2a98659-d057-4e73-905b-5c5a16af9baf/foreground.stderr.txt",
+        "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/a2a98659-d057-4e73-905b-5c5a16af9baf/foreground.stdout.txt",
+        "timeout": false
+      },
+      "resource_samples": {
+        "after": {
+          "busy": false,
+          "foreign_processes": false,
+          "idle": true,
+          "samples": [
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792261035.8676906
+            },
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792261043.2798095
+            },
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792261050.7177541
+            }
+          ]
+        },
+        "before": {
+          "busy": false,
+          "foreign_processes": false,
+          "idle": true,
+          "samples": [
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792261022.7145424
+            }
+          ]
+        },
+        "quiescence": {
+          "device_uuids": [
+            "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+          ],
+          "elapsed_seconds": 22.749508451997826,
+          "format": "CUDA-QUIESCENCE/1",
+          "observations": [
+            {
+              "busy": false,
+              "foreign_processes": false,
+              "idle": true,
+              "samples": [
+                {
+                  "devices": [
+                    {
+                      "clocks_sm_mhz": 1312.0,
+                      "compute_capability": "7.0",
+                      "driver_version": "580.178.04",
+                      "index": 0,
+                      "memory_free_mib": 16145,
+                      "memory_total_mib": 16384,
+                      "name": "Tesla V100-SXM2-16GB",
+                      "pci_bus_id": "00000000:02:00.0",
+                      "temperature_c": 36.0,
+                      "throttle_reasons": "0x0000000000000000",
+                      "utilization_percent": 0.0,
+                      "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                    }
+                  ],
+                  "foreign_processes": [],
+                  "timestamp": 1792261007.3615506
+                }
+              ]
+            },
+            {
+              "busy": false,
+              "foreign_processes": false,
+              "idle": true,
+              "samples": [
+                {
+                  "devices": [
+                    {
+                      "clocks_sm_mhz": 1312.0,
+                      "compute_capability": "7.0",
+                      "driver_version": "580.178.04",
+                      "index": 0,
+                      "memory_free_mib": 16145,
+                      "memory_total_mib": 16384,
+                      "name": "Tesla V100-SXM2-16GB",
+                      "pci_bus_id": "00000000:02:00.0",
+                      "temperature_c": 36.0,
+                      "throttle_reasons": "0x0000000000000000",
+                      "utilization_percent": 0.0,
+                      "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                    }
+                  ],
+                  "foreign_processes": [],
+                  "timestamp": 1792261014.9371133
+                }
+              ]
+            },
+            {
+              "busy": false,
+              "foreign_processes": false,
+              "idle": true,
+              "samples": [
+                {
+                  "devices": [
+                    {
+                      "clocks_sm_mhz": 1312.0,
+                      "compute_capability": "7.0",
+                      "driver_version": "580.178.04",
+                      "index": 0,
+                      "memory_free_mib": 16145,
+                      "memory_total_mib": 16384,
+                      "name": "Tesla V100-SXM2-16GB",
+                      "pci_bus_id": "00000000:02:00.0",
+                      "temperature_c": 36.0,
+                      "throttle_reasons": "0x0000000000000000",
+                      "utilization_percent": 0.0,
+                      "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                    }
+                  ],
+                  "foreign_processes": [],
+                  "timestamp": 1792261022.7145424
+                }
+              ]
+            }
+          ],
+          "observed_consecutive_samples": 3,
+          "required_consecutive_samples": 3,
+          "samples_observed": 3,
+          "schema_version": 1,
+          "state": "quiescent",
+          "uncontaminated": true
+        }
+      },
+      "severity": 0,
+      "status": "succeeded",
+      "toolchain": {
+        "environment": {
+          "CUDACXX": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+          "CUDAToolkit_ROOT": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+          "PATH": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute:/home/tumlinson/.local/bin:/home/tumlinson/.codex/packages/standalone/releases/0.162.1-x86_64-unknown-linux-musl/codex-path:/home/tumlinson/.local/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/tumlinson/.nvm/versions/node/v22.23.2/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Systems_2025.3/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/nvvm/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/comm_libs/12.9/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/comm_libs/12.9/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/comm_libs/hpcx/bin:/home/tumlinson/.codex/tmp/arg0/codex-arg0NVmlLM:/home/tumlinson/.cargo/bin:/home/tumlinson/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/home/tumlinson/Software/miniconda3/bin:/home/tumlinson/Software/miniconda3/condabin:/usr/local/sbin:/usr/games:/usr/local/games:/snap/bin:/home/tumlinson/Software/llama.cpp/build/bin:/home/tumlinson/Software/sratoolkit.3.3.0-ubuntu64/bin"
+        },
+        "nvcc": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+        "root": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+        "sanitizer": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+        "version": "12.9"
+      },
+      "valid": true
+    },
+    "task_id": null,
+    "todo_revision": null,
+    "valid": 1
+  }
+}

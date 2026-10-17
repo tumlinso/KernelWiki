@@ -1,0 +1,25 @@
+{
+  "tool": "compute-sanitizer",
+  "status": "partial",
+  "conclusive": false,
+  "command": "/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/bin/volta_smoke --self-test --input /home/tumlinson/KernelWiki/benchmark_runs/volta-environment/inputs.f16le ",
+  "exit_status": 0,
+  "signal": "",
+  "crash_class": "unknown",
+  "likely_domain": "unknown",
+  "next_step": "The sanitizer run did not report a device fault. Escalate to batch cuda-gdb if the crash still reproduces.",
+  "reasons": [
+    "compute-sanitizer reported zero errors."
+  ],
+  "matched_signatures": [],
+  "stderr_tail": [],
+  "stdout_tail": [
+    "{\"status\":\"passed\",\"gpu\":\"Tesla V100-SXM2-16GB\",\"gpu_uuid\":\"21131915148823af38dd1743ae1f5cc8\",\"compute_capability\":\"7.0\",\"checks\":[{\"name\":\"inline-ptx-fma-rn-f32\",\"max_abs_error\":0},{\"name\":\"wmma-f16-input-f32-accum\",\"m\":16,\"n\":16,\"k\":16,\"max_abs_error\":0}]}"
+  ],
+  "backtrace_head": [],
+  "host_frames": [],
+  "source_hint": null,
+  "tool_detail": "memcheck",
+  "limitations": [],
+  "error_count": 0
+}

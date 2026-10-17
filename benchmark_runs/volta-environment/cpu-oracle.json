@@ -1,0 +1,26 @@
+{
+  "checks": [
+    {
+      "atol": 1e-07,
+      "max_abs_error": 0,
+      "name": "inline-ptx-fma-rn-f32",
+      "reference_max_abs": 0.29296875,
+      "rtol": 1e-07
+    },
+    {
+      "atol": 0.002,
+      "max_abs_error": 0,
+      "name": "wmma-f16-input-f32-accum",
+      "reference_max_abs": 0.9375,
+      "rtol": 0.002
+    }
+  ],
+  "controller_gate_evidence_id": "3209078c-5d10-4a8f-9799-5cc8d725cbc0",
+  "format": "KERNELWIKI-CPU-ORACLE/1",
+  "input": {
+    "path": "benchmark_runs/volta-environment/inputs.f16le",
+    "sha256": "5c231f0961921f9a3dfe86d633e8cc0c6f6b974c04b47a7d6f203f835a3cf98e"
+  },
+  "method": "Python binary64 scalar recomputation from the exact FP16 input bytes; the bound native SM70 smoke performs elementwise device-output comparisons against the same contract and exits nonzero on mismatch.",
+  "passed": true
+}

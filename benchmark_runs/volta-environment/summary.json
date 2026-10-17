@@ -1,0 +1,165 @@
+{
+  "bound_native_gate": {
+    "evidence": {
+      "path": "controller/native-gate-evidence.json",
+      "sha256": "93105e4a3bf591d6006de0c5067c2a00b5d127567342026165339302798f8541"
+    },
+    "evidence_id": "3209078c-5d10-4a8f-9799-5cc8d725cbc0",
+    "input_sha256": "5c231f0961921f9a3dfe86d633e8cc0c6f6b974c04b47a7d6f203f835a3cf98e",
+    "source_sha256": "2d8ac189ed8cd5190788ed5adb5f38ad90fc18c105a4b4eb697da0448df25a48"
+  },
+  "cases": [
+    {
+      "contract": {
+        "path": "contract.json",
+        "sha256": "51802e733e0918094f57a5cb7716634c2668d8cc1b10807787d3c78983742430"
+      },
+      "disposition": "evaluated_not_promoted",
+      "gpu_uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8",
+      "id": "environment",
+      "implementations": {
+        "baseline": {
+          "binary": {
+            "path": "benchmark_runs/volta-environment/bin/volta_smoke-5a87420217bc6e79713f7f335d83e3bc2d6f70cec08f9b5502df80180f1daea8.bin",
+            "sha256": "5a87420217bc6e79713f7f335d83e3bc2d6f70cec08f9b5502df80180f1daea8"
+          },
+          "executed_path": "benchmark_runs/volta-environment/bin/volta_smoke",
+          "source": {
+            "path": "artifacts/kernels/volta-common/variants/volta_smoke.cu",
+            "sha256": "2d8ac189ed8cd5190788ed5adb5f38ad90fc18c105a4b4eb697da0448df25a48"
+          }
+        },
+        "candidate": {
+          "binary": {
+            "path": "benchmark_runs/volta-environment/bin/volta_smoke-5a87420217bc6e79713f7f335d83e3bc2d6f70cec08f9b5502df80180f1daea8.bin",
+            "sha256": "5a87420217bc6e79713f7f335d83e3bc2d6f70cec08f9b5502df80180f1daea8"
+          },
+          "executed_path": "benchmark_runs/volta-environment/bin/volta_smoke",
+          "source": {
+            "path": "artifacts/kernels/volta-common/variants/volta_smoke.cu",
+            "sha256": "2d8ac189ed8cd5190788ed5adb5f38ad90fc18c105a4b4eb697da0448df25a48"
+          }
+        }
+      },
+      "libraries": [],
+      "oracle": {
+        "path": "cpu-oracle.json",
+        "sha256": "edb770cbd8ccf3cf3718591482f1c2ab3ffb1257284a846f2eeaaaeb6c8e051b"
+      },
+      "represented_input": {
+        "path": "benchmark_runs/volta-environment/inputs.f16le",
+        "sha256": "5c231f0961921f9a3dfe86d633e8cc0c6f6b974c04b47a7d6f203f835a3cf98e"
+      },
+      "runs": {
+        "baseline_timing": {
+          "evidence": {
+            "path": "controller/baseline_timing/evidence.json",
+            "sha256": "3fc6787d2a118ee765a2037a6f87d15f043732ffd8eada5808ad6ac042813561"
+          },
+          "execution": {
+            "path": "controller/baseline_timing/execution.json",
+            "sha256": "84b9d1653e15d8d4804fa285ebc31bd70d4c90bba5876a32f4c6f249aaf107f1"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/4193800e-26f4-4a59-b282-4fe328d55d61/lease.json",
+            "sha256": "a8689c8d63694482ebb66969d87f01dd9d97d8617a5b1142be7a5b17363cef32"
+          }
+        },
+        "candidate_timing": {
+          "evidence": {
+            "path": "controller/candidate_timing/evidence.json",
+            "sha256": "8a10eedfb263eb919edcbee4e05a505ade61bd30f980532cb8e66a4b8fcc7259"
+          },
+          "execution": {
+            "path": "controller/candidate_timing/execution.json",
+            "sha256": "ed7844e56313c9910c54e7e6fc6ee807faef621f05403588ecc7b3487c6ce127"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/0dd41e03-f828-4eb0-9b8d-f8a87b96a129/lease.json",
+            "sha256": "23edc6076be063f8c683a08e63f72990237d594f695faa56f62ed59f0c5e8499"
+          }
+        },
+        "correctness_baseline": {
+          "evidence": {
+            "path": "controller/correctness_baseline/evidence.json",
+            "sha256": "2ee9fad02cc50e84eaad29f43d0b727251e978583b7ba889ffe698d82fd984ab"
+          },
+          "execution": {
+            "path": "controller/correctness_baseline/execution.json",
+            "sha256": "fa0f7b798229254c935489dcd1d572142a5d09b45345b20df7c45fc2c3d4ce15"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/a2a98659-d057-4e73-905b-5c5a16af9baf/lease.json",
+            "sha256": "7e384c98e02c68ca91fea17355db3308486befe7f520c984e42248fdea8f2ad2"
+          }
+        },
+        "correctness_candidate": {
+          "evidence": {
+            "path": "controller/correctness_candidate/evidence.json",
+            "sha256": "aad11256214f7f30333460b1b4b8227941650f8f6455dc277b146e5ae7dead96"
+          },
+          "execution": {
+            "path": "controller/correctness_candidate/execution.json",
+            "sha256": "136964ef63ecff1ac48899b7c161a814808bb8012a5489049bc67c2bf60b2ff8"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/6394b443-d3d4-4240-a68e-d921aa2ecae2/lease.json",
+            "sha256": "d8ead30c51ee714f514ee429b21898b9e325933f2b3ebfb0adcc41b09b19051b"
+          }
+        },
+        "profile_candidate": {
+          "evidence": {
+            "path": "controller/profile_candidate/evidence.json",
+            "sha256": "a7dfdf6228d2e49c8e46ba758dff38fc4c6049e79920e2d30e26be50055fa6a6"
+          },
+          "execution": {
+            "path": "controller/profile_candidate/execution.json",
+            "sha256": "6d63e96d225b0d63b18576d70651315b39b2406316cf4bbac85e3ec4837b1095"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/a9aaf396-b161-4ba7-a044-206b433bb52c/lease.json",
+            "sha256": "252827e781ff4845c87935ba5663c0ce3b8147fe2db204f63b94b9ef9bf5cd7b"
+          },
+          "profile": {
+            "analysis": {
+              "path": "profile/analysis/selected-wmma.json",
+              "sha256": "4ff6bf24d8205525698dad313d08b3407365a4d40f7ebe258ae6db808e151acd"
+            },
+            "report": {
+              "path": "profile/report.ncu-rep",
+              "sha256": "5e8422c41862fc7dc7906ce28dac06829e7c6545798566aa82c2c450ce1fdf40"
+            },
+            "selected_kernel": "<unnamed>::wmma_16x16x16(const __half *, const __half *, float *)",
+            "shim_log": {
+              "path": "profile/ncu-shim.jsonl",
+              "sha256": "ad43d0e925774502645477f1357cc6dfebde5305ef669b4633eb43cc88e63a62"
+            }
+          }
+        },
+        "sanitizer_candidate": {
+          "evidence": {
+            "path": "controller/sanitizer-root/evidence.json",
+            "sha256": "36a8ca82a51de51ebc8cba65c15fde555d6080f8ac65ccb5f8ff44bff8482b77"
+          },
+          "execution": {
+            "path": "controller/sanitizer-root/execution.json",
+            "sha256": "e6742e5c8ffdbf6651844f010d1c6c1e1936af62bf08315e720a8c60aeb17a03"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/0e5dbb63-4b99-4803-85e3-3dad11c07901/lease.json",
+            "sha256": "601312a69efee6630c624ec27b2703ebe94b499ee41d17710a503ece9be03a0e"
+          },
+          "sanitizer_summary": {
+            "path": "controller/sanitizer-root/sanitizer-summary.json",
+            "sha256": "0f708b77527bd4fb46620d072c784df02f28046d65b9b76236f7bc417d3c0162"
+          }
+        }
+      }
+    }
+  ],
+  "environment": {
+    "path": "environment.json",
+    "sha256": "4449c819e4adef449158dd8bb3f4f580f9a21288489b0ec62c67f2a7ac78434c"
+  },
+  "format": "KERNELWIKI-VOLTA-EVIDENCE/1"
+}

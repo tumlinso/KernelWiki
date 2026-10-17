@@ -1,0 +1,65 @@
+{
+  "case_id": "environment",
+  "compute_capability": "7.0",
+  "correctness": {
+    "baseline_evidence_id": "355a3769-72c9-4927-af3b-9f8025a3eec9",
+    "candidate_evidence_id": "3761df02-1c88-45e5-97d1-486cecf3777e",
+    "contract": "FP16 represented inputs; row-major 16x16x16; binary64 scalar reference; FP32 accumulation; WMMA atol/rtol 0.002; inline PTX FMA atol/rtol 1e-7",
+    "gate_evidence_id": "3209078c-5d10-4a8f-9799-5cc8d725cbc0",
+    "native_reported_max_abs_error": {
+      "inline-ptx-fma-rn-f32": 0.0,
+      "wmma-f16-input-f32-accum": 0.0
+    }
+  },
+  "disposition": "evaluated_not_promoted",
+  "environment_receipt": "environment.json",
+  "format": "KERNELWIKI-VOLTA-ENVIRONMENT-RESULTS/1",
+  "gpu": "Tesla V100-SXM2-16GB",
+  "gpu_uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8",
+  "limitations": [
+    "This is a toolkit/runtime and native smoke qualification, not a tuned family benchmark.",
+    "CUDA C++ WMMA does not qualify raw MMA lane mapping, CUTLASS, CuTe DSL, or Triton."
+  ],
+  "measured_binary": {
+    "executed_path": "bin/volta_smoke",
+    "path": "bin/volta_smoke-5a87420217bc6e79713f7f335d83e3bc2d6f70cec08f9b5502df80180f1daea8.bin",
+    "sha256": "5a87420217bc6e79713f7f335d83e3bc2d6f70cec08f9b5502df80180f1daea8"
+  },
+  "native_gate_evidence_export": "controller/native-gate-evidence.json",
+  "profile": {
+    "analysis": "profile/analysis/selected-wmma.json",
+    "clock_control": "none",
+    "collection_scope": "controller NCU compact metrics, all target processes, no collection-time kernel-name or launch-count filter; WMMA selected during report analysis",
+    "evidence_id": "6483d638-6b1c-48fe-af2a-c332c67faf51",
+    "limitations": [
+      "no source-stall metrics",
+      "PM sampling series count 0",
+      "timed warp samples unsupported",
+      "helper found no rule results",
+      "profiled timing is not used as a performance comparison"
+    ],
+    "report": "profile/report.ncu-rep",
+    "report_sha256": "5e8422c41862fc7dc7906ce28dac06829e7c6545798566aa82c2c450ce1fdf40",
+    "selected_kernel": "<unnamed>::wmma_16x16x16(const __half *, const __half *, float *)",
+    "source_import": true
+  },
+  "sanitizer": {
+    "application_status": "passed",
+    "error_count": 0,
+    "evidence_id": "3d908fc1-2b99-4ce1-9e98-165f98e9f88d",
+    "qualification": "accepted narrowly: zero-error memcheck plus bound native PASS record; raw partial wrapper classification is preserved",
+    "tool_detail": "memcheck",
+    "tool_exit_status": 0,
+    "wrapper_conclusive": false,
+    "wrapper_status": "partial"
+  },
+  "source_sha256": "2d8ac189ed8cd5190788ed5adb5f38ad90fc18c105a4b4eb697da0448df25a48",
+  "timing": {
+    "baseline_evidence_id": "b4f71a63-41b4-447b-a9a4-b865c5439c3d",
+    "baseline_median_us": 2.22720003,
+    "candidate_evidence_id": "c2212ece-8db4-4c8d-8505-4c11412a7427",
+    "candidate_median_us": 2.22720003,
+    "comparison": "same source and binary on both sides; environment repeatability only, no speedup or promotion claim",
+    "measurement": "unprofiled CUDA event per launch, smoke only"
+  }
+}

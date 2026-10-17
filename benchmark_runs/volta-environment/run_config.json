@@ -1,0 +1,55 @@
+{
+  "format": "KERNELWIKI-VOLTA-SMOKE-CONFIG/1",
+  "target": "V100 SM70",
+  "toolchain": {
+    "root": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+    "compiler": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+    "sanitizer": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+    "ncu": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute/ncu",
+    "ncu_version_expected_from_host_inspection": "2025.2.1",
+    "compiler_version": "capture from bound controller receipt"
+  },
+  "source": "artifacts/kernels/volta-common/variants/volta_smoke.cu",
+  "input": {
+    "path": "benchmark_runs/volta-environment/inputs.f16le",
+    "format": "little-endian FP16, row-major A[16,16] followed by B[16,16]",
+    "sha256": "5c231f0961921f9a3dfe86d633e8cc0c6f6b974c04b47a7d6f203f835a3cf98e"
+  },
+  "compile_argv": [
+    "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+    "-O2",
+    "-std=c++17",
+    "-lineinfo",
+    "-arch=sm_70",
+    "-o",
+    "benchmark_runs/volta-environment/bin/volta_smoke",
+    "artifacts/kernels/volta-common/variants/volta_smoke.cu"
+  ],
+  "unprofiled_timing": {
+    "argv_suffix": [
+      "--time-smoke",
+      "--input",
+      "benchmark_runs/volta-environment/inputs.f16le"
+    ],
+    "metric": "samples_us.4",
+    "warmups": 1,
+    "repetitions": 7,
+    "note": "smoke-only launch-bound timing; not a performance promotion comparison"
+  },
+  "selected_profile": {
+    "recipe": "ncu",
+    "set": "full",
+    "launch_count": 1,
+    "clock_control": "none",
+    "import_source": true,
+    "selected_kernel": "wmma_16x16x16",
+    "shim": "benchmark_runs/volta-environment/ncu-collection-shim.py",
+    "library_linked_by_smoke": []
+  },
+  "post_gate_runs": [
+    "controller compute-sanitizer recipe on --self-test, check captured summary error_count == 0",
+    "controller baseline recipe for timing, separate from profile, with --time-smoke and samples_us.4",
+    "controller ncu recipe for one selected wmma_16x16x16 launch, using the approved NCU_BIN shim"
+  ],
+  "required_gate_file": "benchmark_runs/volta-environment/required-gate.json"
+}

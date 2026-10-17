@@ -1,0 +1,5 @@
+===== NCU rules for volta-smoke, highest estimated speedup first =====
+Kernel: <unnamed>::wmma_16x16x16(const __half *, const __half *, float *)
+Rule results status: no_results
+No rule results were returned; this can mean no rules triggered or the report contains no rule data.
+speedup: est. % of the kernel's time (global) or of the part the rule is about (local)

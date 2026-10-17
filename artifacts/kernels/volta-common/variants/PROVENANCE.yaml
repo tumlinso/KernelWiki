@@ -1,0 +1,21 @@
+origin_url: https://docs.nvidia.com/cuda/cuda-programming-guide/
+upstream_repo: NVIDIA CUDA C++ Programming Guide and PTX ISA
+license: MIT (repository license); authored code, no upstream source copied
+retrieved_at: '2026-10-17'
+asset_mode: derived
+derived_from:
+  - doc-volta-cuda-12-9
+  - doc-volta-ptx-8-8
+files:
+  - local_path: volta_smoke.cu
+    role: derived-source
+    mode: derived
+    sha256: 2d8ac189ed8cd5190788ed5adb5f38ad90fc18c105a4b4eb697da0448df25a48
+  - local_path: make_volta_smoke_input.py
+    role: derived-source
+    mode: derived
+    sha256: 886fae7eb08c880d4e49ae4ea72aa2e47a460ed8c151a374898b75541803fcbe
+  - local_path: verify_volta_smoke_oracle.py
+    role: derived-source
+    mode: derived
+    sha256: 65fe6ce66f140a3292ad7955c31a45aebd00b648dd1b2a01ec8956761974ac4d

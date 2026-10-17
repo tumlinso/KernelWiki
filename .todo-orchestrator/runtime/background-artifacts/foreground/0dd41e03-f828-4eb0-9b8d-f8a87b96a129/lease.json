@@ -1,0 +1,11 @@
+{
+  "format": "CUDA-FOREGROUND-LEASE/1",
+  "owner_id": "foreground:93006de1-ac55-4fb9-b1f9-f99eaff54b03",
+  "project_root": "/home/tumlinson/KernelWiki",
+  "pid": 815014,
+  "resource_ids": [
+    "accelerator:GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+  ],
+  "observed_unix": 1792261224.9928293,
+  "state": "active"
+}

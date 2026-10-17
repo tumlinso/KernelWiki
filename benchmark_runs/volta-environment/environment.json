@@ -1,0 +1,65 @@
+{
+  "clock_policy": {
+    "clock_or_power_state_changed": false,
+    "ncu_clock_control": "none",
+    "timing": "separate ordinary unprofiled controller runs"
+  },
+  "format": "KERNELWIKI-VOLTA-ENVIRONMENT/1",
+  "gpu_observation": {
+    "compute_capability": "7.0",
+    "driver_version": "580.178.04",
+    "lease": "controller-reported selected GPU; ordinal not hard-coded",
+    "name": "Tesla V100-SXM2-16GB",
+    "observed_sm_clock_mhz": 1312.0,
+    "observed_temperature_c": 36.0,
+    "observed_throttle_reasons": "0x0000000000000000",
+    "observed_utilization_percent": 0.0,
+    "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+  },
+  "profiler": {
+    "collection_shim": {
+      "path": "benchmark_runs/volta-environment/ncu-collection-shim.py",
+      "sha256": "fda69450466b6617d627e638db32d094ac28d8e7d5bec80e512a4fdce3fce98f"
+    },
+    "ncu": {
+      "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute/ncu",
+      "sha256": "a44ff2c735c4dcf66c78f3f430155805d6a0b1f74f26331f98ecec03bfbf3f1a",
+      "version": "2025.2.1.0 (build 35987062)"
+    },
+    "producer_version_in_report": "not exposed by report metadata; CLI identity recorded above",
+    "reader_api": "ncu_report 2025.2.1"
+  },
+  "runtime_and_libraries": {
+    "binary_dynamic_dependencies": [
+      "libstdc++.so.6",
+      "libm.so.6",
+      "libgcc_s.so.1",
+      "libc.so.6",
+      "ld-linux-x86-64.so.2"
+    ],
+    "cublas": "not used or linked by this smoke",
+    "cutlass": "not used or linked by this smoke",
+    "declared_external_libraries": [],
+    "dynamic_libcudart_dependency": false,
+    "linkage_limit": "ELF has CUDA Runtime symbols but no dynamic libcudart dependency; nvcc default static-runtime linkage is consistent with this. The link does not record archive-member provenance, so the archive hash is environment identity, not proof of a linked-library performance claim.",
+    "source_uses_cuda_runtime_api": true,
+    "static_cudart_archive_available": {
+      "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/lib64/libcudart_static.a",
+      "sha256": "c5d91439cd095c7c158763ca0ee4968ede70608a1536634f6b2abbf1826f5356"
+    }
+  },
+  "toolchain": {
+    "compute_sanitizer": {
+      "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+      "sha256": "979adf037f4e3434a976b7f0912b0a05ce3b062e31b2a73397a1bf1cd5f57547",
+      "version": "2025.2.1.0 (build 35969825)"
+    },
+    "cuda_toolkit_release": "12.9.86",
+    "cuda_toolkit_root": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+    "nvcc": {
+      "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+      "sha256": "df9974db233a0b7a6c6d59c0e5d74e011566104098bcb3553495ff1b95bdeaf6",
+      "version": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Tue_May_27_02:21:03_PDT_2025\nCuda compilation tools, release 12.9, V12.9.86\nBuild cuda_12.9.r12.9/compiler.36037853_0"
+    }
+  }
+}

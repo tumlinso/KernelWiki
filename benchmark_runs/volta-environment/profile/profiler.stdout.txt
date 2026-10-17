@@ -1,0 +1,6 @@
+==WARNING== Note: Running with unmodified GPU clocks. If not controlled otherwise, profiling results may be inconsistent.
+==PROF== Connected to process 816288 (/home/tumlinson/KernelWiki/benchmark_runs/volta-environment/bin/volta_smoke)
+==PROF== Profiling "inline_ptx_fma" - 0: 0%....50%....100% - 8 passes
+==PROF== Profiling "wmma_16x16x16" - 1: 0%....50%....100% - 8 passes
+==PROF== Disconnected from process 816288
+==PROF== Report: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/a9aaf396-b161-4ba7-a044-206b433bb52c/ncu/run/report.ncu-rep

@@ -1,0 +1,20 @@
+{
+  "case_id": "environment",
+  "case_signature": {
+    "input_file_sha256": "5c231f0961921f9a3dfe86d633e8cc0c6f6b974c04b47a7d6f203f835a3cf98e",
+    "k": 16,
+    "layout": "row_major",
+    "m": 16,
+    "n": 16,
+    "operation": "wmma_m16n16k16"
+  },
+  "numerical_contract": {
+    "accumulator": "IEEE-754 binary32",
+    "input": "IEEE-754 binary16 represented inputs",
+    "oracle": "binary64 scalar reference",
+    "ptx_fma_atol": 1e-07,
+    "ptx_fma_rtol": 1e-07,
+    "wmma_atol": 0.002,
+    "wmma_rtol": 0.002
+  }
+}

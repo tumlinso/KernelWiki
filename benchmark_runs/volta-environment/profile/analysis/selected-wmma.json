@@ -1,0 +1,42 @@
+{
+  "architecture": "sm_70",
+  "format": "KERNELWIKI-VOLTA-SELECTED-PROFILE/1",
+  "helper_output": {
+    "path": "profile/analysis/metrics_key_volta-smoke.json",
+    "sha256": "c5cce0f9eef0b54f1c68d877869a8b4a1e4a6f5139625e42ab52a87c9c8c0177"
+  },
+  "interpretation_limits": [
+    "This is the selected WMMA action from an unfiltered report; collection did not specify a kernel-name or launch-count filter.",
+    "Profiled duration is not used for performance comparison.",
+    "Source-stall metrics were absent; timed warp samples are unsupported and PM sampling reported zero series.",
+    "Metric values are descriptive for this one-launch smoke only, not a family performance claim."
+  ],
+  "metric_summary": {
+    "curated_metric_count": 127,
+    "curated_metrics_missing": 108,
+    "curated_metrics_present": 19,
+    "pm_sampling_series_count": 0,
+    "report_metric_count": 260,
+    "rule_results": {
+      "count": 0,
+      "error": null,
+      "status": "no_results"
+    },
+    "source_stall_metrics_present": [],
+    "timed_warp_samples": {
+      "count": null,
+      "error": null,
+      "status": "unsupported"
+    }
+  },
+  "metrics": {
+    "gpu__time_duration.sum": 2592.0,
+    "launch__block_size": 32,
+    "launch__grid_size": 1,
+    "launch__registers_per_thread": 32,
+    "launch__shared_mem_per_block": 0,
+    "sm__throughput.avg.pct_of_peak_sustained_elapsed": 0.005763024435223605
+  },
+  "readable": true,
+  "selected_kernel": "<unnamed>::wmma_16x16x16(const __half *, const __half *, float *)"
+}

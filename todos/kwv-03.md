@@ -3,16 +3,16 @@
 <!-- todo-orchestrator:v2-managed:start -->
 # KWV-03: Qualify the existing native measurement path and reusable receipts
 
-Task revision: `13`; current project revision is in `todo-status.md`.
+Task revision: `39`; current project revision is in `todo-status.md`.
 
 ## Objective
 Use the CUDA controller and user-supplied Volta NCU skill to establish a small working compilation/correctness/timing/profile path. Do not build another toolkit.
 
 ## State
-- Lifecycle: `in_progress`
-- Execution: `claimed`
+- Lifecycle: `done`
+- Execution: `closed`
 - Parallel policy: `serial`
-- Result: `-`
+- Result: `validated`
 
 ## Next Action
 Read KWV-03 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.

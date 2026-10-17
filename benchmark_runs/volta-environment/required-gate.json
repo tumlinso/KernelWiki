@@ -1,0 +1,50 @@
+{
+  "id": "kwv03-volta-sm70-correctness-smoke",
+  "type": "command",
+  "argv": [
+    "benchmark_runs/volta-environment/bin/volta_smoke",
+    "--self-test",
+    "--input",
+    "benchmark_runs/volta-environment/inputs.f16le"
+  ],
+  "cwd": ".",
+  "env": {
+    "PROJECT_CONTROL_SKILLS_ROOT": "/home/tumlinson/.agents/skills",
+    "PYTHONPATH": "/home/tumlinson/skills_dev/integrations/coding-workflow-mcp:/home/tumlinson/project-control/src",
+    "CUDAToolkit_ROOT": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+    "CUDA_HOME": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+    "CUDACXX": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc"
+  },
+  "timeout": 3600,
+  "expected_exit_code": 0,
+  "input_paths": [
+    "artifacts/kernels/volta-common/variants/volta_smoke.cu",
+    "benchmark_runs/volta-environment/inputs.f16le",
+    "benchmark_runs/volta-environment/run_config.json",
+    "benchmark_runs/volta-environment/required-gate.json"
+  ],
+  "cuda": {
+    "gpus": 1,
+    "cpu_threads": 1,
+    "toolchain": {
+      "root": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+      "require_sanitizer": true
+    },
+    "build_argv": [
+      "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+      "-O2",
+      "-std=c++17",
+      "-lineinfo",
+      "-arch=sm_70",
+      "-o",
+      "benchmark_runs/volta-environment/bin/volta_smoke",
+      "artifacts/kernels/volta-common/variants/volta_smoke.cu"
+    ],
+    "binary_paths": ["benchmark_runs/volta-environment/bin/volta_smoke"],
+    "quiescence": {
+      "consecutive_idle_samples": 3,
+      "interval_seconds": 0.25,
+      "timeout_seconds": 20
+    }
+  }
+}
