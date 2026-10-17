@@ -1,0 +1,5 @@
+==WARNING== Note: Running with unmodified GPU clocks. If not controlled otherwise, profiling results may be inconsistent.
+==PROF== Connected to process 1059178 (/home/tumlinson/KernelWiki/benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner)
+==PROF== Profiling "w4a16_simt_small_m_kernel" - 0: 0%....50%....100% - 8 passes
+==PROF== Disconnected from process 1059178
+==PROF== Report: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/c08fae3d-a9fd-4ea1-a351-c692b649d1f2/ncu/run/report.ncu-rep

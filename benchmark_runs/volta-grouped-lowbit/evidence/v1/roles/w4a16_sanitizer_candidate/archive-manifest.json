@@ -1,0 +1,30 @@
+{
+  "application_status": "passed",
+  "binary_path": "benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner",
+  "compute_capability": "7.0",
+  "controller_status": "succeeded",
+  "evidence_id": "25d95d3a-fd24-4535-94c6-374a5ccc7420",
+  "files": {
+    "controller-run.json": "d09d4d52bd73499e05d4e452585a411ed36dffae47b642d6ce5bbed7693b31ff",
+    "foreground.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "foreground.stdout.txt": "8c5562bb1f1857b5b3a3d311ed1624eeb3abe7631dbdbbeb522199dcf0889b56",
+    "lease.json": "bcd8520e5c331e7a4be5b7de1fb8eee95db13b0d335648400b1bd3164d4dcb47",
+    "measured_binary": "c9eae1a8c7ceac582d5a39e8595656068797b15b57559ae5ddd3b8ff2dd10d88",
+    "project-control-result.json": "b9a0b09a622aa9357a913900510d89eec27e71cc5a6218221947a2d34cca66d4",
+    "sanitizer/run/process_env.txt": "7f70c771666f9bff5dd2c0bbdd81027d0bb6ffd2a9b7e4008fa9a11367c8cf01",
+    "sanitizer/run/raw.log": "a9d061cee538182f762e132abeea7bac7bddb844338f25751bbbb043f242c425",
+    "sanitizer/run/run_config.json": "1be7de2d182729eda0b40374205beb99c5d9c4f1287e95d80e5b99a4eb402220",
+    "sanitizer/run/stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sanitizer/run/stdout.txt": "27a17d2e4ea00d53634f06fa0eba45ee857029d881fb425031971b4217bbc9d8",
+    "sanitizer/run/summary.json": "cac1834ea432e43cb1ebd73240d385bd99db3e759a9a18c0a7dc416be0f7b8a9",
+    "sanitizer/run/summary.txt": "fcb23799a8d20adb6412215f2c2fb13237d3fc371eac10dc743117ac89d5c6a3"
+  },
+  "format": "KERNELWIKI-KWV07-ROLE-ARCHIVE/1",
+  "gpu_uuid_raw_hex": "21131915148823af38dd1743ae1f5cc8",
+  "role": "w4a16_sanitizer_candidate",
+  "runner_status": "passed",
+  "sanitizer_conclusive": false,
+  "sanitizer_error_count": 0,
+  "sanitizer_exit_status": 0,
+  "sanitizer_status": "partial"
+}

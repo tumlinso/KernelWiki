@@ -1,0 +1,11 @@
+{
+  "files": {
+    "contracts/grouped-suite.json": "ba610f656dd070d9e3bbe732677e9650beb9b69824c947e0341c8973d1a794d9",
+    "contracts/w4a16-suite.json": "a719306a1aad6f655385ee4c8f0418971674fa7ca717a17ca1dbb36ad2a1d208",
+    "oracles/grouped-suite.json": "593c62facc7ffcba0ece321fe759f17b1e3750bfcf8eb640410653b96fcf8e67",
+    "oracles/w4a16-suite.json": "4c6586eb1f4ab8b080153beeb267626037ca7fb62af89d5a2c73d12b80548afb",
+    "suites/grouped.json": "a1fcbe536ca98b14285f11af1b19d71302ccd46ed47bc8760d400fc092672b99",
+    "suites/w4a16.json": "782c84fd60b234d42e692f1c872c2590741fc2b6ee827d23336db5cc83eb1280"
+  },
+  "format": "KERNELWIKI-KWV07-SUITE-FILES/1"
+}

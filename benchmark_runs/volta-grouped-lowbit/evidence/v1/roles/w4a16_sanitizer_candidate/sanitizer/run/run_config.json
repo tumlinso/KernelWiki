@@ -1,0 +1,8 @@
+{
+  "utc_timestamp": "2026-10-17T21:41:02Z",
+  "hostname": "testlsserver",
+  "pwd": "/home/tumlinson/KernelWiki",
+  "tool": "memcheck",
+  "sanitizer_bin": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+  "command": ["benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner", "--bundle", "benchmark_runs/volta-grouped-lowbit/cases/fixture_bundle", "--suite", "w4a16", "--impl", "direct-w4", "--mode", "check"]
+}

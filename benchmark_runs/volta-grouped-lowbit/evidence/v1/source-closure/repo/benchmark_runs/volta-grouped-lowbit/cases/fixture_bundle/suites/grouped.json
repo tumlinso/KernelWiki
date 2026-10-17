@@ -1,0 +1,129 @@
+{
+  "binary_format": {
+    "grouped_input_payload": "FP16 X, FP16 W_up, FP16 W_gate, int32 assignments[row,expert,output_position]",
+    "grouped_oracle_payload": "FP64 Y, FP64 U, FP64 G, FP64 sum_abs_up, FP64 sum_abs_gate",
+    "header": "little-endian <8s8I, 40 bytes",
+    "input_magic": "KWV07I01",
+    "oracle_magic": "KWV07R01",
+    "w4_input_payload": "FP16 activations, packed signed nibbles, FP32 K-group scales",
+    "w4_oracle_payload": "FP64 C, FP64 sum_abs_products"
+  },
+  "cases": [
+    {
+      "contract": {
+        "bytes": 1213,
+        "path": "contracts/tiny_balanced.json",
+        "sha256": "e949ee4797dfe130f0dd3df043394ff33afe0c2f6632b4028b97535bfa85114e"
+      },
+      "id": "tiny_balanced",
+      "input": {
+        "bytes": 33416,
+        "path": "inputs/tiny_balanced.bin",
+        "sha256": "589efe53d28506197760f3316d966fb15f851072de54b060e069cfc9a78a4bd0"
+      },
+      "oracle": {
+        "bytes": 10280,
+        "path": "oracles/tiny_balanced.bin",
+        "sha256": "73293eebe534f7a5e7967fcee78cfa245c66fdeebad9440925a856ee3c8070f7"
+      }
+    },
+    {
+      "contract": {
+        "bytes": 1213,
+        "path": "contracts/tiny_skewed.json",
+        "sha256": "8f29a3e9b587749defd9e845976f1d3144f5620c2137eed3f3b8993eef564182"
+      },
+      "id": "tiny_skewed",
+      "input": {
+        "bytes": 33416,
+        "path": "inputs/tiny_skewed.bin",
+        "sha256": "a4b8c336793a062b1c7501a04123540cb2f24137a58dfe0cff0f35bcd57787d3"
+      },
+      "oracle": {
+        "bytes": 10280,
+        "path": "oracles/tiny_skewed.bin",
+        "sha256": "5c58a1cd879fedcee732b36b335154ad2178850c7917af97e0c2b22f8c477f35"
+      }
+    },
+    {
+      "contract": {
+        "bytes": 1217,
+        "path": "contracts/moderate_balanced.json",
+        "sha256": "00d2292b7a268c5fb99f74dfe687c41ee91134bfe9b43a02b06679b088f39539"
+      },
+      "id": "moderate_balanced",
+      "input": {
+        "bytes": 135592,
+        "path": "inputs/moderate_balanced.bin",
+        "sha256": "6949f98d08c38e4a36258d015dcdfbfe2fe59ea490fa584c4083cc10ffbc86ba"
+      },
+      "oracle": {
+        "bytes": 81960,
+        "path": "oracles/moderate_balanced.bin",
+        "sha256": "993ae2bd9e5de38dc927c4a4823e028190c7b72c1cd1f2335f631e1e3c7c7ff6"
+      }
+    },
+    {
+      "contract": {
+        "bytes": 1218,
+        "path": "contracts/moderate_skewed.json",
+        "sha256": "34191ae2b08504071eb6dd8dde97e80b2af2e60ebd36aecf1b3874a7c3ab3dfb"
+      },
+      "id": "moderate_skewed",
+      "input": {
+        "bytes": 135592,
+        "path": "inputs/moderate_skewed.bin",
+        "sha256": "a00e7d80e7eb1ce9cc61ec6226b2c42a7b0d36410f6b448420cf391050a58a96"
+      },
+      "oracle": {
+        "bytes": 81960,
+        "path": "oracles/moderate_skewed.bin",
+        "sha256": "66c184448c183970b98404b0d73fd8d1881813c728f36001ba2ba0f4e7916d39"
+      }
+    },
+    {
+      "contract": {
+        "bytes": 1256,
+        "path": "contracts/weighted_balanced.json",
+        "sha256": "1abac6933e9aa93fdacaeb7394035869bd90f5b52fd2dbf478d19bdee36bc132"
+      },
+      "id": "weighted_balanced",
+      "input": {
+        "bytes": 4261416,
+        "path": "inputs/weighted_balanced.bin",
+        "sha256": "6fbe426d4794134bfc5cb9566d1a7326266ea66a4f95baf02f91f6193564407d"
+      },
+      "oracle": {
+        "bytes": 1310760,
+        "path": "oracles/weighted_balanced.bin",
+        "sha256": "3c3971e1e045bcbd923fde088353e87db62bb1f29f37b8b57cf7cb39f37ff7a9"
+      }
+    },
+    {
+      "contract": {
+        "bytes": 1250,
+        "path": "contracts/weighted_skewed.json",
+        "sha256": "0a181462350fd986265b10cc3290c3b179d2368aa259cb2e6c5624e7c25335a9"
+      },
+      "id": "weighted_skewed",
+      "input": {
+        "bytes": 4261416,
+        "path": "inputs/weighted_skewed.bin",
+        "sha256": "8f506a23a13195dd8c436ddabdc0e41a6cb2a540242c5a8620b3056b67f1b6b1"
+      },
+      "oracle": {
+        "bytes": 1310760,
+        "path": "oracles/weighted_skewed.bin",
+        "sha256": "915a8862da6991f83e4f995b0ea0170a27ab548b7e3cfbc9a37fa693104fc5ff"
+      }
+    }
+  ],
+  "family": "grouped_gated",
+  "format": "KERNELWIKI-KWV07-SUITE/1",
+  "path_basis": "bundle root",
+  "source_bundle_manifest": {
+    "path": "bundle-manifest.json",
+    "sha256": "646137b453a81b9a09245d2b768376fab428ab4b4123c8023973d1b30942d3d8"
+  },
+  "suite_id": "kwv07-grouped-gated"
+}

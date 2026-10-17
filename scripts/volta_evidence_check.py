@@ -6,6 +6,8 @@ import argparse
 import hashlib
 import json
 import math
+import statistics
+import struct
 import sys
 from pathlib import Path
 from pathlib import PurePosixPath
@@ -77,6 +79,93 @@ ATTENTION_ARCHIVE_ROLE_ALIASES = {
     "correctness_split_decode": "correctness_split16",
     "sanitizer_split_decode": "sanitizer_split16",
     "split_decode_timing": "split16_decode_timing",
+}
+KWV07_SUITE_CONTRACT_FORMAT = "KERNELWIKI-KWV07-SUITE-CONTRACT/1"
+KWV07_SUITE_FORMAT = "KERNELWIKI-KWV07-SUITE/1"
+KWV07_NATIVE_FORMAT = "KERNELWIKI-KWV07-NATIVE/1"
+KWV07_FROZEN_BUNDLE_SHA256 = "646137b453a81b9a09245d2b768376fab428ab4b4123c8023973d1b30942d3d8"
+KWV07_FROZEN_SUITE_FILES_SHA256 = "c3de6df5f58c575eef30c565085b98dc07db6e413cb49eb52746d59c60e08e6e"
+KWV07_FROZEN_SUITES = {
+    "kwv07-grouped-gated": {
+        "suite_sha256": "a1fcbe536ca98b14285f11af1b19d71302ccd46ed47bc8760d400fc092672b99",
+        "contract_sha256": "ba610f656dd070d9e3bbe732677e9650beb9b69824c947e0341c8973d1a794d9",
+        "oracle_sha256": "593c62facc7ffcba0ece321fe759f17b1e3750bfcf8eb640410653b96fcf8e67",
+        "cases": {
+            "tiny_balanced": {"shape": {"source_rows": 4, "assignments": 8, "k": 64, "n": 32, "experts": 4}, "outputs": 256},
+            "tiny_skewed": {"shape": {"source_rows": 4, "assignments": 8, "k": 64, "n": 32, "experts": 4}, "outputs": 256},
+            "moderate_balanced": {"shape": {"source_rows": 16, "assignments": 32, "k": 128, "n": 64, "experts": 4}, "outputs": 2048},
+            "moderate_skewed": {"shape": {"source_rows": 16, "assignments": 32, "k": 128, "n": 64, "experts": 4}, "outputs": 2048},
+            "weighted_balanced": {"shape": {"source_rows": 64, "assignments": 128, "k": 512, "n": 256, "experts": 8}, "outputs": 32768},
+            "weighted_skewed": {"shape": {"source_rows": 64, "assignments": 128, "k": 512, "n": 256, "experts": 8}, "outputs": 32768},
+        },
+    },
+    "kwv07-w4a16": {
+        "suite_sha256": "782c84fd60b234d42e692f1c872c2590741fc2b6ee827d23336db5cc83eb1280",
+        "contract_sha256": "a719306a1aad6f655385ee4c8f0418971674fa7ca717a17ca1dbb36ad2a1d208",
+        "oracle_sha256": "4c6586eb1f4ab8b080153beeb267626037ca7fb62af89d5a2c73d12b80548afb",
+        "cases": {
+            "low_m": {"shape": {"m": 1, "k": 257, "n": 63, "group_size": 128}, "outputs": 63, "weight_family": "tail_adversarial", "reuse_cases": [1, 4, 16]},
+            "moderate_m": {"shape": {"m": 16, "k": 257, "n": 63, "group_size": 128}, "outputs": 1008, "weight_family": "tail_adversarial", "reuse_cases": [1, 4]},
+            "weighted_low_m": {"shape": {"m": 1, "k": 4096, "n": 1024, "group_size": 128}, "outputs": 1024, "weight_family": "shared_large_weights", "reuse_cases": [1, 4, 16]},
+            "weighted_moderate_m": {"shape": {"m": 16, "k": 4096, "n": 1024, "group_size": 128}, "outputs": 16384, "weight_family": "shared_large_weights", "reuse_cases": [1, 4]},
+        },
+    },
+}
+KWV07_REUSE_ASSUMPTION = (
+    "represented weights, scales, and activation remain resident and unchanged for each reuse count; "
+    "cold setup includes one file read, allocation, and H2D transfer"
+)
+KWV07_TIMING_SCOPES = {
+    "kwv07-grouped-gated": {
+        "format": "KERNELWIKI-KWV07-TIMING-SCOPE/1",
+        "family": "grouped",
+        "device_event": "gather + both up/gate GEMMs for every nonempty expert + FP32 SiLU/product + scatter; stable assignment grouping is one-time host preparation outside the CUDA-event scope",
+        "synchronized_host": "per-invocation submit through synchronized completion; stable assignment grouping is prepared once before sampled invocations",
+        "setup_host": "input+oracle file read/parse, stable assignment grouping, allocations, H2D and sync",
+        "components": {
+            "group_metadata": "group_metadata_host_us records one-time stable assignment preparation measured by prep_us; it is inside one_time_setup_host_us and outside CUDA-event samples",
+            "derived_one_use_host_total": "native cold_one_use_host_total_us is one_time_setup_host_us + median_host_us; a derived setup-plus-batch sum, not full cold request latency",
+        },
+    },
+    "kwv07-w4a16": {
+        "format": "KERNELWIKI-KWV07-TIMING-SCOPE/1",
+        "family": "w4a16",
+        "device_event": "first decode preparation and repeated compute are sampled separately as listed in components",
+        "synchronized_host": "synchronized wall time for each listed operation scope",
+        "setup_host": "input+oracle file read/parse, allocations, H2D and sync",
+        "components": {
+            "predecode": "predecode-w4 reports separate nine-sample medians in predecode_event_us and predecode_host_us for packed-nibble/scale decode to FP16; direct-w4 reports zero preparation",
+            "reuse_compute": "dense cuBLAS after decode for predecode-w4; direct fused decode+SIMT dot for direct-w4",
+            "derived_prep_plus_batch_device_total": "native cold_device_event_total_us is predecode_event_us median plus reuse-batch event median for predecode-w4, or reuse-batch event median for direct-w4; setup and input transfer are excluded",
+            "derived_setup_prep_plus_batch_host_total": "native cold_host_wall_total_us is one_time_setup_host_us plus predecode_host_us median plus reuse-batch host median; this derived subtotal is not full cold invocation latency",
+            "reuse_condition": "host-controlled resident-data reuse; unchanged activation/codes/scales within each case; no L2/HBM residency claim",
+            "paired_M_control": "M=1 and M=16 within each K/N family share byte-identical packed codes/scales; activations are independent, not prefix-matched",
+        },
+    },
+}
+KWV07_ROLE_SPECS = {
+    "kwv07-grouped-gated": {
+        "suite": "grouped", "family": "grouped_gated", "outputs": 70144,
+        "roles": {
+            "grouped_correctness_baseline": ("baseline", "split-gated", "foreground-baseline", "check", None),
+            "grouped_correctness_candidate": ("candidate", "paired-gated", "foreground-baseline", "check", None),
+            "grouped_sanitizer_candidate": ("candidate", "paired-gated", "foreground-compute-sanitizer", "check", None),
+            "grouped_baseline_timing": ("baseline", "split-gated", "foreground-baseline", "time", None),
+            "grouped_candidate_timing": ("candidate", "paired-gated", "foreground-baseline", "time", None),
+            "grouped_profile_candidate": ("candidate", "paired-gated", "foreground-ncu", "check", "weighted_skewed"),
+        },
+    },
+    "kwv07-w4a16": {
+        "suite": "w4a16", "family": "w4a16", "outputs": 18479,
+        "roles": {
+            "w4a16_correctness_baseline": ("baseline", "predecode-w4", "foreground-baseline", "check", None),
+            "w4a16_correctness_candidate": ("candidate", "direct-w4", "foreground-baseline", "check", None),
+            "w4a16_sanitizer_candidate": ("candidate", "direct-w4", "foreground-compute-sanitizer", "check", None),
+            "w4a16_baseline_timing": ("baseline", "predecode-w4", "foreground-baseline", "time", None),
+            "w4a16_candidate_timing": ("candidate", "direct-w4", "foreground-baseline", "time", None),
+            "w4a16_profile_candidate": ("candidate", "direct-w4", "foreground-ncu", "check", "weighted_low_m"),
+        },
+    },
 }
 
 
@@ -376,6 +465,10 @@ def _is_rows_contract(contract: dict[str, Any]) -> bool:
 
 def _is_attention_contract(contract: dict[str, Any]) -> bool:
     return contract.get("format") == ATTENTION_CONTRACT_FORMAT
+
+
+def _is_kwv07_contract(contract: dict[str, Any]) -> bool:
+    return contract.get("format") == KWV07_SUITE_CONTRACT_FORMAT
 
 
 def _row_contract_cases(contract: dict[str, Any]) -> list[dict[str, Any]]:
@@ -1353,6 +1446,805 @@ def _attention_role_source_closure(root: Path, run: dict[str, Any], role: str,
     return closure_path
 
 
+def _kwv07_suite_records(root: Path, case_id: str, contract_path: Path,
+                         contract: dict[str, Any], input_path: Path, input_sha: str,
+                         oracle_path: Path, oracle_sha: str) -> dict[str, Any]:
+    """Bind a grouped/W4 suite contract to its exact inputs, FP64 files, and CPU precheck."""
+    spec = KWV07_ROLE_SPECS.get(case_id)
+    frozen = KWV07_FROZEN_SUITES.get(case_id)
+    if spec is None or frozen is None:
+        raise EvidenceError("KWV07 contract has an unknown aggregate family identity")
+    bundle_root = contract_path.parent.parent.resolve()
+    try:
+        bundle_root.relative_to(root.resolve())
+    except ValueError as exc:
+        raise EvidenceError("KWV07 fixture bundle is outside the repository") from exc
+
+    if (contract.get("format") != KWV07_SUITE_CONTRACT_FORMAT or
+            contract.get("case_id") != case_id or contract.get("family") != spec["family"] or
+            contract.get("path_basis") != "bundle root" or
+            contract_path.resolve() != (bundle_root / "contracts" / f"{spec['suite']}-suite.json").resolve()):
+        raise EvidenceError(f"{case_id}: suite contract identity or path basis is invalid")
+    case_ids = contract.get("case_ids")
+    expected_case_ids = list(frozen["cases"])
+    if (not isinstance(case_ids, list) or not case_ids or any(
+            not isinstance(item, str) or not item for item in case_ids)):
+        raise EvidenceError(f"{case_id}: ordered suite case IDs are malformed")
+    if case_ids != expected_case_ids:
+        raise EvidenceError(f"{case_id}: ordered suite case IDs differ from the frozen KWV07 suite")
+
+    suite_record = contract.get("suite_manifest")
+    if not isinstance(suite_record, dict):
+        raise EvidenceError(f"{case_id}: suite manifest binding is missing")
+    suite_raw, suite_sha = suite_record.get("path"), suite_record.get("sha256")
+    if (not isinstance(suite_raw, str) or not isinstance(suite_sha, str) or len(suite_sha) != 64):
+        raise EvidenceError(f"{case_id}: suite manifest binding is malformed")
+    suite_path = (bundle_root / suite_raw).resolve()
+    if (not suite_path.is_relative_to(bundle_root) or not suite_path.is_file() or
+            digest(suite_path) != suite_sha or suite_sha != frozen["suite_sha256"]):
+        raise EvidenceError(f"{case_id}: suite manifest hash/path differs from the frozen contract")
+    suite = read_json(suite_path)
+    suite_cases = suite.get("cases") if isinstance(suite, dict) else None
+    if (not isinstance(suite, dict) or suite.get("format") != KWV07_SUITE_FORMAT or
+            suite.get("suite_id") != case_id or suite.get("family") != spec["family"] or
+            suite.get("path_basis") != "bundle root" or
+            not isinstance(suite_cases, list) or
+            any(not isinstance(item, dict) for item in suite_cases) or
+            [item.get("id") for item in suite_cases if isinstance(item, dict)] != case_ids):
+        raise EvidenceError(f"{case_id}: suite manifest does not match contract case order")
+    if (input_path.resolve() != (bundle_root / "bundle-manifest.json").resolve() or
+            input_sha != digest(input_path) or input_sha != KWV07_FROZEN_BUNDLE_SHA256 or
+            suite.get("source_bundle_manifest") != {"path": "bundle-manifest.json", "sha256": input_sha}):
+        raise EvidenceError(f"{case_id}: runner bundle does not match the suite's source manifest")
+    bundle = read_json(input_path)
+    bundle_cases = bundle.get("cases") if isinstance(bundle, dict) else None
+    if not isinstance(bundle, dict) or not isinstance(bundle_cases, list) or any(
+            not isinstance(item, dict) for item in bundle_cases):
+        raise EvidenceError(f"{case_id}: fixture bundle case records are malformed")
+    bundle_by_id = {item.get("id"): item for item in bundle_cases if isinstance(item, dict)}
+    if len(bundle_by_id) != len(bundle_cases):
+        raise EvidenceError(f"{case_id}: fixture bundle repeats or malforms a case ID")
+
+    if (oracle_path.resolve() != (bundle_root / "oracles" / f"{spec['suite']}-suite.json").resolve() or
+            oracle_sha != digest(oracle_path) or oracle_sha != frozen["oracle_sha256"]):
+        raise EvidenceError(f"{case_id}: CPU oracle path does not match the aggregate family")
+    oracle = read_json(oracle_path)
+    oracle_checks = oracle.get("checks") if isinstance(oracle, dict) else None
+    if (not isinstance(oracle, dict) or oracle.get("format") != "KERNELWIKI-CPU-ORACLE/1" or
+            oracle.get("suite_id") != case_id or oracle.get("passed") is not True or
+            oracle.get("validation_scope") !=
+            "CPU-only represented-input/reference identity and fixed-policy FP32 simulation precheck; no GPU execution or GPU numerical result is asserted" or
+            oracle.get("suite_manifest") != {"path": suite_raw, "sha256": suite_sha} or
+            not isinstance(oracle_checks, list) or
+            [item.get("case_id") for item in oracle_checks if isinstance(item, dict)] != case_ids):
+        raise EvidenceError(f"{case_id}: CPU oracle wrapper is not the matching CPU-only precheck")
+
+    suite_files_path = bundle_root / "suite-files.json"
+    if digest(suite_files_path) != KWV07_FROZEN_SUITE_FILES_SHA256:
+        raise EvidenceError(f"{case_id}: suite file index differs from the frozen KWV07 bundle")
+    suite_files = read_json(suite_files_path)
+    files = suite_files.get("files") if isinstance(suite_files, dict) else None
+    if (not isinstance(suite_files, dict) or
+            suite_files.get("format") != "KERNELWIKI-KWV07-SUITE-FILES/1" or
+            not isinstance(files, dict)):
+        raise EvidenceError(f"{case_id}: suite file hash index is malformed")
+    expected_suite_files = {
+        f"contracts/{spec['suite']}-suite.json": digest(contract_path),
+        f"oracles/{spec['suite']}-suite.json": oracle_sha,
+        f"suites/{spec['suite']}.json": suite_sha,
+    }
+    for name, expected_sha in expected_suite_files.items():
+        if files.get(name) != expected_sha:
+            raise EvidenceError(f"{case_id}: suite file index does not bind {name}")
+    if (digest(contract_path) != frozen["contract_sha256"] or
+            suite.get("source_bundle_manifest", {}).get("sha256") != KWV07_FROZEN_BUNDLE_SHA256):
+        raise EvidenceError(f"{case_id}: contract or bundle manifest differs from the frozen KWV07 suite")
+
+    if (len(suite_cases) != len(oracle_checks) or len(case_ids) == 0 or
+            any(not isinstance(item, dict) for item in oracle_checks)):
+        raise EvidenceError(f"{case_id}: case/oracle arrays are incomplete")
+    dimensions: dict[str, dict[str, Any]] = {}
+    expected_inputs: dict[str, str] = {}
+    expected_references: dict[str, str] = {}
+    w4_weights: dict[str, tuple[bytes, bytes, int]] = {}
+    total_outputs = 0
+    for record, oracle_check in zip(suite_cases, oracle_checks):
+        case_name = record["id"]
+        if case_name not in bundle_by_id:
+            raise EvidenceError(f"{case_id}: {case_name} is absent from the bundle manifest")
+        bound_case = bundle_by_id[case_name]
+        for field in ("contract", "input", "oracle"):
+            if record.get(field) != bound_case.get(field):
+                raise EvidenceError(f"{case_id} {case_name}: suite and bundle manifests differ for {field}")
+            item = record[field]
+            if (not isinstance(item, dict) or not isinstance(item.get("path"), str) or
+                    not isinstance(item.get("sha256"), str) or type(item.get("bytes")) is not int):
+                raise EvidenceError(f"{case_id} {case_name}: malformed {field} file identity")
+            file_path = (bundle_root / item["path"]).resolve()
+            if (not file_path.is_relative_to(bundle_root) or not file_path.is_file() or
+                    file_path.stat().st_size != item["bytes"] or digest(file_path) != item["sha256"]):
+                raise EvidenceError(f"{case_id} {case_name}: {field} bytes differ from the suite manifest")
+            if field == "contract":
+                per_case = read_json(file_path)
+                expected_kind = "grouped_gated" if spec["suite"] == "grouped" else "w4a16"
+                shape = per_case.get("shape") if isinstance(per_case, dict) else None
+                if (not isinstance(per_case, dict) or per_case.get("kind") != expected_kind or
+                        per_case.get("input_sha256") != record["input"]["sha256"] or
+                        per_case.get("oracle_sha256") != record["oracle"]["sha256"] or
+                        not isinstance(shape, dict)):
+                    raise EvidenceError(f"{case_id} {case_name}: case contract differs from its exact inputs")
+                expected_case = frozen["cases"].get(case_name)
+                if (not isinstance(expected_case, dict) or shape != expected_case["shape"]):
+                    raise EvidenceError(f"{case_id} {case_name}: exact dimensions differ from the frozen KWV07 suite")
+                if spec["suite"] == "grouped":
+                    outputs = shape.get("assignments") * shape.get("n") if all(
+                        type(shape.get(field)) is int and shape[field] > 0
+                        for field in ("assignments", "n")) else None
+                else:
+                    outputs = shape.get("m") * shape.get("n") if all(
+                        type(shape.get(field)) is int and shape[field] > 0
+                        for field in ("m", "n")) else None
+                    reuse = per_case.get("reuse_cases")
+                    if (not isinstance(reuse, list) or not reuse or
+                            any(type(value) is not int or value <= 0 for value in reuse) or
+                            reuse != sorted(set(reuse)) or
+                            reuse != expected_case["reuse_cases"] or
+                            per_case.get("weight_family") != expected_case["weight_family"]):
+                        raise EvidenceError(f"{case_id} {case_name}: W4 reuse cases are malformed")
+                if type(outputs) is not int or outputs != expected_case["outputs"]:
+                    raise EvidenceError(f"{case_id} {case_name}: output count is invalid")
+                if oracle_check.get("checked_outputs") != outputs or oracle_check.get("result") != "pass":
+                    raise EvidenceError(f"{case_id} {case_name}: CPU oracle output count/result differs")
+                numeric = [oracle_check.get("max_abs_error"), oracle_check.get("atol"),
+                           oracle_check.get("rtol"), oracle_check.get("max_individual_bound_ratio")]
+                if (any(not _finite_nonnegative_number(value) for value in numeric) or
+                        oracle_check["rtol"] != 0 or oracle_check["max_abs_error"] > oracle_check["atol"] or
+                        oracle_check["max_individual_bound_ratio"] > 1):
+                    raise EvidenceError(f"{case_id} {case_name}: CPU oracle tolerance precheck failed")
+                dimensions[case_name] = {
+                    "outputs": outputs, "atol": float(oracle_check["atol"]),
+                    "reuse_cases": per_case.get("reuse_cases", []), "contract": per_case,
+                }
+                total_outputs += outputs
+            elif field == "input":
+                expected_inputs[str(file_path)] = item["sha256"]
+                if spec["suite"] == "w4a16":
+                    per_case = dimensions[case_name]["contract"]
+                    shape = per_case["shape"]
+                    data = file_path.read_bytes()
+                    header = struct.Struct("<8s8I")
+                    if len(data) < header.size:
+                        raise EvidenceError(f"{case_id} {case_name}: W4 input is shorter than its binary header")
+                    magic, kind, m, k, n, experts, group_size, assignments, scale_count = header.unpack_from(data)
+                    packed_count = (k * n + 1) // 2
+                    codes_start = header.size + 2 * m * k
+                    codes_end = codes_start + packed_count
+                    scales_count = ((k + group_size - 1) // group_size) * n if group_size else 0
+                    if (magic != b"KWV07I01" or kind != 2 or
+                            (m, k, n, group_size) != (shape["m"], shape["k"], shape["n"], shape["group_size"]) or
+                            experts != 0 or assignments != 0 or scale_count != scales_count or
+                            codes_end + 4 * scale_count != len(data)):
+                        raise EvidenceError(f"{case_id} {case_name}: W4 input header/length differs from its frozen shape")
+                    weight_family = per_case["weight_family"]
+                    payload = (data[codes_start:codes_end], data[codes_end:], m)
+                    previous = w4_weights.get(weight_family)
+                    if previous is not None and (previous[0] != payload[0] or previous[1] != payload[1]):
+                        raise EvidenceError(f"{case_id} {case_name}: paired-M codes/scales differ within {weight_family}")
+                    w4_weights[weight_family] = payload
+            else:
+                expected_references[str(file_path)] = item["sha256"]
+
+    if spec["suite"] == "w4a16":
+        if set(w4_weights) != {"tail_adversarial", "shared_large_weights"}:
+            raise EvidenceError(f"{case_id}: the two frozen paired-M weight families are incomplete")
+        for family in w4_weights:
+            members = [record for record in dimensions.values()
+                       if record["contract"].get("weight_family") == family]
+            if (len(members) != 2 or
+                    sorted(member["contract"]["shape"]["m"] for member in members) != [1, 16]):
+                raise EvidenceError(f"{case_id}: {family} does not provide the frozen M=1/M=16 pair")
+
+    if total_outputs != spec["outputs"]:
+        raise EvidenceError(f"{case_id}: frozen aggregate output count differs")
+    contract_input_refs = contract.get("input_references")
+    contract_oracle_refs = contract.get("oracle_references")
+    if (contract_input_refs != [record["input"] for record in suite_cases] or
+            contract_oracle_refs != [record["oracle"] for record in suite_cases]):
+        raise EvidenceError(f"{case_id}: suite contract does not bind ordered input and FP64 reference lists")
+    if len(expected_inputs) != len(case_ids) or len(expected_references) != len(case_ids):
+        raise EvidenceError(f"{case_id}: exact suite input/reference set is incomplete")
+    return {
+        "bundle_root": bundle_root, "suite_path": suite_path, "suite_sha": suite_sha,
+        "suite": suite, "suite_files_path": suite_files_path,
+        "dimensions": dimensions, "oracle": oracle,
+        "expected_inputs": expected_inputs, "expected_references": expected_references,
+        "total_outputs": total_outputs,
+    }
+
+
+def _kwv07_finite_metrics(record: dict[str, Any], fields: tuple[str, ...], label: str) -> dict[str, float]:
+    values: dict[str, float] = {}
+    for field in fields:
+        value = record.get(field)
+        if not _finite_nonnegative_number(value):
+            raise EvidenceError(f"{label}: {field} is missing, negative, or non-finite")
+        values[field] = float(value)
+    return values
+
+
+def _kwv07_samples(record: dict[str, Any], field: str, label: str) -> list[float]:
+    values = record.get(field)
+    if not isinstance(values, list) or len(values) != 9 or any(
+            not _finite_nonnegative_number(value) or float(value) <= 0 for value in values):
+        raise EvidenceError(f"{label}: {field} must contain nine positive finite samples")
+    return [float(value) for value in values]
+
+
+def _kwv07_close(actual: Any, expected: float) -> bool:
+    return (_finite_nonnegative_number(actual) and
+            math.isclose(float(actual), expected, rel_tol=2e-6, abs_tol=1e-9))
+
+
+def _kwv07_native_checks(result: dict[str, Any], case_id: str, records: dict[str, Any],
+                         gpu_uuid: str, role: str, label: str) -> None:
+    role_specs = KWV07_ROLE_SPECS[case_id]["roles"]
+    role_spec = role_specs.get(role)
+    if role_spec is None:
+        raise EvidenceError(f"{label}: unknown role")
+    _impl_group, implementation, _kind, mode, selected_case = role_spec
+    dimensions = records["dimensions"]
+    expected_case_ids = list(dimensions) if selected_case is None else [selected_case]
+    expected_uuid = gpu_uuid.removeprefix("GPU-").replace("-", "").lower()
+    if (result.get("format") != KWV07_NATIVE_FORMAT or result.get("status") != "passed" or
+            result.get("suite") != KWV07_ROLE_SPECS[case_id]["suite"] or
+            result.get("implementation") != implementation or result.get("mode") != mode or
+            result.get("compute_capability") != "7.0" or result.get("gpu_uuid") != expected_uuid or
+            not isinstance(result.get("gpu"), str) or not result["gpu"] or
+            type(result.get("case_count")) is not int or result["case_count"] != len(expected_case_ids)):
+        raise EvidenceError(f"{label}: native suite identity, GPU, implementation, mode, or status differs")
+    observed = result.get("cases")
+    if (not isinstance(observed, list) or len(observed) != len(expected_case_ids) or
+            [item.get("case_id") for item in observed if isinstance(item, dict)] != expected_case_ids):
+        raise EvidenceError(f"{label}: native case IDs/order do not match the frozen suite scope")
+
+    top_numeric = _kwv07_finite_metrics(
+        result, ("max_abs_error", "max_admission_tolerance", "max_tolerance_ratio"), label)
+    for field in ("checked_outputs", "failed_outputs", "nonfinite_outputs"):
+        if type(result.get(field)) is not int:
+            raise EvidenceError(f"{label}: {field} is not an integer")
+    checked = failed = nonfinite = 0
+    case_abs: list[float] = []
+    case_bounds: list[float] = []
+    case_ratios: list[float] = []
+    for item, case_name in zip(observed, expected_case_ids):
+        expected = dimensions[case_name]
+        if type(item.get("checked_outputs")) is not int or item["checked_outputs"] != expected["outputs"]:
+            raise EvidenceError(f"{label} {case_name}: checked output count differs from FP64 reference")
+        for field in ("failed_outputs", "nonfinite_outputs"):
+            if type(item.get(field)) is not int or item[field] != 0:
+                raise EvidenceError(f"{label} {case_name}: native failure/non-finite output count is nonzero")
+        metrics = _kwv07_finite_metrics(
+            item, ("max_abs_error", "max_admission_tolerance", "max_tolerance_ratio"),
+            f"{label} {case_name}")
+        if (metrics["max_abs_error"] > metrics["max_admission_tolerance"] or
+                metrics["max_tolerance_ratio"] > 1 or
+                not math.isclose(metrics["max_admission_tolerance"], expected["atol"],
+                                 rel_tol=2e-6, abs_tol=1e-12)):
+            raise EvidenceError(f"{label} {case_name}: native error or tolerance differs from frozen per-output policy")
+        checked += item["checked_outputs"]
+        failed += item["failed_outputs"]
+        nonfinite += item["nonfinite_outputs"]
+        case_abs.append(metrics["max_abs_error"])
+        case_bounds.append(metrics["max_admission_tolerance"])
+        case_ratios.append(metrics["max_tolerance_ratio"])
+
+        setup = _kwv07_finite_metrics(
+            item, ("one_time_setup_host_us", "group_metadata_host_us",
+                   "predecode_event_us", "predecode_host_us"), f"{label} {case_name}")
+        if setup["group_metadata_host_us"] > setup["one_time_setup_host_us"] + 1e-9:
+            raise EvidenceError(f"{label} {case_name}: group metadata is not part of one-time setup")
+
+        if mode == "time":
+            events = _kwv07_samples(item, "event_samples_us", f"{label} {case_name}")
+            hosts = _kwv07_samples(item, "host_samples_us", f"{label} {case_name}")
+            median_event, median_host = statistics.median(events), statistics.median(hosts)
+            if (not _kwv07_close(item.get("median_event_us"), median_event) or
+                    not _kwv07_close(item.get("median_host_us"), median_host)):
+                raise EvidenceError(f"{label} {case_name}: reported timing medians differ from unprofiled samples")
+            if case_id == "kwv07-grouped-gated":
+                if "reuse_runs" in item or "reuse_assumption" in item or not _kwv07_close(
+                        item.get("cold_one_use_host_total_us"), setup["one_time_setup_host_us"] + median_host):
+                    raise EvidenceError(f"{label} {case_name}: grouped cold host total/scope differs")
+            else:
+                if implementation == "direct-w4" and (setup["predecode_event_us"] != 0 or
+                                                        setup["predecode_host_us"] != 0):
+                    raise EvidenceError(f"{label} {case_name}: direct-W4 route reports predecode work")
+                reuse = item.get("reuse_runs")
+                uses = expected["reuse_cases"]
+                if (item.get("reuse_assumption") != KWV07_REUSE_ASSUMPTION or
+                        not isinstance(reuse, list) or
+                        [row.get("uses") for row in reuse if isinstance(row, dict)] != uses):
+                    raise EvidenceError(f"{label} {case_name}: W4 reuse protocol differs from the per-case contract")
+                for row in reuse:
+                    row_events = _kwv07_samples(row, "device_event_samples_us", f"{label} {case_name} reuse")
+                    row_hosts = _kwv07_samples(row, "compute_host_samples_us", f"{label} {case_name} reuse")
+                    cold_event = (setup["predecode_event_us"] if implementation == "predecode-w4" else 0.0) + statistics.median(row_events)
+                    cold_host = setup["one_time_setup_host_us"] + setup["predecode_host_us"] + statistics.median(row_hosts)
+                    if (not _kwv07_close(row.get("cold_device_event_total_us"), cold_event) or
+                            not _kwv07_close(row.get("cold_host_wall_total_us"), cold_host)):
+                        raise EvidenceError(f"{label} {case_name} reuse: cold total differs from measured components")
+                one_use = next(row for row in reuse if row["uses"] == 1)
+                if (one_use["device_event_samples_us"] != item["event_samples_us"] or
+                        one_use["compute_host_samples_us"] != item["host_samples_us"]):
+                    raise EvidenceError(f"{label} {case_name}: top-level W4 timing does not identify the one-use row")
+        elif any(field in item for field in ("event_samples_us", "host_samples_us", "reuse_runs",
+                                             "median_event_us", "median_host_us")):
+            raise EvidenceError(f"{label} {case_name}: check/profile output contains timing measurements")
+
+    expected_outputs = sum(dimensions[name]["outputs"] for name in expected_case_ids)
+    if (checked != expected_outputs or result["checked_outputs"] != expected_outputs or
+            result["failed_outputs"] != failed or failed != 0 or
+            result["nonfinite_outputs"] != nonfinite or nonfinite != 0 or
+            not _kwv07_close(top_numeric["max_abs_error"], max(case_abs)) or
+            not _kwv07_close(top_numeric["max_admission_tolerance"], max(case_bounds)) or
+            not _kwv07_close(top_numeric["max_tolerance_ratio"], max(case_ratios))):
+        raise EvidenceError(f"{label}: native aggregate counts or error maxima differ from case records")
+
+
+def _kwv07_source_closure(root: Path, case: dict[str, Any], case_id: str
+                          ) -> tuple[dict[str, Any], dict[str, dict[str, Any]]]:
+    closure_path, closure_sha = sha_binding(root, case.get("source_closure"),
+                                            f"{case_id} source closure")
+    closure = read_json(closure_path)
+    records = closure.get("repository_inputs") if isinstance(closure, dict) else None
+    declarations = closure.get("declaring_specs") if isinstance(closure, dict) else None
+    if (not isinstance(closure, dict) or
+            closure.get("format") != "KERNELWIKI-KWV07-SOURCE-CLOSURE/1" or
+            not isinstance(records, list) or not records or
+            not isinstance(declarations, list) or len(declarations) != 12):
+        raise EvidenceError(f"{case_id}: source closure format or declaring spec set is invalid")
+    captured = _captured_input_archives(root, case, required=True)
+    expected: dict[str, tuple[str, str, int]] = {}
+    for index, item in enumerate(records):
+        label = f"{case_id} source closure input {index}"
+        if not isinstance(item, dict):
+            raise EvidenceError(f"{label}: malformed repository input")
+        original = _repo_relative_identity(root, item.get("original_path"), f"{label} original path")
+        archive_raw, expected_sha, size = item.get("archived_path"), item.get("sha256"), item.get("size_bytes")
+        if (not isinstance(archive_raw, str) or not isinstance(expected_sha, str) or
+                len(expected_sha) != 64 or type(size) is not int or size < 0):
+            raise EvidenceError(f"{label}: archive identity is malformed")
+        archive_path = absolute_repo_file(root, archive_raw, f"{label} archive")
+        if (archive_path.stat().st_size != size or digest(archive_path) != expected_sha or
+                str(original) in expected):
+            raise EvidenceError(f"{label}: archive hash, size, or original identity differs")
+        expected[str(original)] = (str(archive_path), expected_sha, size)
+    if set(expected) != set(captured):
+        raise EvidenceError(f"{case_id}: captured input aliases differ from source closure")
+    for original, (archive, sha, size) in expected.items():
+        capture = captured[original]
+        if (str(capture["archive_path"]) != archive or capture["sha256"] != sha or
+                capture["archive_path"].stat().st_size != size):
+            raise EvidenceError(f"{case_id}: captured input alias differs from source closure")
+
+    expected_roles = set().union(*(set(spec["roles"]) for spec in KWV07_ROLE_SPECS.values()))
+    expected_specs = {
+        f"benchmark_runs/volta-grouped-lowbit/controller/role-{role}.spec.json"
+        for role in expected_roles
+    }
+    declared: dict[str, dict[str, Any]] = {}
+    for index, item in enumerate(declarations):
+        label = f"{case_id} source closure spec {index}"
+        if not isinstance(item, dict) or not isinstance(item.get("path"), str):
+            raise EvidenceError(f"{label}: malformed spec identity")
+        original = _repo_relative_identity(root, item["path"], f"{label} path")
+        capture = captured.get(str(original))
+        if (capture is None or capture["sha256"] != item.get("sha256") or
+                str(original.relative_to(root)) not in expected_specs or str(original) in declared):
+            raise EvidenceError(f"{label}: spec is not an exact captured role spec")
+        archived_spec = read_json(capture["archive_path"])
+        if not isinstance(archived_spec, dict):
+            raise EvidenceError(f"{label}: archived spec is not a JSON object")
+        role = archived_spec.get("role")
+        if role not in expected_roles or role in {record.get("role") for record in declared.values()}:
+            raise EvidenceError(f"{label}: role identity is duplicated or unknown")
+        inputs = archived_spec.get("inputs")
+        if not isinstance(inputs, list) or not inputs:
+            raise EvidenceError(f"{label}: archived role spec input list is missing")
+        for raw_input in inputs:
+            if not isinstance(raw_input, str) or not raw_input:
+                raise EvidenceError(f"{label}: role spec input identity is malformed")
+            input_path = Path(raw_input)
+            if input_path.is_absolute():
+                continue
+            input_identity = _repo_relative_identity(root, raw_input, f"{label} declared input")
+            if str(input_identity) not in captured:
+                raise EvidenceError(f"{label}: declared input is absent from source closure")
+        declared[str(original)] = {"role": role, "path": original, "spec": archived_spec}
+    if {str(record["path"].relative_to(root)) for record in declared.values()} != expected_specs or {
+            record["role"] for record in declared.values()} != expected_roles:
+        raise EvidenceError(f"{case_id}: source closure does not declare each exact role spec")
+    input_sets = [set(record["spec"]["inputs"]) for record in declared.values()]
+    if any(input_set != input_sets[0] for input_set in input_sets[1:]):
+        raise EvidenceError(f"{case_id}: role specs do not share the frozen repository input set")
+    return {"path": closure_path, "sha256": closure_sha, "data": closure,
+            "declared_specs": {record["role"]: record for record in declared.values()}}, captured
+
+
+def _kwv07_validate_spec(root: Path, case_id: str, role: str,
+                         spec_record: dict[str, Any], binary_path: Path,
+                         gpu_uuid: str,
+                         expected_role: tuple[str, str, str, str, str | None]) -> None:
+    _implementation_group, implementation, _kind, mode, selected_case = expected_role
+    spec = spec_record["spec"]
+    suite = KWV07_ROLE_SPECS[case_id]["suite"]
+    expected_recipe = "ncu" if _kind == "foreground-ncu" else (
+        "compute-sanitizer" if _kind == "foreground-compute-sanitizer" else "baseline")
+    expected_argv = [
+        str(binary_path.relative_to(root)), "--bundle",
+        "benchmark_runs/volta-grouped-lowbit/cases/fixture_bundle",
+        "--suite", suite, "--impl", implementation, "--mode", mode,
+    ]
+    if selected_case is not None:
+        expected_argv += ["--case", selected_case]
+    if (spec.get("role") != role or spec.get("contract_id") != case_id or
+            spec.get("recipe") != expected_recipe or spec.get("argv") != expected_argv or
+            spec.get("project_root") != str(root) or spec.get("command_cwd") != str(root) or
+            spec.get("resources", {}).get("gpu_uuids") != [gpu_uuid]):
+        raise EvidenceError(f"{case_id} {role}: archived controller spec does not match the native role")
+    benchmark = spec.get("benchmark")
+    build_argv = benchmark.get("build_argv") if isinstance(benchmark, dict) else None
+    first_build_role = role == "grouped_correctness_baseline"
+    if first_build_role:
+        if (not isinstance(build_argv, list) or not build_argv or
+                build_argv[0] != "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc" or
+                "-arch=sm_70" not in build_argv or "-lcublas" not in build_argv or
+                str((root / "artifacts/kernels/volta-grouped-lowbit/variants/kwv07_runner.cu").resolve()) not in build_argv or
+                str((root / "artifacts/kernels/volta-grouped-lowbit/variants/grouped_lowbit.cu").resolve()) not in build_argv or
+                build_argv[-2:] != ["-o", str(binary_path)]):
+            raise EvidenceError(f"{case_id} {role}: first grouped role does not build the shared SM70 binary")
+    elif build_argv:
+        raise EvidenceError(f"{case_id} {role}: shared KWV07 binary was rebuilt after the first role")
+
+
+def _kwv07_validate_timing_scope(case_id: str, case: dict[str, Any]) -> None:
+    expected = KWV07_TIMING_SCOPES.get(case_id)
+    if expected is None or case.get("timing_scope") != expected:
+        raise EvidenceError(f"{case_id}: timing scope declaration differs from the frozen KWV07 measurement protocol")
+
+
+def _kwv07_validate_argv(summary: dict[str, Any], root: Path, case_id: str,
+                         role: str, implementation: dict[str, Any],
+                         expected_role: tuple[str, str, str, str, str | None]) -> None:
+    _impl_group, native_impl, _kind, mode, selected_case = expected_role
+    provenance = summary.get("provenance")
+    argv = provenance.get("argv") if isinstance(provenance, dict) else None
+    if not isinstance(argv, list) or not argv or not isinstance(argv[0], str):
+        raise EvidenceError(f"{case_id} {role}: controller application argv is missing")
+    executable = Path(argv[0])
+    if not executable.is_absolute():
+        executable = root / executable
+    if executable.resolve() != implementation["executed_path"].resolve():
+        raise EvidenceError(f"{case_id} {role}: executed native binary differs from shared ELF")
+    expected = [
+        "--bundle", "benchmark_runs/volta-grouped-lowbit/cases/fixture_bundle",
+        "--suite", KWV07_ROLE_SPECS[case_id]["suite"],
+        "--impl", native_impl, "--mode", mode,
+    ]
+    if selected_case is not None:
+        expected += ["--case", selected_case]
+    if argv[1:] != expected:
+        raise EvidenceError(f"{case_id} {role}: native argv selectors differ from the frozen role")
+
+
+def _kwv07_archive_hash(manifest: dict[str, Any], path: Path, role_dir: Path,
+                        label: str) -> str:
+    try:
+        relative = path.resolve().relative_to(role_dir.resolve()).as_posix()
+    except ValueError as exc:
+        raise EvidenceError(f"{label}: archived file is outside its role directory") from exc
+    files = manifest.get("files")
+    if not isinstance(files, dict):
+        raise EvidenceError(f"{label}: role archive file inventory is missing")
+    expected = files.get(relative)
+    actual = digest(path)
+    if not isinstance(expected, str) or expected != actual:
+        raise EvidenceError(f"{label}: archive manifest does not bind {relative}")
+    return actual
+
+
+def _kwv07_bind_stdout_capture(base: Path, root: Path, case_id: str,
+                               role: str, gpu_uuid: str, run: dict[str, Any], native_stdout: Path,
+                               sanitizer_summary: Path | None = None,
+                               sanitizer_log: Path | None = None) -> dict[str, Any]:
+    archive_path = checked_file(base, run.get("archive_manifest"), f"{case_id} {role} archive manifest")
+    archive = read_json(archive_path)
+    evidence_path = checked_file(base, run.get("evidence"), f"{case_id} {role} controller export")
+    exported = read_json(evidence_path)
+    evidence = exported.get("evidence") if isinstance(exported, dict) else None
+    summary = evidence.get("summary") if isinstance(evidence, dict) else None
+    artifacts = evidence.get("artifacts") if isinstance(evidence, dict) else None
+    record = summary.get("record") if isinstance(summary, dict) else None
+    stdout_path = record.get("stdout") if isinstance(record, dict) else None
+    stdout_artifacts = [item for item in artifacts if isinstance(item, dict) and
+                        item.get("kind") == "stdout"] if isinstance(artifacts, list) else []
+    role_dir = archive_path.parent
+    outer = role_dir / "foreground.stdout.txt"
+    expected_uuid = gpu_uuid.removeprefix("GPU-").replace("-", "").lower()
+    files = archive.get("files") if isinstance(archive, dict) else None
+    outer_hash = files.get("foreground.stdout.txt") if isinstance(files, dict) else None
+    if (not isinstance(archive, dict) or archive.get("role") != role or
+            archive.get("evidence_id") != (evidence.get("id") if isinstance(evidence, dict) else None) or
+            archive.get("gpu_uuid_raw_hex") != expected_uuid or
+            str(archive.get("compute_capability")) != "7.0" or
+            not isinstance(stdout_path, str) or len(stdout_artifacts) != 1 or
+            stdout_artifacts[0].get("complete") != 1 or
+            stdout_artifacts[0].get("path") != stdout_path or
+            stdout_artifacts[0].get("content_hash") != outer_hash or
+            not isinstance(outer_hash, str) or len(outer_hash) != 64 or
+            not outer.is_file() or digest(outer) != outer_hash):
+        raise EvidenceError(f"{case_id} {role}: controller stdout is not hash-bound to the role archive")
+
+    for archive_key, run_key in (("controller-run.json", "execution"),
+                                 ("project-control-result.json", "evidence")):
+        path = checked_file(base, run.get(run_key), f"{case_id} {role} {run_key}")
+        if files.get(archive_key) != digest(path):
+            raise EvidenceError(f"{case_id} {role}: archive manifest differs from {archive_key}")
+    lease = run.get("lease")
+    if not isinstance(lease, dict):
+        raise EvidenceError(f"{case_id} {role}: lease capture is missing")
+    lease_path = absolute_repo_file(root, lease.get("path"), f"{case_id} {role} lease")
+    if files.get("lease.json") != digest(lease_path) or digest(lease_path) != lease.get("sha256"):
+        raise EvidenceError(f"{case_id} {role}: archive manifest differs from lease capture")
+
+    capture = run.get("native_stdout_capture", run.get("native_stdout"))
+    capture_path = checked_file(base, capture, f"{case_id} {role} native stdout capture")
+    if capture_path.resolve() != native_stdout.resolve():
+        raise EvidenceError(f"{case_id} {role}: native stdout capture path differs from declared stdout")
+    capture_hash = _kwv07_archive_hash(archive, capture_path, role_dir,
+                                       f"{case_id} {role} native stdout")
+    if capture.get("sha256") != capture_hash:
+        raise EvidenceError(f"{case_id} {role}: native stdout capture hash differs")
+    nested = role.endswith("sanitizer_candidate") or role.endswith("profile_candidate")
+    if role.endswith("sanitizer_candidate"):
+        expected_suffix = "sanitizer/run/stdout.txt"
+    elif role.endswith("profile_candidate"):
+        expected_suffix = "ncu/run/command.stdout.txt"
+    else:
+        expected_suffix = "foreground.stdout.txt"
+    try:
+        capture_suffix = capture_path.resolve().relative_to(role_dir.resolve()).as_posix()
+    except ValueError as exc:
+        raise EvidenceError(f"{case_id} {role}: native stdout is outside its role archive") from exc
+    if nested:
+        reported = capture.get("reported_path")
+        try:
+            outer_text = outer.read_text(encoding="utf-8", errors="replace")
+        except OSError as exc:
+            raise EvidenceError(f"{case_id} {role}: outer controller stdout cannot be read: {exc}") from exc
+        marker = "stdout: " if role.endswith("sanitizer_candidate") else "command stdout: "
+        if (capture_suffix != expected_suffix or not isinstance(reported, str) or
+                not Path(reported).is_absolute() or f"{marker}{reported}" not in outer_text):
+            raise EvidenceError(f"{case_id} {role}: nested native stdout path is not identified by captured outer output")
+    elif (capture_suffix != expected_suffix or capture.get("reported_path") is not None or
+          capture_hash != outer_hash or stdout_artifacts[0].get("content_hash") != capture_hash):
+        raise EvidenceError(f"{case_id} {role}: native stdout differs from controller-exported stdout")
+
+    if role.endswith("sanitizer_candidate"):
+        if sanitizer_summary is None or sanitizer_log is None:
+            raise EvidenceError(f"{case_id} {role}: sanitizer summary and raw log are missing")
+        summary_hash = _kwv07_archive_hash(archive, sanitizer_summary, role_dir,
+                                           f"{case_id} {role} sanitizer summary")
+        log_hash = _kwv07_archive_hash(archive, sanitizer_log, role_dir,
+                                       f"{case_id} {role} sanitizer raw log")
+        sanitizer_data = read_json(sanitizer_summary)
+        if (not isinstance(sanitizer_data, dict) or
+                sanitizer_data.get("tool") != "compute-sanitizer" or
+                sanitizer_data.get("status") != "partial" or
+                sanitizer_data.get("tool_detail") != "memcheck" or
+                sanitizer_data.get("conclusive") is not False or
+                type(sanitizer_data.get("exit_status")) is not int or sanitizer_data["exit_status"] != 0 or
+                type(sanitizer_data.get("error_count")) is not int or sanitizer_data["error_count"] != 0):
+            raise EvidenceError(f"{case_id} {role}: sanitizer classifier is not the accepted raw-zero partial memcheck result")
+        try:
+            raw_text = sanitizer_log.read_text(encoding="utf-8", errors="replace")
+            outer_text = outer.read_text(encoding="utf-8", errors="replace")
+        except OSError as exc:
+            raise EvidenceError(f"{case_id} {role}: sanitizer capture cannot be read: {exc}") from exc
+        summaries = [line for line in raw_text.splitlines() if "ERROR SUMMARY:" in line]
+        reported_log = run.get("sanitizer_log", {}).get("reported_path")
+        reported_stdout = capture.get("reported_path")
+        if (len(summaries) != 1 or not summaries[0].strip().endswith("0 errors") or
+                not isinstance(reported_log, str) or
+                f"stdout: {reported_stdout}" not in outer_text or
+                f"raw log: {reported_log}" not in outer_text):
+            raise EvidenceError(f"{case_id} {role}: raw sanitizer capture does not report exactly zero errors")
+        if files.get("sanitizer/run/summary.json") != summary_hash or files.get("sanitizer/run/raw.log") != log_hash:
+            raise EvidenceError(f"{case_id} {role}: sanitizer files differ from archive manifest")
+    return archive
+
+
+def _kwv07_bind_profile_files(base: Path, run: dict[str, Any], label: str,
+                              archive: dict[str, Any]) -> None:
+    profile = run.get("profile")
+    if not isinstance(profile, dict):
+        raise EvidenceError(f"{label}: NCU profile artifact records are missing")
+    archive_path = checked_file(base, run.get("archive_manifest"), f"{label} archive manifest")
+    role_dir = archive_path.parent
+    for key in ("report", "analysis", "raw_csv", "shim_log"):
+        path = checked_file(base, profile.get(key), f"{label} NCU {key}")
+        _kwv07_archive_hash(archive, path, role_dir, f"{label} NCU {key}")
+        if key == "raw_csv" and path.stat().st_size == 0:
+            raise EvidenceError(f"{label}: NCU raw counter CSV is empty")
+    if Path(profile["raw_csv"]["path"]).name != "raw.csv":
+        raise EvidenceError(f"{label}: NCU raw counter CSV path is not the captured raw.csv artifact")
+
+
+def _check_kwv07_case(base: Path, root: Path, case: dict[str, Any],
+                      evidence_ids: set[str], contract_path: Path,
+                      contract_sha: str, contract: dict[str, Any]) -> None:
+    case_id = case["id"]
+    role_spec = KWV07_ROLE_SPECS.get(case_id)
+    if role_spec is None or contract.get("case_id") != case_id:
+        raise EvidenceError("KWV07 case does not identify one of the frozen grouped/W4 suites")
+    _kwv07_validate_timing_scope(case_id, case)
+    input_path, input_sha = sha_binding(root, case.get("represented_input"),
+                                        f"{case_id} represented bundle manifest")
+    oracle_path = checked_file(base, case.get("oracle"), f"{case_id} CPU oracle wrapper")
+    oracle_sha = digest(oracle_path)
+    if case.get("oracle", {}).get("sha256") != oracle_sha:
+        raise EvidenceError(f"{case_id}: CPU oracle wrapper binding differs")
+    suite_records = _kwv07_suite_records(root, case_id, contract_path, contract,
+                                         input_path, input_sha, oracle_path, oracle_sha)
+    if case_id not in {"kwv07-grouped-gated", "kwv07-w4a16"}:
+        raise EvidenceError(f"{case_id}: unsupported KWV07 family")
+    gpu_uuid = case.get("gpu_uuid")
+    if (not isinstance(gpu_uuid, str) or not gpu_uuid.startswith("GPU-") or
+            len(gpu_uuid.removeprefix("GPU-").replace("-", "")) != 32):
+        raise EvidenceError(f"{case_id}: declared GPU UUID is malformed")
+    uuid_hex = gpu_uuid.removeprefix("GPU-").replace("-", "").lower()
+
+    closure, captured_archives = _kwv07_source_closure(root, case, case_id)
+    captured_inputs = {str(item["original_path"]): item["sha256"]
+                       for item in captured_archives.values()}
+    if (str(contract_path.resolve()) not in captured_inputs or
+            captured_inputs[str(contract_path.resolve())] != contract_sha or
+            str(input_path.resolve()) not in captured_inputs or
+            captured_inputs[str(input_path.resolve())] != input_sha or
+            str(oracle_path.resolve()) not in captured_inputs or
+            captured_inputs[str(oracle_path.resolve())] != oracle_sha):
+        raise EvidenceError(f"{case_id}: suite contract, represented bundle, or CPU oracle is absent from source closure")
+
+    implementations = case.get("implementations")
+    if not isinstance(implementations, dict):
+        raise EvidenceError(f"{case_id}: implementation records are missing")
+    bound_impls: dict[str, dict[str, Any]] = {}
+    for name in ("baseline", "candidate"):
+        entry = implementations.get(name)
+        if not isinstance(entry, dict):
+            raise EvidenceError(f"{case_id}: {name} implementation record is missing")
+        source_path, source_sha = sha_binding(root, entry.get("source"), f"{case_id} {name} source")
+        source_record = entry.get("source")
+        original_raw = source_record.get("original_path") if isinstance(source_record, dict) else None
+        if not isinstance(original_raw, str):
+            raise EvidenceError(f"{case_id} {name}: source omits its captured original path")
+        original_path = _repo_relative_identity(root, original_raw, f"{case_id} {name} source original path")
+        source_capture = captured_archives.get(str(original_path))
+        if (source_capture is None or source_capture["archive_path"] != source_path or
+                source_capture["sha256"] != source_sha):
+            raise EvidenceError(f"{case_id} {name}: source differs from its captured archive")
+        binary_path, binary_sha = sha_binding(root, entry.get("binary"), f"{case_id} {name} binary archive")
+        executed_raw = entry.get("executed_path")
+        executed_path = absolute_repo_file(root, executed_raw, f"{case_id} {name} executed binary")
+        if digest(executed_path) != binary_sha:
+            raise EvidenceError(f"{case_id} {name}: executed binary differs from shared binary archive")
+        bound_impls[name] = {
+            "source_path": source_path, "source_input_path": original_path,
+            "source_sha": source_sha, "binary_path": binary_path,
+            "executed_path": executed_path, "binary_sha": binary_sha,
+        }
+    baseline, candidate = bound_impls["baseline"], bound_impls["candidate"]
+    if (baseline["binary_sha"] != candidate["binary_sha"] or
+            baseline["executed_path"] != candidate["executed_path"] or
+            baseline["binary_path"] != candidate["binary_path"] or
+            baseline["executed_path"].relative_to(root).as_posix() !=
+            "benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner"):
+        raise EvidenceError(f"{case_id}: baseline and candidate do not share the one frozen KWV07 ELF")
+
+    runs = case.get("runs")
+    if not isinstance(runs, dict) or set(runs) != set(role_spec["roles"]):
+        raise EvidenceError(f"{case_id}: controller receipt set does not match the exact twelve-role plan")
+    declared_specs = closure["declared_specs"]
+    for role, expected_role in role_spec["roles"].items():
+        impl_group, native_impl, expected_kind, mode, selected_case = expected_role
+        implementation = bound_impls[impl_group]
+        _kwv07_validate_spec(root, case_id, role, declared_specs[role],
+                             implementation["executed_path"], gpu_uuid, expected_role)
+
+    summaries: dict[str, dict[str, Any]] = {}
+    archives: dict[str, dict[str, Any]] = {}
+    for role, expected_role in role_spec["roles"].items():
+        impl_group, native_impl, expected_kind, mode, selected_case = expected_role
+        label = f"{case_id} {role}"
+        implementation = bound_impls[impl_group]
+        summary = _controller_run(
+            base, root, runs.get(role), label, expected_kind, implementation,
+            contract_path, contract_sha, input_path, input_sha, oracle_path, oracle_sha,
+            gpu_uuid, evidence_ids, captured_inputs,
+            allow_duplicate_captured_inputs=set(captured_inputs),
+        )
+        _kwv07_validate_argv(summary, root, case_id, role, implementation, expected_role)
+        spec = declared_specs[role]["spec"]
+        expected_build = spec.get("benchmark", {}).get("build_argv") if isinstance(
+            spec.get("benchmark"), dict) else None
+        build = summary.get("build")
+        if role == "grouped_correctness_baseline":
+            if (not isinstance(build, dict) or build.get("argv") != expected_build or
+                    build.get("returncode") != 0 or
+                    not isinstance(build.get("stdout_sha256"), str) or
+                    not isinstance(build.get("stderr_sha256"), str) or
+                    len(build["stdout_sha256"]) != 64 or len(build["stderr_sha256"]) != 64):
+                raise EvidenceError(f"{label}: Project Control does not prove the sole successful shared-ELF build")
+        elif build is not None:
+            raise EvidenceError(f"{label}: shared KWV07 ELF was rebuilt after the first role")
+
+        run = runs[role]
+        native_record = run.get("native_stdout_capture", run.get("native_stdout"))
+        native_path = checked_file(base, native_record, f"{label} native stdout")
+        sanitizer_summary = sanitizer_log = None
+        if role.endswith("sanitizer_candidate"):
+            sanitizer_summary = checked_file(base, run.get("sanitizer_summary"),
+                                             f"{label} Compute Sanitizer summary")
+            sanitizer_log = checked_file(base, run.get("sanitizer_log"),
+                                         f"{label} raw Compute Sanitizer log")
+        archive = _kwv07_bind_stdout_capture(base, root, case_id, role, gpu_uuid,
+                                             run, native_path, sanitizer_summary, sanitizer_log)
+        archive_binary_hash = archive.get("files", {}).get("measured_binary")
+        if (archive.get("runner_status") != "passed" or
+                archive.get("binary_path") not in {
+                    str(implementation["executed_path"].relative_to(root)),
+                    str(implementation["executed_path"]),
+                } or archive_binary_hash != implementation["binary_sha"]):
+            raise EvidenceError(f"{label}: role archive does not bind the shared native binary or app pass")
+        native = read_json(native_path)
+        _kwv07_native_checks(native, case_id, suite_records, gpu_uuid, role, label)
+        summaries[role] = summary
+        archives[role] = archive
+
+    libraries = case.get("libraries")
+    if not isinstance(libraries, list):
+        raise EvidenceError(f"{case_id}: linked library identities must be an explicit list")
+    for library in libraries:
+        if (not isinstance(library, dict) or
+                library.get("implementation") not in {"baseline", "candidate"} or
+                not all(library.get(field) for field in ("name", "version", "path", "sha256"))):
+            raise EvidenceError(f"{case_id}: linked library identity/version/path/hash is malformed")
+        library_raw = Path(str(library["path"]))
+        library_path = (library_raw if library_raw.is_absolute() else root / library_raw).resolve()
+        if not library_path.is_file() or digest(library_path) != library["sha256"]:
+            raise EvidenceError(f"{case_id}: linked library path/hash differs")
+        for role, summary in summaries.items():
+            if _input_bindings(summary).get(str(library_path)) != library["sha256"]:
+                raise EvidenceError(f"{case_id} {role}: controller inputs do not bind {library['name']}")
+
+    profile_roles = [role for role, (_impl, _native_impl, kind, _mode, _case) in role_spec["roles"].items()
+                     if kind == "foreground-ncu"]
+    if len(profile_roles) != 1:
+        raise EvidenceError(f"{case_id}: exactly one NCU role must be declared")
+    profile_role = profile_roles[0]
+    profile = runs[profile_role].get("profile")
+    if not isinstance(profile, dict):
+        raise EvidenceError(f"{case_id}: selected NCU profile artifacts are missing")
+    _attention_validate_profile(root, base, runs[profile_role], summaries[profile_role],
+                                f"{case_id} {profile_role}")
+    ncu_archive = archives[profile_role]
+    _kwv07_bind_profile_files(base, runs[profile_role], f"{case_id} {profile_role}", ncu_archive)
+    if (ncu_archive.get("counter_valid") is not True or
+            ncu_archive.get("timing_valid") is not False or
+            ncu_archive.get("profile_samples") != 1):
+        raise EvidenceError(f"{case_id} {profile_role}: NCU archive must be one counter-valid, timing-invalid profile")
+
+
 def _check_attention_case(base: Path, root: Path, case: dict[str, Any],
                           evidence_ids: set[str], contract_path: Path,
                           contract_sha: str, contract: dict[str, Any]) -> None:
@@ -1645,6 +2537,9 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
         raise EvidenceError(f"{case['id']}: contract lacks case signature or numerical policy")
     if _is_attention_contract(contract_data):
         _check_attention_case(base, root, case, evidence_ids, contract, contract_sha, contract_data)
+        return
+    if _is_kwv07_contract(contract_data):
+        _check_kwv07_case(base, root, case, evidence_ids, contract, contract_sha, contract_data)
         return
     rows_contract = _is_rows_contract(contract_data)
     captured_archives = _captured_input_archives(root, case, required=rows_contract)

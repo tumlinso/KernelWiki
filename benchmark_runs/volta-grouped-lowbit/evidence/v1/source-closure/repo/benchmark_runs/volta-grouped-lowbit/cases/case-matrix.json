@@ -1,0 +1,50 @@
+{
+  "format": "KERNELWIKI-KWV07-CASES/1",
+  "grouped_gated": {
+    "contract": {
+      "activation": "FP16 represented",
+      "weights": "FP16 represented",
+      "projection_accumulator": "FP32",
+      "projection_intermediate": "FP32",
+      "activation_function": "SiLU(g)=g/(1+exp(-g))",
+      "epilogue": "FP32 silu(G)*U",
+      "output": "FP32",
+      "assignment": ["row_id", "expert_id", "output_position"]
+    },
+    "cases": [
+      {"id":"tiny_balanced","M":8,"K":64,"N":32,"experts":4,"counts":[2,2,2,2],"profile_candidate":false},
+      {"id":"tiny_skewed","M":8,"K":64,"N":32,"experts":4,"counts":[1,0,0,7],"profile_candidate":true},
+      {"id":"moderate_balanced","M":32,"K":128,"N":64,"experts":4,"counts":[8,8,8,8],"profile_candidate":false},
+      {"id":"moderate_skewed","M":32,"K":128,"N":64,"experts":4,"counts":[1,0,0,31],"profile_candidate":false},
+      {"id":"weighted_balanced","M":128,"K":512,"N":256,"experts":8,"counts":[16,16,16,16,16,16,16,16],"profile_candidate":false},
+      {"id":"weighted_skewed","M":128,"K":512,"N":256,"experts":8,"counts":[1,0,0,0,0,0,0,127],"profile_candidate":false}
+    ],
+    "required_semantics": ["stable source assignment identity", "duplicate row/expert records retained", "empty experts retained", "explicit unique output positions", "same output precision for candidates"]
+  },
+  "w4a16": {
+    "contract": {
+      "q": "signed two's-complement [-8,7]",
+      "packing": "row-major [K,N], even element low nibble, odd element high nibble",
+      "scale": "positive finite FP32 [ceil(K/group_size),N]",
+      "group_size": 128,
+      "decode": "round_fp16_rn(round_fp32(scale*q))",
+      "activation": "FP16 represented",
+      "accumulator": "FP32",
+      "output": "FP32",
+      "bounded_scale_test_envelope": [0.00006103515625, 8000.0]
+    },
+    "cases": [
+      {"id":"low_m_reuse1","M":1,"K":257,"N":63,"reuse":1},
+      {"id":"low_m_reuse4","M":1,"K":257,"N":63,"reuse":4},
+      {"id":"low_m_reuse16","M":1,"K":257,"N":63,"reuse":16},
+      {"id":"moderate_m_reuse1","M":16,"K":257,"N":63,"reuse":1},
+      {"id":"moderate_m_reuse4","M":16,"K":257,"N":63,"reuse":4},
+      {"id":"weighted_low_m_reuse1","M":1,"K":4096,"N":1024,"reuse":1},
+      {"id":"weighted_low_m_reuse4","M":1,"K":4096,"N":1024,"reuse":4},
+      {"id":"weighted_low_m_reuse16","M":1,"K":4096,"N":1024,"reuse":16},
+      {"id":"weighted_moderate_m_reuse1","M":16,"K":4096,"N":1024,"reuse":1},
+      {"id":"weighted_moderate_m_reuse4","M":16,"K":4096,"N":1024,"reuse":4}
+    ],
+    "correctness_only_edges": ["all sixteen code values", "odd logical nibble tail", "K-axis group tail", "positive and negative activations", "long-K cancellation", "scale rounding order discriminator", "weight/scale update between invocations"]
+  }
+}

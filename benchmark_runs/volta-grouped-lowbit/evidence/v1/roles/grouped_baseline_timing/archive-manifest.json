@@ -1,0 +1,17 @@
+{
+  "binary_path": "benchmark_runs/volta-grouped-lowbit/bin/v1/kwv07_runner",
+  "compute_capability": "7.0",
+  "evidence_id": "98c2f133-f0dc-4a3a-8dc5-945559b25e86",
+  "files": {
+    "controller-run.json": "e2d12d19fcf6bf74fcc3f28ef225242ee7cecdb3fc415885bb83e6903dda1dd9",
+    "foreground.stderr.txt": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+    "foreground.stdout.txt": "e5c4475e1f96ddfd5f249e8db7aa6fb51be5b598971565afd2f04de5aec96ec2",
+    "lease.json": "acdd0d75d25837d3f8270e34ca632fb0cb71f3c61f8c1e6d3979eb847f70b383",
+    "measured_binary": "c9eae1a8c7ceac582d5a39e8595656068797b15b57559ae5ddd3b8ff2dd10d88",
+    "project-control-result.json": "bd8996f69e27a0161080b76ccb25e770e939f27b1cbe73d803dcb2c3a3feaa85"
+  },
+  "format": "KERNELWIKI-KWV07-ROLE-ARCHIVE/1",
+  "gpu_uuid_raw_hex": "21131915148823af38dd1743ae1f5cc8",
+  "role": "grouped_baseline_timing",
+  "runner_status": "passed"
+}

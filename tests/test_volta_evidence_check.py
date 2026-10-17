@@ -1260,5 +1260,418 @@ class AttentionNativeEvidenceTests(unittest.TestCase):
             "- raw log: /runtime/inner/raw.log\n", nested=True)
 
 
+class GroupedLowbitNativeEvidenceTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.root = Path(__file__).parents[1]
+        cls.bundle = cls.root / "benchmark_runs" / "volta-grouped-lowbit" / "cases" / "fixture_bundle"
+        cls.gpu = "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+        cls.records = {}
+        for suite, case_id in (("grouped", "kwv07-grouped-gated"), ("w4a16", "kwv07-w4a16")):
+            contract_path = cls.bundle / "contracts" / f"{suite}-suite.json"
+            input_path = cls.bundle / "bundle-manifest.json"
+            oracle_path = cls.bundle / "oracles" / f"{suite}-suite.json"
+            contract = CHECK.read_json(contract_path)
+            cls.records[case_id] = CHECK._kwv07_suite_records(
+                cls.root, case_id, contract_path, contract, input_path,
+                CHECK.digest(input_path), oracle_path, CHECK.digest(oracle_path))
+
+    def native_result(self, case_id, role):
+        role_spec = CHECK.KWV07_ROLE_SPECS[case_id]["roles"][role]
+        _impl_group, implementation, _kind, mode, selected = role_spec
+        dimensions = self.records[case_id]["dimensions"]
+        case_ids = list(dimensions) if selected is None else [selected]
+        observed = []
+        for case_name in case_ids:
+            expected = dimensions[case_name]
+            setup = 2.0
+            predecode_event = 0.25 if implementation == "predecode-w4" else 0.0
+            predecode_host = 0.5 if implementation == "predecode-w4" else 0.0
+            item = {
+                "case_id": case_name,
+                "checked_outputs": expected["outputs"], "failed_outputs": 0,
+                "nonfinite_outputs": 0, "max_abs_error": 0.0,
+                "max_admission_tolerance": expected["atol"], "max_tolerance_ratio": 0.0,
+                "one_time_setup_host_us": setup, "group_metadata_host_us": 0.5 if case_id == "kwv07-grouped-gated" else 0.0,
+                "predecode_event_us": predecode_event, "predecode_host_us": predecode_host,
+            }
+            if mode == "time":
+                events = [10.0] * 9
+                hosts = [12.0] * 9
+                item.update({"event_samples_us": events, "host_samples_us": hosts,
+                             "median_event_us": 10.0, "median_host_us": 12.0})
+                if case_id == "kwv07-grouped-gated":
+                    item["cold_one_use_host_total_us"] = setup + 12.0
+                else:
+                    reuse = []
+                    for uses in expected["reuse_cases"]:
+                        row_events = [20.0] * 9
+                        row_hosts = [22.0] * 9
+                        reuse.append({
+                            "uses": uses, "device_event_samples_us": row_events,
+                            "compute_host_samples_us": row_hosts,
+                            "cold_device_event_total_us": predecode_event + 20.0,
+                            "cold_host_wall_total_us": setup + predecode_host + 22.0,
+                        })
+                    item["reuse_runs"] = reuse
+                    item["reuse_assumption"] = CHECK.KWV07_REUSE_ASSUMPTION
+                    item["event_samples_us"] = reuse[0]["device_event_samples_us"]
+                    item["host_samples_us"] = reuse[0]["compute_host_samples_us"]
+                    item["median_event_us"] = 20.0
+                    item["median_host_us"] = 22.0
+            observed.append(item)
+        return {
+            "format": CHECK.KWV07_NATIVE_FORMAT, "status": "passed",
+            "suite": CHECK.KWV07_ROLE_SPECS[case_id]["suite"],
+            "implementation": implementation, "mode": mode, "gpu": "NVIDIA V100",
+            "gpu_uuid": "21131915148823af38dd1743ae1f5cc8",
+            "compute_capability": "7.0", "case_count": len(case_ids),
+            "checked_outputs": sum(item["checked_outputs"] for item in observed),
+            "failed_outputs": 0, "nonfinite_outputs": 0,
+            "max_abs_error": 0.0,
+            "max_admission_tolerance": max(item["max_admission_tolerance"] for item in observed),
+            "max_tolerance_ratio": 0.0, "cases": observed,
+        }
+
+    def test_both_native_suites_bind_exact_fp64_case_order_and_counts(self):
+        self.assertEqual(self.records["kwv07-grouped-gated"]["total_outputs"], 70144)
+        self.assertEqual(self.records["kwv07-w4a16"]["total_outputs"], 18479)
+        self.assertEqual(len(self.records["kwv07-grouped-gated"]["dimensions"]), 6)
+        self.assertEqual(len(self.records["kwv07-w4a16"]["dimensions"]), 4)
+        self.assertTrue(all(record["atol"] > 0 for suite in self.records.values()
+                            for record in suite["dimensions"].values()))
+
+    def test_timing_scope_is_an_exact_machine_checked_declaration(self):
+        for case_id, scope in CHECK.KWV07_TIMING_SCOPES.items():
+            CHECK._kwv07_validate_timing_scope(case_id, {"timing_scope": scope})
+            altered = json.loads(json.dumps(scope))
+            altered["components"][next(iter(altered["components"]))] += " (claim added)"
+            with self.assertRaisesRegex(CHECK.EvidenceError, "timing scope declaration"):
+                CHECK._kwv07_validate_timing_scope(case_id, {"timing_scope": altered})
+
+        grouped = CHECK.KWV07_TIMING_SCOPES["kwv07-grouped-gated"]
+        self.assertIn("outside the CUDA-event scope", grouped["device_event"])
+        self.assertIn("prep_us", grouped["components"]["group_metadata"])
+        self.assertIn("one_time_setup_host_us", grouped["components"]["group_metadata"])
+
+        w4 = CHECK.KWV07_TIMING_SCOPES["kwv07-w4a16"]["components"]
+        self.assertIn("nine-sample medians", w4["predecode"])
+        self.assertIn("derived subtotal", w4["derived_setup_prep_plus_batch_host_total"])
+        self.assertIn("not full cold invocation latency",
+                      w4["derived_setup_prep_plus_batch_host_total"])
+        self.assertNotIn("cold_host_wall_total", w4)
+
+    def test_native_adapter_accepts_each_declared_role_scope(self):
+        for case_id, spec in CHECK.KWV07_ROLE_SPECS.items():
+            for role in spec["roles"]:
+                with self.subTest(case=case_id, role=role):
+                    CHECK._kwv07_native_checks(self.native_result(case_id, role), case_id,
+                                               self.records[case_id], self.gpu, role, role)
+
+    def test_archived_spec_adapters_bind_exact_runner_selectors_and_build_once(self):
+        binary = self.root / "benchmark_runs" / "volta-grouped-lowbit" / "bin" / "v1" / "kwv07_runner"
+        for case_id, family in CHECK.KWV07_ROLE_SPECS.items():
+            for role, expected in family["roles"].items():
+                with self.subTest(case=case_id, role=role):
+                    spec_path = self.root / "benchmark_runs" / "volta-grouped-lowbit" / "controller" / f"role-{role}.spec.json"
+                    spec = CHECK.read_json(spec_path)
+                    CHECK._kwv07_validate_spec(
+                        self.root, case_id, role, {"spec": spec}, binary, self.gpu, expected)
+                    argv = [str(binary), "--bundle",
+                            "benchmark_runs/volta-grouped-lowbit/cases/fixture_bundle",
+                            "--suite", family["suite"], "--impl", expected[1],
+                            "--mode", expected[3]]
+                    if expected[4] is not None:
+                        argv += ["--case", expected[4]]
+                    CHECK._kwv07_validate_argv(
+                        {"provenance": {"argv": argv}}, self.root, case_id, role,
+                        {"executed_path": binary}, expected)
+                    if role != "grouped_correctness_baseline":
+                        tampered = json.loads(json.dumps(spec))
+                        tampered.setdefault("benchmark", {})["build_argv"] = ["nvcc"]
+                        with self.assertRaisesRegex(CHECK.EvidenceError, "rebuilt after the first role"):
+                            CHECK._kwv07_validate_spec(
+                                self.root, case_id, role, {"spec": tampered}, binary,
+                                self.gpu, expected)
+        case_id, role = "kwv07-grouped-gated", "grouped_profile_candidate"
+        expected = CHECK.KWV07_ROLE_SPECS[case_id]["roles"][role]
+        argv = [str(binary), "--bundle", "benchmark_runs/volta-grouped-lowbit/cases/fixture_bundle",
+                "--suite", "grouped", "--impl", "paired-gated", "--mode", "check",
+                "--case", "weighted_skewed", "--warmups", "2"]
+        with self.assertRaisesRegex(CHECK.EvidenceError, "selectors differ"):
+            CHECK._kwv07_validate_argv(
+                {"provenance": {"argv": argv}}, self.root, case_id, role,
+                {"executed_path": binary}, expected)
+
+    def test_native_adapter_rejects_case_count_policy_and_identity_changes(self):
+        case_id, role = "kwv07-grouped-gated", "grouped_correctness_candidate"
+        result = self.native_result(case_id, role)
+        result["cases"].pop()
+        with self.assertRaisesRegex(CHECK.EvidenceError, "case IDs/order"):
+            CHECK._kwv07_native_checks(result, case_id, self.records[case_id], self.gpu, role, role)
+
+        result = self.native_result(case_id, role)
+        result["gpu_uuid"] = "f" * 32
+        with self.assertRaisesRegex(CHECK.EvidenceError, "identity, GPU"):
+            CHECK._kwv07_native_checks(result, case_id, self.records[case_id], self.gpu, role, role)
+
+        result = self.native_result(case_id, role)
+        result["cases"][0]["max_admission_tolerance"] *= 2
+        result["max_admission_tolerance"] *= 2
+        with self.assertRaisesRegex(CHECK.EvidenceError, "frozen per-output policy"):
+            CHECK._kwv07_native_checks(result, case_id, self.records[case_id], self.gpu, role, role)
+
+    def test_grouped_timing_requires_nine_unprofiled_samples_and_matching_total(self):
+        case_id, role = "kwv07-grouped-gated", "grouped_candidate_timing"
+        result = self.native_result(case_id, role)
+        CHECK._kwv07_native_checks(result, case_id, self.records[case_id], self.gpu, role, role)
+        result["cases"][0]["event_samples_us"].pop()
+        with self.assertRaisesRegex(CHECK.EvidenceError, "nine positive finite samples"):
+            CHECK._kwv07_native_checks(result, case_id, self.records[case_id], self.gpu, role, role)
+
+        result = self.native_result(case_id, role)
+        result["cases"][0]["cold_one_use_host_total_us"] += 1
+        with self.assertRaisesRegex(CHECK.EvidenceError, "cold host total"):
+            CHECK._kwv07_native_checks(result, case_id, self.records[case_id], self.gpu, role, role)
+
+    def test_w4_reuse_timings_bind_each_contract_reuse_count_and_cold_totals(self):
+        case_id, role = "kwv07-w4a16", "w4a16_baseline_timing"
+        result = self.native_result(case_id, role)
+        CHECK._kwv07_native_checks(result, case_id, self.records[case_id], self.gpu, role, role)
+        row = result["cases"][0]["reuse_runs"][-1]
+        row["cold_host_wall_total_us"] += 1
+        with self.assertRaisesRegex(CHECK.EvidenceError, "cold total"):
+            CHECK._kwv07_native_checks(result, case_id, self.records[case_id], self.gpu, role, role)
+
+        result = self.native_result(case_id, role)
+        result["cases"][0]["reuse_runs"][0]["uses"] = 2
+        with self.assertRaisesRegex(CHECK.EvidenceError, "reuse protocol"):
+            CHECK._kwv07_native_checks(result, case_id, self.records[case_id], self.gpu, role, role)
+
+    def test_ncu_check_profile_is_single_selected_case_without_timing_data(self):
+        case_id, role = "kwv07-w4a16", "w4a16_profile_candidate"
+        result = self.native_result(case_id, role)
+        self.assertEqual(result["mode"], "check")
+        self.assertEqual([item["case_id"] for item in result["cases"]], ["weighted_low_m"])
+        CHECK._kwv07_native_checks(result, case_id, self.records[case_id], self.gpu, role, role)
+        result["cases"][0]["event_samples_us"] = [1.0] * 9
+        with self.assertRaisesRegex(CHECK.EvidenceError, "contains timing measurements"):
+            CHECK._kwv07_native_checks(result, case_id, self.records[case_id], self.gpu, role, role)
+
+    def make_source_closure(self, root):
+        base = root / "benchmark_runs" / "volta-grouped-lowbit"
+        archive_root = base / "evidence" / "v1" / "source-closure" / "repo"
+        roles = list(CHECK.KWV07_ROLE_SPECS["kwv07-grouped-gated"]["roles"])
+        roles += list(CHECK.KWV07_ROLE_SPECS["kwv07-w4a16"]["roles"])
+        spec_paths = [f"benchmark_runs/volta-grouped-lowbit/controller/role-{role}.spec.json"
+                      for role in roles]
+        source_path = "artifacts/kernels/volta-grouped-lowbit/variants/grouped_lowbit.cu"
+        all_inputs = [source_path, *spec_paths]
+        files = []
+        captured = []
+        declaring = []
+        for path in [source_path, *spec_paths]:
+            archive_path = archive_root / f"input-{len(files):02}.bin"
+            if path in spec_paths:
+                role = roles[spec_paths.index(path)]
+                sha = json_file(archive_path, {"role": role, "contract_id":
+                                               ("kwv07-grouped-gated" if role.startswith("grouped_")
+                                                else "kwv07-w4a16"),
+                                               "inputs": all_inputs})
+                declaring.append({"path": path, "sha256": sha})
+            else:
+                sha = put(archive_path, b"grouped and W4 shared source\n")
+            files.append({"original_path": path,
+                          "archived_path": str(archive_path.relative_to(root)),
+                          "sha256": sha, "size_bytes": archive_path.stat().st_size})
+            captured.append({"original_path": path,
+                             "archive_path": str(archive_path.relative_to(root)),
+                             "sha256": sha})
+        closure_path = base / "evidence" / "v1" / "source-closure" / "source-closure.json"
+        closure_data = {"format": "KERNELWIKI-KWV07-SOURCE-CLOSURE/1",
+                        "repository_inputs": files, "declaring_specs": declaring,
+                        "tools": []}
+        closure_sha = json_file(closure_path, closure_data)
+        return ({"source_closure": {"path": str(closure_path.relative_to(root)),
+                                     "sha256": closure_sha},
+                 "captured_input_archives": captured}, closure_path)
+
+    def test_source_closure_requires_all_twelve_role_specs_and_exact_archives(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "repo"
+            root.mkdir()
+            case, _closure_path = self.make_source_closure(root)
+            closure, captures = CHECK._kwv07_source_closure(
+                root, case, "kwv07-grouped-gated")
+            self.assertEqual(len(closure["declared_specs"]), 12)
+            self.assertEqual(len(captures), 13)
+            case["captured_input_archives"].pop()
+            with self.assertRaisesRegex(CHECK.EvidenceError, "aliases differ"):
+                CHECK._kwv07_source_closure(root, case, "kwv07-grouped-gated")
+
+    def make_kwv07_stdout_capture(self, root, role, nested=False, sanitizer=False):
+        base = root / "benchmark_runs" / "volta-grouped-lowbit"
+        role_dir = base / "evidence" / "v1" / "roles" / role
+        evidence_id = "kwv07-evidence-" + role
+        execution_path = role_dir / "controller-run.json"
+        execution_sha = json_file(execution_path, {"evidence_id": evidence_id})
+        lease_path = root / ".todo-orchestrator" / "runtime" / "foreground" / "lease.json"
+        lease_sha = json_file(lease_path, {"format": "CUDA-FOREGROUND-LEASE/1"})
+        if sanitizer:
+            native_relative = "sanitizer/run/stdout.txt"
+            outer_text = ("wrapper summary\n- stdout: /runtime/kwv07/stdout.txt\n"
+                          "- raw log: /runtime/kwv07/raw.log\n")
+        elif nested:
+            native_relative = "ncu/run/command.stdout.txt"
+            outer_text = "profile summary\n- command stdout: /runtime/kwv07/ncu/run/command.stdout.txt\n"
+        else:
+            native_relative = "foreground.stdout.txt"
+            outer_text = "{\"format\":\"KERNELWIKI-KWV07-NATIVE/1\"}\n"
+        outer_path = role_dir / "foreground.stdout.txt"
+        outer_sha = put(outer_path, outer_text.encode())
+        native_path = role_dir / native_relative
+        native_sha = put(native_path, b'{"format":"KERNELWIKI-KWV07-NATIVE/1"}\n')
+        runtime_outer = f"/runtime/{role}/foreground.stdout.txt"
+        evidence_path = role_dir / "project-control-result.json"
+        evidence = {
+            "id": evidence_id,
+            "artifacts": [{"kind": "stdout", "complete": 1,
+                           "path": runtime_outer, "content_hash": outer_sha}],
+            "summary": {"record": {"stdout": runtime_outer}},
+        }
+        evidence_sha = json_file(evidence_path, {"evidence": evidence})
+        files = {
+            "controller-run.json": execution_sha,
+            "project-control-result.json": evidence_sha,
+            "lease.json": lease_sha,
+            "foreground.stdout.txt": outer_sha,
+            "foreground.stderr.txt": put(role_dir / "foreground.stderr.txt", b""),
+            native_relative: native_sha,
+        }
+        run = {
+            "execution": {"path": str(execution_path.relative_to(base)), "sha256": execution_sha},
+            "evidence": {"path": str(evidence_path.relative_to(base)), "sha256": evidence_sha},
+            "lease": {"path": str(lease_path.relative_to(root)), "sha256": lease_sha},
+            "native_stdout_capture": {"path": str(native_path.relative_to(base)),
+                                      "sha256": native_sha,
+                                      **({"reported_path": "/runtime/kwv07/stdout.txt"} if sanitizer else
+                                         {"reported_path": "/runtime/kwv07/ncu/run/command.stdout.txt"} if nested else {})},
+        }
+        sanitizer_summary = sanitizer_log = None
+        if sanitizer:
+            sanitizer_summary = role_dir / "sanitizer" / "run" / "summary.json"
+            summary_sha = json_file(sanitizer_summary, {
+                "tool": "compute-sanitizer", "status": "partial", "tool_detail": "memcheck",
+                "conclusive": False, "exit_status": 0, "error_count": 0,
+            })
+            sanitizer_log = role_dir / "sanitizer" / "run" / "raw.log"
+            log_sha = put(sanitizer_log, b"========= ERROR SUMMARY: 0 errors\n")
+            files["sanitizer/run/summary.json"] = summary_sha
+            files["sanitizer/run/raw.log"] = log_sha
+            run["sanitizer_summary"] = {"path": str(sanitizer_summary.relative_to(base)),
+                                        "sha256": summary_sha}
+            run["sanitizer_log"] = {"path": str(sanitizer_log.relative_to(base)),
+                                    "sha256": log_sha,
+                                    "reported_path": "/runtime/kwv07/raw.log"}
+        manifest_path = role_dir / "manifest.json"
+        manifest_sha = json_file(manifest_path, {
+            "role": role, "evidence_id": evidence_id,
+            "gpu_uuid_raw_hex": "21131915148823af38dd1743ae1f5cc8",
+            "compute_capability": "7.0", "files": files,
+        })
+        run["archive_manifest"] = {"path": str(manifest_path.relative_to(base)),
+                                   "sha256": manifest_sha}
+        return base, run, native_path, sanitizer_summary, sanitizer_log
+
+    def test_controller_stdout_export_hash_binds_direct_runner_json(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "repo"
+            root.mkdir()
+            base, run, native_path, _, _ = self.make_kwv07_stdout_capture(
+                root, "grouped_correctness_baseline")
+            archive = CHECK._kwv07_bind_stdout_capture(
+                base, root, "kwv07-grouped-gated", "grouped_correctness_baseline",
+                self.gpu, run, native_path)
+            self.assertEqual(archive["role"], "grouped_correctness_baseline")
+            run["native_stdout_capture"]["sha256"] = "0" * 64
+            with self.assertRaisesRegex(CHECK.EvidenceError, "SHA-256 mismatch"):
+                CHECK._kwv07_bind_stdout_capture(
+                    base, root, "kwv07-grouped-gated", "grouped_correctness_baseline",
+                    self.gpu, run, native_path)
+
+    def test_nested_ncu_stdout_is_path_and_archive_bound_but_not_a_timing_sample(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "repo"
+            root.mkdir()
+            base, run, native_path, _, _ = self.make_kwv07_stdout_capture(
+                root, "grouped_profile_candidate", nested=True)
+            CHECK._kwv07_bind_stdout_capture(
+                base, root, "kwv07-grouped-gated", "grouped_profile_candidate",
+                self.gpu, run, native_path)
+            run["native_stdout_capture"]["reported_path"] = "/runtime/other.json"
+            with self.assertRaisesRegex(CHECK.EvidenceError, "not identified by captured outer output"):
+                CHECK._kwv07_bind_stdout_capture(
+                    base, root, "kwv07-grouped-gated", "grouped_profile_candidate",
+                    self.gpu, run, native_path)
+
+    def test_ncu_profile_files_include_hash_bound_raw_csv(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "repo"
+            root.mkdir()
+            base, run, _native_path, _, _ = self.make_kwv07_stdout_capture(
+                root, "grouped_profile_candidate", nested=True)
+            manifest_path = CHECK.checked_file(base, run["archive_manifest"], "manifest")
+            manifest = CHECK.read_json(manifest_path)
+            role_dir = manifest_path.parent
+            profile = {}
+            for key, relative in (("report", "ncu/report.ncu-rep"),
+                                  ("analysis", "ncu/summary.json"),
+                                  ("raw_csv", "ncu/raw.csv"),
+                                  ("shim_log", "ncu-shim.log")):
+                path = role_dir / relative
+                if key == "analysis":
+                    sha = json_file(path, {"counter_valid": True, "timing_valid": False})
+                else:
+                    sha = put(path, (key + " evidence\n").encode())
+                manifest["files"][relative] = sha
+                profile[key] = {"path": str(path.relative_to(base)), "sha256": sha}
+            json_file(manifest_path, manifest)
+            run["archive_manifest"]["sha256"] = CHECK.digest(manifest_path)
+            run["profile"] = profile
+            CHECK._kwv07_bind_profile_files(
+                base, run, "profile", CHECK.read_json(manifest_path))
+            profile["raw_csv"]["path"] = str((role_dir / "ncu" / "not-raw.csv").relative_to(base))
+            (role_dir / "ncu" / "not-raw.csv").write_text("counter\n")
+            sha = CHECK.digest(role_dir / "ncu" / "not-raw.csv")
+            profile["raw_csv"]["sha256"] = sha
+            manifest["files"]["ncu/not-raw.csv"] = sha
+            json_file(manifest_path, manifest)
+            run["archive_manifest"]["sha256"] = CHECK.digest(manifest_path)
+            with self.assertRaisesRegex(CHECK.EvidenceError, "raw counter CSV path"):
+                CHECK._kwv07_bind_profile_files(
+                    base, run, "profile", CHECK.read_json(manifest_path))
+
+    def test_sanitizer_raw_zero_partial_classifier_keeps_app_stdout_separate(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "repo"
+            root.mkdir()
+            base, run, native_path, summary, raw_log = self.make_kwv07_stdout_capture(
+                root, "grouped_sanitizer_candidate", sanitizer=True)
+            CHECK._kwv07_bind_stdout_capture(
+                base, root, "kwv07-grouped-gated", "grouped_sanitizer_candidate",
+                self.gpu, run, native_path, summary, raw_log)
+            raw_log.write_text("========= ERROR SUMMARY: 1 errors\n")
+            run["sanitizer_log"]["sha256"] = CHECK.digest(raw_log)
+            manifest_path = CHECK.checked_file(base, run["archive_manifest"], "manifest")
+            manifest = CHECK.read_json(manifest_path)
+            manifest["files"]["sanitizer/run/raw.log"] = CHECK.digest(raw_log)
+            json_file(manifest_path, manifest)
+            run["archive_manifest"]["sha256"] = CHECK.digest(manifest_path)
+            with self.assertRaisesRegex(CHECK.EvidenceError, "exactly zero errors"):
+                CHECK._kwv07_bind_stdout_capture(
+                    base, root, "kwv07-grouped-gated", "grouped_sanitizer_candidate",
+                    self.gpu, run, native_path, summary, raw_log)
+
+
 if __name__ == "__main__":
     unittest.main()

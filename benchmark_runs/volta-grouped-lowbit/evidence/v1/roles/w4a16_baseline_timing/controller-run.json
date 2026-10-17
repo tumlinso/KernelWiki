@@ -1,0 +1,11 @@
+{
+  "classification": "decision-result",
+  "evidence_id": "b0e7bb53-ea39-4c22-b794-93de9705e6c5",
+  "lease_receipt": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/8fff01f1-e545-456e-8fc1-3cdd44eecdb6/lease.json",
+  "message": "No action-worthy result; evidence stored.",
+  "ok": true,
+  "returncode": 0,
+  "status": "succeeded",
+  "stderr_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/8fff01f1-e545-456e-8fc1-3cdd44eecdb6/foreground.stderr.txt",
+  "stdout_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/8fff01f1-e545-456e-8fc1-3cdd44eecdb6/foreground.stdout.txt"
+}

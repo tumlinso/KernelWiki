@@ -2,7 +2,7 @@
 id: blog-volta-attention-measurements
 title: 'Volta attention: prefill, decode, and selected-block measurements'
 author: KernelWiki Volta attention investigation
-url: https://github.com/tumlinso/KernelWiki/blob/main/benchmark_runs/volta-attention/summary.json
+url: https://github.com/tumlinso/KernelWiki/blob/master/benchmark_runs/volta-attention/summary.json
 source_category: benchmark-blog
 architectures: [sm70]
 tags: [attention, sparse-attention, conditional-rescaling, software-exp]

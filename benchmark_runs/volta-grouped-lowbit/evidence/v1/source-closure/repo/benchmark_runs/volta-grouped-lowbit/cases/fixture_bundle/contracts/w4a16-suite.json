@@ -1,0 +1,67 @@
+{
+  "case_id": "kwv07-w4a16",
+  "case_ids": [
+    "low_m",
+    "moderate_m",
+    "weighted_low_m",
+    "weighted_moderate_m"
+  ],
+  "case_signature": "4545f841f6f65ef6c4909c8df593806a421ecc855da7229a552bfaa063567a75",
+  "family": "w4a16",
+  "format": "KERNELWIKI-KWV07-SUITE-CONTRACT/1",
+  "input_references": [
+    {
+      "bytes": 9406,
+      "path": "inputs/low_m.bin",
+      "sha256": "c1d8ea982714839456cc4f67e4efaf45224688fdb0ce41e9251b16f8718dd1ad"
+    },
+    {
+      "bytes": 17116,
+      "path": "inputs/moderate_m.bin",
+      "sha256": "8ba30a6bc309bb4007e7cdb93f87c1158ab9041366c953c73f388df8f3058478"
+    },
+    {
+      "bytes": 2236456,
+      "path": "inputs/weighted_low_m.bin",
+      "sha256": "7d68fa044d71a25370afdb3eab80086cc76f1b401f1bd47acfbcd6cb7e93b077"
+    },
+    {
+      "bytes": 2359336,
+      "path": "inputs/weighted_moderate_m.bin",
+      "sha256": "48c55a1e127a69fee7444b7d4b1f8253d92dfd1b6193877ae0741d6c2354b0ed"
+    }
+  ],
+  "numerical_contract": {
+    "cpu_oracle": "FP64 CPU reference generated over exact represented binary inputs; exact binary references are SHA-bound and the declared FP32 arithmetic is prechecked before device execution",
+    "gpu_check": "runner checks every output against the fixed per-output policy after each device invocation; this contract is not a GPU result",
+    "operator": "C[m,n] = sum_k A16[m,k] * round_fp16_rn(round_fp32(scale[floor(k/128),n] * signed_int4_q[k,n]))",
+    "policy": "FP16 represented activations; signed two's-complement q in [-8,7], even row-major K*N code in low nibble; FP32 scale multiply followed by FP16 RN decode; FP32 accumulation/output; FP64 oracle; per-output gamma_K*sum(abs(A16*decoded_W16)) bound"
+  },
+  "oracle_references": [
+    {
+      "bytes": 1048,
+      "path": "oracles/low_m.bin",
+      "sha256": "de693351e12ff67cf07d0bc5e23d964ef6b160d3eda1ed065071919571537a73"
+    },
+    {
+      "bytes": 16168,
+      "path": "oracles/moderate_m.bin",
+      "sha256": "f3525b5e5e6af578a4f1517ee5964901928f0f7aac9ca442aafcf6d3bce68bd2"
+    },
+    {
+      "bytes": 16424,
+      "path": "oracles/weighted_low_m.bin",
+      "sha256": "28aae663ae0ab06de0b716fd71364a7ec48d28de5f593c866000a75887cc8d03"
+    },
+    {
+      "bytes": 262184,
+      "path": "oracles/weighted_moderate_m.bin",
+      "sha256": "4435cc8fdda8d10867cd506c44695728cd40fb5dca9c009c08727b2c7b24ecd8"
+    }
+  ],
+  "path_basis": "bundle root",
+  "suite_manifest": {
+    "path": "suites/w4a16.json",
+    "sha256": "782c84fd60b234d42e692f1c872c2590741fc2b6ee827d23336db5cc83eb1280"
+  }
+}

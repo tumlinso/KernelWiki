@@ -39,8 +39,26 @@ example:
   --json
 ```
 
-Native timing reports CUDA-event medians and synchronized host-compute
-medians separately. Cold host totals include one-time input reads, allocation,
-and H2D setup; cold device totals contain only device work. Source closure,
-compiler, cuBLAS, GPU UUID, exact shared ELF, and stdout are bound under
-`evidence/v1/`.
+Native timing reports nine-sample CUDA-event medians and synchronized
+submit-through-completion host medians separately. The setup timer includes
+fixture and FP64-oracle file reads/parsing, validation, allocation, H2D, and
+synchronization. Group metadata is measured inside setup and is not additive.
+The displayed grouped one-use host total is a derived setup-plus-warm-use sum,
+not a measured cold production request. For W4A16, decode and repeated compute
+are separate measurements; prep-plus-batch device and setup-plus-prep-plus-
+batch host totals are sums of those medians, not one measured cold interval.
+Harness setup includes oracle I/O and runs under an initialized CUDA context,
+so these models do not predict application startup latency. Reuse keeps each
+case's represented weights, scales, and activations unchanged; it does not
+claim any L2 or HBM residency.
+
+The interpretation and measured per-case values are in
+[`summary.json`](summary.json) and the
+[measurement report](../../sources/blogs/volta-grouped-lowbit-measurements.md).
+The grouped candidate is faster for the measured balanced/launch-dominated
+cases, while the grouped library path is faster on the weighted skewed case.
+The materialized W4A16 decode plus dense cuBLAS path has lower resident compute
+time than direct decode on all four measured cases, although direct decode
+retains the smaller packed representation. These are bounded V100 results, not
+a universal dispatch rule. Source closure, compiler, cuBLAS, GPU UUID, exact
+shared ELF, and stdout are bound under `evidence/v1/`.
