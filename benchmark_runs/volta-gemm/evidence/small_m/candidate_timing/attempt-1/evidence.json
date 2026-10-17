@@ -1,0 +1,1493 @@
+{
+  "evidence": {
+    "artifacts": [
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "cc01225005eeb97118643cfd852276f06dd3906189c00b5bdaac65a9e394753a",
+        "created_at": 1792264922.4037046,
+        "id": "92759589-8959-4441-836b-702a7d8d89c0",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-0.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "31a15ee2fef299f28092775fe89cddfeb926927466cb56e747f7428f4e3ad022",
+        "created_at": 1792264922.4037046,
+        "id": "d9b51ddb-435a-4f6b-a6d9-55e9e1d6497d",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-0.stderr.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "fc42cbc84e444622b2c19acf3ad90bb07c49515e7f044d37866c1109c410fa74",
+        "created_at": 1792264922.4037046,
+        "id": "4550e08d-769e-4408-b71f-26835eb1c2fe",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-1.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "1a30c6a421d4985af237ef6239e73fe64d88c1f734ebeb77e1bfd74259203561",
+        "created_at": 1792264922.4037046,
+        "id": "b96c0312-550e-4015-9bbb-7050529a6a46",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-1.stderr.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "cc01225005eeb97118643cfd852276f06dd3906189c00b5bdaac65a9e394753a",
+        "created_at": 1792264922.4037046,
+        "id": "1de63969-31f4-46da-ab6d-6cb0c73e6338",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-2.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "d4710d37da10eecdf2b249111ba24a906fac14cfe61b0946071ad3d275fc5ed8",
+        "created_at": 1792264922.4037046,
+        "id": "f018a445-c2bb-4c36-ab3e-69f92aa4e23a",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-2.stderr.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "4fc4954951620c8978ba21755a5e53de89beb4365c366f121f18e9bca9bd61b2",
+        "created_at": 1792264922.4037046,
+        "id": "c781952f-e2e8-4a91-bcb8-5896f8dde581",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-3.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "7e156df8a1dfe41a3014fd5b165a28674ab52f2d17c7b59c6c0bae47bed08ca7",
+        "created_at": 1792264922.4037046,
+        "id": "a546c1be-7026-40e8-a33f-50988fe1ac07",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-3.stderr.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "4fc4954951620c8978ba21755a5e53de89beb4365c366f121f18e9bca9bd61b2",
+        "created_at": 1792264922.4037046,
+        "id": "25043640-7b3f-436a-a445-46a2a07e88c8",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-4.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "2e52c2cbc295cb08864d72c29cec37efb8470b3405a214d228b1e4fc72371cda",
+        "created_at": 1792264922.4037046,
+        "id": "b42467d2-a488-4321-b28d-0780151291bc",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-4.stderr.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "cc01225005eeb97118643cfd852276f06dd3906189c00b5bdaac65a9e394753a",
+        "created_at": 1792264922.4037046,
+        "id": "113f98df-0ebd-4d67-a50e-4e467ee432b3",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-5.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "383fce09323e0c6bd6fb759cfcecb565009311b03e7c618eab5972364823162f",
+        "created_at": 1792264922.4037046,
+        "id": "e1085209-5393-43eb-8c3e-f9797de7461a",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-5.stderr.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "fc42cbc84e444622b2c19acf3ad90bb07c49515e7f044d37866c1109c410fa74",
+        "created_at": 1792264922.4037046,
+        "id": "2e4adfc3-8932-4f78-b081-6b4ce1516d7d",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-6.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "8f7793fd6524c5d10c57586a372aa720653c904736c86e5ee423c1711281d31a",
+        "created_at": 1792264922.4037046,
+        "id": "0a996a3a-9248-4bdd-ae7f-a537b7329420",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-6.stderr.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "4fc4954951620c8978ba21755a5e53de89beb4365c366f121f18e9bca9bd61b2",
+        "created_at": 1792264922.4037046,
+        "id": "eea86fbc-cb84-415f-a674-a4990ab698c1",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-7.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "f316ed232ce7c08fef9eeb32f079799d93a5c636c5096189b3c7e631910c45b1",
+        "created_at": 1792264922.4037046,
+        "id": "442add0e-dae9-4ac7-9278-b68c1282c821",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-7.stderr.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "4fc4954951620c8978ba21755a5e53de89beb4365c366f121f18e9bca9bd61b2",
+        "created_at": 1792264922.4037046,
+        "id": "a6f8b599-d969-42f4-973e-8f66ec03acdc",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-8.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "1222005b2db98d80c0aa58c9ea8db3961a274ec10c74c79bac8963a9af6aa697",
+        "created_at": 1792264922.4037046,
+        "id": "440ba617-7d56-4103-8450-9cfa67261769",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-8.stderr.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "cc01225005eeb97118643cfd852276f06dd3906189c00b5bdaac65a9e394753a",
+        "created_at": 1792264922.4037046,
+        "id": "61dc3d0d-76f7-4218-bdd5-12007e58918d",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-9.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "30c2c7f1f62b9fe8225eeea3d669c7fe1dc4c20e6594ea614e700ddbe9bde66b",
+        "created_at": 1792264922.4037046,
+        "id": "d844ced1-a938-44b1-a798-08051c437df8",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-9.stderr.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "4fc4954951620c8978ba21755a5e53de89beb4365c366f121f18e9bca9bd61b2",
+        "created_at": 1792264922.4037046,
+        "id": "3bb027c1-29ec-464e-a480-dc482218efa4",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-10.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "ecec2627a0c6db943400eed19e610a25b5bb0a4f341846d3bee61128e81bded6",
+        "created_at": 1792264922.4037046,
+        "id": "4a507791-d136-42b2-bf21-0b1411025855",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-10.stderr.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "4fc4954951620c8978ba21755a5e53de89beb4365c366f121f18e9bca9bd61b2",
+        "created_at": 1792264922.4037046,
+        "id": "3a3a2ce1-baab-4bfe-9c53-46b1a249a23e",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stdout",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-11.stdout.txt"
+      },
+      {
+        "attempt_id": null,
+        "complete": 1,
+        "content_hash": "33a182cfdd02009c9faf9b6e39338f5135aed1e7260913de8540862df620fd74",
+        "created_at": 1792264922.4037046,
+        "id": "cd997b1e-5b47-462e-8169-98d3fd67098f",
+        "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+        "kind": "stderr",
+        "path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-11.stderr.txt"
+      }
+    ],
+    "classification": "healthy",
+    "contaminated": 0,
+    "created_at": 1792264922.4037046,
+    "id": "22e1018e-56f9-466f-aa73-81c5ac75501c",
+    "job_id": "277386a3-543d-4baa-8672-27a8a8a1a8c3",
+    "kind": "foreground-baseline",
+    "parser_version": "cuda-controller/1",
+    "severity": 0,
+    "snapshot": {
+      "commit": "7e40d37e8ef222569bd51134f3e4631f63b1fa18",
+      "dirty": true,
+      "fingerprint": "79330326e7bb0102fdb162c839c8f4f8114a1d005f4616687d98d627a02681a2",
+      "patch_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "project_root": "/home/tumlinson/KernelWiki",
+      "safe": true,
+      "source_root": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/snapshots/79330326e7bb0102fdb162c839c8f4f8114a1d005f4616687d98d627a02681a2/source",
+      "untracked": [
+        {
+          "path": "benchmark_runs/volta-gemm/bin/gemm_cpu_oracle",
+          "sha256": "68186c589d18fd90d40f990ca89d076ba2d70931a146c8029c27219aed97ee90"
+        },
+        {
+          "path": "benchmark_runs/volta-gemm/bin/gemm_runner",
+          "sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7"
+        }
+      ]
+    },
+    "source_fingerprint": "79330326e7bb0102fdb162c839c8f4f8114a1d005f4616687d98d627a02681a2",
+    "status": "succeeded",
+    "summary": {
+      "baseline": {
+        "compatibility_key": null,
+        "missing_identity": [
+          "build",
+          "inputs",
+          "toolchain",
+          "workload"
+        ],
+        "reason": "incomplete_compatibility_identity",
+        "status": "non_comparable"
+      },
+      "benchmark": {
+        "records": [
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-0",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 2.9726138559999526,
+            "metric": 246.7840015888214,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-0.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-0.stdout.txt",
+            "timeout": false,
+            "warmup": true
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-1",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.022675211002934,
+            "metric": 245.7599937915802,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-1.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-1.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-2",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 2.9727966470018146,
+            "metric": 246.7840015888214,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-2.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-2.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-3",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.0226847609956167,
+            "metric": 244.73600089550018,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-3.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-3.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-4",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.022670272999676,
+            "metric": 244.73600089550018,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-4.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-4.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-5",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.022642730997177,
+            "metric": 246.7840015888214,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-5.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-5.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-6",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.0230367870026384,
+            "metric": 245.7599937915802,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-6.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-6.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-7",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.0227809970019734,
+            "metric": 244.73600089550018,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-7.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-7.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-8",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.0225656740003615,
+            "metric": 244.73600089550018,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-8.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-8.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-9",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.0230129859992303,
+            "metric": 246.7840015888214,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-9.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-9.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-10",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.022884318997967,
+            "metric": 244.73600089550018,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-10.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-10.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-11",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.021352288000344,
+            "metric": 244.73600089550018,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-11.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-11.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          }
+        ],
+        "statistics": {
+          "confidence_interval_approx_95": [
+            244.73600089550018,
+            244.73600089550018
+          ],
+          "excluded": [],
+          "included": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "mad": 0.0,
+          "median": 244.73600089550018,
+          "values": [
+            245.7599937915802,
+            246.7840015888214,
+            244.73600089550018,
+            244.73600089550018,
+            246.7840015888214,
+            245.7599937915802,
+            244.73600089550018,
+            244.73600089550018,
+            246.7840015888214,
+            244.73600089550018,
+            244.73600089550018
+          ]
+        },
+        "valid": true
+      },
+      "binaries": [
+        {
+          "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm/bin/gemm_runner",
+          "sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7"
+        }
+      ],
+      "build": null,
+      "classification": "healthy",
+      "comparable": false,
+      "comparison_percent": null,
+      "context": null,
+      "correctness": null,
+      "parser_version": "cuda-controller/1",
+      "provenance": {
+        "argv": [
+          "benchmark_runs/volta-gemm/bin/gemm_runner",
+          "--case",
+          "small_m",
+          "--input",
+          "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+          "--impl",
+          "ptx",
+          "--mode",
+          "time",
+          "--stages",
+          "2",
+          "--warmups",
+          "1",
+          "--repetitions",
+          "1"
+        ],
+        "binary": {
+          "path": "benchmark_runs/volta-gemm/bin/gemm_runner",
+          "sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7"
+        },
+        "environment": {},
+        "gpus": [
+          {
+            "clocks_sm_mhz": 1312.0,
+            "compute_capability": "7.0",
+            "driver_version": "580.178.04",
+            "index": 0,
+            "memory_free_mib": 16145,
+            "memory_total_mib": 16384,
+            "name": "Tesla V100-SXM2-16GB",
+            "pci_bus_id": "00000000:02:00.0",
+            "temperature_c": 37.0,
+            "throttle_reasons": "0x0000000000000000",
+            "utilization_percent": 0.0,
+            "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+          }
+        ],
+        "inputs": [
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-gemm/variants/gemm_runner.cu",
+            "sha256": "229ccef78580915f7e9082b317b8c2a9b4aa9e8bbd1af24e73338bfdff04a25e"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-gemm/variants/gemm_baselines.cu",
+            "sha256": "f96ebc2c4cbc18883f5ddcd7feb0278823e6d913a7b612226a8d32a45cae5e50"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-gemm/variants/gemm_baselines.cuh",
+            "sha256": "d2d4569836c12c7ad0bb91f968b65f45be2273ab6501c8a7c5d58fbfb195874c"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-gemm/variants/gemm_e09_smoke.cu",
+            "sha256": "85acbd0bb48067f8f19c88548862a5a06aaa60eb9397f96b55c75e93bd7f4a6b"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-gemm/variants/gemm_e09_smoke.cuh",
+            "sha256": "e6357c9dc12d81eeb0ccfae37ddd66a31a01e85ac54993b7450e2f6b94b5283f"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cu",
+            "sha256": "db47085c542dd50f7b17125cfc88c84595a6e11aaff62fa0d2ebfc0c831af4ed"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cuh",
+            "sha256": "25b381c336b2f466959d661f10fed33671d66817c4767d04ea37b2a9fbc30028"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-gemm/variants/gemm_contract.hpp",
+            "sha256": "2e88386f1b6afa3ba3e45ff26d95037cf5764b00d44d2a3a42a064441be18fef"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-gemm/variants/CUTLASS-PIN.md",
+            "sha256": "cd84a08bd704cfb65bcdc1b5dd36adf482c4a3d950bc66d7ef756dd7b6858ede"
+          },
+          {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/math_libs/12.9/targets/x86_64-linux/lib/libcublas.so.12.9.1.4",
+            "sha256": "d63456d94f1b8e2408a8a9538c8740eb474c9eba48a84f420b15e2e10fbcd048"
+          },
+          {
+            "path": "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/LICENSE.txt",
+            "sha256": "5f0ea053230eb92267e9e80ed67ec08899ebc55d093eff4a2273a7b340a48cca"
+          },
+          {
+            "path": "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/include/cutlass/arch/mma_sm70.h",
+            "sha256": "f670a45ffc54b5b9487104d173b3695f822ebff3311b00f357ae1200fde79903"
+          },
+          {
+            "path": "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/include/cutlass/layout/tensor_op_multiplicand_sm70.h",
+            "sha256": "4ba44a947e82899c760913f79e5def50b86c610c0c20652fec4aac9ef73e8101"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm/bin/gemm_runner",
+            "sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm/cases/small_m/contract.json",
+            "sha256": "e54aa8378731423b29d382b2824a79c9db88a1c4660d56a2d1480e8bea634a51"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm/cases/small_m/cpu-oracle.json",
+            "sha256": "9758064145575c11f45b395d15e524b57a5cff91d21dd1f213304cbaa62edcfb"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+            "sha256": "ed1bdb4a268e252ce4cc9d1fdfbcf5f636f658cb525766b1f54ec038c8e43ca0"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm/cases/small_m/reference.f64le",
+            "sha256": "2744fe8ced972afb676b16da618fd8da94eef92a66f74b41665f8a7821633209"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-gemm/variants/PROVENANCE.yaml",
+            "sha256": "090e98185a221cf1caf0c3358e636e1d4bbc3e96c075b6be6dbf1ce0ebae4af9"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-gemm/variants/gemm_cpu_oracle.cpp",
+            "sha256": "7da18b3ae23f71ba096bf3b1b91de6d9f0ad77d96fba2cf483f4403d83651e01"
+          },
+          {
+            "path": "/home/tumlinson/KernelWiki/artifacts/kernels/volta-gemm/variants/prepare_gemm_case.py",
+            "sha256": "aeba9f729d001b663d385dea2bd7743b3973ccb21b2e5c114e0330c96e7f0aab"
+          }
+        ],
+        "parser_version": "cuda-controller/1",
+        "project_root": "/home/tumlinson/KernelWiki",
+        "source": {
+          "commit": "7e40d37e8ef222569bd51134f3e4631f63b1fa18",
+          "dirty": true,
+          "fingerprint": "79330326e7bb0102fdb162c839c8f4f8114a1d005f4616687d98d627a02681a2",
+          "patch_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "project_root": "/home/tumlinson/KernelWiki",
+          "safe": true,
+          "source_root": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/snapshots/79330326e7bb0102fdb162c839c8f4f8114a1d005f4616687d98d627a02681a2/source",
+          "untracked": [
+            {
+              "path": "benchmark_runs/volta-gemm/bin/gemm_cpu_oracle",
+              "sha256": "68186c589d18fd90d40f990ca89d076ba2d70931a146c8029c27219aed97ee90"
+            },
+            {
+              "path": "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7"
+            }
+          ]
+        },
+        "timestamp": 1792264922.402776,
+        "tools": {
+          "ncu": {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute/ncu",
+            "version": "NVIDIA (R) Nsight Compute Command Line Profiler | Copyright (c) 2018-2025 NVIDIA Corporation | Version 2025.2.1.0 (build 35987062) (public-release)"
+          },
+          "nsys": {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Systems_2025.3/bin/nsys",
+            "version": "NVIDIA Nsight Systems version 2025.3.1.90-253135822126v0"
+          },
+          "nvcc": {
+            "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+            "version": "nvcc: NVIDIA (R) Cuda compiler driver | Copyright (c) 2005-2025 NVIDIA Corporation | Built on Tue_May_27_02:21:03_PDT_2025"
+          }
+        }
+      },
+      "record": {
+        "argv": [
+          "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+          "--label",
+          "cuda-controller-foreground",
+          "--",
+          "benchmark_runs/volta-gemm/bin/gemm_runner",
+          "--case",
+          "small_m",
+          "--input",
+          "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+          "--impl",
+          "ptx",
+          "--mode",
+          "time",
+          "--stages",
+          "2",
+          "--warmups",
+          "1",
+          "--repetitions",
+          "1"
+        ],
+        "records": [
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-0",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 2.9726138559999526,
+            "metric": 246.7840015888214,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-0.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-0.stdout.txt",
+            "timeout": false,
+            "warmup": true
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-1",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.022675211002934,
+            "metric": 245.7599937915802,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-1.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-1.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-2",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 2.9727966470018146,
+            "metric": 246.7840015888214,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-2.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-2.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-3",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.0226847609956167,
+            "metric": 244.73600089550018,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-3.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-3.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-4",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.022670272999676,
+            "metric": 244.73600089550018,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-4.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-4.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-5",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.022642730997177,
+            "metric": 246.7840015888214,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-5.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-5.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-6",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.0230367870026384,
+            "metric": 245.7599937915802,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-6.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-6.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-7",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.0227809970019734,
+            "metric": 244.73600089550018,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-7.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-7.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-8",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.0225656740003615,
+            "metric": 244.73600089550018,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-8.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-8.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-9",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.0230129859992303,
+            "metric": 246.7840015888214,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-9.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-9.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-10",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.022884318997967,
+            "metric": 244.73600089550018,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-10.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-10.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          },
+          {
+            "argv": [
+              "/home/tumlinson/.agents/skills/cuda/scripts/with_benchmark_mutex.sh",
+              "--label",
+              "cuda-controller-11",
+              "--",
+              "benchmark_runs/volta-gemm/bin/gemm_runner",
+              "--case",
+              "small_m",
+              "--input",
+              "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+              "--impl",
+              "ptx",
+              "--mode",
+              "time",
+              "--stages",
+              "2",
+              "--warmups",
+              "1",
+              "--repetitions",
+              "1"
+            ],
+            "elapsed_seconds": 3.021352288000344,
+            "metric": 244.73600089550018,
+            "returncode": 0,
+            "stderr": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-11.stderr.txt",
+            "stdout": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/benchmark-11.stdout.txt",
+            "timeout": false,
+            "warmup": false
+          }
+        ],
+        "returncode": 0,
+        "statistics": {
+          "confidence_interval_approx_95": [
+            244.73600089550018,
+            244.73600089550018
+          ],
+          "excluded": [],
+          "included": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10
+          ],
+          "mad": 0.0,
+          "median": 244.73600089550018,
+          "values": [
+            245.7599937915802,
+            246.7840015888214,
+            244.73600089550018,
+            244.73600089550018,
+            246.7840015888214,
+            245.7599937915802,
+            244.73600089550018,
+            244.73600089550018,
+            246.7840015888214,
+            244.73600089550018,
+            244.73600089550018
+          ]
+        }
+      },
+      "resource_samples": {
+        "after": {
+          "busy": false,
+          "foreign_processes": false,
+          "idle": true,
+          "samples": [
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792264899.7944186
+            },
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792264907.2123287
+            },
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792264914.669375
+            }
+          ]
+        },
+        "before": {
+          "busy": false,
+          "foreign_processes": false,
+          "idle": true,
+          "samples": [
+            {
+              "devices": [
+                {
+                  "clocks_sm_mhz": 1312.0,
+                  "compute_capability": "7.0",
+                  "driver_version": "580.178.04",
+                  "index": 0,
+                  "memory_free_mib": 16145,
+                  "memory_total_mib": 16384,
+                  "name": "Tesla V100-SXM2-16GB",
+                  "pci_bus_id": "00000000:02:00.0",
+                  "temperature_c": 36.0,
+                  "throttle_reasons": "0x0000000000000000",
+                  "utilization_percent": 0.0,
+                  "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                }
+              ],
+              "foreign_processes": [],
+              "timestamp": 1792264856.2257226
+            }
+          ]
+        },
+        "quiescence": {
+          "device_uuids": [
+            "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+          ],
+          "elapsed_seconds": 22.21383309399971,
+          "format": "CUDA-QUIESCENCE/1",
+          "observations": [
+            {
+              "busy": false,
+              "foreign_processes": false,
+              "idle": true,
+              "samples": [
+                {
+                  "devices": [
+                    {
+                      "clocks_sm_mhz": 1312.0,
+                      "compute_capability": "7.0",
+                      "driver_version": "580.178.04",
+                      "index": 0,
+                      "memory_free_mib": 16145,
+                      "memory_total_mib": 16384,
+                      "name": "Tesla V100-SXM2-16GB",
+                      "pci_bus_id": "00000000:02:00.0",
+                      "temperature_c": 36.0,
+                      "throttle_reasons": "0x0000000000000000",
+                      "utilization_percent": 0.0,
+                      "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                    }
+                  ],
+                  "foreign_processes": [],
+                  "timestamp": 1792264841.282009
+                }
+              ]
+            },
+            {
+              "busy": false,
+              "foreign_processes": false,
+              "idle": true,
+              "samples": [
+                {
+                  "devices": [
+                    {
+                      "clocks_sm_mhz": 1312.0,
+                      "compute_capability": "7.0",
+                      "driver_version": "580.178.04",
+                      "index": 0,
+                      "memory_free_mib": 16145,
+                      "memory_total_mib": 16384,
+                      "name": "Tesla V100-SXM2-16GB",
+                      "pci_bus_id": "00000000:02:00.0",
+                      "temperature_c": 37.0,
+                      "throttle_reasons": "0x0000000000000000",
+                      "utilization_percent": 0.0,
+                      "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                    }
+                  ],
+                  "foreign_processes": [],
+                  "timestamp": 1792264848.7585163
+                }
+              ]
+            },
+            {
+              "busy": false,
+              "foreign_processes": false,
+              "idle": true,
+              "samples": [
+                {
+                  "devices": [
+                    {
+                      "clocks_sm_mhz": 1312.0,
+                      "compute_capability": "7.0",
+                      "driver_version": "580.178.04",
+                      "index": 0,
+                      "memory_free_mib": 16145,
+                      "memory_total_mib": 16384,
+                      "name": "Tesla V100-SXM2-16GB",
+                      "pci_bus_id": "00000000:02:00.0",
+                      "temperature_c": 36.0,
+                      "throttle_reasons": "0x0000000000000000",
+                      "utilization_percent": 0.0,
+                      "uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+                    }
+                  ],
+                  "foreign_processes": [],
+                  "timestamp": 1792264856.2257226
+                }
+              ]
+            }
+          ],
+          "observed_consecutive_samples": 3,
+          "required_consecutive_samples": 3,
+          "samples_observed": 3,
+          "schema_version": 1,
+          "state": "quiescent",
+          "uncontaminated": true
+        }
+      },
+      "severity": 0,
+      "status": "succeeded",
+      "toolchain": {
+        "environment": {
+          "CUDACXX": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+          "CUDAToolkit_ROOT": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+          "PATH": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Compute:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer:/home/tumlinson/.local/bin:/home/tumlinson/.codex/packages/standalone/releases/0.162.1-x86_64-unknown-linux-musl/codex-path:/home/tumlinson/.local/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/tumlinson/.nvm/versions/node/v22.23.2/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/profilers/12.9/Nsight_Systems_2025.3/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/nvvm/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/compilers/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/comm_libs/12.9/nccl/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/comm_libs/12.9/nvshmem/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/comm_libs/hpcx/bin:/home/tumlinson/.codex/tmp/arg0/codex-arg0NVmlLM:/home/tumlinson/.cargo/bin:/home/tumlinson/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/home/tumlinson/Software/miniconda3/bin:/home/tumlinson/Software/miniconda3/condabin:/usr/local/sbin:/usr/games:/usr/local/games:/snap/bin:/home/tumlinson/Software/llama.cpp/build/bin:/home/tumlinson/Software/sratoolkit.3.3.0-ubuntu64/bin"
+        },
+        "nvcc": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+        "root": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+        "sanitizer": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+        "version": "12.9"
+      },
+      "valid": true
+    },
+    "task_id": null,
+    "todo_revision": null,
+    "valid": 1
+  }
+}

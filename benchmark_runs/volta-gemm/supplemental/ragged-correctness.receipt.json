@@ -1,0 +1,28 @@
+{
+  "case_id": "ragged",
+  "controller_evidence_id": "f72b8f7d-b6c5-4842-b95a-e19ef98dddad",
+  "evidence": {
+    "path": "ragged-correctness.evidence.json",
+    "sha256": "0d0f76971425789302010fc359574d255afc317d0e7fe3051d69061a0bd1a74c"
+  },
+  "execution": {
+    "path": "ragged-correctness.controller.json",
+    "sha256": "e865b24464c5fcef1edda2622c32c9f929fa2f166357bf4c1f8750b5191c783c"
+  },
+  "format": "KERNELWIKI-GEMM-SUPPLEMENT-RECEIPT/1",
+  "gpu_uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8",
+  "lease": {
+    "path": "ragged-correctness.lease.json",
+    "sha256": "45bbd5ec54d8ba9ebea4c98a1122bf0ee747416edd0bf7dfe2fef09b0555619a"
+  },
+  "phase": "correctness",
+  "runner_sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7",
+  "stderr": {
+    "path": "ragged-correctness.stderr.txt",
+    "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb"
+  },
+  "stdout": {
+    "path": "ragged-correctness.stdout.txt",
+    "sha256": "de6842da6966be4a5a83508d57d09cf338de359e30b882fb8fbdacd96ce6da95"
+  }
+}

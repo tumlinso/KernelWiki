@@ -27,6 +27,16 @@ CASE_PATHS = {
     "grouped-lowbit": "benchmark_runs/volta-grouped-lowbit/summary.json",
     "recurrence": "benchmark_runs/volta-recurrence/summary.json",
 }
+GEMM_OPERATOR = "C[m,n] = sum_k A16[m,k] * B16[k,n]"
+GEMM_CHECK_FORMAT = "KERNELWIKI-GEMM-CHECK/1"
+GEMM_PRIMARY_ROLES = {
+    "correctness_baseline": ("baseline", "cublas", "correctness", None),
+    "correctness_candidate": ("candidate", "ptx", "correctness", "2"),
+    "sanitizer_candidate": ("candidate", "ptx", "correctness", "2"),
+    "baseline_timing": ("baseline", "cublas", "time", None),
+    "candidate_timing": ("candidate", "ptx", "time", "2"),
+    "profile_candidate": ("candidate", "ptx", "single", "2"),
+}
 
 
 class EvidenceError(ValueError):
@@ -225,7 +235,144 @@ def _timing_samples(summary: dict[str, Any], label: str) -> list[float]:
     return samples
 
 
-def _partial_memcheck_has_application_pass(summary: dict[str, Any], gpu_uuid: str) -> bool:
+def _is_gemm_contract(contract: dict[str, Any]) -> bool:
+    numerical_contract = contract.get("numerical_contract")
+    return (isinstance(numerical_contract, dict) and
+            numerical_contract.get("operator") == GEMM_OPERATOR)
+
+
+def _finite_nonnegative_number(value: Any) -> bool:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return False
+    try:
+        number = float(value)
+    except (OverflowError, ValueError):
+        return False
+    return math.isfinite(number) and number >= 0
+
+
+def _gemm_native_pass_matches_contract(result: dict[str, Any],
+                                       contract: dict[str, Any]) -> bool:
+    if (result.get("format") != GEMM_CHECK_FORMAT or
+            result.get("operator") != "gemm" or
+            result.get("implementation") != "ptx" or
+            type(result.get("shared_stages")) is not int or
+            result.get("shared_stages") != 2 or
+            result.get("case_id") != contract.get("case_id") or
+            result.get("passed") is not True):
+        return False
+    shape = contract.get("shape")
+    if not isinstance(shape, dict):
+        return False
+    m, n = shape.get("m"), shape.get("n")
+    if (type(m) is not int or m <= 0 or type(n) is not int or n <= 0 or
+            type(result.get("checked_outputs")) is not int or
+            result["checked_outputs"] != m * n):
+        return False
+    if any(type(result.get(field)) is not int or result[field] != 0
+           for field in ("failed_outputs", "nonfinite_outputs")):
+        return False
+    metrics = ("max_abs_error", "max_admission_tolerance", "max_tolerance_ratio")
+    if not all(_finite_nonnegative_number(result.get(field)) for field in metrics):
+        return False
+    return (float(result["max_abs_error"]) <= float(result["max_admission_tolerance"]) and
+            float(result["max_tolerance_ratio"]) <= 1.0)
+
+
+def _gemm_option(argv: list[Any], role: str, flag: str,
+                 expected: str | None) -> str | None:
+    occurrences = [
+        index for index, item in enumerate(argv)
+        if isinstance(item, str) and
+        (item == flag or item.startswith(flag + "="))
+    ]
+    expected_count = 0 if expected is None else 1
+    if len(occurrences) != expected_count:
+        raise EvidenceError(
+            f"{role}: controller argv must contain {expected_count} {flag} selector(s)"
+        )
+    if not occurrences:
+        return None
+    index = occurrences[0]
+    if (argv[index] != flag or index + 1 >= len(argv) or
+            not isinstance(argv[index + 1], str) or argv[index + 1].startswith("--")):
+        raise EvidenceError(f"{role}: controller argv has malformed {flag} selector")
+    value = argv[index + 1]
+    if value != expected:
+        raise EvidenceError(f"{role}: controller argv {flag} selector does not match GEMM contract")
+    return value
+
+
+def _validate_gemm_input_option(argv: list[Any], role: str, root: Path,
+                                expected_path: Path) -> None:
+    occurrences = [
+        index for index, item in enumerate(argv)
+        if isinstance(item, str) and
+        (item == "--input" or item.startswith("--input="))
+    ]
+    if len(occurrences) != 1:
+        raise EvidenceError(f"{role}: controller argv must contain exactly one --input selector")
+    index = occurrences[0]
+    if (argv[index] != "--input" or index + 1 >= len(argv) or
+            not isinstance(argv[index + 1], str) or argv[index + 1].startswith("--")):
+        raise EvidenceError(f"{role}: controller argv has malformed --input selector")
+    input_arg = Path(argv[index + 1])
+    if not input_arg.is_absolute():
+        input_arg = root / input_arg
+    if input_arg.resolve() != expected_path.resolve():
+        raise EvidenceError(f"{role}: controller argv --input does not resolve to represented GEMM input")
+
+
+def _validate_gemm_primary_argv(summaries: dict[str, dict[str, Any]], root: Path,
+                               contract: dict[str, Any], input_path: Path,
+                               implementations: dict[str, dict[str, Any]]) -> None:
+    """Bind the six primary GEMM run roles to their declared runner selectors."""
+    case_id = contract.get("case_id")
+    if not isinstance(case_id, str) or not case_id:
+        raise EvidenceError("GEMM contract case_id is missing")
+    for role, (implementation_name, implementation, mode, stages) in GEMM_PRIMARY_ROLES.items():
+        summary = summaries.get(role)
+        provenance = summary.get("provenance") if isinstance(summary, dict) else None
+        argv = provenance.get("argv") if isinstance(provenance, dict) else None
+        if not isinstance(argv, list):
+            raise EvidenceError(f"{role}: controller provenance argv is missing for GEMM")
+        source = provenance.get("source")
+        project_root = source.get("project_root") if isinstance(source, dict) else None
+        if not isinstance(project_root, str) or not project_root:
+            raise EvidenceError(f"{role}: controller source project_root is missing for GEMM argv")
+        if not argv or not isinstance(argv[0], str) or not argv[0]:
+            raise EvidenceError(f"{role}: controller argv executable is missing for GEMM")
+        capture_root = Path(project_root).resolve()
+        argv_executable = Path(argv[0])
+        if not argv_executable.is_absolute():
+            argv_executable = capture_root / argv_executable
+        binary = provenance.get("binary")
+        binary_raw = binary.get("path") if isinstance(binary, dict) else None
+        if not isinstance(binary_raw, str) or not binary_raw:
+            raise EvidenceError(f"{role}: controller binary path is missing for GEMM argv")
+        provenance_binary = Path(binary_raw)
+        if not provenance_binary.is_absolute():
+            provenance_binary = capture_root / provenance_binary
+        implementation_record = implementations.get(implementation_name)
+        expected_executable = (
+            implementation_record.get("executed_path")
+            if isinstance(implementation_record, dict) else None
+        )
+        if (not isinstance(expected_executable, Path) or
+                argv_executable.resolve() != expected_executable.resolve() or
+                provenance_binary.resolve() != expected_executable.resolve()):
+            raise EvidenceError(
+                f"{role}: controller argv[0] differs from the declared GEMM executable"
+            )
+        _gemm_option(argv, role, "--case", case_id)
+        _validate_gemm_input_option(argv, role, root, input_path)
+        _gemm_option(argv, role, "--impl", implementation)
+        _gemm_option(argv, role, "--mode", mode)
+        _gemm_option(argv, role, "--stages", stages)
+
+
+def _partial_memcheck_has_application_pass(summary: dict[str, Any], gpu_uuid: str,
+                                            contract: dict[str, Any] | None = None) -> bool:
     """Accept only the known partial memcheck classification with a raw target PASS."""
     if (summary.get("tool") != "compute-sanitizer" or
             summary.get("tool_detail") != "memcheck" or
@@ -236,12 +383,17 @@ def _partial_memcheck_has_application_pass(summary: dict[str, Any], gpu_uuid: st
     lines = summary.get("stdout_tail")
     if not isinstance(lines, list):
         return False
+    gemm_contract = isinstance(contract, dict) and _is_gemm_contract(contract)
     for line in lines:
         if not isinstance(line, str):
             continue
         try:
             result = json.loads(line)
         except json.JSONDecodeError:
+            continue
+        if gemm_contract:
+            if isinstance(result, dict) and _gemm_native_pass_matches_contract(result, contract):
+                return True
             continue
         raw_uuid = result.get("gpu_uuid") if isinstance(result, dict) else None
         if (isinstance(result, dict) and result.get("status") == "passed" and
@@ -331,6 +483,8 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
             input_path, input_sha, oracle_path, oracle_sha,
             str(case.get("gpu_uuid", "")), evidence_ids,
         )
+    if _is_gemm_contract(contract_data):
+        _validate_gemm_primary_argv(summaries, root, contract_data, input_path, bound_impls)
     library_roles = {
         "baseline": ("correctness_baseline", "baseline_timing"),
         "candidate": ("correctness_candidate", "sanitizer_candidate", "candidate_timing", "profile_candidate"),
@@ -352,7 +506,9 @@ def _check_case(base: Path, root: Path, case: Any, evidence_ids: set[str]) -> No
     sanitizer_passed = sanitizer_status in {"passed", "success", "succeeded"}
     partial_memcheck_passed = (
         sanitizer_status == "partial" and
-        _partial_memcheck_has_application_pass(sanitizer, str(case.get("gpu_uuid", "")))
+        _partial_memcheck_has_application_pass(
+            sanitizer, str(case.get("gpu_uuid", "")), contract_data
+        )
     )
     error_count = sanitizer.get("error_count")
     if (type(error_count) is not int or error_count != 0 or

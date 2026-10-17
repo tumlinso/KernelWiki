@@ -3,16 +3,16 @@
 <!-- todo-orchestrator:v2-managed:start -->
 # KWV-04: Build and investigate native GEMM, fragment ownership and software staging
 
-Task revision: `40`; current project revision is in `todo-status.md`.
+Task revision: `43`; current project revision is in `todo-status.md`.
 
 ## Objective
 Deliver a correct useful SM70 GEMM baseline and test the actual costs of staging and retaining fragment layouts under a fixed numerical contract.
 
 ## State
-- Lifecycle: `in_progress`
-- Execution: `claimed`
+- Lifecycle: `done`
+- Execution: `closed`
 - Parallel policy: `serial`
-- Result: `-`
+- Result: `validated`
 
 ## Next Action
 Read KWV-04 in planning/volta-bootstrap/planning/WORK.md, then the listed material. Implement the bounded outcome; reuse existing evidence and tools.

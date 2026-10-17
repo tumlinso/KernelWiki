@@ -1,0 +1,2 @@
+[benchmark-mutex] acquired ncu:run via /tmp/cuda_v100_benchmark.lock
+[benchmark-mutex] released ncu:run via /tmp/cuda_v100_benchmark.lock

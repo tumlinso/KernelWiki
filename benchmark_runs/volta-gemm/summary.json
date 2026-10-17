@@ -1,0 +1,920 @@
+{
+  "format": "KERNELWIKI-VOLTA-EVIDENCE/1",
+  "cases": [
+    {
+      "id": "large_dense",
+      "disposition": "evaluated_not_promoted",
+      "gpu_uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8",
+      "contract": {
+        "path": "cases/large_dense/contract.json",
+        "sha256": "e4ff49692bd6fa71035fc64a7cf0259412257880d0083c858a57f56a1641757b"
+      },
+      "represented_input": {
+        "path": "benchmark_runs/volta-gemm/cases/large_dense/inputs.bin",
+        "sha256": "4a10e1084e9a934f1082cf3737f65902734fc9997a51dc8ce3365faa4f354ea7"
+      },
+      "oracle": {
+        "path": "cases/large_dense/cpu-oracle.json",
+        "sha256": "635cdcf03477e8d4dc1946764ba69d3ee090d6877c0dfa9735c0af0797d4859b"
+      },
+      "reference": {
+        "path": "benchmark_runs/volta-gemm/cases/large_dense/reference.f64le",
+        "sha256": "d857fafab808da8ced9f3b64166c2f0377d1ef40e437628d75d4f1cf4b92146a"
+      },
+      "implementations": {
+        "baseline": {
+          "source": {
+            "path": "artifacts/kernels/volta-gemm/variants/gemm_baselines.cu",
+            "sha256": "f96ebc2c4cbc18883f5ddcd7feb0278823e6d913a7b612226a8d32a45cae5e50"
+          },
+          "binary": {
+            "path": "benchmark_runs/volta-gemm/evidence/shared/bin/gemm_runner-fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7.bin",
+            "sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7"
+          },
+          "executed_path": "benchmark_runs/volta-gemm/bin/gemm_runner"
+        },
+        "candidate": {
+          "source": {
+            "path": "artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cu",
+            "sha256": "db47085c542dd50f7b17125cfc88c84595a6e11aaff62fa0d2ebfc0c831af4ed"
+          },
+          "binary": {
+            "path": "benchmark_runs/volta-gemm/evidence/shared/bin/gemm_runner-fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7.bin",
+            "sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7"
+          },
+          "executed_path": "benchmark_runs/volta-gemm/bin/gemm_runner"
+        }
+      },
+      "libraries": [
+        {
+          "implementation": "baseline",
+          "name": "cuBLAS runtime used for GEMM",
+          "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/math_libs/12.9/targets/x86_64-linux/lib/libcublas.so.12.9.1.4",
+          "sha256": "d63456d94f1b8e2408a8a9538c8740eb474c9eba48a84f420b15e2e10fbcd048",
+          "version": "12.9.1.4",
+          "runtime_api_version": 120901,
+          "runtime_api_version_label": "12.9.1"
+        },
+        {
+          "implementation": "candidate",
+          "name": "cuBLAS runtime queried for API identity; PTX path performs GEMM",
+          "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/math_libs/12.9/targets/x86_64-linux/lib/libcublas.so.12.9.1.4",
+          "sha256": "d63456d94f1b8e2408a8a9538c8740eb474c9eba48a84f420b15e2e10fbcd048",
+          "version": "12.9.1.4",
+          "runtime_api_version": 120901,
+          "runtime_api_version_label": "12.9.1"
+        }
+      ],
+      "runs": {
+        "correctness_baseline": {
+          "execution": {
+            "path": "evidence/large_dense/correctness_baseline/execution.json",
+            "sha256": "3f4ce7a0ff8f293d134fa4f08f80ad05d81549ac706dfed6c33f02faf9414f03"
+          },
+          "evidence": {
+            "path": "evidence/large_dense/correctness_baseline/evidence.json",
+            "sha256": "c0d160d154ed73383a119715a8f23ee5c1f9ad730fea4168f4a2121277b3d2bd"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/bf672c7f-9bd2-4233-934c-f1449fc9e20b/lease.json",
+            "sha256": "5167fa1bf8280a4c99d642827ca3ed4129448f7b060774d6468eccd8f82151f6",
+            "archive_path": "evidence/large_dense/correctness_baseline/lease.json"
+          },
+          "target_output": {
+            "stdout": {
+              "path": "evidence/large_dense/correctness_baseline/target.stdout.txt",
+              "sha256": "09512bcbd91e4456635ad0588e33d498b66162535f23ec216afa6e0fc9bbec2e",
+              "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/bf672c7f-9bd2-4233-934c-f1449fc9e20b/foreground.stdout.txt"
+            },
+            "stderr": {
+              "path": "evidence/large_dense/correctness_baseline/target.stderr.txt",
+              "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+              "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/bf672c7f-9bd2-4233-934c-f1449fc9e20b/foreground.stderr.txt"
+            }
+          },
+          "evidence_id": "f74e3ceb-0f92-4b07-a493-ec5fe75ea8cc"
+        },
+        "correctness_candidate": {
+          "execution": {
+            "path": "evidence/large_dense/correctness_candidate/execution.json",
+            "sha256": "236039e9479b105615776c57f783d1db9793f999ae540162d2f256cc52fb5768"
+          },
+          "evidence": {
+            "path": "evidence/large_dense/correctness_candidate/evidence.json",
+            "sha256": "5ad3f63fe35e1547f426b8ac5e88e3e91244aa0a882f921e026de8c813c17b61"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/820df417-812a-43b2-9bf8-3b605cec055a/lease.json",
+            "sha256": "f29f12f8d0d8d328c6b925e3c30d3d25995ecd6579681461c8a6c8087d822bd0",
+            "archive_path": "evidence/large_dense/correctness_candidate/lease.json"
+          },
+          "target_output": {
+            "stdout": {
+              "path": "evidence/large_dense/correctness_candidate/target.stdout.txt",
+              "sha256": "730b3ed7d6f8b91d0257abd6a915c53e06261a6695e90830b4eef8d45922fa85",
+              "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/820df417-812a-43b2-9bf8-3b605cec055a/foreground.stdout.txt"
+            },
+            "stderr": {
+              "path": "evidence/large_dense/correctness_candidate/target.stderr.txt",
+              "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+              "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/820df417-812a-43b2-9bf8-3b605cec055a/foreground.stderr.txt"
+            }
+          },
+          "evidence_id": "f36b6185-9769-4d17-bc46-d60e5c0af1b4"
+        },
+        "sanitizer_candidate": {
+          "execution": {
+            "path": "evidence/large_dense/sanitizer_candidate/attempt-2/execution.json",
+            "sha256": "7954e5fcd398f4c6f8b156b2557c5609283e815ecf139349f706cfc8439c21fc"
+          },
+          "evidence": {
+            "path": "evidence/large_dense/sanitizer_candidate/attempt-2/evidence.json",
+            "sha256": "750836ad2d0e86796fcc2ba30896029f55ba63fd71a34a576d7ef7a2e06d2ea2"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/0bfdea76-d4d9-4228-bdec-f7c15880138a/lease.json",
+            "sha256": "3fcc09ad522b74f9dbcfcedb653750b0acbb1bd20630a72164699d77d74b358b",
+            "archive_path": "evidence/large_dense/sanitizer_candidate/attempt-2/lease.json"
+          },
+          "sanitizer_summary": {
+            "path": "evidence/large_dense/sanitizer_candidate/attempt-2/summary.json",
+            "sha256": "08ce418a6b77d3be22607a4274af70595422cbf32b43ed1896b005d170334cb0"
+          },
+          "target_output": {
+            "stdout": {
+              "path": "evidence/large_dense/sanitizer_candidate/attempt-2/stdout.txt",
+              "sha256": "730b3ed7d6f8b91d0257abd6a915c53e06261a6695e90830b4eef8d45922fa85"
+            },
+            "stderr": {
+              "path": "evidence/large_dense/sanitizer_candidate/attempt-2/stderr.txt",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          "controller_output": {
+            "stdout": {
+              "path": "evidence/large_dense/sanitizer_candidate/attempt-2/pc-foreground.stdout.txt",
+              "sha256": "9d616e6230d47dc309c2b36bd9f263d252e52fe1a3f1f18ccc5c7035d754f2ef"
+            },
+            "stderr": {
+              "path": "evidence/large_dense/sanitizer_candidate/attempt-2/pc-foreground.stderr.txt",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        },
+        "baseline_timing": {
+          "execution": {
+            "path": "evidence/large_dense/baseline_timing/attempt-1/execution.json",
+            "sha256": "efae56c671a25c56d3d6ab07b06ca89facb19b668b7c83a7ac45a2b41ec3d834"
+          },
+          "evidence": {
+            "path": "evidence/large_dense/baseline_timing/attempt-1/evidence.json",
+            "sha256": "d7b95786f49191fce9c48e361fc1382d2fd1802fe4921646870d0e3e5e5c7661"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/2b642f8c-6e8c-40f7-bb01-fe6e9ca9eae9/lease.json",
+            "sha256": "8e7e416c066fc04bf24b250c036f01cba6925a066f7f52c43faba215a922bbdc",
+            "archive_path": "evidence/large_dense/baseline_timing/attempt-1/lease.json"
+          }
+        },
+        "candidate_timing": {
+          "execution": {
+            "path": "evidence/large_dense/candidate_timing/attempt-1/execution.json",
+            "sha256": "148a52d7f2498389054ece26f429e4afe0b9d94740118f760a7062945eede027"
+          },
+          "evidence": {
+            "path": "evidence/large_dense/candidate_timing/attempt-1/evidence.json",
+            "sha256": "8d010d170247d532e1589d4b207eb24cdbc8a8ee01a3ffa602dfd219850ee6b3"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/ddc6aa1a-b50c-4090-8a3d-89a2e04e9780/lease.json",
+            "sha256": "76da372b95acb1678880bbf0ff25236c29f609925c8454406644564d2f35bde3",
+            "archive_path": "evidence/large_dense/candidate_timing/attempt-1/lease.json"
+          }
+        },
+        "profile_candidate": {
+          "execution": {
+            "path": "evidence/large_dense/profile_candidate/attempt-1/execution.json",
+            "sha256": "a6c90d6411fb17b7cf8049740bae7e2f8d4cc58658462f713394b6bd1d31a837"
+          },
+          "evidence": {
+            "path": "evidence/large_dense/profile_candidate/attempt-1/evidence.json",
+            "sha256": "ef4c549ed703c57ab77d38605b2a8b4e864b8000a2bae2215d9a48de245f3ce5"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/bab63d2b-f4a3-41bc-a8bc-76a3d7270a85/lease.json",
+            "sha256": "3e582d43556030aff3dfa4c0bb667340763d2ad6d87a780a43728e8263b8bad2",
+            "archive_path": "evidence/large_dense/profile_candidate/attempt-1/lease.json"
+          },
+          "profile": {
+            "selected_kernel": "void unnamed>::ptx_gemm_kernel<64, 64, 32, 2, 0>(const unsigned short *, const unsigned short *, const float *, float *, int, int, int)",
+            "report": {
+              "path": "evidence/large_dense/profile_candidate/attempt-1/ncu-run/report.ncu-rep",
+              "sha256": "a2729076fe867a2c4a18a268772237f7f96c4572acab8f809f31ce708923db82"
+            },
+            "analysis": {
+              "path": "evidence/large_dense/profile_candidate/attempt-1/analysis.json",
+              "sha256": "a867a056cdc0b37cd25df2dfce2a7da90359b639277572d8d135ece41ae68124"
+            },
+            "shim_log": {
+              "path": "evidence/large_dense/profile_candidate/attempt-1/ncu-shim.jsonl",
+              "sha256": "8593cae61f7111da1ee34267085b52d7198bd31d21eaaa38930198cadcc81724"
+            },
+            "raw_csv": {
+              "path": "evidence/large_dense/profile_candidate/attempt-1/ncu-run/raw.csv",
+              "sha256": "c44aaea0900ee8b650444dcb01b07c5ee119c252e9f919cd48d6f55ec7c0e366"
+            },
+            "raw_summary": {
+              "path": "evidence/large_dense/profile_candidate/attempt-1/ncu-run/summary.json",
+              "sha256": "d2c4f7639fab4ddfa38ae7576ebc6bb12118708cd7a99b2ff35977563c938ba8"
+            }
+          }
+        }
+      },
+      "correctness": {
+        "correctness_baseline": {
+          "evidence_id": "f74e3ceb-0f92-4b07-a493-ec5fe75ea8cc",
+          "implementation": "cublas",
+          "cublas_api_version": 120901,
+          "checked_outputs": 1048576,
+          "failed_outputs": 0,
+          "nonfinite_outputs": 0,
+          "max_abs_error": 0,
+          "max_admission_tolerance": 0.004523626026096983,
+          "passed": true
+        },
+        "correctness_candidate": {
+          "evidence_id": "f36b6185-9769-4d17-bc46-d60e5c0af1b4",
+          "implementation": "ptx",
+          "cublas_api_version": 120901,
+          "checked_outputs": 1048576,
+          "failed_outputs": 0,
+          "nonfinite_outputs": 0,
+          "max_abs_error": 0,
+          "max_admission_tolerance": 0.004523626026096983,
+          "passed": true
+        }
+      },
+      "timing_summary": {
+        "metric": "samples_us.0",
+        "protocol": "11 controller-admitted unprofiled repetitions per implementation; same case inputs and GPU UUID",
+        "baseline": {
+          "evidence_id": "e7ce6ec5-0d22-4072-bfb7-2b3f8faf87bb",
+          "median_us": 61.43999844789505,
+          "mad_us": 1.0239966213703156,
+          "confidence_interval_approx_95_us": [
+            60.54281294331024,
+            62.33718395247986
+          ],
+          "samples_us": [
+            61.43999844789505,
+            60.416001826524734,
+            61.43999844789505,
+            62.463998794555664,
+            62.463998794555664,
+            62.463998794555664,
+            61.43999844789505,
+            62.463998794555664,
+            60.416001826524734,
+            62.463998794555664,
+            61.43999844789505
+          ]
+        },
+        "candidate": {
+          "evidence_id": "99f67e2a-68f7-4a4d-a50d-96761f841c53",
+          "median_us": 232.44799673557281,
+          "mad_us": 1.024007797241211,
+          "confidence_interval_approx_95_us": [
+            231.55080143913014,
+            233.3451920320155
+          ],
+          "samples_us": [
+            229.37600314617157,
+            232.44799673557281,
+            232.44799673557281,
+            232.44799673557281,
+            233.47200453281403,
+            232.44799673557281,
+            229.37600314617157,
+            232.44799673557281,
+            229.37600314617157,
+            229.37600314617157,
+            229.37600314617157
+          ]
+        },
+        "candidate_to_baseline_ratio": 3.7833333757764205,
+        "candidate_to_baseline_percent_change": 278.33333757764206
+      },
+      "measurement_note": "PTX stage-2 median was slower than cuBLAS; no promotion."
+    },
+    {
+      "id": "small_m",
+      "disposition": "evaluated_not_promoted",
+      "gpu_uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8",
+      "contract": {
+        "path": "cases/small_m/contract.json",
+        "sha256": "e54aa8378731423b29d382b2824a79c9db88a1c4660d56a2d1480e8bea634a51"
+      },
+      "represented_input": {
+        "path": "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+        "sha256": "ed1bdb4a268e252ce4cc9d1fdfbcf5f636f658cb525766b1f54ec038c8e43ca0"
+      },
+      "oracle": {
+        "path": "cases/small_m/cpu-oracle.json",
+        "sha256": "9758064145575c11f45b395d15e524b57a5cff91d21dd1f213304cbaa62edcfb"
+      },
+      "reference": {
+        "path": "benchmark_runs/volta-gemm/cases/small_m/reference.f64le",
+        "sha256": "2744fe8ced972afb676b16da618fd8da94eef92a66f74b41665f8a7821633209"
+      },
+      "implementations": {
+        "baseline": {
+          "source": {
+            "path": "artifacts/kernels/volta-gemm/variants/gemm_baselines.cu",
+            "sha256": "f96ebc2c4cbc18883f5ddcd7feb0278823e6d913a7b612226a8d32a45cae5e50"
+          },
+          "binary": {
+            "path": "benchmark_runs/volta-gemm/evidence/shared/bin/gemm_runner-fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7.bin",
+            "sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7"
+          },
+          "executed_path": "benchmark_runs/volta-gemm/bin/gemm_runner"
+        },
+        "candidate": {
+          "source": {
+            "path": "artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cu",
+            "sha256": "db47085c542dd50f7b17125cfc88c84595a6e11aaff62fa0d2ebfc0c831af4ed"
+          },
+          "binary": {
+            "path": "benchmark_runs/volta-gemm/evidence/shared/bin/gemm_runner-fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7.bin",
+            "sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7"
+          },
+          "executed_path": "benchmark_runs/volta-gemm/bin/gemm_runner"
+        }
+      },
+      "libraries": [
+        {
+          "implementation": "baseline",
+          "name": "cuBLAS runtime used for GEMM",
+          "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/math_libs/12.9/targets/x86_64-linux/lib/libcublas.so.12.9.1.4",
+          "sha256": "d63456d94f1b8e2408a8a9538c8740eb474c9eba48a84f420b15e2e10fbcd048",
+          "version": "12.9.1.4",
+          "runtime_api_version": 120901,
+          "runtime_api_version_label": "12.9.1"
+        },
+        {
+          "implementation": "candidate",
+          "name": "cuBLAS runtime queried for API identity; PTX path performs GEMM",
+          "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/math_libs/12.9/targets/x86_64-linux/lib/libcublas.so.12.9.1.4",
+          "sha256": "d63456d94f1b8e2408a8a9538c8740eb474c9eba48a84f420b15e2e10fbcd048",
+          "version": "12.9.1.4",
+          "runtime_api_version": 120901,
+          "runtime_api_version_label": "12.9.1"
+        }
+      ],
+      "runs": {
+        "correctness_baseline": {
+          "execution": {
+            "path": "evidence/small_m/correctness_baseline/execution.json",
+            "sha256": "2624bcf614084c593dceaabe65cc8360f33f485d5dadf4e8c6f821f8e90e95f3"
+          },
+          "evidence": {
+            "path": "evidence/small_m/correctness_baseline/evidence.json",
+            "sha256": "b70529beb9dd8a8dbc8d9f931506cbf4552827acff31362ad80d52c3c2cdbbdf"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/c761d08f-dabc-4298-a609-4b247ee1ca4a/lease.json",
+            "sha256": "38098c0c5a2023093b9e7ef60e50c481c9497c7a825db28d0b61d5c22575b334",
+            "archive_path": "evidence/small_m/correctness_baseline/lease.json"
+          },
+          "target_output": {
+            "stdout": {
+              "path": "evidence/small_m/correctness_baseline/target.stdout.txt",
+              "sha256": "e046018e785768a288295ec8ac47281c65856e11d62cda743cadb4d3eb54a296",
+              "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/c761d08f-dabc-4298-a609-4b247ee1ca4a/foreground.stdout.txt"
+            },
+            "stderr": {
+              "path": "evidence/small_m/correctness_baseline/target.stderr.txt",
+              "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+              "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/c761d08f-dabc-4298-a609-4b247ee1ca4a/foreground.stderr.txt"
+            }
+          },
+          "evidence_id": "d1c6c989-796d-48e4-a3d3-d21b65146709"
+        },
+        "correctness_candidate": {
+          "execution": {
+            "path": "evidence/small_m/correctness_candidate/execution.json",
+            "sha256": "e82ca993143419b3a724603a5d10b9a25306edf60f82b0b8eeeb8ceb7532d204"
+          },
+          "evidence": {
+            "path": "evidence/small_m/correctness_candidate/evidence.json",
+            "sha256": "cc74d6aaa23deb7e5ab7b18e0db526cb6a687e17472166138665218c2bf4916a"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/f9966e12-a8ff-4f2b-85f6-7a78a9d2d722/lease.json",
+            "sha256": "fd47bf24824190c86e638144ab7b16c4d1dac927d42aaff445ba3c91ade4aa69",
+            "archive_path": "evidence/small_m/correctness_candidate/lease.json"
+          },
+          "target_output": {
+            "stdout": {
+              "path": "evidence/small_m/correctness_candidate/target.stdout.txt",
+              "sha256": "26d0e42480687af65fbcc145034dd84fb5ad8b4985df9c3ab3659b52c60af639",
+              "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/f9966e12-a8ff-4f2b-85f6-7a78a9d2d722/foreground.stdout.txt"
+            },
+            "stderr": {
+              "path": "evidence/small_m/correctness_candidate/target.stderr.txt",
+              "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+              "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/f9966e12-a8ff-4f2b-85f6-7a78a9d2d722/foreground.stderr.txt"
+            }
+          },
+          "evidence_id": "d39021fb-1751-4c0b-a0b3-50726538c6a4"
+        },
+        "sanitizer_candidate": {
+          "execution": {
+            "path": "evidence/small_m/sanitizer_candidate/attempt-1/execution.json",
+            "sha256": "67bd2d47ff80600455a10eca320ad5e214dd4f3a2ef498de0c2c6d6cea93b5ec"
+          },
+          "evidence": {
+            "path": "evidence/small_m/sanitizer_candidate/attempt-1/evidence.json",
+            "sha256": "387e1f6145cf59e64c9f0e4f017f04bd1e85b2a6be05ac58211d9e9f05987291"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/07a41ec3-5f7b-408f-b5ec-0d63f087b632/lease.json",
+            "sha256": "1e268162651bdbdc0fdaeb30091f52726616d26ff749f2553a0e09238fd8dfb7",
+            "archive_path": "evidence/small_m/sanitizer_candidate/attempt-1/lease.json"
+          },
+          "sanitizer_summary": {
+            "path": "evidence/small_m/sanitizer_candidate/attempt-1/summary.json",
+            "sha256": "702eeda4e84320e7a0c06c16c74458fe254604d129f29c48b59d0453f10edd9f"
+          },
+          "target_output": {
+            "stdout": {
+              "path": "evidence/small_m/sanitizer_candidate/attempt-1/stdout.txt",
+              "sha256": "26d0e42480687af65fbcc145034dd84fb5ad8b4985df9c3ab3659b52c60af639"
+            },
+            "stderr": {
+              "path": "evidence/small_m/sanitizer_candidate/attempt-1/stderr.txt",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          "controller_output": {
+            "stdout": {
+              "path": "evidence/small_m/sanitizer_candidate/attempt-1/pc-foreground.stdout.txt",
+              "sha256": "f7cc481f1e2d7f7d24e363958ba32a56666390613831c30d3811e11f6810e83a"
+            },
+            "stderr": {
+              "path": "evidence/small_m/sanitizer_candidate/attempt-1/pc-foreground.stderr.txt",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        },
+        "baseline_timing": {
+          "execution": {
+            "path": "evidence/small_m/baseline_timing/attempt-1/execution.json",
+            "sha256": "e6a5083c38c8c3fd1542591d573f21d6ddc79241f89312dcf9c9bc7e99fa8b44"
+          },
+          "evidence": {
+            "path": "evidence/small_m/baseline_timing/attempt-1/evidence.json",
+            "sha256": "7216d1e4806e77afe82d7da7f9f74fb3fa4277d63205217559ae28c3ff2f5b30"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/e9ee9ee4-50eb-4740-886f-501c6f864b8f/lease.json",
+            "sha256": "076a0aeb54309f96c24577c22b8cfc3f3ad125d6a201ff4e9ed859ddd6474356",
+            "archive_path": "evidence/small_m/baseline_timing/attempt-1/lease.json"
+          }
+        },
+        "candidate_timing": {
+          "execution": {
+            "path": "evidence/small_m/candidate_timing/attempt-1/execution.json",
+            "sha256": "de85a1d29cb4d21e4f4d874d6f7f03a8a63887d43cb483d1dbff92a2d05c4f1a"
+          },
+          "evidence": {
+            "path": "evidence/small_m/candidate_timing/attempt-1/evidence.json",
+            "sha256": "3999158e945889ebf1cf46154df2b5f5a6572bb1e367458b30b8e8885474d355"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/d7071ea3-359e-4fcb-b44c-eae1b3a0750d/lease.json",
+            "sha256": "9d0871e9b71b41052de8c58c964847e4c52cf58ae296a83c798af4a7691c38a5",
+            "archive_path": "evidence/small_m/candidate_timing/attempt-1/lease.json"
+          }
+        },
+        "profile_candidate": {
+          "execution": {
+            "path": "evidence/small_m/profile_candidate/attempt-1/execution.json",
+            "sha256": "229b049ccec8977c3f0da193aa9b7990a39682a53678ea212d6b9398a0e2bf8d"
+          },
+          "evidence": {
+            "path": "evidence/small_m/profile_candidate/attempt-1/evidence.json",
+            "sha256": "279c0c7d1df2a3e293559e830a253454b1bb3d78ea59b2e0153996e890209906"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/038c8594-a292-45b6-9b19-59f8863798c6/lease.json",
+            "sha256": "ecdd1607e3fb58a58afc7b149aabd2cb8fb29372f4333d190c58336e79f58f76",
+            "archive_path": "evidence/small_m/profile_candidate/attempt-1/lease.json"
+          },
+          "profile": {
+            "selected_kernel": "void unnamed>::ptx_gemm_kernel<16, 32, 32, 2, 0>(const unsigned short *, const unsigned short *, const float *, float *, int, int, int)",
+            "report": {
+              "path": "evidence/small_m/profile_candidate/attempt-1/ncu-run/report.ncu-rep",
+              "sha256": "423a13f106ac50ea128fda3c3023f0916aad8b4e309a860772af925808154166"
+            },
+            "analysis": {
+              "path": "evidence/small_m/profile_candidate/attempt-1/analysis.json",
+              "sha256": "053ef8ef9d4a2a3a2e059a79cd422b9d1adbb8249060e9f9b2911b20fe324811"
+            },
+            "shim_log": {
+              "path": "evidence/small_m/profile_candidate/attempt-1/ncu-shim.jsonl",
+              "sha256": "06e54d8c472c0c0871f835fad9a7d508f361e48c8a37293d91f9c64f5169f0c3"
+            },
+            "raw_csv": {
+              "path": "evidence/small_m/profile_candidate/attempt-1/ncu-run/raw.csv",
+              "sha256": "8916213d74b635e69e1c2427a0ae9f836e5d743579e7defab93e82ac316f801d"
+            },
+            "raw_summary": {
+              "path": "evidence/small_m/profile_candidate/attempt-1/ncu-run/summary.json",
+              "sha256": "5002e9f76c59d1a68681887945b1afea56335f9fd438c463a2014a34571c059f"
+            }
+          }
+        }
+      },
+      "correctness": {
+        "correctness_baseline": {
+          "evidence_id": "d1c6c989-796d-48e4-a3d3-d21b65146709",
+          "implementation": "cublas",
+          "cublas_api_version": 120901,
+          "checked_outputs": 65536,
+          "failed_outputs": 0,
+          "nonfinite_outputs": 0,
+          "max_abs_error": 0,
+          "max_admission_tolerance": 0.06631599770943032,
+          "passed": true
+        },
+        "correctness_candidate": {
+          "evidence_id": "d39021fb-1751-4c0b-a0b3-50726538c6a4",
+          "implementation": "ptx",
+          "cublas_api_version": 120901,
+          "checked_outputs": 65536,
+          "failed_outputs": 0,
+          "nonfinite_outputs": 0,
+          "max_abs_error": 0,
+          "max_admission_tolerance": 0.06631599770943032,
+          "passed": true
+        }
+      },
+      "timing_summary": {
+        "metric": "samples_us.0",
+        "protocol": "11 controller-admitted unprofiled repetitions per implementation; same case inputs and GPU UUID",
+        "baseline": {
+          "evidence_id": "8648aaa9-386f-4beb-9f94-3a94553ad986",
+          "median_us": 83.96799862384796,
+          "mad_us": 1.024000346660614,
+          "confidence_interval_approx_95_us": [
+            83.07080985531053,
+            84.8651873923854
+          ],
+          "samples_us": [
+            83.96799862384796,
+            82.94399827718735,
+            83.96799862384796,
+            82.94399827718735,
+            82.94399827718735,
+            82.94399827718735,
+            83.96799862384796,
+            83.96799862384796,
+            84.99199897050858,
+            82.94399827718735,
+            83.96799862384796
+          ]
+        },
+        "candidate": {
+          "evidence_id": "22e1018e-56f9-466f-aa73-81c5ac75501c",
+          "median_us": 244.73600089550018,
+          "mad_us": 0.0,
+          "confidence_interval_approx_95_us": [
+            244.73600089550018,
+            244.73600089550018
+          ],
+          "samples_us": [
+            245.7599937915802,
+            246.7840015888214,
+            244.73600089550018,
+            244.73600089550018,
+            246.7840015888214,
+            245.7599937915802,
+            244.73600089550018,
+            244.73600089550018,
+            246.7840015888214,
+            244.73600089550018,
+            244.73600089550018
+          ]
+        },
+        "candidate_to_baseline_ratio": 2.9146342047741993,
+        "candidate_to_baseline_percent_change": 191.46342047741993
+      },
+      "measurement_note": "PTX stage-2 median was slower than cuBLAS; no promotion."
+    },
+    {
+      "id": "ragged",
+      "disposition": "evaluated_not_promoted",
+      "gpu_uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8",
+      "contract": {
+        "path": "cases/ragged/contract.json",
+        "sha256": "c4782a317116a7b54f844f32b2439ed160e9ca87ff8594e0f62c898bb39b28d0"
+      },
+      "represented_input": {
+        "path": "benchmark_runs/volta-gemm/cases/ragged/inputs.bin",
+        "sha256": "59be4d97102a1ebbdc6653ad41f01cd34dee75636ddcf597af05f592d9aec439"
+      },
+      "oracle": {
+        "path": "cases/ragged/cpu-oracle.json",
+        "sha256": "ec53dcc2273307e51fde0caa0faf98b99b675b7fec8204b74d5e17ec7ba53011"
+      },
+      "reference": {
+        "path": "benchmark_runs/volta-gemm/cases/ragged/reference.f64le",
+        "sha256": "e34819dd1772853a600b3b46b601c60b6fefba428be78987ee88e54f066c73a4"
+      },
+      "implementations": {
+        "baseline": {
+          "source": {
+            "path": "artifacts/kernels/volta-gemm/variants/gemm_baselines.cu",
+            "sha256": "f96ebc2c4cbc18883f5ddcd7feb0278823e6d913a7b612226a8d32a45cae5e50"
+          },
+          "binary": {
+            "path": "benchmark_runs/volta-gemm/evidence/shared/bin/gemm_runner-fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7.bin",
+            "sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7"
+          },
+          "executed_path": "benchmark_runs/volta-gemm/bin/gemm_runner"
+        },
+        "candidate": {
+          "source": {
+            "path": "artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cu",
+            "sha256": "db47085c542dd50f7b17125cfc88c84595a6e11aaff62fa0d2ebfc0c831af4ed"
+          },
+          "binary": {
+            "path": "benchmark_runs/volta-gemm/evidence/shared/bin/gemm_runner-fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7.bin",
+            "sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7"
+          },
+          "executed_path": "benchmark_runs/volta-gemm/bin/gemm_runner"
+        }
+      },
+      "libraries": [
+        {
+          "implementation": "baseline",
+          "name": "cuBLAS runtime used for GEMM",
+          "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/math_libs/12.9/targets/x86_64-linux/lib/libcublas.so.12.9.1.4",
+          "sha256": "d63456d94f1b8e2408a8a9538c8740eb474c9eba48a84f420b15e2e10fbcd048",
+          "version": "12.9.1.4",
+          "runtime_api_version": 120901,
+          "runtime_api_version_label": "12.9.1"
+        },
+        {
+          "implementation": "candidate",
+          "name": "cuBLAS runtime queried for API identity; PTX path performs GEMM",
+          "path": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/math_libs/12.9/targets/x86_64-linux/lib/libcublas.so.12.9.1.4",
+          "sha256": "d63456d94f1b8e2408a8a9538c8740eb474c9eba48a84f420b15e2e10fbcd048",
+          "version": "12.9.1.4",
+          "runtime_api_version": 120901,
+          "runtime_api_version_label": "12.9.1"
+        }
+      ],
+      "runs": {
+        "correctness_baseline": {
+          "execution": {
+            "path": "evidence/ragged/correctness_baseline/execution.json",
+            "sha256": "56371f92c2777a02218e82763adfb812ae4e6831b93f74f01c0ca723e8b5a6f2"
+          },
+          "evidence": {
+            "path": "evidence/ragged/correctness_baseline/evidence.json",
+            "sha256": "07de47c1694bf3d51c6ee3de6d940d1b27ad822c0807b6d5964719f2ac7bc6df"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/2453f5cf-7cb8-4943-8902-1877243006e9/lease.json",
+            "sha256": "e4d72a400adec3bafde6f58f9ca16dfc3357c3d7dedf1753409a1cb3cabf8f46",
+            "archive_path": "evidence/ragged/correctness_baseline/lease.json"
+          },
+          "target_output": {
+            "stdout": {
+              "path": "evidence/ragged/correctness_baseline/target.stdout.txt",
+              "sha256": "cbc0232ac6ff52a973f24dab66720e34059f57b1451be758eed3861fe882fac3",
+              "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/2453f5cf-7cb8-4943-8902-1877243006e9/foreground.stdout.txt"
+            },
+            "stderr": {
+              "path": "evidence/ragged/correctness_baseline/target.stderr.txt",
+              "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+              "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/2453f5cf-7cb8-4943-8902-1877243006e9/foreground.stderr.txt"
+            }
+          },
+          "evidence_id": "c25e1707-9b84-4956-8b45-1b3f967f35ab"
+        },
+        "correctness_candidate": {
+          "execution": {
+            "path": "evidence/ragged/correctness_candidate/execution.json",
+            "sha256": "48f3afdb26579c53eaef4b89ad2c6b66c4a961bdca224f353d7f9325f4298a80"
+          },
+          "evidence": {
+            "path": "evidence/ragged/correctness_candidate/evidence.json",
+            "sha256": "9f88598f6fca86a3d93b55c3904668bbd2061cf4431012ab0732b031657516a1"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/0201e5a0-4d0a-4533-a6d6-b6c52cb5a69d/lease.json",
+            "sha256": "d6e9dcd4089eaf5efbfaf45838ae2326a98934ecc3a3f8521a7b4310795e7722",
+            "archive_path": "evidence/ragged/correctness_candidate/lease.json"
+          },
+          "target_output": {
+            "stdout": {
+              "path": "evidence/ragged/correctness_candidate/target.stdout.txt",
+              "sha256": "b78cba6d558b31194d7eab83d120aa6d8bfee8342775e5727c6445c7db5f1113",
+              "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/0201e5a0-4d0a-4533-a6d6-b6c52cb5a69d/foreground.stdout.txt"
+            },
+            "stderr": {
+              "path": "evidence/ragged/correctness_candidate/target.stderr.txt",
+              "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb",
+              "original_path": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/0201e5a0-4d0a-4533-a6d6-b6c52cb5a69d/foreground.stderr.txt"
+            }
+          },
+          "evidence_id": "4ce37c96-e603-4ab9-8693-1c26f2dfc321"
+        },
+        "sanitizer_candidate": {
+          "execution": {
+            "path": "evidence/ragged/sanitizer_candidate/attempt-1/execution.json",
+            "sha256": "bd19adeb428bbeb189f1dbe9673831661ed4d73d0e9d4800eb1263aa034b343f"
+          },
+          "evidence": {
+            "path": "evidence/ragged/sanitizer_candidate/attempt-1/evidence.json",
+            "sha256": "26782adff06dcda624c164701fcf45ca667a136947c52436d43c9140f2da514b"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/c8b4de1e-1af1-4dee-9722-ce29f8a7a474/lease.json",
+            "sha256": "04267b56c7154edbf1ff768f16e4560bf7588b337961ffe6627e5af18587e9ee",
+            "archive_path": "evidence/ragged/sanitizer_candidate/attempt-1/lease.json"
+          },
+          "sanitizer_summary": {
+            "path": "evidence/ragged/sanitizer_candidate/attempt-1/summary.json",
+            "sha256": "1bb48e83eed764f78e7c2fc85b42225e50898294c4a4cad1a968c429d53157ac"
+          },
+          "target_output": {
+            "stdout": {
+              "path": "evidence/ragged/sanitizer_candidate/attempt-1/stdout.txt",
+              "sha256": "b78cba6d558b31194d7eab83d120aa6d8bfee8342775e5727c6445c7db5f1113"
+            },
+            "stderr": {
+              "path": "evidence/ragged/sanitizer_candidate/attempt-1/stderr.txt",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          },
+          "controller_output": {
+            "stdout": {
+              "path": "evidence/ragged/sanitizer_candidate/attempt-1/pc-foreground.stdout.txt",
+              "sha256": "a2756347de1284f8f955c3cda7bf4611038ac4b78b702583aef4dd6cb47aa563"
+            },
+            "stderr": {
+              "path": "evidence/ragged/sanitizer_candidate/attempt-1/pc-foreground.stderr.txt",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          }
+        },
+        "baseline_timing": {
+          "execution": {
+            "path": "evidence/ragged/baseline_timing/attempt-1/execution.json",
+            "sha256": "f17ac98a5baab4e83fa1946b4e9d62bf617b7a5cc145f2e18408f298a63085be"
+          },
+          "evidence": {
+            "path": "evidence/ragged/baseline_timing/attempt-1/evidence.json",
+            "sha256": "3fe6fac9cd9c46e6714a953dc1a550870f583da6c45e15611f2ca1f586d110c5"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/fbc4463a-2278-4bc6-9426-fd7248215875/lease.json",
+            "sha256": "ed44e8db86ef6c7d95129179f3cd48a755295d40bcfc3a69b844ee6b0d757222",
+            "archive_path": "evidence/ragged/baseline_timing/attempt-1/lease.json"
+          }
+        },
+        "candidate_timing": {
+          "execution": {
+            "path": "evidence/ragged/candidate_timing/attempt-1/execution.json",
+            "sha256": "e65da79680b463f0e2febdc806ec0f4b25c8e584b360cd4c4edcc9b8c5c19be8"
+          },
+          "evidence": {
+            "path": "evidence/ragged/candidate_timing/attempt-1/evidence.json",
+            "sha256": "88171da6535f5803d391891cef605670637a9e1b433dd0a5ea154ffd2718a273"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/d556e216-7767-47c1-97ce-06156439a06f/lease.json",
+            "sha256": "ac11b17ba21ab61bfa4a53f374eea2daccf96ef2771b2d879be27d65c2f7d4f5",
+            "archive_path": "evidence/ragged/candidate_timing/attempt-1/lease.json"
+          }
+        },
+        "profile_candidate": {
+          "execution": {
+            "path": "evidence/ragged/profile_candidate/attempt-1/execution.json",
+            "sha256": "e3ff83752ab9d78cb79d503bb4ba4287f7415dd0f84ff211105dc6ff4707e04b"
+          },
+          "evidence": {
+            "path": "evidence/ragged/profile_candidate/attempt-1/evidence.json",
+            "sha256": "b4c9ae2eec4c3111cfa266876b92e6741deacf10b98346b44e887e3a0e26625d"
+          },
+          "lease": {
+            "path": ".todo-orchestrator/runtime/background-artifacts/foreground/c4de1e30-8196-411e-a654-8a2c5ae65e38/lease.json",
+            "sha256": "be4bf8467bccca96d13e34df1fddc415c48f4e8f51e6d542139be88e39205de9",
+            "archive_path": "evidence/ragged/profile_candidate/attempt-1/lease.json"
+          },
+          "profile": {
+            "selected_kernel": "void unnamed>::ptx_gemm_kernel<32, 64, 32, 2, 0>(const unsigned short *, const unsigned short *, const float *, float *, int, int, int)",
+            "report": {
+              "path": "evidence/ragged/profile_candidate/attempt-1/ncu-run/report.ncu-rep",
+              "sha256": "a9491899bfc03d60412a6ef423d35624545bebaf1480240eb28704021e54beec"
+            },
+            "analysis": {
+              "path": "evidence/ragged/profile_candidate/attempt-1/analysis.json",
+              "sha256": "455fea14d4478e7cabf89c4017883cfb7d64361d5d4014eccfc042b55d38b3b3"
+            },
+            "shim_log": {
+              "path": "evidence/ragged/profile_candidate/attempt-1/ncu-shim.jsonl",
+              "sha256": "9d6416304b31ee62d9a211be1b279cc1bc3724779842c444adbf331dce1adb5d"
+            },
+            "raw_csv": {
+              "path": "evidence/ragged/profile_candidate/attempt-1/ncu-run/raw.csv",
+              "sha256": "03915cb5d25c80f45314233835bc0ef0cc743ecf1034b88a27297d235a6d66a5"
+            },
+            "raw_summary": {
+              "path": "evidence/ragged/profile_candidate/attempt-1/ncu-run/summary.json",
+              "sha256": "2a05c5bca43c0f99e50482ad7657d78c1844a97a356cfe9bc3f66dc45fcf9011"
+            }
+          }
+        }
+      },
+      "correctness": {
+        "correctness_baseline": {
+          "evidence_id": "c25e1707-9b84-4956-8b45-1b3f967f35ab",
+          "implementation": "cublas",
+          "cublas_api_version": 120901,
+          "checked_outputs": 65151,
+          "failed_outputs": 0,
+          "nonfinite_outputs": 0,
+          "max_abs_error": 0,
+          "max_admission_tolerance": 0.002519542664099607,
+          "passed": true
+        },
+        "correctness_candidate": {
+          "evidence_id": "4ce37c96-e603-4ab9-8693-1c26f2dfc321",
+          "implementation": "ptx",
+          "cublas_api_version": 120901,
+          "checked_outputs": 65151,
+          "failed_outputs": 0,
+          "nonfinite_outputs": 0,
+          "max_abs_error": 0,
+          "max_admission_tolerance": 0.002519542664099607,
+          "passed": true
+        }
+      },
+      "timing_summary": {
+        "metric": "samples_us.0",
+        "protocol": "11 controller-admitted unprofiled repetitions per implementation; same case inputs and GPU UUID",
+        "baseline": {
+          "evidence_id": "d2e109f3-f7f4-4db3-99ff-098a13ecea81",
+          "median_us": 50.175998359918594,
+          "mad_us": 2.0479969680309296,
+          "confidence_interval_approx_95_us": [
+            48.38162408679634,
+            51.970372633040846
+          ],
+          "samples_us": [
+            48.128001391887665,
+            48.128001391887665,
+            49.15200173854828,
+            78.84799689054489,
+            49.15200173854828,
+            50.175998359918594,
+            57.34400078654289,
+            55.296000093221664,
+            56.32000043988228,
+            50.175998359918594,
+            49.15200173854828
+          ]
+        },
+        "candidate": {
+          "evidence_id": "86d582a1-d2ef-42fd-b81f-9d574960ec0f",
+          "median_us": 47.10400104522705,
+          "mad_us": 0.0,
+          "confidence_interval_approx_95_us": [
+            47.10400104522705,
+            47.10400104522705
+          ],
+          "samples_us": [
+            47.10400104522705,
+            48.128001391887665,
+            47.10400104522705,
+            48.128001391887665,
+            47.10400104522705,
+            47.10400104522705,
+            48.128001391887665,
+            47.10400104522705,
+            47.10400104522705,
+            48.128001391887665,
+            47.10400104522705
+          ]
+        },
+        "candidate_to_baseline_ratio": 0.9387755617206511,
+        "candidate_to_baseline_percent_change": -6.122443827934887
+      },
+      "measurement_note": "PTX stage-2 median was lower than cuBLAS on this regime alone; no family promotion follows from this single-case result."
+    }
+  ]
+}

@@ -131,6 +131,19 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
                 {"path": str(self.repo_shim.resolve()), "sha256": self.repo_shim_sha},
                 {"path": str(self.fake_ncu.resolve()), "sha256": self.fake_ncu_sha},
             ))
+        implementation_name = (
+            "baseline" if role in {"correctness_baseline", "baseline_timing"}
+            else "candidate"
+        )
+        mode = "time" if role.endswith("timing") else "single" if role == "profile_candidate" else "correctness"
+        argv = [
+            str(implementation["binary_path"].relative_to(self.root)), "--case", "m16n16k16",
+            "--input", str(self.input_path.relative_to(self.root)),
+            "--impl", "cublas" if implementation_name == "baseline" else "ptx",
+            "--mode", mode,
+        ]
+        if implementation_name == "candidate":
+            argv.extend(("--stages", "2"))
         summary = {
             "status": "succeeded", "valid": True,
             "toolchain": {"root": "/opt/cuda/12.9", "version": "12.9",
@@ -144,6 +157,7 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
                 "gpus": [{"uuid": self.gpu, "compute_capability": "7.0"}],
                 "tools": {"nvcc": "Cuda compilation tools, release 12.9",
                           "ncu": {"path": str(self.fake_ncu), "version": "Nsight Compute CLI 2025.2.1"}},
+                "argv": argv,
             },
             "binaries": [{"path": str(implementation["binary_path"].resolve()),
                           "sha256": implementation["binary"]["sha256"]}],
@@ -165,6 +179,65 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
 
     def validate(self):
         return CHECK.validate(self.manifest_path)
+
+    def prepare_gemm_partial_case(self):
+        contract = json.loads(self.contract.read_text())
+        contract["numerical_contract"]["operator"] = CHECK.GEMM_OPERATOR
+        contract["shape"] = {"m": 16, "n": 16, "k": 16}
+        contract_sha = json_file(self.contract, contract)
+        self.manifest["cases"][0]["contract"]["sha256"] = contract_sha
+        contract_path = str(self.contract.resolve())
+        for run in self.manifest["cases"][0]["runs"].values():
+            exported_path = self.base / run["evidence"]["path"]
+            exported = json.loads(exported_path.read_text())
+            inputs = exported["evidence"]["summary"]["provenance"]["inputs"]
+            for item in inputs:
+                if item.get("path") == contract_path:
+                    item["sha256"] = contract_sha
+            run["evidence"]["sha256"] = json_file(exported_path, exported)
+        native = {
+            "format": CHECK.GEMM_CHECK_FORMAT,
+            "case_id": "m16n16k16",
+            "operator": "gemm",
+            "implementation": "ptx",
+            "shared_stages": 2,
+            "passed": True,
+            "checked_outputs": 16 * 16,
+            "failed_outputs": 0,
+            "nonfinite_outputs": 0,
+            "max_abs_error": 0,
+            "max_admission_tolerance": 0.004,
+            "max_tolerance_ratio": 0,
+        }
+        sanitizer = {
+            "tool": "compute-sanitizer", "status": "partial", "conclusive": False,
+            "tool_detail": "memcheck", "exit_status": 0, "error_count": 0,
+            "stdout_tail": [json.dumps(native)],
+        }
+        run = self.manifest["cases"][0]["runs"]["sanitizer_candidate"]
+        run["sanitizer_summary"]["sha256"] = json_file(self.sanitizer_summary, sanitizer)
+        self.write_manifest()
+
+    def set_controller_argv(self, role, argv):
+        run = self.manifest["cases"][0]["runs"][role]
+        evidence_path = self.base / run["evidence"]["path"]
+        exported = json.loads(evidence_path.read_text())
+        exported["evidence"]["summary"]["provenance"]["argv"] = argv
+        run["evidence"]["sha256"] = json_file(evidence_path, exported)
+        self.write_manifest()
+
+    def controller_argv(self, role):
+        run = self.manifest["cases"][0]["runs"][role]
+        evidence_path = self.base / run["evidence"]["path"]
+        exported = json.loads(evidence_path.read_text())
+        return exported["evidence"]["summary"]["provenance"]["argv"]
+
+    def replace_argv_option(self, argv, flag, value):
+        changed = list(argv)
+        occurrences = [i for i, item in enumerate(changed) if item == flag]
+        self.assertEqual(1, len(occurrences))
+        changed[occurrences[0] + 1] = value
+        return changed
 
     def test_complete_matched_evidence_passes(self):
         result = self.validate()
@@ -338,6 +411,182 @@ class VoltaEvidenceCheckTests(unittest.TestCase):
                 self.assertFalse(result["valid"])
                 self.assertIn("sanitizer reported errors or incomplete execution", result["errors"][0])
                 partial[field] = 0
+
+    def test_partial_memcheck_accepts_contract_bound_gemm_native_pass(self):
+        contract = {
+            "case_id": "large_dense",
+            "numerical_contract": {"operator": CHECK.GEMM_OPERATOR},
+            "shape": {"m": 1024, "n": 1024, "k": 1024},
+        }
+        native = {
+            "format": CHECK.GEMM_CHECK_FORMAT,
+            "case_id": "large_dense",
+            "operator": "gemm",
+            "implementation": "ptx",
+            "shared_stages": 2,
+            "passed": True,
+            "checked_outputs": 1024 * 1024,
+            "failed_outputs": 0,
+            "nonfinite_outputs": 0,
+            "max_abs_error": 0,
+            "max_admission_tolerance": 0.0045236260260969833,
+            "max_tolerance_ratio": 0,
+        }
+        partial = {
+            "tool": "compute-sanitizer", "status": "partial", "conclusive": False,
+            "tool_detail": "memcheck", "exit_status": 0, "error_count": 0,
+            "stdout_tail": [json.dumps(native)],
+        }
+        self.assertTrue(CHECK._partial_memcheck_has_application_pass(partial, self.gpu, contract))
+
+    def test_gemm_partial_native_pass_requires_controller_role_selectors(self):
+        self.prepare_gemm_partial_case()
+        result = self.validate()
+        self.assertTrue(result["valid"], result["errors"])
+
+    def test_gemm_controller_argv_rejects_wrong_implementation(self):
+        self.prepare_gemm_partial_case()
+        argv = self.replace_argv_option(
+            self.controller_argv("sanitizer_candidate"), "--impl", "cublas"
+        )
+        self.set_controller_argv("sanitizer_candidate", argv)
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertTrue(any("--impl selector does not match" in error for error in result["errors"]))
+
+    def test_gemm_controller_argv_rejects_wrong_stage_count(self):
+        self.prepare_gemm_partial_case()
+        argv = self.replace_argv_option(
+            self.controller_argv("candidate_timing"), "--stages", "1"
+        )
+        self.set_controller_argv("candidate_timing", argv)
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertTrue(any("--stages selector does not match" in error for error in result["errors"]))
+
+    def test_gemm_controller_argv_rejects_wrong_mode(self):
+        self.prepare_gemm_partial_case()
+        argv = self.replace_argv_option(
+            self.controller_argv("profile_candidate"), "--mode", "time"
+        )
+        self.set_controller_argv("profile_candidate", argv)
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertTrue(any("--mode selector does not match" in error for error in result["errors"]))
+
+    def test_gemm_controller_argv_rejects_wrong_case(self):
+        self.prepare_gemm_partial_case()
+        argv = self.replace_argv_option(
+            self.controller_argv("profile_candidate"), "--case", "other-case"
+        )
+        self.set_controller_argv("profile_candidate", argv)
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertTrue(any("--case selector does not match" in error for error in result["errors"]))
+
+    def test_gemm_controller_argv_rejects_wrong_input(self):
+        self.prepare_gemm_partial_case()
+        argv = self.replace_argv_option(
+            self.controller_argv("profile_candidate"), "--input",
+            "benchmark_runs/volta-case/inputs/wrong.bin"
+        )
+        self.set_controller_argv("profile_candidate", argv)
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertTrue(any("--input does not resolve to represented GEMM input" in error
+                            for error in result["errors"]))
+
+    def test_gemm_controller_argv_rejects_duplicate_selectors(self):
+        self.prepare_gemm_partial_case()
+        argv = self.controller_argv("sanitizer_candidate") + ["--impl", "cublas"]
+        self.set_controller_argv("sanitizer_candidate", argv)
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertTrue(any("must contain 1 --impl selector" in error for error in result["errors"]), result["errors"])
+
+    def test_gemm_controller_argv_rejects_duplicate_input_selectors(self):
+        self.prepare_gemm_partial_case()
+        argv = self.controller_argv("sanitizer_candidate") + [
+            "--input", "benchmark_runs/volta-case/inputs/represented.bin"
+        ]
+        self.set_controller_argv("sanitizer_candidate", argv)
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertTrue(any("exactly one --input selector" in error for error in result["errors"]), result["errors"])
+
+    def test_gemm_controller_argv_rejects_unbound_executable(self):
+        self.prepare_gemm_partial_case()
+        argv = list(self.controller_argv("sanitizer_candidate"))
+        argv[0] = "/tmp/unrelated-gemm-runner"
+        self.set_controller_argv("sanitizer_candidate", argv)
+        result = self.validate()
+        self.assertFalse(result["valid"])
+        self.assertTrue(any("argv[0] differs from the declared GEMM executable" in error
+                            for error in result["errors"]), result["errors"])
+
+    def test_partial_memcheck_rejects_unbound_or_incomplete_gemm_native_pass(self):
+        contract = {
+            "case_id": "large_dense",
+            "numerical_contract": {"operator": CHECK.GEMM_OPERATOR},
+            "shape": {"m": 1024, "n": 1024, "k": 1024},
+        }
+        native = {
+            "format": CHECK.GEMM_CHECK_FORMAT,
+            "case_id": "large_dense",
+            "operator": "gemm",
+            "implementation": "ptx",
+            "shared_stages": 2,
+            "passed": True,
+            "checked_outputs": 1024 * 1024,
+            "failed_outputs": 0,
+            "nonfinite_outputs": 0,
+            "max_abs_error": 0,
+            "max_admission_tolerance": 0.0045236260260969833,
+            "max_tolerance_ratio": 0,
+        }
+        partial = {
+            "tool": "compute-sanitizer", "status": "partial", "conclusive": False,
+            "tool_detail": "memcheck", "exit_status": 0, "error_count": 0,
+            "stdout_tail": [],
+        }
+        invalid_results = []
+        for field, value in (
+            ("format", "KERNELWIKI-OTHER-CHECK/1"),
+            ("case_id", "small_m"),
+            ("implementation", "cublas"),
+            ("shared_stages", 1),
+            ("checked_outputs", 1024 * 1024 - 1),
+            ("failed_outputs", True),
+            ("nonfinite_outputs", None),
+            ("failed_outputs", 1),
+            ("passed", False),
+            ("max_tolerance_ratio", 1.000001),
+            ("max_abs_error", 1000),
+            ("max_abs_error", -1),
+            ("max_admission_tolerance", True),
+            ("max_admission_tolerance", float("inf")),
+        ):
+            changed = json.loads(json.dumps(native))
+            if value is None:
+                changed.pop(field)
+            else:
+                changed[field] = value
+            invalid_results.append((field, changed))
+        for field, changed in invalid_results:
+            with self.subTest(field=field, value=changed.get(field)):
+                partial["stdout_tail"] = [json.dumps(changed)]
+                self.assertFalse(CHECK._partial_memcheck_has_application_pass(
+                    partial, self.gpu, contract
+                ))
+
+        for invalid_shape in ({"m": True, "n": 1024}, {"m": 0, "n": 1024}):
+            bad_contract = json.loads(json.dumps(contract))
+            bad_contract["shape"] = invalid_shape
+            partial["stdout_tail"] = [json.dumps(native)]
+            with self.subTest(shape=invalid_shape):
+                self.assertFalse(CHECK._partial_memcheck_has_application_pass(
+                    partial, self.gpu, bad_contract
+                ))
 
     def test_profile_report_must_be_present(self):
         self.manifest["cases"][0]["runs"]["profile_candidate"]["profile"].pop("report")

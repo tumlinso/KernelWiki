@@ -1,0 +1,28 @@
+{
+  "case_id": "ragged",
+  "controller_evidence_id": "54402569-417c-4ceb-b2a7-def2cff3b315",
+  "evidence": {
+    "path": "ragged-timing.evidence.json",
+    "sha256": "b54c3512e819d75f799843253c4149fe01aa56e42174789859371f8c52e648ab"
+  },
+  "execution": {
+    "path": "ragged-timing.controller.json",
+    "sha256": "3291bf31eb21b94c95d623f5b536b20a5664a0d093d89a1a4bb9083890f3f6d7"
+  },
+  "format": "KERNELWIKI-GEMM-SUPPLEMENT-RECEIPT/1",
+  "gpu_uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8",
+  "lease": {
+    "path": "ragged-timing.lease.json",
+    "sha256": "67ae09c3a0f2c078e06173efae85aef4b6799bea827bafcf12875b7b3dd43758"
+  },
+  "phase": "timing",
+  "runner_sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7",
+  "stderr": {
+    "path": "ragged-timing.stderr.txt",
+    "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb"
+  },
+  "stdout": {
+    "path": "ragged-timing.stdout.txt",
+    "sha256": "25991ea593fd6a45fbe152360ea2e68989c6e2cd53e9bfe989c60c4382d2ee58"
+  }
+}

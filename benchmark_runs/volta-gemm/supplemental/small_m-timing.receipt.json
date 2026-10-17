@@ -1,0 +1,28 @@
+{
+  "case_id": "small_m",
+  "controller_evidence_id": "b52c6783-7ed0-4fa4-8986-e98939a996ff",
+  "evidence": {
+    "path": "small_m-timing.evidence.json",
+    "sha256": "d1bcc3d400eeedb6fc0e5331252144a7f6683204b19eee2f049f314df63c77ac"
+  },
+  "execution": {
+    "path": "small_m-timing.controller.json",
+    "sha256": "53c153af2d99a4871c846123f58f585d42a5bbc9b8007ac2bcff3c76a6709d6b"
+  },
+  "format": "KERNELWIKI-GEMM-SUPPLEMENT-RECEIPT/1",
+  "gpu_uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8",
+  "lease": {
+    "path": "small_m-timing.lease.json",
+    "sha256": "265b7d01bf4317b9376abd62f1e9305669ce56162b97dcbc09c531a654d47cd6"
+  },
+  "phase": "timing",
+  "runner_sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7",
+  "stderr": {
+    "path": "small_m-timing.stderr.txt",
+    "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb"
+  },
+  "stdout": {
+    "path": "small_m-timing.stdout.txt",
+    "sha256": "e65f8cd53f7fc052eb3052f6c8a3c10536ab56cac89aac6455862715b13680df"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "argv": [
+    "/usr/bin/python3",
+    "benchmark_runs/volta-gemm/supplemental/compare_matrix.py",
+    "--case",
+    "small_m",
+    "--phase",
+    "correctness"
+  ],
+  "binary_paths": [
+    "benchmark_runs/volta-gemm/bin/gemm_runner"
+  ],
+  "command_cwd": "/home/tumlinson/KernelWiki",
+  "inputs": [
+    "artifacts/kernels/volta-gemm/variants/PROVENANCE.yaml",
+    "artifacts/kernels/volta-gemm/variants/README.md",
+    "artifacts/kernels/volta-gemm/variants/CUTLASS-PIN.md",
+    "artifacts/kernels/volta-gemm/variants/gemm_runner.cu",
+    "artifacts/kernels/volta-gemm/variants/gemm_contract.hpp",
+    "artifacts/kernels/volta-gemm/variants/gemm_baselines.cu",
+    "artifacts/kernels/volta-gemm/variants/gemm_baselines.cuh",
+    "artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cu",
+    "artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cuh",
+    "artifacts/kernels/volta-gemm/variants/gemm_e09_smoke.cu",
+    "artifacts/kernels/volta-gemm/variants/gemm_e09_smoke.cuh",
+    "benchmark_runs/volta-gemm/supplemental/compare_matrix.py",
+    "benchmark_runs/volta-gemm/bin/gemm_runner",
+    "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/math_libs/12.9/targets/x86_64-linux/lib/libcublas.so.12.9.1.4",
+    "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/LICENSE.txt",
+    "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/include/cutlass/arch/mma_sm70.h",
+    "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/include/cutlass/layout/tensor_op_multiplicand_sm70.h",
+    "benchmark_runs/volta-gemm/cases/small_m/contract.json",
+    "benchmark_runs/volta-gemm/cases/small_m/cpu-oracle.json",
+    "benchmark_runs/volta-gemm/cases/small_m/inputs.bin",
+    "benchmark_runs/volta-gemm/cases/small_m/reference.f64le"
+  ],
+  "paths": [
+    "artifacts/kernels/volta-gemm",
+    "benchmark_runs/volta-gemm/cases/small_m",
+    "benchmark_runs/volta-gemm/bin",
+    "benchmark_runs/volta-gemm/supplemental"
+  ],
+  "project_root": "/home/tumlinson/KernelWiki",
+  "quiescence": {
+    "consecutive_idle_samples": 3,
+    "interval_seconds": 0.25,
+    "timeout_seconds": 60
+  },
+  "recipe": "baseline",
+  "resources": {
+    "cpu_threads": 2,
+    "gpu_uuids": [
+      "GPU-21131915-1488-23af-38dd-1743ae1f5cc8"
+    ],
+    "gpus": 1
+  },
+  "schema_version": 1,
+  "timeout": 3600,
+  "toolchain": {
+    "require_sanitizer": true,
+    "root": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9"
+  }
+}

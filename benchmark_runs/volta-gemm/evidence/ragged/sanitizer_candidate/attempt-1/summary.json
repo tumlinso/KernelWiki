@@ -1,0 +1,25 @@
+{
+  "tool": "compute-sanitizer",
+  "status": "partial",
+  "conclusive": false,
+  "command": "benchmark_runs/volta-gemm/bin/gemm_runner --case ragged --input benchmark_runs/volta-gemm/cases/ragged/inputs.bin --impl ptx --mode correctness --reference benchmark_runs/volta-gemm/cases/ragged/reference.f64le --stages 2 ",
+  "exit_status": 0,
+  "signal": "",
+  "crash_class": "unknown",
+  "likely_domain": "unknown",
+  "next_step": "The sanitizer run did not report a device fault. Escalate to batch cuda-gdb if the crash still reproduces.",
+  "reasons": [
+    "compute-sanitizer reported zero errors."
+  ],
+  "matched_signatures": [],
+  "stderr_tail": [],
+  "stdout_tail": [
+    "{\"format\":\"KERNELWIKI-GEMM-CHECK/1\",\"case_id\":\"ragged\",\"operator\":\"gemm\",\"implementation\":\"ptx\",\"cublas_api_version\":120901,\"shared_stages\":2,\"max_abs_error\":0,\"max_admission_tolerance\":0.002519542664099607,\"max_tolerance_ratio\":0,\"checked_outputs\":65151,\"failed_outputs\":0,\"nonfinite_outputs\":0,\"passed\":true}"
+  ],
+  "backtrace_head": [],
+  "host_frames": [],
+  "source_hint": null,
+  "tool_detail": "memcheck",
+  "limitations": [],
+  "error_count": 0
+}

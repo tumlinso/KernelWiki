@@ -1,0 +1,8 @@
+{
+  "utc_timestamp": "2026-10-17T19:13:20Z",
+  "hostname": "testlsserver",
+  "pwd": "/home/tumlinson/KernelWiki",
+  "tool": "memcheck",
+  "sanitizer_bin": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/compute-sanitizer/compute-sanitizer",
+  "command": ["benchmark_runs/volta-gemm/bin/gemm_runner", "--case", "ragged", "--input", "benchmark_runs/volta-gemm/cases/ragged/inputs.bin", "--impl", "ptx", "--mode", "correctness", "--reference", "benchmark_runs/volta-gemm/cases/ragged/reference.f64le", "--stages", "2"]
+}

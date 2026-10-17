@@ -1,0 +1,2 @@
+[benchmark-mutex] acquired cuda-controller-foreground via /tmp/cuda_v100_benchmark.lock
+[benchmark-mutex] released cuda-controller-foreground via /tmp/cuda_v100_benchmark.lock

@@ -1,0 +1,16 @@
+V100 Crash Debug Decision
+
+tool: compute-sanitizer
+status: partial
+conclusive: no
+crash_class: unknown
+likely_domain: unknown
+exit_status: 0
+signal: 
+tool_detail: memcheck
+error_count: 0
+
+decision:
+- compute-sanitizer reported zero errors.
+
+next_step: The sanitizer run did not report a device fault. Escalate to batch cuda-gdb if the crash still reproduces.

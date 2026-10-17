@@ -1,0 +1,28 @@
+{
+  "case_id": "large_dense",
+  "controller_evidence_id": "b3a06728-89f0-4d65-9292-ee038aa0f94d",
+  "evidence": {
+    "path": "large_dense-correctness.evidence.json",
+    "sha256": "dabb9fc4e447a2e7ffcf252abe7dd5eb321793e6715ea7bd9bc040a4e72c0068"
+  },
+  "execution": {
+    "path": "large_dense-correctness.controller.json",
+    "sha256": "906a2d9067cacfcef7379c42392d511bdc8a7ffc94d5cc6e87ebf7cd4ada1f91"
+  },
+  "format": "KERNELWIKI-GEMM-SUPPLEMENT-RECEIPT/1",
+  "gpu_uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8",
+  "lease": {
+    "path": "large_dense-correctness.lease.json",
+    "sha256": "c690bbdcc4bdd37bcc7fd12a2c2e155d05e314c54aa89262219f1bc6e6da1932"
+  },
+  "phase": "correctness",
+  "runner_sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7",
+  "stderr": {
+    "path": "large_dense-correctness.stderr.txt",
+    "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb"
+  },
+  "stdout": {
+    "path": "large_dense-correctness.stdout.txt",
+    "sha256": "1034060ac114c02013a28143b585a9fefcdc1d9c9b208ac9ff145f29a0096e90"
+  }
+}

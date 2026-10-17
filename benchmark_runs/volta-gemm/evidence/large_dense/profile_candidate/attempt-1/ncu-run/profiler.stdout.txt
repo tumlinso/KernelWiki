@@ -1,0 +1,5 @@
+==WARNING== Note: Running with unmodified GPU clocks. If not controlled otherwise, profiling results may be inconsistent.
+==PROF== Connected to process 907463 (/home/tumlinson/KernelWiki/benchmark_runs/volta-gemm/bin/gemm_runner)
+==PROF== Profiling "ptx_gemm_kernel" - 0: 0%....50%....100% - 8 passes
+==PROF== Disconnected from process 907463
+==PROF== Report: /home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/bab63d2b-f4a3-41bc-a8bc-76a3d7270a85/ncu/run/report.ncu-rep

@@ -1,0 +1,11 @@
+{
+  "classification": "healthy",
+  "evidence_id": "99f67e2a-68f7-4a4d-a50d-96761f841c53",
+  "lease_receipt": "/home/tumlinson/KernelWiki/.todo-orchestrator/runtime/background-artifacts/foreground/ddc6aa1a-b50c-4090-8a3d-89a2e04e9780/lease.json",
+  "message": "No action-worthy result; evidence stored.",
+  "ok": true,
+  "returncode": 0,
+  "status": "succeeded",
+  "stderr_path": null,
+  "stdout_path": null
+}

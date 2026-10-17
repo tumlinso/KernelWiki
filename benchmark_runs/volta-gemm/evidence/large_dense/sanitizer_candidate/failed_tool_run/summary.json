@@ -1,0 +1,23 @@
+{
+  "tool": "compute-sanitizer",
+  "status": "partial",
+  "conclusive": false,
+  "command": "benchmark_runs/volta-gemm/bin/gemm_runner --case large_dense --input benchmark_runs/volta-gemm/cases/large_dense/inputs.bin --impl ptx --mode correctness --reference benchmark_runs/volta-gemm/cases/large_dense/reference.f64le --stages 2 ",
+  "exit_status": 1,
+  "signal": "",
+  "crash_class": "unknown",
+  "likely_domain": "unknown",
+  "next_step": "The sanitizer log did not expose an error summary. Inspect raw.log and rerun with a smaller reproducer if needed.",
+  "reasons": [
+    "The sanitizer log did not contain an `ERROR SUMMARY` line."
+  ],
+  "matched_signatures": [],
+  "stderr_tail": [],
+  "stdout_tail": [],
+  "backtrace_head": [],
+  "host_frames": [],
+  "source_hint": null,
+  "tool_detail": "memcheck",
+  "limitations": [],
+  "error_count": null
+}

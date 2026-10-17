@@ -1,0 +1,28 @@
+{
+  "case_id": "large_dense",
+  "controller_evidence_id": "36f6b97c-fa09-4427-86c9-ebfac66d3b5d",
+  "evidence": {
+    "path": "large_dense-timing.evidence.json",
+    "sha256": "6e7a3d756539c3ad12df0511d1892c041d6aff1d3c71049d0c637c206a548468"
+  },
+  "execution": {
+    "path": "large_dense-timing.controller.json",
+    "sha256": "4a784cdc0993ab3be85158c3bbb2ee4f6fac082c9fa8e02eeaa840a6a9311041"
+  },
+  "format": "KERNELWIKI-GEMM-SUPPLEMENT-RECEIPT/1",
+  "gpu_uuid": "GPU-21131915-1488-23af-38dd-1743ae1f5cc8",
+  "lease": {
+    "path": "large_dense-timing.lease.json",
+    "sha256": "bc14de5eacfb8fb2d08f3bbe1c4bcd2abb1cb08d37a62c542e141a02acd3dd5f"
+  },
+  "phase": "timing",
+  "runner_sha256": "fd6989c76a9d3925236771e4c7e8a9f70cda5fa2820420d1d1623e8408330ac7",
+  "stderr": {
+    "path": "large_dense-timing.stderr.txt",
+    "sha256": "3373596d706ef6709d41f59bf7f7b78c2973606ba87dfa5ce4daeaaa2e7a10bb"
+  },
+  "stdout": {
+    "path": "large_dense-timing.stdout.txt",
+    "sha256": "fa1c3df4dfc4b891a6ca31c4001f035b2db9e0b03bc2668a4696f20edd891c8e"
+  }
+}

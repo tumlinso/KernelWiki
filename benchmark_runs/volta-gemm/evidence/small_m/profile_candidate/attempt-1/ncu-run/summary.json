@@ -1,0 +1,49 @@
+{
+  "tool": "ncu",
+  "status": "partial",
+  "counter_valid": true,
+  "timing_valid": false,
+  "needs_more_data": true,
+  "measurement_scope": "kernel counters",
+  "collection_set": "",
+  "launch_count": null,
+  "reasons": [
+    "Nsight Compute is valid for kernel-cause diagnosis here, but not for throughput timing because replay changes runtime.",
+    "Hottest kernel class: mixed.",
+    "Primary next move: Pair this with Nsight Systems and the benchmark output before changing the kernel.",
+    "- Kernel sample count is light. Rerun with more repeated hot launches if you need stronger confidence."
+  ],
+  "recommended_route": "profile",
+  "recommended_route_reason": "The kernel summary is mixed, so pair it with timeline or benchmark evidence first.",
+  "hot_kernel": {
+    "name": "void unnamed>::ptx_gemm_kernel<16, 32, 32, 2, 0>(const unsigned short *, const unsigned short *, const float *, float *, int, int, int)",
+    "share_pct": 100.0,
+    "samples": 1,
+    "class": "mixed",
+    "next_step": "Pair this with Nsight Systems and the benchmark output before changing the kernel.",
+    "dram_pct": 14.242166,
+    "sm_pct": 15.200614,
+    "tensor_pct": 1.902885,
+    "occupancy": null,
+    "registers_per_thread": 95.0
+  },
+  "top_kernels": [
+    {
+      "name": "void unnamed>::ptx_gemm_kernel<16, 32, 32, 2, 0>(const unsigned short *, const unsigned short *, const float *, float *, int, int, int)",
+      "share_pct": 100.0,
+      "samples": 1,
+      "class": "mixed",
+      "next_step": "Pair this with Nsight Systems and the benchmark output before changing the kernel.",
+      "dram_pct": 14.242166,
+      "sm_pct": 15.200614,
+      "tensor_pct": 1.902885,
+      "occupancy": null,
+      "registers_per_thread": 95.0
+    }
+  ],
+  "next_step": "Pair this with Nsight Systems and the benchmark output before changing the kernel.",
+  "notes": [
+    "Use benchmark output or Nsight Systems for throughput comparisons.",
+    "Use Nsight Compute to decide whether poor performance comes from bytes moved, compute path choice, registers, or shared memory."
+  ]
+}

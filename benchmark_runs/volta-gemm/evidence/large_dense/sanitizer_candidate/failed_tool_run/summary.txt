@@ -1,0 +1,15 @@
+V100 Crash Debug Decision
+
+tool: compute-sanitizer
+status: partial
+conclusive: no
+crash_class: unknown
+likely_domain: unknown
+exit_status: 1
+signal: 
+tool_detail: memcheck
+
+decision:
+- The sanitizer log did not contain an `ERROR SUMMARY` line.
+
+next_step: The sanitizer log did not expose an error summary. Inspect raw.log and rerun with a smaller reproducer if needed.

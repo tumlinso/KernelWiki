@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "project_root": "/home/tumlinson/KernelWiki",
+  "command_cwd": "/home/tumlinson/KernelWiki",
+  "recipe": "baseline",
+  "toolchain": {
+    "root": "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9",
+    "require_sanitizer": true
+  },
+  "benchmark": {
+    "build_argv": [
+      "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/cuda/12.9/bin/nvcc",
+      "-O3",
+      "-std=c++17",
+      "-lineinfo",
+      "-arch=sm_70",
+      "-I",
+      "artifacts/kernels/volta-gemm/variants",
+      "-I",
+      "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/include",
+      "-o",
+      "benchmark_runs/volta-gemm/bin/gemm_runner",
+      "artifacts/kernels/volta-gemm/variants/gemm_runner.cu",
+      "artifacts/kernels/volta-gemm/variants/gemm_baselines.cu",
+      "artifacts/kernels/volta-gemm/variants/gemm_e09_smoke.cu",
+      "artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cu",
+      "-lcublas"
+    ]
+  },
+  "argv": [
+    "benchmark_runs/volta-gemm/bin/gemm_runner",
+    "--onehot-multitile-smoke"
+  ],
+  "timeout": 600,
+  "resources": {"gpus": 1, "cpu_threads": 2},
+  "quiescence": {
+    "consecutive_idle_samples": 3,
+    "interval_seconds": 0.25,
+    "timeout_seconds": 30
+  },
+  "binary_paths": ["benchmark_runs/volta-gemm/bin/gemm_runner"],
+  "paths": ["artifacts/kernels/volta-gemm", "benchmark_runs/volta-gemm"],
+  "inputs": [
+    "artifacts/kernels/volta-gemm/variants/gemm_runner.cu",
+    "artifacts/kernels/volta-gemm/variants/gemm_baselines.cu",
+    "artifacts/kernels/volta-gemm/variants/gemm_baselines.cuh",
+    "artifacts/kernels/volta-gemm/variants/gemm_e09_smoke.cu",
+    "artifacts/kernels/volta-gemm/variants/gemm_e09_smoke.cuh",
+    "artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cu",
+    "artifacts/kernels/volta-gemm/variants/volta_ptx_gemm.cuh",
+    "artifacts/kernels/volta-gemm/variants/gemm_contract.hpp",
+    "artifacts/kernels/volta-gemm/variants/CUTLASS-PIN.md",
+    "/opt/nvidia/hpc_sdk/Linux_x86_64/26.1/REDIST/math_libs/12.9/targets/x86_64-linux/lib/libcublas.so.12.9.1.4",
+    "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/LICENSE.txt",
+    "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/include/cutlass/arch/mma_sm70.h",
+    "/tmp/kernelwiki-gemm-prep.X4Sd0K/cutlass-v2.11.0/include/cutlass/layout/tensor_op_multiplicand_sm70.h"
+  ]
+}

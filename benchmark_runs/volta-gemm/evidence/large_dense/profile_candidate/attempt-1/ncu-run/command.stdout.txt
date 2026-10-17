@@ -1,0 +1,1 @@
+{"format":"KERNELWIKI-GEMM-LAUNCH/1","case_id":"large_dense","implementation":"ptx","operator":"gemm","cublas_api_version":120901,"shared_stages":2}

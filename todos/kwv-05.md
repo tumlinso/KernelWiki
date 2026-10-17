@@ -1,14 +1,16 @@
+
+
 <!-- todo-orchestrator:v2-managed:start -->
 # KWV-05: Build row kernels and locate memory/fusion crossovers
 
-Task revision: `2`; current project revision is in `todo-status.md`.
+Task revision: `44`; current project revision is in `todo-status.md`.
 
 ## Objective
 Supply stable softmax and one normalization operator; test useful traffic/request and residency tradeoffs without building a reduction library.
 
 ## State
-- Lifecycle: `planned`
-- Execution: `ready`
+- Lifecycle: `in_progress`
+- Execution: `claimed`
 - Parallel policy: `serial`
 - Result: `-`
 
