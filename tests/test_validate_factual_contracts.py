@@ -507,22 +507,34 @@ class ShippedDocumentationContractTests(unittest.TestCase):
             self.assertTrue(output.strip(), (path, command))
             self.assertNotIn("No matches.", output, (path, command, output))
 
-    def test_current_audit_receipts_match_discovered_tests_and_bundles(self):
-        discovered_tests = sum(
-            len(re.findall(r"^\s+def test_", path.read_text(encoding="utf-8"), re.MULTILINE))
-            for path in (ROOT / "tests").glob("test_*.py")
-        )
+    def test_audit_receipts_keep_historical_runs_scoped_and_report_live_bundles(self):
         bundles = len(list((ROOT / "artifacts").rglob("PROVENANCE.yaml")))
+        regression = (ROOT / "audit/regression-tests.md").read_text(encoding="utf-8")
+        validation = (ROOT / "audit/validation-results.md").read_text(encoding="utf-8")
+        evidence = (ROOT / "audit/evidence-ledger.md").read_text(encoding="utf-8")
 
-        self.assertEqual(158, discovered_tests)
-        for path in (ROOT / "audit/regression-tests.md", ROOT / "audit/validation-results.md"):
-            self.assertIn(f"{discovered_tests} tests", path.read_text(encoding="utf-8"))
-        for path in (
-            ROOT / "data/phase3-verify-verbatim-audit.md",
-            ROOT / "audit/evidence-ledger.md",
-            ROOT / "audit/validation-results.md",
-        ):
-            self.assertIn(f"{bundles} bundle", path.read_text(encoding="utf-8"))
+        historical_gate = re.search(
+            r"## Current full discovery gate — (?P<date>\d{4}-\d{2}-\d{2}) UTC\s+"
+            r"Command: `python3 -m unittest discover -s tests -p 'test_\*\.py'`\s+"
+            r"Result: \*\*pass — (?P<count>\d+) tests\*\*",
+            regression,
+        )
+        self.assertIsNotNone(historical_gate, "dated regression-test receipt is missing")
+        historical_count = historical_gate.group("count")
+        historical_date = historical_gate.group("date")
+        self.assertIn(f"{historical_count} tests", validation)
+        self.assertIn(f"checked {historical_date}", evidence)
+        self.assertIn(f"{historical_count} tests successfully", evidence)
+
+        status = subprocess.run(
+            [sys.executable, str(SCRIPTS / "repo_status.py")],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=20,
+        )
+        self.assertEqual(0, status.returncode, status.stdout + status.stderr)
+        self.assertIn(f"Artifact bundles: {bundles}", status.stdout)
 
         receipt = (ROOT / "data/phase3-verify-verbatim-audit.md").read_text(encoding="utf-8")
         self.assertIn("Historical stdout", receipt)
@@ -538,7 +550,8 @@ class ShippedDocumentationContractTests(unittest.TestCase):
         skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
 
         self.assertEqual(page_count, index_count)
-        self.assertIn(f"— {index_count} techniques with architectures", skill)
+        self.assertIn("`queries/by-technique.md`", skill)
+        self.assertIn("run `python3 scripts/repo_status.py` for current corpus counts", skill)
 
     def test_nvfp4_primer_row_matches_retained_workload_scale_contract(self):
         primer = (ROOT / "references/primer.md").read_text(encoding="utf-8")
@@ -635,11 +648,21 @@ class ShippedDocumentationContractTests(unittest.TestCase):
         }
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
+        schema = validate.yaml.safe_load((ROOT / "data/schemas.yaml").read_text(encoding="utf-8"))
+        declared_modes = set(schema["artifact-bundle-provenance"]["constraints"]["asset_mode"])
 
-        self.assertEqual({"verbatim"}, modes)
+        self.assertTrue(modes <= declared_modes)
+        self.assertIn("verbatim", modes)
+        self.assertIn("derived", modes)
+        derived_manifests = [
+            self.frontmatter(path)
+            for path in (ROOT / "artifacts").rglob("PROVENANCE.yaml")
+            if self.frontmatter(path)["asset_mode"] == "derived"
+        ]
+        self.assertTrue(derived_manifests)
+        self.assertTrue(all(item.get("derived_from") for item in derived_manifests))
         for text in (readme, skill):
             self.assertIn("Verbatim upstream asset bundles", text)
-            self.assertNotIn("Verbatim/extracted/derived asset bundles", text)
 
     def test_gemv_progression_points_to_technique_page(self):
         examples = (ROOT / "references/examples.md").read_text(encoding="utf-8")

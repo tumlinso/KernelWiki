@@ -1,6 +1,6 @@
-# Volta, Hopper & Blackwell Kernel Optimization Knowledge Base
+# Volta, Ampere, Hopper & Blackwell Kernel Knowledge Base
 
-> Blackwell (SM100) and Hopper (SM90) kernel corpus, with source-backed Volta/V100 (SM70) hardware guidance and bounded native V100 kernel case studies.
+> Blackwell (SM100) and Hopper (SM90) kernel corpus, source-backed Volta/V100 (SM70) and Ampere/A100 (SM80) hardware contracts, and bounded native V100 kernel case studies.
 > Optimized for LLM agent retrieval. See [CLAUDE.md](CLAUDE.md) for schema and conventions.
 > **For Claude Code agents**: this repository is a Claude Code skill — see [SKILL.md](SKILL.md).
 
@@ -19,6 +19,7 @@ See [references/examples.md](references/examples.md) for 10 worked query pattern
 | I want to... | Go to |
 |---|---|
 | Ask about V100 / Volta (`sm70`) | [Volta routing reference](references/volta.md) |
+| Ask about A100 / Ampere (`sm80`) | [Ampere routing reference](references/ampere.md) |
 | Browse exact, family-only, or unknown architecture evidence | [queries/by-architecture.md](queries/by-architecture.md) |
 | Fix a performance problem | [queries/by-problem.md](queries/by-problem.md) |
 | Learn a specific technique | [queries/by-technique.md](queries/by-technique.md) |
@@ -36,10 +37,13 @@ See [references/examples.md](references/examples.md) for 10 worked query pattern
 - [hw-2sm-cooperative](wiki/hardware/2sm-cooperative.md) — Two-SM cooperative MMA
 - [hw-nvfp4](wiki/hardware/nvfp4.md) — NVFP4 and block-scaled narrow precision
 - [hw-pdl-gdc](wiki/hardware/pdl-gdc.md) — Programmatic Dependent Launch / Grid Dependency Control
+- [hw-ampere-async-copy](wiki/hardware/ampere-async-copy.md) — SM80 asynchronous global-to-shared copy and split barriers
+- [hw-ampere-tensor-operations](wiki/hardware/ampere-tensor-operations.md) — SM80 Tensor Core arithmetic eligibility
+- [hw-ampere-memory-resources](wiki/hardware/ampere-memory-resources.md) — SM80/A100 cache, shared-memory, and residency limits
 
 ## Volta / V100 (SM70) Reference
 
-These six hardware pages are source-reported concept guidance. Exact V100 queries use `sm70`; the `volta` family route can also include neighboring `sm72` evidence. Local kernel measurements below are separate experimental results, bounded to their exact contracts and shapes.
+These hardware pages are source-reported concept guidance. Exact V100 queries use `sm70`; the `volta` family route can also include neighboring `sm72` evidence. Local kernel measurements below are separate experimental results, bounded to their exact contracts and shapes.
 
 - [hw-volta-mma](wiki/hardware/volta-mma.md) — explicit MMA and opaque WMMA boundaries
 - [hw-volta-numerics](wiki/hardware/volta-numerics.md) — representation and accumulation contracts
@@ -47,8 +51,10 @@ These six hardware pages are source-reported concept guidance. Exact V100 querie
 - [hw-volta-participation](wiki/hardware/volta-participation.md) — collective participation and progress
 - [hw-volta-feature-boundaries](wiki/hardware/volta-feature-boundaries.md) — native SM70 features and software representations
 - [hw-volta-operand-delivery](wiki/hardware/volta-operand-delivery.md) — profiling-led operand delivery investigation
+- [hw-volta-vmm-addressing](wiki/hardware/volta-vmm-addressing.md) — public VMM mapping, permission, and alias consistency contracts
 
 Use [`references/volta.md`](references/volta.md) to route a question and follow each page's source IDs before applying it.
+Use [`references/ampere.md`](references/ampere.md) for exact SM80/A100 copy, Tensor Core, and memory-resource retrieval.
 
 ## Native V100 Kernel Studies
 

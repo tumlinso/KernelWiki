@@ -1,4 +1,4 @@
-# KernelWiki — Volta, Hopper & Blackwell Kernel Optimization Knowledge Base
+# KernelWiki — Volta, Ampere, Hopper & Blackwell Kernel Knowledge Base
 > [!IMPORTANT]
 > This skill is maintained as a standalone submodule of
 > [Kernel Design Agents (KDA)](https://github.com/mit-han-lab/kernel-design-agents)
@@ -12,7 +12,7 @@
 > 2026-08-18 UTC. The local Volta studies are dated 2026-10-17; their source and
 > execution records carry separate evidence dates.
 
-A structured knowledge base with source-backed Volta/V100 (SM70) hardware guidance and bounded, locally measured native kernel studies, alongside a larger NVIDIA Blackwell (SM100, B200) and Hopper (SM90, H100) kernel corpus. It is packaged as a Claude Code skill. The repository root **is** the skill directory — clone it directly into `~/.claude/skills/` and it works out of the box.
+A structured knowledge base with source-backed Volta/V100 (SM70) and Ampere/A100 (SM80) hardware contracts, bounded locally measured native V100 kernel studies, and a larger NVIDIA Blackwell (SM100, B200) and Hopper (SM90, H100) kernel corpus. It is packaged as a Claude Code skill. The repository root **is** the skill directory — clone it directly into `~/.claude/skills/` and it works out of the box.
 
 ## Install as a Claude Code Skill
 
@@ -49,7 +49,8 @@ export BLACKWELL_WIKI_ROOT=/path/to/KernelWiki
 - Auto-generated cross-reference indices — [by architecture](queries/by-architecture.md) / problem / technique / hardware feature / repo / kernel type / language.
 - Reviewed candidate ledgers with include/defer/exclude decisions.
 - **Hybrid version-claim registry** ([`data/version-claims.yaml`](data/version-claims.yaml)) — per-page `version_sensitive: <id>` pointers + central registry, validated for bidirectional consistency
-- **Volta/V100 (SM70)** — six source-reported hardware concept pages sit beside locally compiled, correctness-checked, and measured GEMM, row, attention, grouped/gated, W4A16, and recurrent-state studies. Their results are experimental and limited to the published contracts and shapes; they do not imply global optimality or transfer automatically to SM72, Hopper, or Blackwell.
+- **Volta/V100 (SM70)** — source-reported MMA, numerical, resource, synchronization, feature-boundary, operand-delivery, and VMM contracts sit beside locally compiled, correctness-checked, and measured GEMM, row, attention, grouped/gated, W4A16, and recurrent-state studies. Their results are experimental and limited to the published contracts and shapes; they do not imply global optimality or transfer automatically to SM72, Hopper, or Blackwell.
+- **Ampere/A100 (SM80)** — source-reported asynchronous copy/barrier, Tensor Core eligibility, and memory/resource contracts. They distinguish SM80/A100 values from other Ampere-family targets and report no local performance results.
 - [Volta implementation handoff](planning/volta-bootstrap/implementation/IMPLEMENTATION-HANDOFF.md) — compact kernel-family outcomes, exact/family query receipts, source-following and code-access results, and remaining limits.
 - Run `python3 scripts/repo_status.py` for current corpus counts.
 
@@ -79,6 +80,7 @@ python3 scripts/grep_wiki.py "tcgen05" --only wiki
 - [`SKILL.md`](SKILL.md) — Skill entry point: when to engage, 5 navigation paths, output contract.
 - [`references/primer.md`](references/primer.md) — Topic map: hardware features, techniques, kernels, symptoms → canonical page IDs.
 - [`references/volta.md`](references/volta.md) — Volta/V100 route, with exact-target and family-filter guidance.
+- [`references/ampere.md`](references/ampere.md) — Ampere/A100 route, with SM80 copy, Tensor Core, and resource contracts.
 - [`references/schema.md`](references/schema.md) — Frontmatter schema, confidence rules, reproducibility ladder, controlled vocabulary, canonical aliases.
 - [`references/examples.md`](references/examples.md) — 10 worked query patterns (user question → command sequence → synthesis).
 - [`CLAUDE.md`](CLAUDE.md) — Extended schema + navigation reference for Claude Code.
@@ -135,7 +137,7 @@ These commands also work without PyYAML. Installing `requirements.txt` is option
 
 ## Scope Rules
 
-- **Architecture scope** — Volta/V100 (SM70) has a separate exact route for both hardware guidance and measured case studies. Blackwell remains the larger kernel corpus; its legacy Hopper-only pages require `blackwell_relevance`, while source pages are exempt. A `volta` family query can include neighboring `sm72` material; exact V100 implementation claims remain `sm70`-scoped.
+- **Architecture scope** — Volta/V100 (SM70) has a separate exact route for hardware guidance and measured case studies; Ampere/A100 (SM80) has an exact source-backed contract route. Blackwell remains the larger kernel corpus; its legacy Hopper-only pages require `blackwell_relevance`, while source pages are exempt. A `volta` family query can include neighboring `sm72` material; exact V100 implementation claims remain `sm70`-scoped. An `ampere` family query may include multiple SM 8.x targets; page values remain scoped to their listed architectures.
 - **Kernel-only** — No distributed-system topics (DeepEP, DualPipe, EPLB are out of scope).
 - **English canonical** — All content in English.
 - **First-class DSLs** — CuTe DSL, CUDA C++, PTX, Triton. TileLang / cuTile / JAX-Pallas mentioned but no dedicated guides.

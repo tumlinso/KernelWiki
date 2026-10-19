@@ -25,6 +25,48 @@ tma:
   - TMA
   - cp.async.bulk
 
+cp-async:
+  - "cp.async"
+  - "asynchronous global to shared copy"
+  - "async copy"
+
+lop3:
+  - "LOP3"
+  - "three-input Boolean logic"
+  - "three input Boolean logic"
+
+prmt:
+  - "PRMT"
+  - "byte permutation"
+  - "__byte_perm"
+
+fns:
+  - "__fns"
+  - "find nth set bit"
+
+dp4a:
+  - "DP4A"
+  - "__dp4a"
+  - "packed byte dot product"
+
+dp2a:
+  - "DP2A"
+  - "__dp2a_lo"
+  - "__dp2a_hi"
+
+tf32:
+  - TensorFloat-32
+  - "Tensor Float 32"
+
+vmm:
+  - "virtual memory management"
+  - "virtual alias"
+  - "virtual address alias"
+
+sm80:
+  - A100
+  - "sm_80"
+
 2sm-cooperative:
   - "2-SM cooperative"
   - "two-SM cooperative"

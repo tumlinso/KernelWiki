@@ -6,20 +6,38 @@ Use this route for V100 `sm70`. Select an exact target for executable guidance; 
 python3 scripts/query.py --architecture V100 --type hardware --compact
 python3 scripts/query.py --architecture V100 --type kernel --compact
 python3 scripts/get_page.py hw-volta-mma --follow-sources
+python3 scripts/get_page.py hw-volta-integer-routing --follow-sources
 python3 scripts/get_page.py kernel-volta-attention --follow-sources --include-code
 python3 scripts/query.py --architecture volta --compact
 ```
 
-## Current material
+## Hardware contracts
 
 | Decision | Page |
 |---|---|
 | MMA/WMMA and fragment ownership | `hw-volta-mma` |
 | Register/shared/warp tradeoffs | `hw-volta-resources` |
 | Synchronization and progress | `hw-volta-participation` |
+| LOP3, PRMT, FNS, DP4A, and warp match/ballot contracts | `hw-volta-integer-routing` |
 | Is a modern mechanism native on V100? | `hw-volta-feature-boundaries` |
 | Accumulation or precision changes | `hw-volta-numerics` |
 | A remaining operand/dependency bottleneck | `hw-volta-operand-delivery` |
+| Public VMM mappings, permissions, alias consistency | `hw-volta-vmm-addressing` |
+
+## Atlas evidence carried in the Wiki
+
+These are bounded experiment pages, separate from the hardware contract. They
+retain their tested subset and source/access limitations:
+
+- E09 explicit PTX lane/slot coordinate check: `hw-volta-atlas-e09-mma-coordinate`
+- E11 packed intersection comparison: `hw-volta-atlas-e11-packed-intersection`
+- E12 independent local transforms: `hw-volta-atlas-e12-independent-transform`
+- E16 resident scheduling versus batching/graph replay: `hw-volta-atlas-e16-resident-scheduling`
+- E23 fixed VMM aliases versus a serial modulo ring: `hw-volta-atlas-e23-vmm-aliasing`
+- E39 bitplane addition: `hw-volta-atlas-e39-bitplane-addition`
+
+Use [the Ampere route](ampere.md) for A100/SM80 asynchronous copy, Tensor
+Core, and resource contracts.
 
 ## Native V100 kernel case studies
 

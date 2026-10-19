@@ -192,6 +192,10 @@ When asking about:
 - GDN / Gated Delta Net → `gated-delta-net`
 - NSA / Native Sparse Attention → `sparse-attention`
 - WGMMA / wgmma.mma_async → `wgmma`
+- A100 / sm_80 → exact architecture `sm80`
+- cp.async / async copy → `cp-async`
+- TensorFloat-32 → `tf32`
+- CUDA virtual memory management / virtual alias → `vmm`
 
 ## Cross-Reference Fields
 

@@ -1189,6 +1189,7 @@ Source-PR pages whose validated evidence review found no family-level or exact a
 
 | Page | Path |
 |------|------|
+| [Circuit-Bending Atlas: pinned V100 experiment campaign summaries](../sources/blogs/atlas-v100-campaign-20261006.md) | `sources/blogs/atlas-v100-campaign-20261006.md` |
 | [V100 atlas campaign: bounded ownership and numerical evidence](../sources/blogs/volta-atlas-campaign.md) | `sources/blogs/volta-atlas-campaign.md` |
 | [Volta attention: prefill, decode, and selected-block measurements](../sources/blogs/volta-attention-measurements.md) | `sources/blogs/volta-attention-measurements.md` |
 | [Volta FP16-input GEMM: native correctness and measured alternatives](../sources/blogs/volta-gemm-measurements.md) | `sources/blogs/volta-gemm-measurements.md` |
@@ -1200,16 +1201,26 @@ Source-PR pages whose validated evidence review found no family-level or exact a
 | [FastAttention](../sources/docs/volta-fastattention.md) | `sources/docs/volta-fastattention.md` |
 | [FTTN: Feature-Targeted Testing for Numerical Properties of Matrix Accelerators](../sources/docs/volta-fttn.md) | `sources/docs/volta-fttn.md` |
 | [Dissecting the NVIDIA Volta GPU Architecture via Microbenchmarking](../sources/docs/volta-jia.md) | `sources/docs/volta-jia.md` |
+| [NVIDIA CUDA Math API Reference Manual 12.9.1](../sources/docs/volta-math-12-9.md) | `sources/docs/volta-math-12-9.md` |
 | [NVIDIA PTX ISA 8.8 (CUDA 12.9.1 archive)](../sources/docs/volta-ptx-8-8.md) | `sources/docs/volta-ptx-8-8.md` |
 | [SparkAttention](../sources/docs/volta-sparkattention.md) | `sources/docs/volta-sparkattention.md` |
 | [NVIDIA: Navigating GPU Architecture Support](../sources/docs/volta-toolkit-support.md) | `sources/docs/volta-toolkit-support.md` |
 | [NVIDIA Volta Tuning Guide (CUDA 12.9.1 archive)](../sources/docs/volta-tuning-12-9.md) | `sources/docs/volta-tuning-12-9.md` |
+| [Volta experiment E09: explicit MMA coordinates](../wiki/hardware/volta-atlas-e09-mma-coordinate.md) | `wiki/hardware/volta-atlas-e09-mma-coordinate.md` |
+| [Volta experiment E11: packed set intersections](../wiki/hardware/volta-atlas-e11-packed-intersection.md) | `wiki/hardware/volta-atlas-e11-packed-intersection.md` |
+| [Volta experiment E12: independent local transform](../wiki/hardware/volta-atlas-e12-independent-transform.md) | `wiki/hardware/volta-atlas-e12-independent-transform.md` |
+| [Volta experiment E16: resident scheduling comparison](../wiki/hardware/volta-atlas-e16-resident-scheduling.md) | `wiki/hardware/volta-atlas-e16-resident-scheduling.md` |
+| [Volta experiment E23: fixed virtual-memory alias view](../wiki/hardware/volta-atlas-e23-vmm-aliasing.md) | `wiki/hardware/volta-atlas-e23-vmm-aliasing.md` |
+| [Volta experiment E39: bitplane full-adder comparison](../wiki/hardware/volta-atlas-e39-bitplane-addition.md) | `wiki/hardware/volta-atlas-e39-bitplane-addition.md` |
+| [Volta: bounded Circuit-Bending Atlas campaign evidence](../wiki/hardware/volta-atlas-evidence.md) | `wiki/hardware/volta-atlas-evidence.md` |
 | [V100: native features versus software representations](../wiki/hardware/volta-feature-boundaries.md) | `wiki/hardware/volta-feature-boundaries.md` |
+| [Volta: integer logic, packed selection, and warp routing contracts](../wiki/hardware/volta-integer-routing.md) | `wiki/hardware/volta-integer-routing.md` |
 | [Volta: explicit MMA and opaque WMMA](../wiki/hardware/volta-mma.md) | `wiki/hardware/volta-mma.md` |
 | [Volta: representation and accumulation contracts](../wiki/hardware/volta-numerics.md) | `wiki/hardware/volta-numerics.md` |
 | [Volta: operand delivery is a testable limiter](../wiki/hardware/volta-operand-delivery.md) | `wiki/hardware/volta-operand-delivery.md` |
 | [Volta: participation, visibility and progress](../wiki/hardware/volta-participation.md) | `wiki/hardware/volta-participation.md` |
 | [Volta: resource budgets are coupled](../wiki/hardware/volta-resources.md) | `wiki/hardware/volta-resources.md` |
+| [Volta: public virtual memory mapping and alias contracts](../wiki/hardware/volta-vmm-addressing.md) | `wiki/hardware/volta-vmm-addressing.md` |
 | [Volta Attention Prefill, Decode, and Selected-Block Kernels](../wiki/kernels/volta-attention.md) | `wiki/kernels/volta-attention.md` |
 | [Volta Gated-Delta Recurrent State Kernels](../wiki/kernels/volta-gated-delta.md) | `wiki/kernels/volta-gated-delta.md` |
 | [Volta FP16-input, FP32-accumulating GEMM](../wiki/kernels/volta-gemm.md) | `wiki/kernels/volta-gemm.md` |
@@ -1245,6 +1256,9 @@ Source-PR pages whose validated evidence review found no family-level or exact a
 
 | Page | Path |
 |------|------|
+| [NVIDIA CUDA C++ Programming Guide 12.9.1 (Ampere contracts)](../sources/docs/ampere-cuda-12-9.md) | `sources/docs/ampere-cuda-12-9.md` |
+| [NVIDIA PTX ISA 8.8 (CUDA 12.9.1 archive, Ampere forms)](../sources/docs/ampere-ptx-8-8.md) | `sources/docs/ampere-ptx-8-8.md` |
+| [NVIDIA Ampere GPU Architecture Tuning Guide (CUDA 12.9.1 archive)](../sources/docs/ampere-tuning-guide-12-9.md) | `sources/docs/ampere-tuning-guide-12-9.md` |
 | [cuTile Python Documentation](../sources/docs/cutile-python-dsl.md) | `sources/docs/cutile-python-dsl.md` |
 | [CUTLASS CuTe DSL Documentation](../sources/docs/cutlass-cute-dsl.md) | `sources/docs/cutlass-cute-dsl.md` |
 | [Native Sparse Attention (NSA)](../sources/docs/nsa.md) | `sources/docs/nsa.md` |
@@ -1296,6 +1310,9 @@ Source-PR pages whose validated evidence review found no family-level or exact a
 | [[Kernel][Quantization] add w4a8 support for marlin kernel](../sources/prs/vllm/PR-24722.md) | `sources/prs/vllm/PR-24722.md` |
 | [[Quantization] add humming quantization kernel](../sources/prs/vllm/PR-34556.md) | `sources/prs/vllm/PR-34556.md` |
 | [[Bugfix] Gate 256-bit instructions to CUDA 12.9+](../sources/prs/vllm/PR-34791.md) | `sources/prs/vllm/PR-34791.md` |
+| [Ampere SM80: asynchronous global-to-shared copy and split barriers](../wiki/hardware/ampere-async-copy.md) | `wiki/hardware/ampere-async-copy.md` |
+| [Ampere SM80: A100 memory and resource limits](../wiki/hardware/ampere-memory-resources.md) | `wiki/hardware/ampere-memory-resources.md` |
+| [Ampere SM80: Tensor Core arithmetic eligibility](../wiki/hardware/ampere-tensor-operations.md) | `wiki/hardware/ampere-tensor-operations.md` |
 | [mbarrier (Memory Barrier Primitives)](../wiki/hardware/mbarrier.md) | `wiki/hardware/mbarrier.md` |
 | [Native Sparse Attention (NSA)](../wiki/kernels/nsa.md) | `wiki/kernels/nsa.md` |
 

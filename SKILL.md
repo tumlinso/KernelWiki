@@ -1,19 +1,20 @@
 ---
 name: KernelWiki
-description: Use when the user asks about NVIDIA Volta/V100 (SM70), Hopper (SM90), or Blackwell (SM100) GPU kernels, including Volta MMA/WMMA and CUDA/PTX contracts, Blackwell tcgen05/TMEM/CLC/NVFP4, attention, GEMM, grouped kernels, or concrete upstream implementation references. Do NOT use for generic CUDA Q&A unrelated to these targets, host-side framework integration, or distributed systems (DeepEP/EPLB/DualPipe).
+description: Use when the user asks about NVIDIA Volta/V100 (SM70), Ampere/A100 (SM80), Hopper (SM90), or Blackwell (SM100) GPU kernels, including architecture-specific CUDA/PTX contracts, Volta MMA/WMMA, Ampere cp.async/Tensor Cores, Blackwell tcgen05/TMEM/CLC/NVFP4, attention, GEMM, grouped kernels, or concrete upstream implementation references. Do NOT use for generic CUDA Q&A unrelated to these targets, host-side framework integration, or distributed systems (DeepEP/EPLB/DualPipe).
 argument-hint: "[natural-language-question] | [--tag foo --type kernel] | [page-id]"
 allowed-tools: "Bash Read Grep Glob"
 ---
 
-# KernelWiki — Volta, Hopper & Blackwell Kernel Optimization Wiki
+# KernelWiki — Volta, Ampere, Hopper & Blackwell Kernel Knowledge Base
 
-Query a structured, cross-referenced knowledge base with source-backed Volta/V100 (SM70) hardware guidance, bounded local native V100 kernel studies, and a larger Blackwell (SM100) and Hopper (SM90) kernel corpus. Local Volta timings are experimental case results, not general dispatch guarantees. Volta family evidence is not automatically exact V100 evidence. The repository update date is recorded in `README.md`; run `python3 scripts/repo_status.py` for current corpus counts.
+Query a structured, cross-referenced knowledge base with source-backed Volta/V100 (SM70) and Ampere/A100 (SM80) hardware contracts, bounded local native V100 kernel studies, and a larger Blackwell (SM100) and Hopper (SM90) kernel corpus. Local Volta timings are experimental case results, not general dispatch guarantees. Family evidence is not automatically exact-device evidence. The repository update date is recorded in `README.md`; run `python3 scripts/repo_status.py` for current corpus counts.
 
 ## When To Use This Skill
 
 Trigger this skill when the user asks about:
 
 - **Volta/V100 (SM70)** — source-reported MMA/WMMA, PTX/CUDA, synchronization, resource, and numerical contracts; or locally measured GEMM, row, attention, grouped/gated, W4A16, and recurrent-state cases
+- **Ampere/A100 (SM80)** — source-backed asynchronous global-to-shared copies and barriers, Tensor Core arithmetic eligibility, and A100 memory/resource boundaries
 - **Blackwell/SM100 kernel programming** — tcgen05.mma, TMEM, CLC, 2-SM cooperative, NVFP4, FP8/FP4 block scaling, PDL/GDC
 - **Kernel implementations** — FlashAttention-4, DeepGEMM, FlashMLA, NSA, GatedDeltaNet, NVFP4 GEMM/GEMV, fused MoE, gated dual GEMM
 - **Performance patterns** — low SM utilization, memory-bound, register pressure, compute-bound, tail effects, pipeline stalls
@@ -47,7 +48,9 @@ implementation.
 python3 scripts/query.py "how to fuse gate-up dual GEMM on Blackwell"
 python3 scripts/query.py --architecture V100 --type hardware --compact
 python3 scripts/query.py --architecture V100 --type kernel --compact
+python3 scripts/query.py --architecture A100 --type hardware --compact
 python3 scripts/query.py --architecture volta --compact
+python3 scripts/query.py --architecture ampere --type hardware --compact
 python3 scripts/query.py --tag nvfp4 --type kernel
 python3 scripts/query.py --repo cutlass --limit 20
 python3 scripts/query.py --symptom tail-effect --compact
@@ -57,8 +60,11 @@ Filters: `--type`, `--tag`, `--repo`, `--language`, `--architecture`,
 `--symptom`, `--confidence`, `--limit`, `--compact`, `--paths-only`. `--tag`
 and `--architecture` accept aliases — `--tag UMMA` matches `tcgen05`,
 `--architecture B200` matches `sm100`, and `--architecture V100` matches exact
-`sm70`. Use the `volta` family filter for broader evidence; it also includes
-neighboring `sm72`, which is not exact V100 evidence.
+`sm70`; `--architecture A100` matches exact `sm80`. Use the `volta` family
+filter for broader evidence; it also includes neighboring `sm72`, which is
+not exact V100 evidence. The `ampere` family filter includes several exact SM
+8.x targets; consult each page for its stated target before applying A100
+resource values to the whole family.
 
 ### Path 2: Fetch a specific page by id or path
 
@@ -67,7 +73,9 @@ python3 scripts/get_page.py kernel-flash-attention-4
 python3 scripts/get_page.py pr-cutlass-2472
 python3 scripts/get_page.py kernel-flash-attention-4 --follow-sources
 python3 scripts/get_page.py kernel-volta-attention --follow-sources --include-code
+python3 scripts/get_page.py hw-ampere-async-copy --follow-sources
 python3 scripts/get_page.py hw-volta-mma --follow-sources
+python3 scripts/get_page.py hw-volta-integer-routing --follow-sources
 python3 scripts/get_page.py kernel-flash-attention-4 --body-only
 ```
 
@@ -97,6 +105,7 @@ Companion docs under `references/`:
 
 - `references/primer.md` — topic map: hardware features, techniques, symptoms, canonical page IDs. Read this first when the question is broad.
 - `references/volta.md` — Volta/V100 route and exact-versus-family query guidance.
+- `references/ampere.md` — Ampere/A100 route and SM80-specific copy, Tensor Core, and resource contracts.
 - `references/schema.md` — condensed frontmatter schema, confidence rules, reproducibility ladder, controlled vocabulary, canonical aliases.
 - `references/examples.md` — 10 worked query patterns mapping user questions → command sequences → synthesis.
 

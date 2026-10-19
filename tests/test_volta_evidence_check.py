@@ -8,6 +8,8 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
 
 SCRIPT = Path(__file__).parents[1] / "scripts" / "volta_evidence_check.py"
 SPEC = importlib.util.spec_from_file_location("volta_evidence_check", SCRIPT)
@@ -2140,7 +2142,7 @@ class RecurrenceNativeEvidenceTests(unittest.TestCase):
         self.assertEqual(self.records["bundle_payload_sha256"], CHECK.KWV08_PAYLOAD_SHA256)
         self.assertEqual(self.records["cases"]["long_prefill_many_sequences"]["live_steps"], 13014)
 
-    def test_source_closure_binds_six_specs_and_all_repo_and_toolchain_inputs(self):
+    def test_archived_source_closure_binds_six_specs_and_all_captured_inputs(self):
         closure_path = self.base / "evidence" / "v1" / "source-closure" / "source-closure.json"
         closure = CHECK.read_json(closure_path)
         case = {
@@ -2156,12 +2158,56 @@ class RecurrenceNativeEvidenceTests(unittest.TestCase):
                 for row in closure["repository_inputs"]
             ],
         }
-        info, aliases, toolchain = CHECK._kwv08_source_closure(self.root, case)
+        # The portable receipt keeps its frozen closure and archive hashes authoritative
+        # without requiring the historical CUDA installation to be present on this host.
+        info, aliases, toolchain = CHECK._kwv08_source_closure(
+            self.root, case, portable=True)
         self.assertEqual(info["sha256"], CHECK.KWV08_SOURCE_CLOSURE_SHA256)
         self.assertEqual(len(aliases), 31)
         self.assertEqual(len(toolchain), 8)
         self.assertEqual({item["role"] for item in info["declared_specs"].values()},
                          {f"recurrence_{role}" for role in CHECK.KWV08_ROLES})
+
+    def test_live_source_closure_rejects_toolchain_file_drift(self):
+        closure_path = self.base / "evidence" / "v1" / "source-closure" / "source-closure.json"
+        closure = CHECK.read_json(closure_path)
+        case = {
+            "id": "recurrence_state_ownership_bundle",
+            "gpu_uuid": closure["gpu_uuid_target"],
+            "source_closure": {
+                "path": str(closure_path.relative_to(self.root)),
+                "sha256": CHECK.digest(closure_path),
+            },
+            "captured_input_archives": [
+                {"original_path": row["original_path"],
+                 "archive_path": row["archived_path"], "sha256": row["sha256"]}
+                for row in closure["repository_inputs"]
+            ],
+        }
+        changed = closure["toolchain_inputs"][0]
+        changed_path = changed["path"]
+        original_digest = CHECK.digest
+        original_is_file = CHECK.Path.is_file
+        original_stat = CHECK.Path.stat
+        changed_hash = "0" * 64 if changed["sha256"] != "0" * 64 else "1" * 64
+
+        def is_file(path):
+            return True if str(path) == changed_path else original_is_file(path)
+
+        def stat(path, *args, **kwargs):
+            if str(path) == changed_path:
+                return SimpleNamespace(st_size=changed["size_bytes"])
+            return original_stat(path, *args, **kwargs)
+
+        def digest(path):
+            return changed_hash if str(path) == changed_path else original_digest(path)
+
+        with patch.object(CHECK.Path, "is_file", autospec=True, side_effect=is_file), \
+                patch.object(CHECK.Path, "stat", autospec=True, side_effect=stat), \
+                patch.object(CHECK, "digest", side_effect=digest):
+            with self.assertRaisesRegex(
+                    CHECK.EvidenceError, "current toolchain file differs from captured identity"):
+                CHECK._kwv08_source_closure(self.root, case)
 
     def test_copied_file_paths_accept_collector_archive_aliases_without_escape(self):
         with tempfile.TemporaryDirectory() as directory:

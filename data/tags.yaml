@@ -37,7 +37,17 @@ architectures:
 
 hardware_features:
   - mma-sm70
+  - mma
+  - lop3
+  - prmt
+  - fns
+  - dp4a
+  - dp2a
   - wmma
+  - cp-async
+  - tf32
+  - split-arrive-wait
+  - vmm
   - warp-collectives
   - tcgen05
   - tmem
