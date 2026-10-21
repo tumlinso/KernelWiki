@@ -5,6 +5,23 @@ CUDA compute capability 7.0. It is an operator study, not a serving runtime:
 there is no learned selector, cache manager, backward pass, dropout, native
 2:4 sparse path, or model integration.
 
+## Qualification status
+
+The original `materialized_softmax` implementation in
+`volta_attention_runner.cu` is disqualified as a correctness or performance
+baseline. After reading the shared row maximum, threads can overwrite the same
+shared reduction array with local sums before every reader has finished. A
+focused KDA audit of the corresponding materialized control recorded 24
+racecheck hazards (4 errors, 20 warnings). Keep this source, its digest, and
+the associated v1 evidence unchanged as historical artifacts, but do not use
+its timings or comparisons derived from them as qualified claims.
+
+KDA's separately named `materialized-corrected` downstream snapshot adds a CTA
+barrier and passed memcheck, racecheck, and synccheck on 24 cases. It is an
+independent correction and qualification; it does not validate this source or
+the archived v1 baseline measurements. The saved audit is recorded in KDA at
+`runs/attention-decode-study/evidence/independent-review/corrected-baseline-control.md`.
+
 ## Fixed contract
 
 - Contiguous row-major Q/K/V use `[B,H,S,D]`; input values are represented as
@@ -23,8 +40,8 @@ there is no learned selector, cache manager, backward pass, dropout, native
 
 ## Implementations
 
-`volta_attention_runner.cu` contains a materialized cuBLAS baseline and native
-host runner. The baseline computes FP16-input QK with FP32 accumulation and
+`volta_attention_runner.cu` contains the historical materialized cuBLAS route
+and native host runner. That route computes FP16-input QK with FP32 accumulation and
 scores, performs stable FP32 softmax, expands the represented FP16 V values to
 FP32, then uses SGEMM for FP32 probabilities times FP32-expanded V. Its full
 conversion, materialization, and compute sequence is included in operator

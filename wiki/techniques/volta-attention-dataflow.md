@@ -12,6 +12,16 @@ sources: [blog-volta-attention-measurements]
 blackwell_relevance: Stable online reductions and explicit partial-state merges provide design patterns to test on newer architectures; this bounded Volta result establishes no cross-architecture performance conclusion or split-selection threshold.
 ---
 
+> **Qualification update (2026-10-21):** The original materialized route
+> described below has a shared-memory race between reading the row maximum
+> and reusing the reduction scratch array. Its archived timings and every
+> comparison or speedup that depends on them are disqualified. The KDA
+> downstream `materialized-corrected` snapshot adds a CTA barrier and passed
+> all three sanitizer tools over 24 cases; this is independent evidence for
+> that corrected snapshot only. See `blog-volta-attention-measurements` for
+> the historical records and the KDA audit path
+> `runs/attention-decode-study/evidence/independent-review/`.
+
 # Keep score scaling and normalization in one contract
 
 Attention computes
@@ -77,18 +87,19 @@ and expanded-V buffers in its shared case context for online and split routes;
 they remain unused by those operators. No harness peak-memory or
 allocation-saving measurement was made. For the measured `Q=(1,8,1,70)`,
 `KV=(1,2,4096,70)` decode, its single CTA per query row exposes only eight
-CTAs on an 80-SM device and measured 704.512 us versus 148.480 us for the
-materialized baseline. The one-query-row grid provides concrete evidence to
-consider splitting the key range; the one-sample NCU counters are diagnostic
-context, not timing proof.
+CTAs on an 80-SM device. The archived 704.512-us online and 148.480-us
+materialized values do not support a comparison because the materialized route
+is disqualified. The one-query-row grid remains visible in the archived
+capture; the one-sample NCU counters are diagnostic context, not timing proof.
 
 A split implementation must include its partial reduction and merge in the
 same timing boundary. The measured 16-way split used a partial `(m,l,u)` per
 split and merged those partials with maximum rescaling; both launches were
-timed. It measured 66.560 us for this exact decode shape. This result justifies
-the bounded route for this case only. It does not imply that 16 is a universal
-split count or that all decode shapes benefit. The prefill comparison
-`97.280 us` materialized versus `96.256 us` online was not decisive.
+timed. Its absolute 66.560-us result is retained for this exact decode shape,
+but the former ratio against the unsafe materialized baseline is withdrawn. It
+does not imply that 16 is a universal split count or that all decode shapes
+benefit. The archived prefill values of 97.280-us materialized and 96.256-us
+online remain historical; their comparison is withdrawn.
 
 # Volta evidence boundary
 

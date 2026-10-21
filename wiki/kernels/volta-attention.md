@@ -15,23 +15,9 @@ performance_claims:
     dtype: FP16 represented Q/K/V; FP32 accumulation, probabilities, and output
     shape: prefill Q=(1,4,32,64), KV=(1,2,512,64), causal GQA
     metric: CUDA-event median latency (us)
-    value: 97.280
-    source_id: blog-volta-attention-measurements
-    source_locator: "v1 primary timing role baseline_prefill_timing; prefill64-long-causal; 11 samples; native runner.stdout.txt"
-  - gpu: Tesla V100-SXM2-16GB
-    dtype: FP16 represented Q/K/V; FP32 accumulation, probabilities, and output
-    shape: prefill Q=(1,4,32,64), KV=(1,2,512,64), causal GQA
-    metric: CUDA-event median latency (us)
     value: 96.256
     source_id: blog-volta-attention-measurements
     source_locator: "v1 primary timing role candidate_prefill_timing; prefill64-long-causal; 11 samples; native runner.stdout.txt"
-  - gpu: Tesla V100-SXM2-16GB
-    dtype: FP16 represented Q/K/V; FP32 accumulation, probabilities, and output
-    shape: decode Q=(1,8,1,70), KV=(1,2,4096,70), causal GQA; materialized cuBLAS path
-    metric: CUDA-event median latency (us)
-    value: 148.480
-    source_id: blog-volta-attention-measurements
-    source_locator: "v1 primary timing role baseline_decode_timing; decode70-causal; 11 samples; native runner.stdout.txt"
   - gpu: Tesla V100-SXM2-16GB
     dtype: FP16 represented Q/K/V; FP32 accumulation, probabilities, and output
     shape: decode Q=(1,8,1,70), KV=(1,2,4096,70), causal GQA; online SIMT path
@@ -48,6 +34,18 @@ performance_claims:
     source_locator: "v2 primary timing role split16_decode_timing; decode70-causal; 11 samples; runner.stdout.txt; full partial and merge interval"
 artifact_dir: artifacts/kernels/volta-attention/variants
 ---
+
+> **Qualification update (2026-10-21):** The original `materialized_softmax`
+> implementation is disqualified as a correctness or performance baseline.
+> It reads the shared row maximum while other threads can reuse that scratch
+> storage for the sum. A focused KDA racecheck audit of the corresponding
+> materialized control reported 24 hazards (4 errors, 20 warnings). Retained
+> v1 materialized timings are historical records only, and comparisons or
+> speedups that use them are withdrawn. A separate downstream
+> `materialized-corrected` snapshot adds a CTA barrier and passed memcheck,
+> racecheck, and synccheck over 24 cases; that result does not validate this
+> source or rehabilitate its v1 measurements. See the source page and the KDA
+> audit at `runs/attention-decode-study/evidence/independent-review/`.
 
 # Operator and numerical contract
 
@@ -109,37 +107,46 @@ running_m = next_m;
 
 # Implementations and bounded measurements
 
-The materialized baseline uses cuBLAS for QK, keeps the score/softmax and
+The archived materialized route uses cuBLAS for QK, keeps the score/softmax and
 probability arrays in FP32, expands represented V to FP32, and uses SGEMM for
-`P*V`. The timed operator includes V expansion, QK, FP32 softmax, and PV.
+`P*V`. Its timed operator includes V expansion, QK, FP32 softmax, and PV.
 Input loading, allocation, and H2D transfer are outside the CUDA-event
-interval. The expansion is part of the measured baseline; it is not treated as
-a free reusable cache.
+interval. The route is disqualified by the shared-memory race described above;
+these operator details identify the historical artifact and do not endorse it
+as a baseline.
 
 The online route is a fused SIMT kernel with FP32 running `(m,l,u)` state. It
 is not a Tensor Core attention kernel and makes no fragment-exchange or fused
-Tensor Core claim. On the measured long-prefill shape its result is
-inconclusive. On one-query D=70 decode it loses substantially to the
-materialized library baseline. A 16-way split-KV route computes FP32 partial
-state and merges it with a separately launched kernel; both launches and the
-entire merge are inside its reported timing. The source has a unique warp-0
-merge owner. This route was added after profile evidence showed the unsplit
-decode launch used only eight CTAs on an 80-SM V100. It is selected only for
-the exact tested decode case; these measurements do not establish a general
-dispatch boundary. The runner's case context reserves materialized score,
+Tensor Core claim. Its v1 timing records are retained in the table below as
+absolute historical observations; prefill and decode comparisons against the
+disqualified materialized route are withdrawn. A 16-way split-KV route
+computes FP32 partial state and merges it with a separately launched kernel;
+both launches and the entire merge are inside its reported timing. The source
+has a unique warp-0 merge owner. This route was added after profile evidence
+showed the unsplit decode launch used only eight CTAs on an 80-SM V100. The
+recorded split route covers only this decode case; the archive establishes no
+general dispatch boundary. The runner's case context reserves materialized score,
 probability, and expanded-V buffers for all implementations, including online
 and split. Those buffers are unused by the online operators, but this harness
 does not measure peak-memory or allocation savings. The online operator's
 required state is `(m,l,u)` per active query row, plus tile temporaries; split
 also stores one such partial per query-row/split before merge.
 
+The table retains the frozen measurements as historical observations. The
+materialized rows are disqualified; the original prefill comparison, decode
+comparison, and all speedups or slowdowns derived from those baselines are
+withdrawn. The `66.560 us` split16 value is an absolute archived timing; its
+former `2.23x` comparison is withdrawn. The separately tested KDA
+`materialized-corrected` control is a distinct source snapshot and has its own
+evidence; it does not change the status of this table's original measurements.
+
 | Case and route | Median ± MAD (us) | Samples | Result within tested scope |
 |---|---:|---:|---|
-| `prefill64-long-causal`, materialized baseline | `97.280 ± 1.024` | 11 | Reference route |
-| `prefill64-long-causal`, online SIMT | `96.256 ± 0.000` | 11 | No decisive improvement |
-| `decode70-causal`, materialized baseline | `148.480 ± 3.072` | 11 | Faster than unsplit online |
-| `decode70-causal`, online SIMT | `704.512 ± 1.024` | 11 | Rejected for this measured case |
-| `decode70-causal`, 16-way split plus merge | `66.560 ± 0.000` | 11 | About 2.23x faster than baseline for this case |
+| `prefill64-long-causal`, materialized baseline (disqualified) | `97.280 ± 1.024` | 11 | Historical record only; not a reference |
+| `prefill64-long-causal`, online SIMT | `96.256 ± 0.000` | 11 | Historical absolute timing; comparison withdrawn |
+| `decode70-causal`, materialized baseline (disqualified) | `148.480 ± 3.072` | 11 | Historical record only; not a reference |
+| `decode70-causal`, online SIMT | `704.512 ± 1.024` | 11 | Historical absolute timing; comparison withdrawn |
+| `decode70-causal`, 16-way split plus merge | `66.560 ± 0.000` | 11 | Historical absolute timing; baseline ratio withdrawn |
 
 All measurements are on one Tesla V100-SXM2-16GB, compute capability 7.0,
 UUID `GPU-21131915-1488-23af-38dd-1743ae1f5cc8`, with the same immutable

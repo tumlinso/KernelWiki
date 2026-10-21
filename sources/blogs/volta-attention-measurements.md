@@ -9,6 +9,31 @@ tags: [attention, sparse-attention, conditional-rescaling, software-exp]
 retrieved_at: '2026-10-17'
 ---
 
+# Post-study qualification update (2026-10-21)
+
+The original v1 `materialized_softmax` source is disqualified as a correctness
+or performance baseline. It reads the CTA-shared maximum and then reuses the
+same reduction array for per-thread sums without a barrier between those
+operations. A focused KDA racecheck audit of the corresponding materialized
+control reported 24 hazards (4 errors, 20 warnings). The original materialized
+timing rows below remain as historical records, but they are not qualified
+benchmark claims. Withdraw the prefill comparison, the decode comparison, and
+every speedup or slowdown that uses those values.
+
+KDA separately evaluated a `materialized-corrected` snapshot with a CTA barrier
+at that boundary. That downstream snapshot passed memcheck, racecheck, and
+synccheck over 24 cases; it is a distinct candidate and does not retroactively
+validate the original KernelWiki source, its run, or any v1 baseline-relative
+claim. The saved KDA audit is at
+`runs/attention-decode-study/evidence/independent-review/corrected-baseline-control.md`;
+its focused sanitizer summary is at
+`runs/attention-decode-study/evidence/independent-review/baseline-sanitizer-audit.txt`.
+
+The source closures, binaries, role receipts, and timing samples in this
+submodule remain frozen archive evidence. The evidence checker verifies their
+captured identities and integrity; it does not qualify the materialized
+implementation after this safety finding.
+
 # Scope, represented data, and contract
 
 This first-party native investigation compares a materialized cuBLAS-backed
@@ -72,24 +97,27 @@ microseconds:
 
 | Case | Route | Median ± MAD (us) | Source role | Native case and check |
 |---|---|---:|---|---|
-| `prefill64-long-causal` | materialized baseline | `97.280 ± 1.024` | `baseline_prefill_timing` | `prefill64-long-causal`, `checks[0]`, 8,192 outputs / 128 rows |
+| `prefill64-long-causal` | materialized baseline (disqualified; historical only) | `97.280 ± 1.024` | `baseline_prefill_timing` | `prefill64-long-causal`, `checks[0]`, 8,192 outputs / 128 rows |
 | `prefill64-long-causal` | online SIMT | `96.256 ± 0.000` | `candidate_prefill_timing` | `prefill64-long-causal`, `checks[0]`, 8,192 outputs / 128 rows |
-| `decode70-causal` | materialized baseline | `148.480 ± 3.072` | `baseline_decode_timing` | `decode70-causal`, `checks[0]`, 560 outputs / 8 rows |
+| `decode70-causal` | materialized baseline (disqualified; historical only) | `148.480 ± 3.072` | `baseline_decode_timing` | `decode70-causal`, `checks[0]`, 560 outputs / 8 rows |
 | `decode70-causal` | online SIMT | `704.512 ± 1.024` | `candidate_decode_timing` | `decode70-causal`, `checks[0]`, 560 outputs / 8 rows |
 | `decode70-causal` | split16 plus merge | `66.560 ± 0.000` | `split16_decode_timing` | `decode70-causal`, `checks[0]`, 560 outputs / 8 rows |
 
-All five values are native runner results with `status: passed`, captured in
-the matching role's `runner.stdout.txt`; each timing check also carries the
-full 11-element `samples_us` array. The prefill difference is inconclusive.
-For the exact decode shape, split16 is about 2.23x faster than the materialized
-baseline and the unsplit online route is about 4.75x slower. The measured
-split result supports only this one D=70, one-query-row case, not a general
-dispatch rule.
+All five values were recorded in the matching role's `runner.stdout.txt`, and
+each timing check carries the full 11-element `samples_us` array. The two
+materialized values are disqualified by the later racecheck finding despite
+their original runner status and passing numerical checks. Therefore the
+prefill difference, the reported 2.23x split16 gain, and the reported 4.75x
+online slowdown are withdrawn. The online and split rows remain absolute
+historical captures; use only comparisons against independently qualified
+baselines. The measured split result is bounded to this one D=70,
+one-query-row case and establishes no general dispatch rule.
 
 ## Correctness and selected-block scope
 
-The v1 baseline and online full-bundle correctness roles passed all seven
-cases: 39,472 outputs across 552 rows per implementation. The CPU reader and
+The v1 baseline and online full-bundle native output checks passed all seven
+cases: 39,472 outputs across 552 rows per implementation. This numerical
+check did not detect the baseline's shared-memory race. The CPU reader and
 oracle suite exercises binary layout, case decoding, and independent output
 checks. The selected-block case checks supplied membership, duplicate
 rejection, mask combination, tail clipping, order invariance, and empty-row
